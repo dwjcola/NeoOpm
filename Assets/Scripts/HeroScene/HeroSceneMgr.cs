@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using GameFramework.AddressableResource;
 using UnityEngine;
+using XLua;
 
 namespace ProHA
 {
@@ -318,8 +319,10 @@ namespace ProHA
                 return;
             
             // ---获取数据，资源
-            Hero_typeLine heroLine = TableTools.Tables.Hero_type.GetLineById(m_List[index]);
-            GetHeroSceneData(0, heroLine, ESceneSlide.INSTANT, OnGetHeroSceneData);
+            LuaTable lt = LC.GetTable("HeroType", m_List[index]);
+            string heroScene = lt.Get<string>("heroScene");
+            int gId = lt.Get<int>("gid");
+            GetHeroSceneData(0, heroScene,gId, ESceneSlide.INSTANT, OnGetHeroSceneData);
         }
 
         public void UpdateHeroScene(List<int> list,int index)
@@ -328,9 +331,8 @@ namespace ProHA
             _curListIndex = index;
         }
         private static int tempID = 0;
-        private void GetHeroSceneData(int index, Hero_typeLine heroLine, ESceneSlide eSlide, Action<int, Hero_typeLine, __HeroData, ESceneSlide> callback)
+        private void GetHeroSceneData(int index, string heroScene,int tid, ESceneSlide eSlide, Action<int, int, __HeroData, ESceneSlide> callback)
         {
-            string heroScene = heroLine.heroScene;
             // heroScene = "Ndge";
 
             // todo 先临时用ScriptObject，后边改成项目正式资源管理接口
@@ -388,12 +390,12 @@ namespace ProHA
             
             
             
-            callback(index, heroLine, heroData, eSlide);
+            callback(index, tid, heroData, eSlide);
         }
         
-        private void OnGetHeroSceneData(int index, Hero_typeLine heroLine, __HeroData heroData, ESceneSlide eSlide)
+        private void OnGetHeroSceneData(int index, int heroTId, __HeroData heroData, ESceneSlide eSlide)
         {
-            GameObject sceneGo = SetupScene(heroLine, heroData);
+            GameObject sceneGo = SetupScene(heroTId, heroData);
 
             if (sceneGo == null) return;
 
@@ -458,8 +460,9 @@ namespace ProHA
         {
             if (index == _curListIndex || index >= m_List.Count)
                 return;
-         
-            Hero_typeLine heroLine = TableTools.Tables.Hero_type.GetLineById(heroTID);
+            LuaTable lt = LC.GetTable("HeroType", heroTID);
+            string heroScene = lt.Get<string>("heroScene");
+            int gId = lt.Get<int>("gid");
             // 判断是要向右切换还是向左
             ESceneSlide eSlide = ESceneSlide.SLIDE_TO_RIGHT;
             if (index < _curListIndex)
@@ -467,7 +470,7 @@ namespace ProHA
                 eSlide  = ESceneSlide.SLIDE_TO_LEFT;
             }
             
-            GetHeroSceneData(index, heroLine, eSlide, OnGetHeroSceneData);
+            GetHeroSceneData(index, heroScene,gId, eSlide, OnGetHeroSceneData);
         }
 
         
@@ -559,9 +562,8 @@ namespace ProHA
         }
 
         
-        private GameObject SetupScene(Hero_typeLine heroLine, __HeroData heroData)
+        private GameObject SetupScene(int heroTID, __HeroData heroData)
         {
-            int heroTID = heroLine.gid;
             
             GameObject sceneGo;
             if (!_sceneInstances.TryGetValue(heroTID, out sceneGo))

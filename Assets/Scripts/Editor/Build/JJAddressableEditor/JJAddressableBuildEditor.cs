@@ -65,7 +65,8 @@ public class JJAddressableBuildEditor : Editor
 #else
         string profileName = "Develop";
 #endif
-        var profileTable =AssetDatabase.LoadAssetAtPath<AdressablesConfigProfileTable>(aasProfilePath);
+        //待处理 重新读表处理 dwj 2021-12-2
+        /*var profileTable =AssetDatabase.LoadAssetAtPath<AdressablesConfigProfileTable>(aasProfilePath);
         foreach (var item in profileTable.TableDic)
         {
             var pName = item.Value.ProfileName;
@@ -89,7 +90,7 @@ public class JJAddressableBuildEditor : Editor
         Debug.Log("配置 更新地址 完成");
         EditorUtility.SetDirty(profileTable);
         AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
+        AssetDatabase.Refresh();*/
     }
     /// <summary>
     /// 生成打包的分组信息

@@ -61,12 +61,12 @@ namespace ProHA
             CheckUpdateForm.Instance.preloadState = PreloadState.PreLoading;
             AASResourceManager.Instance.InstantiateAsset("Assets/Resource_MS/Prefabs/Customs/Customs.prefab",
                 new UnityEngine.ResourceManagement.ResourceProviders.InstantiationParameters(GameEntry.Base.transform.parent,false));
-            ///担心在Complete里写能不能保证执行;
+            /*///担心在Complete里写能不能保证执行;
             var loadTableHandle = Addressables.LoadAssetsAsync<TextAsset>("Tables", (text) =>
             {
                 TableTools.instance.PreLoadTable(text);
             });
-            PreloadAssets.Add(loadTableHandle);
+            PreloadAssets.Add(loadTableHandle);*/
 
             var loadLuaHandle = Addressables.LoadAssetsAsync<TextAsset>("LuaScripts", (text) =>
             {
@@ -77,7 +77,7 @@ namespace ProHA
             });
             PreloadAssets.Add(loadLuaHandle);
             
-            PreloadAssets.Add( LoadFont("MainFont"));
+            //PreloadAssets.Add( LoadFont("MainFont"));
             //GameEntry.numTextProComponent.Initialized();
             GameEntry.UI.StartCoroutine(PreLoadCoroutine());
         }
@@ -106,10 +106,20 @@ namespace ProHA
                 }
                 yield return null;
             }
+
+            OnPreloadFinish();
+            //ConfigPreload.instance.UpdateConfig(OnPreloadFinish);
+        }
+
+
+        private void OnPreloadFinish()
+        {
             PreInit();
             PreLoadDone = true;
             CheckUpdateForm.Instance.LoadingDone = true;
         }
+
+
         /// <summary>
         /// 初始化
         /// </summary>

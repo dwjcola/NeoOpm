@@ -15,6 +15,7 @@ using GameFramework.AddressableResource;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Threading.Tasks;
+using XLua;
 
 namespace ProHA
 {
@@ -93,13 +94,15 @@ namespace ProHA
                 ++loadCount;
                 _Progress = 0.9f * loadCount / totalCount;
             }, () => {*/
-                SceneLine drScene = TableTools.Tables.Scene.GetLineById(sceneId);
-                if (drScene == null)
-                {
-                    Log.Warning("Can not load scene '{0}' from data table.", sceneId.ToString());
-                    return;
-                }
-                GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset(drScene.AssetName), Constant.AssetPriority.SceneAsset, this);
+            LuaTable drScene = LC.GetTable("Scene", sceneId);
+            
+            if (drScene == null)
+            {
+                Log.Warning("Can not load scene '{0}' from data table.", sceneId.ToString());
+                return;
+            }
+            string AssetName = drScene.Get<String>("AssetName");
+            GameEntry.Scene.LoadScene(AssetUtility.GetSceneAsset(AssetName), Constant.AssetPriority.SceneAsset, this);
             /*});*/
         }
         private void OnUnloadSceneSuccess(object sender, GameEventArgs e)
@@ -139,7 +142,7 @@ namespace ProHA
             }
             else if (sceneId == Constant.Scene.Battle)
             {
-                //ChangeState<ProcedureBattle>(procedureOwner);
+                ChangeState<ProcedureBattle>(procedureOwner);
             }
             else
             {

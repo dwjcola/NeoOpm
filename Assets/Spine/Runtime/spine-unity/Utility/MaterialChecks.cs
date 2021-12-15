@@ -38,6 +38,8 @@ namespace Spine.Unity {
 
 		static readonly int STRAIGHT_ALPHA_PARAM_ID = Shader.PropertyToID("_StraightAlphaInput");
 		static readonly string ALPHAPREMULTIPLY_ON_KEYWORD = "_ALPHAPREMULTIPLY_ON";
+		static readonly string ALPHAPREMULTIPLY_VERTEX_ONLY_ON_KEYWORD = "_ALPHAPREMULTIPLY_VERTEX_ONLY";
+		static readonly string ALPHABLEND_ON_KEYWORD = "_ALPHABLEND_ON";
 		static readonly string STRAIGHT_ALPHA_KEYWORD = "_STRAIGHT_ALPHA_INPUT";
 		static readonly string[] FIXED_NORMALS_KEYWORDS = {
 			"_FIXED_NORMALS_VIEWSPACE",
@@ -50,7 +52,9 @@ namespace Spine.Unity {
 		static readonly string CANVAS_GROUP_COMPATIBLE_KEYWORD = "_CANVAS_GROUP_COMPATIBLE";
 
 		public static readonly string kPMANotSupportedLinearMessage =
-			"\nWarning: Premultiply-alpha atlas textures not supported in Linear color space!\n\nPlease\n"
+			"\nWarning: Premultiply-alpha atlas textures not supported in Linear color space!"
+			+ "You can use a straight alpha texture with 'PMA Vertex Color' by choosing blend mode 'PMA Vertex, Straight Texture'.\n\n"
+			+ "If you have a PMA Texture, please\n"
 			+ "a) re-export atlas as straight alpha texture with 'premultiply alpha' unchecked\n"
 			+ "   (if you have already done this, please set the 'Straight Alpha Texture' Material parameter to 'true') or\n"
 			+ "b) switch to Gamma color space via\nProject Settings - Player - Other Settings - Color Space.\n";
@@ -66,10 +70,6 @@ namespace Spine.Unity {
 			"\nWarning: 'Add Normals' required when not using 'Fixed Normals'!\n\nPlease\n"
 			+ "a) enable 'Add Normals' at the SkeletonRenderer/SkeletonAnimation component under 'Advanced' or\n"
 			+ "b) enable 'Fixed Normals' at the Material.\n";
-		public static readonly string kAddNormalsRequiredForURPShadowsMessage =
-			"\nWarning: 'Add Normals' required on URP shader to receive shadows!\n\nPlease\n"
-			+ "a) enable 'Add Normals' at the SkeletonRenderer/SkeletonAnimation component under 'Advanced' or\n"
-			+ "b) disable 'Receive Shadows' at the Material.\n";
 		public static readonly string kSolveTangentsMessage =
 			"\nWarning: 'Solve Tangents' required when using a Normal Map!\n\nPlease\n"
 			+ "a) enable 'Solve Tangents' at the SkeletonRenderer/SkeletonAnimation component under 'Advanced' or\n"
@@ -118,10 +118,6 @@ namespace Spine.Unity {
 				if (renderer.tintBlack == false && RequiresTintBlack(material)) {
 					isProblematic = true;
 					errorMessage += kTintBlackMessage;
-				}
-				if (IsURP3DMaterial(material) && !AreShadowsDisabled(material) && renderer.addNormals == false) {
-					isProblematic = true;
-					errorMessage += kAddNormalsRequiredForURPShadowsMessage;
 				}
 			}
 			return isProblematic;
@@ -181,7 +177,7 @@ namespace Spine.Unity {
 
 		public static bool IsColorSpaceSupported (Material material, ref string errorMessage) {
 			if (QualitySettings.activeColorSpace == ColorSpace.Linear) {
-				if (IsPMAMaterial(material)) {
+				if (IsPMATextureMaterial(material)) {
 					errorMessage += kPMANotSupportedLinearMessage;
 					return false;
 				}
@@ -204,7 +200,7 @@ namespace Spine.Unity {
 			}
 
 			bool isProblematic = false;
-			if (IsPMAMaterial(material)) {
+			if (IsPMATextureMaterial(material)) {
 				// 'sRGBTexture = true' generates incorrectly weighted mipmaps at PMA textures,
 				// causing white borders due to undesired custom weighting.
 				if (sRGBTexture && mipmapEnabled && colorSpace == ColorSpace.Gamma) {
@@ -242,25 +238,34 @@ namespace Spine.Unity {
 			return isProblematic;
 		}
 
-		public static void EnablePMAAtMaterial (Material material, bool enablePMA) {
+		public static void EnablePMATextureAtMaterial (Material material, bool enablePMATexture) {
 			if (material.HasProperty(STRAIGHT_ALPHA_PARAM_ID)) {
-				material.SetInt(STRAIGHT_ALPHA_PARAM_ID, enablePMA ? 0 : 1);
-				if (enablePMA)
+				material.SetInt(STRAIGHT_ALPHA_PARAM_ID, enablePMATexture ? 0 : 1);
+				if (enablePMATexture)
 					material.DisableKeyword(STRAIGHT_ALPHA_KEYWORD);
 				else
 					material.EnableKeyword(STRAIGHT_ALPHA_KEYWORD);
 			}
 			else {
-				if (enablePMA)
-					material.EnableKeyword(ALPHAPREMULTIPLY_ON_KEYWORD);
-				else
+				if (enablePMATexture) {
 					material.DisableKeyword(ALPHAPREMULTIPLY_ON_KEYWORD);
+					material.DisableKeyword(ALPHABLEND_ON_KEYWORD);
+					material.EnableKeyword(ALPHAPREMULTIPLY_VERTEX_ONLY_ON_KEYWORD);
+				}
+				else {
+					material.DisableKeyword(ALPHAPREMULTIPLY_ON_KEYWORD);
+					material.DisableKeyword(ALPHAPREMULTIPLY_VERTEX_ONLY_ON_KEYWORD);
+					material.EnableKeyword(ALPHABLEND_ON_KEYWORD);
+				}
 			}
 		}
 
-		static bool IsPMAMaterial (Material material) {
-			return (material.HasProperty(STRAIGHT_ALPHA_PARAM_ID) && material.GetInt(STRAIGHT_ALPHA_PARAM_ID) == 0) ||
-					material.IsKeywordEnabled(ALPHAPREMULTIPLY_ON_KEYWORD);
+		static bool IsPMATextureMaterial (Material material) {
+			bool usesAlphaPremultiplyKeyword = IsSpriteShader(material);
+			if (usesAlphaPremultiplyKeyword)
+				return material.IsKeywordEnabled(ALPHAPREMULTIPLY_ON_KEYWORD);
+			else
+				return material.HasProperty(STRAIGHT_ALPHA_PARAM_ID) && material.GetInt(STRAIGHT_ALPHA_PARAM_ID) == 0;
 		}
 
 		static bool IsURP3DMaterial (Material material) {
@@ -288,12 +293,16 @@ namespace Spine.Unity {
 					break;
 				}
 			}
-			bool isShaderWithMeshNormals =
-				material.shader.name.Contains("Spine/Sprite/Pixel Lit") ||
-				material.shader.name.Contains("Spine/Sprite/Vertex Lit") ||
-				material.shader.name.Contains("2D/Spine/Sprite") || // covers both URP and LWRP
-				material.shader.name.Contains("Pipeline/Spine/Sprite"); // covers both URP and LWRP
+			bool isShaderWithMeshNormals = IsSpriteShader(material);
 			return isShaderWithMeshNormals && !anyFixedNormalSet;
+		}
+
+		static bool IsSpriteShader (Material material) {
+			string shaderName = material.shader.name;
+			return shaderName.Contains("Spine/Sprite/Pixel Lit") ||
+				shaderName.Contains("Spine/Sprite/Vertex Lit") ||
+				shaderName.Contains("2D/Spine/Sprite") || // covers both URP and LWRP
+				shaderName.Contains("Pipeline/Spine/Sprite"); // covers both URP and LWRP
 		}
 
 		static bool RequiresTintBlack (Material material) {

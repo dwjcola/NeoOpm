@@ -9,15 +9,9 @@ using XLua;
 
 namespace ProHA
 {
-// [ExecuteInEditMode]
+ [ExecuteAlways]
     public class ListView : MonoBehaviour
     {
-        public enum ESelectType
-        {
-            Single,
-            Multiple
-        }
-
         public enum EFlowType
         {
             Horizontal,
@@ -27,21 +21,14 @@ namespace ProHA
         class ItemInfo
         {
             public ListViewItem item;
-            public bool isSelected;
         }
 
         [SerializeField] bool m_isVirtual; //是否为虚列表
 
-        //[SerializeField] 暂时不支持点击
-        ESelectType m_selectType; //选择类型
         [SerializeField]public EFlowType m_flowType; //滑动类型
 
         public RectOffset padding;
-        //[NonSerialized]
-        //public Corner m_StartCorner = Corner.UpperLeft;
-        //[NonSerialized]
-        //public TextAnchor m_ChildAlignment = TextAnchor.UpperCenter;
-        public Vector2 m_itemSize; //item大小
+        private Vector2 m_itemSize; //item大小
 
         public Vector2 spacing { get { return m_itemSpace; } }
         [SerializeField] Vector2 m_itemSpace; //item间距
@@ -61,9 +48,6 @@ namespace ProHA
         Action<LuaTable, LuaTable, object, int, PointerEventData> luaOnDragStartBack;
         Action<LuaTable, LuaTable, object, int, PointerEventData> luaOnDragEndBack;
         Action<int, ListViewItem> m_onItemRefresh; //用于刷新item UI
-        Action<int, bool> m_onItemValueChanged; //item是否选中的状态发生改变时调用
-        Action<ListViewItem> m_onItemClicked; //item被点击时调用
-        public Action onSelectedItemCleared;
 
         int m_rowCount, m_columnCount; //上下滑动时，列数固定。左右滑动时，行数固定
         Vector2 m_initialSize; //listview窗口大小，用于计算行列数
@@ -84,8 +68,6 @@ namespace ProHA
             get => m_isVirtual ? m_itemRealCount : m_itemList.Count;
             set
             {
-                //ResetPosition();
-                ClearAllSelectedItem();
                 if (m_isVirtual)
                 {
                     m_itemRealCount = value;
@@ -99,17 +81,6 @@ namespace ProHA
                             m_itemInfoList.Add(info);
                         }
                     }
-                    //else
-                    //{
-                    //    for (int i = m_itemRealCount; i < oldCount; i++)
-                    //    {
-                    //        if (m_itemInfoList[i].item != null)
-                    //        {
-                    //            RemoveItem(m_itemInfoList[i].item);
-                    //            m_itemInfoList[i].item = null;
-                    //        }
-                    //    }
-                    //}
                 }
                 else
                 {
@@ -130,8 +101,6 @@ namespace ProHA
 
         List<ListViewItem> m_itemList;
 
-        List<ListViewItem> m_selectedItemList;
-        // public List<ListViewItem> selectedItemList => m_selectedItemList;
         protected ListView()
         {
             if (padding == null)
@@ -147,7 +116,6 @@ namespace ProHA
             m_rectTransform.anchorMin = Vector2.up;
 
             m_itemList = new List<ListViewItem>();
-            m_selectedItemList = new List<ListViewItem>();
             m_itemInfoList = new List<ItemInfo>();
             m_scrollRect = m_rectTransform.GetComponentInParent<ScrollRect>();
             if (m_scrollRect == null)
@@ -161,14 +129,9 @@ namespace ProHA
                 UpdateBounds();
         }
 
-        public void Init(GameObject prefab, Action<int, ListViewItem> refresh, Action<int, bool> valueChanged,
-            Action<ListViewItem> clicked)
+        public void Init(GameObject prefab, Action<int, ListViewItem> refresh)
         {
-            if (prefab.GetComponent<ListViewItem>() == null)
-            {
-                Debug.LogError("ListView prefab dont have ListViewItem Component");
-                return;
-            }
+            prefab.GetOrAddComponent<ListViewItem>();
 
             itemPrefab = prefab;
 
@@ -176,16 +139,14 @@ namespace ProHA
                 m_pool.Clear();
             m_pool = new GameObjectPool(m_rectTransform, itemPrefab);
             m_onItemRefresh = refresh;
-            m_onItemValueChanged = valueChanged;
-            m_onItemClicked = clicked;
 
             GetLayoutAttribute();
         }
 
         #region LUA相关
 
-        public bool isInit = false;
-        public void InitListLua(LuaTable lua, IList mDatas, string updateBack, string ondragStart = "",
+        private bool isInit = false;
+        public void InitListLua(LuaTable lua, LuaTable datas, string updateBack, string ondragStart = "",
             string ondragBack = "", string ondragEnd = "")
         {
             isInit = true;
@@ -213,11 +174,8 @@ namespace ProHA
 
             m_onItemRefresh = LuaRefresh;
 
-            //m_onItemValueChanged = valueChanged;
-            //m_onItemClicked = clicked;
-
             GetLayoutAttribute();
-            UpdateData(mDatas);
+            UpdateData(datas.ToList());
         }
 
         public IList GetData()
@@ -246,10 +204,6 @@ namespace ProHA
             m_Datas = mDatas;
             itemCount = m_Datas.Count;
             if (isReposition) ResetPosition();
-            //for (int i = 0; i < m_Datas.Count; i++)
-            //{
-            //    Logger.Error("---0---" + ((LuaTable)m_Datas[i]).Get<int>("TaskId"));
-            //}
         }
         public void UpdateDataLua(LuaTable lua,IList mDatas, bool isReposition = true)
         {
@@ -258,26 +212,12 @@ namespace ProHA
         }
         public void InsertNewData(int index,object item )
         {
-            //for (int i = 0; i < m_Datas.Count; i++)
-            //{
-            //    Logger.Error("---0101---" + ((LuaTable)m_Datas[i]).Get<int>("TaskId"));
-            //}
             for (int i=0;i<m_itemList.Count;i++)
             {
                 m_itemList[i].ResetSizeDelta();
             }
             UpdateBounds();
-            //for (int i = 0; i < m_Datas.Count; i++)
-            //{
-            //    Logger.Error("---1---" + ((LuaTable)m_Datas[i]).Get<int>("TaskId"));
-            //}
             m_Datas.Insert(index, item);
-           
-            //for(int i=0;i< m_Datas.Count; i++)
-            //{
-            //    Logger.Error("---2---" + ((LuaTable)m_Datas[i]).Get<int>("TaskId"));
-            //}
-
             itemCount = m_Datas.Count;
         }
 
@@ -351,26 +291,6 @@ namespace ProHA
             }
         }
 
-        public void ClearAllSelectedItem()
-        {
-            if (m_isVirtual)
-            {
-                for (int i = m_startIndex; i < itemCount; i++)
-                    m_itemInfoList[i].isSelected = false;
-            }
-            else
-            {
-                for (int i = 0, count = m_selectedItemList.Count; i < count; i++)
-                {
-                    m_selectedItemList[i].isSelected = false;
-                    // OnValueChanged(item); 由于原始数据可能已经变化了，所以使用onSelectedItemCleared代替
-                }
-
-                m_selectedItemList.Clear();
-            }
-
-            onSelectedItemCleared?.Invoke();
-        }
 
         public ListViewItem AddItem()
         {
@@ -382,7 +302,7 @@ namespace ProHA
             ListViewItem item = go.GetOrAddComponent<ListViewItem>();
             item.sr = m_scrollRect;
             m_itemList.Add(item);
-            item.Init(m_selectType, OnValueChanged, m_onItemClicked, LuaOnDragStart, LuaOnDrag, LuaOnDragEnd);
+            item.Init(LuaOnDragStart, LuaOnDrag, LuaOnDragEnd);
             go.SetActive(true);
             SetBoundsDirty();
             return item;
@@ -390,12 +310,6 @@ namespace ProHA
 
         public void RemoveItem(ListViewItem item)
         {
-            if (item.isSelected)
-            {
-                item.isSelected = false;
-                OnValueChanged(item);
-            }
-
             m_pool.Put(item.gameObject);
             m_itemList.Remove(item);
             SetBoundsDirty();
@@ -417,10 +331,8 @@ namespace ProHA
             item.AddTweener(canvas.DOFade(0, 0.4f));
             tweener.onComplete = () =>
             {
-                //Logger.Error("remove---------------" + index + "____" +((LuaTable)m_Datas[index]).Get<int>("TaskId"));
                 m_Datas.RemoveAt(index);
                 RemoveItem(index);
-                //m_isBoundsDirty = false;
             };
             
         }
@@ -579,11 +491,10 @@ namespace ProHA
                     needRender = true;
                 }
 
-                //更新位置，是否选中状态，以及数据
+                //更新位置，以及数据
                 if (isForceRender || needRender)
                 {
                     info.item.transform.localPosition = CalculatePosition(i);
-                    info.item.isSelected = info.isSelected;
                     m_onItemRefresh?.Invoke(i, info.item);
                 }
             }
@@ -598,20 +509,6 @@ namespace ProHA
                 return 0;
             position -= m_itemSize[moveAxis];
             return (Mathf.FloorToInt(position / (m_itemSize[moveAxis] + m_itemSpace[moveAxis])) + 1) * (moveAxis ==0? m_rowCount : m_columnCount);
-            //if (m_flowType == EFlowType.Horizontal)
-            //{
-            //    position = -position;
-            //    if (position < m_itemSize.x) return 0;
-
-            //    position -= m_itemSize.x;
-            //    return (Mathf.FloorToInt(position / (m_itemSize.x + m_itemSpace.x)) + 1) * m_rowCount;
-            //}
-            //else
-            //{
-            //    if (position < m_itemSize.y) return 0;
-            //    position -= m_itemSize.y;
-            //    return (Mathf.FloorToInt(position / (m_itemSize.y + m_itemSpace.y)) + 1) * m_columnCount;
-            //}
         }
 
         public void SetVirtual()
@@ -631,7 +528,7 @@ namespace ProHA
         void GetLayoutAttribute()
         {
             if(m_itemSize==Vector2.zero)
-                m_itemSize = itemPrefab.GetComponent<RectTransform>().rect.size;
+                 m_itemSize = itemPrefab.GetComponent<RectTransform>().rect.size;
             m_initialSize = m_rectTransform.parent.GetComponent<RectTransform>().rect.size; //Viewport Size 
 
             //计算行或列
@@ -654,105 +551,16 @@ namespace ProHA
             }
         }
 
-        void OnValueChanged(ListViewItem item)
-        {
-            if (m_isVirtual)
-            {
-                if (item.isSelected)
-                {
-                    if (m_selectType == ESelectType.Single)
-                    {
-                        for (int i = 0; i < itemCount; i++)
-                        {
-                            //找到对应项，设置为选中
-                            if (m_itemInfoList[i].item == item)
-                            {
-                                m_itemInfoList[i].isSelected = true;
-                                m_onItemValueChanged?.Invoke(i, true);
-                                continue;
-                            }
-
-                            //取消之前的选中状态
-                            if (m_itemInfoList[i].isSelected)
-                            {
-                                m_itemInfoList[i].isSelected = false;
-                                if (m_itemInfoList[i].item != null)
-                                    m_itemInfoList[i].item.isSelected = false;
-                                m_onItemValueChanged?.Invoke(i, false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        //找到对应项，设置为选中
-                        for (int i = m_startIndex; i < itemCount; i++)
-                        {
-                            if (m_itemInfoList[i].item == item)
-                            {
-                                m_itemInfoList[i].isSelected = true;
-                                m_onItemValueChanged?.Invoke(i, true);
-                                break;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    //找到对应项，设置为未选中
-                    for (int i = m_startIndex; i < itemCount; i++)
-                    {
-                        if (m_itemInfoList[i].item == item)
-                        {
-                            m_itemInfoList[i].isSelected = false;
-                            m_onItemValueChanged?.Invoke(i, false);
-                            break;
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (item.isSelected)
-                {
-                    if (m_selectType == ESelectType.Single)
-                    {
-                        if (m_selectedItemList.Count > 0)
-                        {
-                            //取消之前的选中状态
-                            m_selectedItemList[0].isSelected = false;
-                            int lastSelectedIndex = m_itemList.IndexOf(m_selectedItemList[0]);
-                            m_onItemValueChanged?.Invoke(lastSelectedIndex, false);
-                            m_selectedItemList.Clear();
-                        }
-
-                        m_selectedItemList.Add(item);
-                    }
-                    else
-                        m_selectedItemList.Add(item);
-                }
-                else
-                {
-                    m_selectedItemList.Remove(item);
-                }
-
-                int index = m_itemList.IndexOf(item);
-                m_onItemValueChanged?.Invoke(index, item.isSelected);
-            }
-        }
 
         public void Clear()
         {
             m_pool?.Clear();
-
             m_itemList?.Clear();
-            m_selectedItemList?.Clear();
             m_itemInfoList?.Clear();
             isInit = false;
         }
         void OnDestroy()
         {
-            // foreach (var item in m_itemList)
-            // item.RemoveOnClickedHandle(OnValueChanged);
            Clear();
         }
         //根据item下标计算所在位置
@@ -776,10 +584,19 @@ namespace ProHA
             return new Vector2(x, -y);
         }
 
-        [ContextMenu("ResetPosition")]
-        public void ResetUIPosition()
+  
+        [ContextMenu("PreView")]
+        public void PreView()
         {
-            UpdateData(GetData());
+            int count = transform.childCount;
+            m_itemList.Clear();
+            for (int i = 0; i < count; i++)
+            {
+                ListViewItem item = transform.GetChild(i).gameObject.GetOrAddComponent<ListViewItem>();
+                m_itemList.Add(item);
+            }
+            GetLayoutAttribute();
+            UpdateBounds();
         }
     }
 }

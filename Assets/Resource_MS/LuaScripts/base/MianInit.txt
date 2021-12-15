@@ -1,0 +1,5 @@
+
+
+require("InitBase")
+
+require_path("InitBattle","battle/InitBattle")

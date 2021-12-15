@@ -194,6 +194,14 @@ namespace ProHA
             get;
             private set;
         }
+
+        private static CSCallLua callLuaCom;
+        public static CSCallLua CallLuaCom { 
+            get => callLuaCom;
+            set => callLuaCom = value; 
+        }
+
+      
         internal static void InitBuiltinComponents()
         {
             Base = UnityGameFramework.Runtime.GameEntry.GetComponent<BaseComponent>();
@@ -216,6 +224,8 @@ namespace ProHA
             //Sound = UnityGameFramework.Runtime.GameEntry.GetComponent<SoundComponent>();
             UI = UnityGameFramework.Runtime.GameEntry.GetComponent<UIComponent>();
             WebRequest = UnityGameFramework.Runtime.GameEntry.GetComponent<WebRequestComponent>();
+
+            CallLuaCom = UI.gameObject.GetOrAddComponent<CSCallLua>();
         }
     }
     public class GameEntryBuiltin : MonoBehaviour

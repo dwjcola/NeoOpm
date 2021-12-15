@@ -1,0 +1,203 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: hud
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 0
+      compressionQuality: 0
+      maxTextureSize: 0
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: a61c18b212b11684dbee9de36f0157c6, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f3ecc110d2dc7c04fbcbf3cad0b5c0a3, type: 3}
+  - {fileID: 21300000, guid: 33ddcc20fe4925e459c729e6a8589c5f, type: 3}
+  - {fileID: 21300000, guid: ffacc730f17536444adb5d7aaa4fb3c9, type: 3}
+  - {fileID: 21300000, guid: 4d56697082404ea43bb3cb70921b9a01, type: 3}
+  - {fileID: 21300000, guid: b4e32980a1fad9d4b8fdf58d07ef3f84, type: 3}
+  - {fileID: 21300000, guid: 212185d084fd7e54c9638038d7c7631c, type: 3}
+  - {fileID: 21300000, guid: 277f4a7149f981c40bc2105d312bcc7d, type: 3}
+  - {fileID: 21300000, guid: 83697c816cf1ccb4fb7f7d7e94d22d9f, type: 3}
+  - {fileID: 21300000, guid: 3e58d6f108c793947a86c8269a08bdf8, type: 3}
+  - {fileID: 21300000, guid: 4b1bfbf1cab028146bfc8b177fbe9b34, type: 3}
+  - {fileID: 21300000, guid: 844f7b223d9fd6942854a12803984b71, type: 3}
+  - {fileID: 21300000, guid: 0223c8a256403574e93accf953bc954c, type: 3}
+  - {fileID: 21300000, guid: 501892b2d1b892643a98a6b3bd7b6648, type: 3}
+  - {fileID: 21300000, guid: 47491be2af98c1b4db2029f359512a51, type: 3}
+  - {fileID: 21300000, guid: 0ca9e0f2393acca41bdb765a9e6257ac, type: 3}
+  - {fileID: 21300000, guid: d38f5c332f718994da8cfa4403acc80d, type: 3}
+  - {fileID: 21300000, guid: 4b71f7430394db449b31550065424828, type: 3}
+  - {fileID: 21300000, guid: 353ccc43562ea9049b133bde6ba7166e, type: 3}
+  - {fileID: 21300000, guid: d7d59393f4ea6ed4cbec34b36a307781, type: 3}
+  - {fileID: 21300000, guid: 351515d3e40956445944c7f0f2d296c7, type: 3}
+  - {fileID: 21300000, guid: e8addcd36762f5b49b0008d9120975a7, type: 3}
+  - {fileID: 21300000, guid: abf1ee644d48ce346a6d606711d95c76, type: 3}
+  - {fileID: 21300000, guid: 84ffeca4c35aaf14fbeb53423210ad3d, type: 3}
+  - {fileID: 21300000, guid: 07355da48600ad74fbc8667c87e5064b, type: 3}
+  - {fileID: 21300000, guid: 8a264db4604c2734593580ccfbb2e21a, type: 3}
+  - {fileID: 21300000, guid: e1bd58c4c209613448fd52323c686452, type: 3}
+  - {fileID: 21300000, guid: 149defd41d4f2d14fa12643748494803, type: 3}
+  - {fileID: 21300000, guid: c03b105520b20424c9238f38955fe6ec, type: 3}
+  - {fileID: 21300000, guid: ed445f552a17d6c4ab63a02676b0f1a8, type: 3}
+  - {fileID: 21300000, guid: b5419cc530e812d47914ed48d54a86f4, type: 3}
+  - {fileID: 21300000, guid: 502c3f467ff9d7b4bb318671ec8e29f0, type: 3}
+  - {fileID: 21300000, guid: a941e48633d8adc4084c0300aa0f8b08, type: 3}
+  - {fileID: 21300000, guid: dd87bd96ce1d5a647baec1dd61a9803a, type: 3}
+  - {fileID: 21300000, guid: 1c27b7a6aa3e7c748a84ebe74f0f5342, type: 3}
+  - {fileID: 21300000, guid: cf9fe9c6eca676d4e891f548588fc865, type: 3}
+  - {fileID: 21300000, guid: 6e2f59e629eb81945aaccc8abfeef266, type: 3}
+  - {fileID: 21300000, guid: cb27fa075e713924c90d8a0c3844e22d, type: 3}
+  - {fileID: 21300000, guid: 7c793167057e82c48948458276f77388, type: 3}
+  - {fileID: 21300000, guid: 636491871eaf2f14882e08aa790eb725, type: 3}
+  - {fileID: 21300000, guid: 0dff3b97f35adf2468d34b50c42f1167, type: 3}
+  - {fileID: 21300000, guid: 24673ca7f6ab1c04094d00b80a39eb81, type: 3}
+  - {fileID: 21300000, guid: c05cb248f16cbd44c89b932ac99442a6, type: 3}
+  - {fileID: 21300000, guid: e807164867ca4144484936d8cc8c4c0d, type: 3}
+  - {fileID: 21300000, guid: 493fd1c841f252844a43aa2b0ce2392a, type: 3}
+  - {fileID: 21300000, guid: f8625be808d6f93418d1cb82ea6d8741, type: 3}
+  - {fileID: 21300000, guid: 036a0f49631c4e24f9effa8eb631dccd, type: 3}
+  - {fileID: 21300000, guid: e43a3559f6d6be144bc05f7b28090499, type: 3}
+  - {fileID: 21300000, guid: 6f743a69d5efe334ea4ad161b1919652, type: 3}
+  - {fileID: 21300000, guid: b8da9a79d20ae4b43bddb4fd91be5bb3, type: 3}
+  - {fileID: 21300000, guid: f0936a99e7b2a414a916ea98812d5bdf, type: 3}
+  - {fileID: 21300000, guid: 008b9cf9e8135b54cb218183cb8a235a, type: 3}
+  - {fileID: 21300000, guid: 97f4584a10913154b9bb6e3361b96cb9, type: 3}
+  - {fileID: 21300000, guid: 917fdd4afd993fe4286bbff325dfbd45, type: 3}
+  - {fileID: 21300000, guid: 31c6db9a59482714c824dcefba011655, type: 3}
+  - {fileID: 21300000, guid: 082c97caf30d6c1449cb19a7dc038025, type: 3}
+  - {fileID: 21300000, guid: 3167e6da601c5d5488b0ebf732e8b082, type: 3}
+  - {fileID: 21300000, guid: d5fd251b848706b4fa1180c3fcb9473d, type: 3}
+  - {fileID: 21300000, guid: 53b1bd2bba75f4640a7c73286a51823c, type: 3}
+  - {fileID: 21300000, guid: 88c4876b895e00441874d0ec470fa15c, type: 3}
+  - {fileID: 21300000, guid: b7763f7bf4f626e41bc4b09a86e46db6, type: 3}
+  - {fileID: 21300000, guid: 46af598bb089ff64b8fe6b73a86ffe7a, type: 3}
+  - {fileID: 21300000, guid: 4c99669b8478a0941816b93d7ff15b6c, type: 3}
+  - {fileID: 21300000, guid: af43e1bbc598c484989419024bfc9461, type: 3}
+  - {fileID: 21300000, guid: 07d2e91ce17a78448aed63fdbe1c47ef, type: 3}
+  - {fileID: 21300000, guid: 76ef852ccfb44324c98d13c5891ec9ea, type: 3}
+  - {fileID: 21300000, guid: 4d0d73cd72220ba468bf826f2390bdaa, type: 3}
+  - {fileID: 21300000, guid: 45ff880e2cd4cb74b912cebeed9e6459, type: 3}
+  - {fileID: 21300000, guid: f01452fec35224f4092f81c4259ffc16, type: 3}
+  - {fileID: 21300000, guid: d70e911f27eaf5e43a017d53cb586ea1, type: 3}
+  - {fileID: 21300000, guid: 7fc8fe2f335dac043baa7c356effe384, type: 3}
+  - {fileID: 21300000, guid: e1f1315f69f99e542a941673db9c492c, type: 3}
+  - {fileID: 21300000, guid: c220127f56fb97c4497d8d8ff86bbfc0, type: 3}
+  - {fileID: 21300000, guid: 7a5b71ef0b451b24d801166c533f27c6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - "_0036_\u901A\u7528_\u63D0\u793A_\u6700\u65B001"
+  - "_0056_\u901A\u7528_\u886C\u5E95_\u5148\u624B\u503C_03"
+  - Img_ActivityBg_Hud
+  - "_0010_\u901A\u7528_\u56FE\u6807_\u9501\u5B9A"
+  - "_0047_\u5192\u9669_\u88C5\u9970_\u663E\u793A\u5C4F_01"
+  - Icon_Hero_Hud
+  - Panel_FunctionNameBg2_Hud
+  - Icon_Adventure4_Hud
+  - Icon_UpStage_Hud
+  - Panel_MainProcessPoint1Off_Hud
+  - Icon_Adventure3_Hud
+  - Panel_MainProcessPoint4_Hud
+  - "_0055_\u901A\u7528_\u886C\u5E95_\u5148\u624B\u503C_02"
+  - Panel_FunctionNameBg_Hud
+  - Panel_MainProcessPoint3_Hud
+  - Icon_Adventure2_Hud
+  - Panel_MainProcessBattle4_Hud
+  - img_IdleReward5_Hud
+  - Icon_Chat_Hud
+  - Panel_MainProcessMask_Hud
+  - "_0019_\u4E3B\u754C\u9762_\u56FE\u6807_\u56FE\u9274"
+  - Panel_MainProcessPoint4Off_Hud
+  - "_0054_\u901A\u7528_\u56FE\u6807_\u5148\u624B\u503C_01"
+  - "_0042_\u901A\u7528_\u9053\u5177\u56FE\u6807_\u7ECF\u9A8C"
+  - "_0005_\u901A\u7528_\u63D0\u793A_\u5C0F\u7EA2\u70B9"
+  - Panel_MainProcessPoint2_Hud
+  - Icon_Crystal_Hud
+  - "_0022_\u901A\u7528_\u886C\u5E95_\u4E3B\u529F\u80FD03"
+  - Panel_MainProcessBg_Hud
+  - Icon_Challenge_Hud
+  - Panel_MainProcessPoint5_Hud
+  - img_Other1_Hud
+  - "_0037_\u901A\u7528_\u63D0\u793A_\u6700\u65B002"
+  - "_0021_\u901A\u7528_\u886C\u5E95_\u4E3B\u529F\u80FD02"
+  - Icon_Bag_Hud
+  - "_0041_\u901A\u7528_\u6309\u952E_\u6DFB\u52A0_01"
+  - img_IdleReward3_Hud
+  - "_0035_\u901A\u7528_\u5E8F\u5217\u63D0\u793A_\u7FFB\u9875\u70B902"
+  - Panel_PlayerLevelBg_Hud
+  - Icon_Quest_Hud
+  - Icon_Mail_Hud
+  - Icon_Guild_Hud
+  - "_0046_\u5192\u9669_\u88C5\u9970_\u663E\u793A\u5C4F_03"
+  - "_0043_\u901A\u7528_\u9053\u5177\u56FE\u6807_\u7816\u77F3"
+  - Panel_MainProcessPoint1_Hud
+  - Panel_ChatBg_Hud
+  - Icon_Friend_Hud
+  - "_0025_\u901A\u7528_\u886C\u5E95_\u4E3B\u529F\u80FD01"
+  - "_0020_\u4E3B\u754C\u9762_\u56FE\u6807_\u699C\u5355"
+  - Panel_PlayerIconGrid1_Hud
+  - "_0040_\u901A\u7528_\u6309\u952E_\u6DFB\u52A0_02"
+  - "_0045_\u901A\u7528_\u8D27\u5E01\u680F_\u886C\u5E95"
+  - Icon_Chat2_Hud
+  - "_0062_\u5192\u9669_\u886C\u5E95_\u5934\u50CF_02"
+  - "_0044_\u901A\u7528_\u9053\u5177\u56FE\u6807_\u91D1\u5E01"
+  - img_IdleReward4_Hud
+  - Icon_Adventure_Hud
+  - Panel_PlayerIconGrid3_Hud
+  - Panel_MainProcessPoint2Off_Hud
+  - Panel_MainProcessCurrent_Hud
+  - img_IdleReward1_Hud
+  - "_0058_\u5192\u9669_\u52A8\u753B_\u6253\u6597_05"
+  - Img_ActivityImg1_Hud
+  - Panel_PlayerNameBg_Hud
+  - Panel_MainProcessBattle1_Hud
+  - Panel_Bg_Hud
+  - Panel_PlayerIconGrid2_Hud
+  - img_IdleReward2_Hud
+  - "_0063_\u5192\u9669_\u886C\u5E95_\u5934\u50CF_01"
+  - "_0048_\u5192\u9669_\u88C5\u9970_\u663E\u793A\u5C4F_02"
+  - "_0034_\u901A\u7528_\u5E8F\u5217\u63D0\u793A_\u7FFB\u9875\u70B901"
+  - Icon_Gacha_Hud
+  - "_0018_\u4E3B\u754C\u9762_\u56FE\u6807_\u5546\u57CE"
+  m_RenderDataMap: {}
+  m_Tag: hud
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

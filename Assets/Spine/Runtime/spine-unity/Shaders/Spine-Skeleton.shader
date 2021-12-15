@@ -1,6 +1,5 @@
 Shader "Spine/Skeleton" {
 	Properties {
-	    [HDR]_Color ("Color", Color) = (1.0, 1.0, 1.0, 1.0)
 		_Cutoff ("Shadow alpha cutoff", Range(0,1)) = 0.1
 		[NoScaleOffset] _MainTex ("Main Texture", 2D) = "black" {}
 		[Toggle(_STRAIGHT_ALPHA_INPUT)] _StraightAlphaInput("Straight Alpha Texture", Int) = 0
@@ -40,7 +39,7 @@ Shader "Spine/Skeleton" {
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
-			half4 _Color;
+			#include "CGIncludes/Spine-Common.cginc"
 			sampler2D _MainTex;
 
 			struct VertexInput {
@@ -59,7 +58,7 @@ Shader "Spine/Skeleton" {
 				VertexOutput o;
 				o.pos = UnityObjectToClipPos(v.vertex);
 				o.uv = v.uv;
-				o.vertexColor = v.vertexColor;
+				o.vertexColor = PMAGammaToTargetSpace(v.vertexColor);
 				return o;
 			}
 
@@ -70,7 +69,7 @@ Shader "Spine/Skeleton" {
 				texColor.rgb *= texColor.a;
 				#endif
 
-				return (texColor * i.vertexColor * _Color);
+				return (texColor * i.vertexColor);
 			}
 			ENDCG
 		}

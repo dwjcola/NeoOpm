@@ -17,16 +17,13 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: cda2f3469885df14d906a2186000e791
   m_SerializeEntries:
-  - m_GUID: ef8189a68a74bec4eba582e65fb98dbd
-    m_Address: Assets/Spine/Runtime/spine-unity/Shaders
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - 
   - m_GUID: 20230787feda32245a93cdb66ea83ccd
     m_Address: Assets/Resource_MS/Shader
     m_ReadOnly: 0
     m_SerializedLabels:
     - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
   m_SchemaSet:

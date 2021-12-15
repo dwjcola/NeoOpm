@@ -41,10 +41,14 @@
 #define BUILT_IN_SPRITE_MASK_COMPONENT
 #endif
 
-using UnityEditor;
+#if UNITY_2020_2_OR_NEWER
+#define HAS_ON_POSTPROCESS_PREFAB
+#endif
+
 using System.Collections.Generic;
-using UnityEngine;
 using System.Reflection;
+using UnityEditor;
+using UnityEngine;
 
 namespace Spine.Unity.Editor {
 	using Event = UnityEngine.Event;
@@ -54,12 +58,14 @@ namespace Spine.Unity.Editor {
 	[CanEditMultipleObjects]
 	public class SkeletonRendererInspector : UnityEditor.Editor {
 		public static bool advancedFoldout;
+		protected bool loadingFailed = false;
 
 		const string SeparatorSlotNamesFieldName = "separatorSlotNames";
 
 		protected SerializedProperty skeletonDataAsset, initialSkinName;
 		protected SerializedProperty initialFlipX, initialFlipY;
-		protected SerializedProperty updateWhenInvisible, singleSubmesh, separatorSlotNames, clearStateOnDisable, immutableTriangles, fixDrawOrder;
+		protected SerializedProperty updateWhenInvisible, singleSubmesh, separatorSlotNames, clearStateOnDisable,
+			immutableTriangles, fixDrawOrder, fixPrefabOverrideViaMeshFilter;
 		protected SerializedProperty normals, tangents, zSpacing, pmaVertexColors, tintBlack; // MeshGenerator settings
 		protected SerializedProperty maskInteraction;
 		protected SerializedProperty maskMaterialsNone, maskMaterialsInside, maskMaterialsOutside;
@@ -74,7 +80,8 @@ namespace Spine.Unity.Editor {
 		protected bool deleteOutsideMaskMaterialsQueued = false;
 
 		protected GUIContent SkeletonDataAssetLabel, SkeletonUtilityButtonContent;
-		protected GUIContent PMAVertexColorsLabel, ClearStateOnDisableLabel, ZSpacingLabel, ImmubleTrianglesLabel, TintBlackLabel, UpdateWhenInvisibleLabel, SingleSubmeshLabel, FixDrawOrderLabel;
+		protected GUIContent PMAVertexColorsLabel, ClearStateOnDisableLabel, ZSpacingLabel, ImmubleTrianglesLabel,
+			TintBlackLabel, UpdateWhenInvisibleLabel, SingleSubmeshLabel, FixDrawOrderLabel, FixPrefabOverrideViaMeshFilterLabel;
 		protected GUIContent NormalsLabel, TangentsLabel, MaskInteractionLabel;
 		protected GUIContent MaskMaterialsHeadingLabel, MaskMaterialsNoneLabel, MaskMaterialsInsideLabel, MaskMaterialsOutsideLabel;
 		protected GUIContent SetMaterialButtonLabel, ClearMaterialButtonLabel, DeleteMaterialButtonLabel;
@@ -107,6 +114,7 @@ namespace Spine.Unity.Editor {
 			isInspectingPrefab = (PrefabUtility.GetPrefabType(target) == PrefabType.Prefab);
 #endif
 			SpineEditorUtilities.ConfirmInitialization();
+			loadingFailed = false;
 
 			// Labels
 			SkeletonDataAssetLabel = new GUIContent("SkeletonData Asset", Icons.spine);
@@ -121,6 +129,7 @@ namespace Spine.Unity.Editor {
 			SingleSubmeshLabel = new GUIContent("Use Single Submesh", "Simplifies submesh generation by assuming you are only using one Material and need only one submesh. This is will disable multiple materials, render separation, and custom slot materials.");
 			UpdateWhenInvisibleLabel = new GUIContent("Update When Invisible", "Update mode used when the MeshRenderer becomes invisible. Update mode is automatically reset to UpdateMode.FullUpdate when the mesh becomes visible again.");
 			FixDrawOrderLabel = new GUIContent("Fix Draw Order", "Applies only when 3+ submeshes are used (2+ materials with alternating order, e.g. \"A B A\"). If true, GPU instancing will be disabled at all materials and MaterialPropertyBlocks are assigned at each material to prevent aggressive batching of submeshes by e.g. the LWRP renderer, leading to incorrect draw order (e.g. \"A1 B A2\" changed to \"A1A2 B\"). You can disable this parameter when everything is drawn correctly to save the additional performance cost. Note: the GPU instancing setting will remain disabled at affected material assets after exiting play mode, you have to enable it manually if you accidentally enabled this parameter.");
+			FixPrefabOverrideViaMeshFilterLabel = new GUIContent("Fix Prefab Overr. MeshFilter", "Fixes the prefab always being marked as changed (sets the MeshFilter's hide flags to DontSaveInEditor), but at the cost of references to the MeshFilter by other components being lost.");
 			MaskInteractionLabel = new GUIContent("Mask Interaction", "SkeletonRenderer's interaction with a Sprite Mask.");
 			MaskMaterialsHeadingLabel = new GUIContent("Mask Interaction Materials", "Materials used for different interaction with sprite masks.");
 			MaskMaterialsNoneLabel = new GUIContent("Normal Materials", "Normal materials used when Mask Interaction is set to None.");
@@ -144,6 +153,7 @@ namespace Spine.Unity.Editor {
 			updateWhenInvisible = so.FindProperty("updateWhenInvisible");
 			singleSubmesh = so.FindProperty("singleSubmesh");
 			fixDrawOrder = so.FindProperty("fixDrawOrder");
+			fixPrefabOverrideViaMeshFilter = so.FindProperty("fixPrefabOverrideViaMeshFilter");
 			maskInteraction = so.FindProperty("maskInteraction");
 			maskMaterialsNone = so.FindProperty("maskMaterials.materialsMaskDisabled");
 			maskMaterialsInside = so.FindProperty("maskMaterials.materialsInsideMask");
@@ -160,7 +170,14 @@ namespace Spine.Unity.Editor {
 
 		public void OnSceneGUI () {
 			var skeletonRenderer = (SkeletonRenderer)target;
+			if (loadingFailed)
+				return;
+
 			var skeleton = skeletonRenderer.Skeleton;
+			if (skeleton == null) {
+				loadingFailed = true;
+				return;
+			}
 			var transform = skeletonRenderer.transform;
 			if (skeleton == null) return;
 
@@ -199,7 +216,7 @@ namespace Spine.Unity.Editor {
 					}
 				}
 
-				#if BUILT_IN_SPRITE_MASK_COMPONENT
+#if BUILT_IN_SPRITE_MASK_COMPONENT
 				if (setMaskNoneMaterialsQueued) {
 					setMaskNoneMaterialsQueued = false;
 					foreach (var c in targets)
@@ -226,7 +243,7 @@ namespace Spine.Unity.Editor {
 					foreach (var c in targets)
 						EditorDeleteMaskMaterials(c as SkeletonRenderer, SpriteMaskInteraction.VisibleOutsideMask);
 				}
-				#endif
+#endif
 
 #if NO_PREFAB_MESH
 				if (isInspectingPrefab) {
@@ -325,12 +342,17 @@ namespace Spine.Unity.Editor {
 							if (updateWhenInvisible != null) EditorGUILayout.PropertyField(updateWhenInvisible, UpdateWhenInvisibleLabel);
 
 							if (singleSubmesh != null) EditorGUILayout.PropertyField(singleSubmesh, SingleSubmeshLabel);
-							#if PER_MATERIAL_PROPERTY_BLOCKS
+#if PER_MATERIAL_PROPERTY_BLOCKS
 							if (fixDrawOrder != null) EditorGUILayout.PropertyField(fixDrawOrder, FixDrawOrderLabel);
-							#endif
+#endif
 							if (immutableTriangles != null) EditorGUILayout.PropertyField(immutableTriangles, ImmubleTrianglesLabel);
 							EditorGUILayout.PropertyField(clearStateOnDisable, ClearStateOnDisableLabel);
 							EditorGUILayout.Space();
+
+#if HAS_ON_POSTPROCESS_PREFAB
+							if (fixPrefabOverrideViaMeshFilter != null) EditorGUILayout.PropertyField(fixPrefabOverrideViaMeshFilter, FixPrefabOverrideViaMeshFilterLabel);
+							EditorGUILayout.Space();
+#endif
 						}
 
 						SeparatorsField(separatorSlotNames);
@@ -352,7 +374,7 @@ namespace Spine.Unity.Editor {
 							if (tangents != null) EditorGUILayout.PropertyField(tangents, TangentsLabel);
 						}
 
-						#if BUILT_IN_SPRITE_MASK_COMPONENT
+#if BUILT_IN_SPRITE_MASK_COMPONENT
 						EditorGUILayout.Space();
 						if (maskMaterialsNone.arraySize > 0 || maskMaterialsInside.arraySize > 0 || maskMaterialsOutside.arraySize > 0) {
 							EditorGUILayout.LabelField(SpineInspectorUtility.TempContent("Mask Interaction Materials", SpineInspectorUtility.UnityIcon<SpriteMask>()), EditorStyles.boldLabel);
@@ -367,7 +389,7 @@ namespace Spine.Unity.Editor {
 							MaskMaterialsEditingField(ref setOutsideMaskMaterialsQueued, ref deleteOutsideMaskMaterialsQueued, maskMaterialsOutside, MaskMaterialsOutsideLabel,
 														differentMaskModesSelected, allowDelete : true, isActiveMaterial: activeMaskInteractionValue == (int)SpriteMaskInteraction.VisibleOutsideMask);
 						}
-						#endif
+#endif
 
 						EditorGUILayout.Space();
 
@@ -399,11 +421,11 @@ namespace Spine.Unity.Editor {
 			}
 		}
 
-		protected void SkeletonRootMotionParameter() {
+		protected void SkeletonRootMotionParameter () {
 			SkeletonRootMotionParameter(targets);
 		}
 
-		public static void SkeletonRootMotionParameter(Object[] targets) {
+		public static void SkeletonRootMotionParameter (Object[] targets) {
 			int rootMotionComponentCount = 0;
 			foreach (var t in targets) {
 				var component = t as Component;
@@ -432,7 +454,7 @@ namespace Spine.Unity.Editor {
 						foreach (var t in targets) {
 							var component = t as Component;
 							var rootMotionComponent = component.GetComponent<SkeletonRootMotion>();
-							if (rootMotionComponent  != null) {
+							if (rootMotionComponent != null) {
 								DestroyImmediate(rootMotionComponent);
 							}
 						}
@@ -460,7 +482,9 @@ namespace Spine.Unity.Editor {
 				int lastSlot = skeleton.Slots.Count - 1;
 				if (skeleton != null) {
 					for (int i = 0, n = separatorSlotNames.arraySize; i < n; i++) {
-						int index = skeleton.FindSlotIndex(separatorSlotNames.GetArrayElementAtIndex(i).stringValue);
+						string slotName = separatorSlotNames.GetArrayElementAtIndex(i).stringValue;
+						SlotData slot = skeleton.Data.FindSlot(slotName);
+						int index = slot != null ? slot.Index : -1;
 						if (index == 0 || index == lastSlot) {
 							hasTerminalSlot = true;
 							break;
@@ -488,7 +512,7 @@ namespace Spine.Unity.Editor {
 			}
 		}
 
-		public void MaskMaterialsEditingField(ref bool wasSetRequested, ref bool wasDeleteRequested,
+		public void MaskMaterialsEditingField (ref bool wasSetRequested, ref bool wasDeleteRequested,
 													SerializedProperty maskMaterials, GUIContent label,
 													bool differentMaskModesSelected, bool allowDelete, bool isActiveMaterial) {
 			using (new EditorGUILayout.HorizontalScope()) {
@@ -509,8 +533,7 @@ namespace Spine.Unity.Editor {
 				{
 					if (GUILayout.Button(ClearMaterialButtonLabel, allowDelete ? EditorStyles.miniButtonMid : EditorStyles.miniButtonRight, GUILayout.Width(46f))) {
 						maskMaterials.ClearArray();
-					}
-					else if (allowDelete && GUILayout.Button(DeleteMaterialButtonLabel, EditorStyles.miniButtonRight, GUILayout.Width(46f))) {
+					} else if (allowDelete && GUILayout.Button(DeleteMaterialButtonLabel, EditorStyles.miniButtonRight, GUILayout.Width(46f))) {
 						wasDeleteRequested = true;
 					}
 					if (!allowDelete)
@@ -520,7 +543,7 @@ namespace Spine.Unity.Editor {
 			}
 		}
 
-		void HandleSkinChange() {
+		void HandleSkinChange () {
 			if (!Application.isPlaying && Event.current.type == EventType.Layout && !initialSkinName.hasMultipleDifferentValues) {
 				bool mismatchDetected = false;
 				string newSkinName = initialSkinName.stringValue;
@@ -530,7 +553,7 @@ namespace Spine.Unity.Editor {
 
 				if (mismatchDetected) {
 					mismatchDetected = false;
-					SceneView.RepaintAll();
+					UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
 				}
 			}
 		}
@@ -552,9 +575,9 @@ namespace Spine.Unity.Editor {
 				// solution or in a separate commit. The current solution does not repaint the Game view because
 				// it is first applying values and in the next editor pass is calling this skin-changing method.
 				if (skeletonRenderer is SkeletonAnimation)
-					((SkeletonAnimation) skeletonRenderer).Update(0f);
+					((SkeletonAnimation)skeletonRenderer).Update(0f);
 				else if (skeletonRenderer is SkeletonMecanim)
-					((SkeletonMecanim) skeletonRenderer).Update();
+					((SkeletonMecanim)skeletonRenderer).Update();
 
 				skeletonRenderer.LateUpdate();
 				return true;
@@ -562,8 +585,8 @@ namespace Spine.Unity.Editor {
 			return false;
 		}
 
-		bool AreAnyMaskMaterialsMissing() {
-			#if BUILT_IN_SPRITE_MASK_COMPONENT
+		bool AreAnyMaskMaterialsMissing () {
+#if BUILT_IN_SPRITE_MASK_COMPONENT
 			foreach (var o in targets) {
 				var component = (SkeletonRenderer)o;
 				if (!component.valid)
@@ -571,11 +594,11 @@ namespace Spine.Unity.Editor {
 				if (SpineMaskUtilities.AreMaskMaterialsMissing(component))
 					return true;
 			}
-			#endif
+#endif
 			return false;
 		}
 
-		#if BUILT_IN_SPRITE_MASK_COMPONENT
+#if BUILT_IN_SPRITE_MASK_COMPONENT
 		static void EditorSetMaskMaterials(SkeletonRenderer component, SpriteMaskInteraction maskType)
 		{
 			if (component == null) return;
@@ -588,6 +611,6 @@ namespace Spine.Unity.Editor {
 			if (!SpineEditorUtilities.SkeletonDataAssetIsValid(component.SkeletonDataAsset)) return;
 			SpineMaskUtilities.EditorDeleteMaskMaterials(component.maskMaterials, maskType);
 		}
-		#endif
+#endif
 	}
 }

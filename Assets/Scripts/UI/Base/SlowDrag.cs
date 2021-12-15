@@ -23,7 +23,7 @@ public class SlowDrag : MonoBehaviour
         if (newScrollRect == null)
             return;
         scrollRect = newScrollRect;
-        scrollRect.onValueChanged.RemoveAllListeners();
+        //scrollRect.onValueChanged.RemoveAllListeners();
         scrollRect.onValueChanged.AddListener((pos) =>
         {
             thisRect.anchoredPosition = newStartPos + scrollRect.content.anchoredPosition * moveRate;

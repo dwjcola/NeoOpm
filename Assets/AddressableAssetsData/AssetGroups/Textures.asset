@@ -17,20 +17,11 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 5075e5bd3e88d404783428332c5a7565
   m_SerializeEntries:
-  - m_GUID: b6bf7b146c8c12648999ab2665b6c738
-    m_Address: Assets/Resource_MS/Textures
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   - m_GUID: 02a99f8a400520d4b976dbc05f528c25
     m_Address: Assets/Resource_MS/UI/UITexture
     m_ReadOnly: 0
     m_SerializedLabels:
     - 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
   m_SchemaSet:

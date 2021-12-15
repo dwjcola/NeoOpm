@@ -31,9 +31,9 @@
 #define NEW_PREFAB_SYSTEM
 #endif
 
-using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
 
 namespace Spine.Unity.Editor {
 	using Event = UnityEngine.Event;
@@ -41,7 +41,8 @@ namespace Spine.Unity.Editor {
 
 	[CustomEditor(typeof(BoundingBoxFollowerGraphic))]
 	public class BoundingBoxFollowerGraphicInspector : UnityEditor.Editor {
-		SerializedProperty skeletonGraphic, slotName, isTrigger, clearStateOnDisable;
+		SerializedProperty skeletonGraphic, slotName,
+			isTrigger, usedByEffector, usedByComposite, clearStateOnDisable;
 		BoundingBoxFollowerGraphic follower;
 		bool rebuildRequired = false;
 		bool addBoneFollower = false;
@@ -60,17 +61,19 @@ namespace Spine.Unity.Editor {
 			skeletonGraphic = serializedObject.FindProperty("skeletonGraphic");
 			slotName = serializedObject.FindProperty("slotName");
 			isTrigger = serializedObject.FindProperty("isTrigger");
+			usedByEffector = serializedObject.FindProperty("usedByEffector");
+			usedByComposite = serializedObject.FindProperty("usedByComposite");
 			clearStateOnDisable = serializedObject.FindProperty("clearStateOnDisable");
 			follower = (BoundingBoxFollowerGraphic)target;
 		}
 
 		public override void OnInspectorGUI () {
 
-			#if !NEW_PREFAB_SYSTEM
+#if !NEW_PREFAB_SYSTEM
 			bool isInspectingPrefab = (PrefabUtility.GetPrefabType(target) == PrefabType.Prefab);
-			#else
+#else
 			bool isInspectingPrefab = false;
-			#endif
+#endif
 
 			// Note: when calling InitializeEditor() in OnEnable, it throws exception
 			// "SerializedObjectNotCreatableException: Object at index 0 is null".
@@ -109,27 +112,32 @@ namespace Spine.Unity.Editor {
 			if (EditorGUI.EndChangeCheck()) {
 				serializedObject.ApplyModifiedProperties();
 				InitializeEditor();
-				#if !NEW_PREFAB_SYSTEM
+#if !NEW_PREFAB_SYSTEM
 				if (!isInspectingPrefab)
 					rebuildRequired = true;
-				#endif
+#endif
 			}
 
 			using (new SpineInspectorUtility.LabelWidthScope(150f)) {
 				EditorGUI.BeginChangeCheck();
 				EditorGUILayout.PropertyField(isTrigger);
-				bool triggerChanged = EditorGUI.EndChangeCheck();
+				EditorGUILayout.PropertyField(usedByEffector);
+				EditorGUILayout.PropertyField(usedByComposite);
+				bool colliderParamChanged = EditorGUI.EndChangeCheck();
 
 				EditorGUI.BeginChangeCheck();
 				EditorGUILayout.PropertyField(clearStateOnDisable, new GUIContent(clearStateOnDisable.displayName, "Enable this if you are pooling your Spine GameObject"));
 				bool clearStateChanged = EditorGUI.EndChangeCheck();
 
-				if (clearStateChanged || triggerChanged) {
+				if (clearStateChanged || colliderParamChanged) {
 					serializedObject.ApplyModifiedProperties();
 					InitializeEditor();
-					if (triggerChanged)
-						foreach (var col in follower.colliderTable.Values)
+					if (colliderParamChanged)
+						foreach (var col in follower.colliderTable.Values) {
 							col.isTrigger = isTrigger.boolValue;
+							col.usedByEffector = usedByEffector.boolValue;
+							col.usedByComposite = usedByComposite.boolValue;
+						}
 				}
 			}
 
@@ -220,6 +228,8 @@ namespace Spine.Unity.Editor {
 			if (original != null) {
 				newFollower.slotName = original.slotName;
 				newFollower.isTrigger = original.isTrigger;
+				newFollower.usedByEffector = original.usedByEffector;
+				newFollower.usedByComposite = original.usedByComposite;
 				newFollower.clearStateOnDisable = original.clearStateOnDisable;
 			}
 			if (slotName != null)
@@ -240,10 +250,10 @@ namespace Spine.Unity.Editor {
 			foreach (var skin in skeletonGraphic.Skeleton.Data.Skins) {
 				var attachments = skin.Attachments;
 				foreach (var entry in attachments) {
-					var boundingBoxAttachment = entry.Value as BoundingBoxAttachment;
+					var boundingBoxAttachment = entry.Attachment as BoundingBoxAttachment;
 					if (boundingBoxAttachment == null)
 						continue;
-					int slotIndex = entry.Key.SlotIndex;
+					int slotIndex = entry.SlotIndex;
 					var slot = skeletonGraphic.Skeleton.Slots.Items[slotIndex];
 					string slotName = slot.Data.Name;
 					GameObject go = AddBoundingBoxFollowerGraphicChild(skeletonGraphic,

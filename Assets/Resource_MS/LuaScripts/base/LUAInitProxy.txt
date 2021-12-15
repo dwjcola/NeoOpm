@@ -6,3 +6,4 @@ Description:初始化proxy
 LUAInitProxy={};
 LoginProxy=require("LoginProxy")
 LoginProxy:Init()
+require("PlayerData")

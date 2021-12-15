@@ -126,7 +126,7 @@ namespace ProHA
             {
                 checkUpdateForm = (CheckUpdateForm)evn.UIForm.Logic;
             }
-            Log.Info("limm----OpenUI-"+evn.UIForm.Logic.Name);
+            Log.Info("OpenUI-"+evn.UIForm.Logic.Name);
 
             checkUpdateForm.preloadState = PreloadState.Init;
             if (Application.isEditor)

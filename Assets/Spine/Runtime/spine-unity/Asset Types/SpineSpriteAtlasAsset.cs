@@ -31,11 +31,11 @@
 #define EXPOSES_SPRITE_ATLAS_UTILITIES
 #endif
 
+using Spine;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using Spine;
 using UnityEngine.U2D;
 
 #if UNITY_EDITOR
@@ -65,12 +65,12 @@ namespace Spine.Unity {
 		public override int MaterialCount { get { return materials == null ? 0 : materials.Length; } }
 		public override Material PrimaryMaterial { get { return materials[0]; } }
 
-	#if UNITY_EDITOR
+#if UNITY_EDITOR
 		static MethodInfo GetPackedSpritesMethod, GetPreviewTexturesMethod;
-		#if !EXPOSES_SPRITE_ATLAS_UTILITIES
+#if !EXPOSES_SPRITE_ATLAS_UTILITIES
 		static MethodInfo PackAtlasesMethod;
-		#endif
-	#endif
+#endif
+#endif
 
 		#region Runtime Instantiation
 		/// <summary>
@@ -97,14 +97,14 @@ namespace Spine.Unity {
 		}
 
 		/// <returns>The atlas or null if it could not be loaded.</returns>
-		public override Atlas GetAtlas () {
+		public override Atlas GetAtlas (bool onlyMetaData = false) {
 			if (spriteAtlasFile == null) {
 				Debug.LogError("SpriteAtlas file not set for SpineSpriteAtlasAsset: " + name, this);
 				Clear();
 				return null;
 			}
 
-			if (materials == null || materials.Length == 0) {
+			if (!onlyMetaData && (materials == null || materials.Length == 0)) {
 				Debug.LogError("Materials not set for SpineSpriteAtlasAsset: " + name, this);
 				Clear();
 				return null;
@@ -132,7 +132,6 @@ namespace Spine.Unity {
 				var page = region.page;
 
 				region.degrees = savedRegion.packingRotation == SpritePackingRotation.None ? 0 : 90;
-				region.rotate = region.degrees != 0;
 
 				float x = savedRegion.x;
 				float y = savedRegion.y;
@@ -141,11 +140,10 @@ namespace Spine.Unity {
 
 				region.u = x / (float)page.width;
 				region.v = y / (float)page.height;
-				if (region.rotate) {
+				if (region.degrees == 90) {
 					region.u2 = (x + height) / (float)page.width;
 					region.v2 = (y + width) / (float)page.height;
-				}
-				else {
+				} else {
 					region.u2 = (x + width) / (float)page.width;
 					region.v2 = (y + height) / (float)page.height;
 				}
@@ -182,17 +180,17 @@ namespace Spine.Unity {
 				return new Atlas(pages, regions);
 
 			Texture2D texture = null;
-			#if UNITY_EDITOR
+#if UNITY_EDITOR
 			if (!Application.isPlaying)
 				texture = AccessPackedTextureEditor(spriteAtlas);
 			else
-			#endif
-				texture = AccessPackedTexture(sprites);
+#endif
+			texture = AccessPackedTexture(sprites);
 
 			Material material = materials[0];
-		#if !UNITY_EDITOR
+#if !UNITY_EDITOR
 			material.mainTexture = texture;
-		#endif
+#endif
 
 			Spine.AtlasPage page = new AtlasPage();
 			page.name = spriteAtlas.name;
@@ -210,13 +208,12 @@ namespace Spine.Unity {
 			sprites = AccessPackedSprites(spriteAtlas);
 
 			int i = 0;
-			for ( ; i < sprites.Length; ++i) {
+			for (; i < sprites.Length; ++i) {
 				var sprite = sprites[i];
 				AtlasRegion region = new AtlasRegion();
 				region.name = sprite.name.Replace("(Clone)", "");
 				region.page = page;
 				region.degrees = sprite.packingRotation == SpritePackingRotation.None ? 0 : 90;
-				region.rotate = region.degrees != 0;
 
 				region.u2 = 1;
 				region.v2 = 1;
@@ -338,9 +335,9 @@ namespace Spine.Unity {
 		}
 
 		public static Texture2D AccessPackedTextureEditor (SpriteAtlas spriteAtlas) {
-		#if EXPOSES_SPRITE_ATLAS_UTILITIES
+#if EXPOSES_SPRITE_ATLAS_UTILITIES
 			UnityEditor.U2D.SpriteAtlasUtility.PackAtlases(new SpriteAtlas[] { spriteAtlas }, EditorUserBuildSettings.activeBuildTarget);
-		#else
+#else
 			/*if (PackAtlasesMethod == null) {
 				System.Type T = Type.GetType("UnityEditor.U2D.SpriteAtlasUtility,UnityEditor");
 				PackAtlasesMethod = T.GetMethod("PackAtlases", BindingFlags.NonPublic | BindingFlags.Static);
@@ -348,7 +345,7 @@ namespace Spine.Unity {
 			if (PackAtlasesMethod != null) {
 				PackAtlasesMethod.Invoke(null, new object[] { new SpriteAtlas[] { spriteAtlas }, EditorUserBuildSettings.activeBuildTarget });
 			}*/
-		#endif
+#endif
 			if (GetPreviewTexturesMethod == null) {
 				System.Type T = Type.GetType("UnityEditor.U2D.SpriteAtlasExtensions,UnityEditor");
 				GetPreviewTexturesMethod = T.GetMethod("GetPreviewTextures", BindingFlags.NonPublic | BindingFlags.Static);

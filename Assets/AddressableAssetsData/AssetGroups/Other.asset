@@ -16,14 +16,7 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 697137ebdef16564fa66c06c8876d361
-  m_SerializeEntries:
-  - m_GUID: 7774510dfbaffa54ea04ec9737392798
-    m_Address: Assets/Resource_MS/Spines/Heroes
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - 
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
   m_SchemaSet:

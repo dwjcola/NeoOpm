@@ -51,6 +51,16 @@ namespace ProHA
             get;
             set;
         }
+        public int UITween
+        {
+            get;
+            set;
+        }
+        public bool UIMask
+        {
+            get;
+            set;
+        }
         public LuaTable LuaClass => m_LuaClass;
 
         public int OriginalDepth
@@ -168,16 +178,14 @@ namespace ProHA
                 m_LuaClass.Get("OnDestroy", out luaOnDestroy);
                 m_LuaClass.Get("ShowTween", out luaShowTween);
                 m_LuaClass.Get("CloseTween", out luaCloseTween);
-                //m_LuaClass.Get("onTouchBlank", out luaTouchBlank);
                 m_LuaClass.Get("DestroyAllMonoItemLua", out DestroyAllMonoItemLua);
             }
 
             if (UIKey!=null)
             {
-                PanelLine panel = TableTools.Tables.Panel.GetLineById(UIKey);
-                if (panel.UITween>=0)
+                if (UITween>=0)
                 {
-                    TweenToShow(panel.UITween);
+                    TweenToShow(UITween);
                 }
             }
             luaShowTween?.Invoke(LuaClass);
@@ -258,37 +266,8 @@ namespace ProHA
             m_CachedCanvas.overrideSorting = true;
             OriginalDepth = m_CachedCanvas.sortingOrder;
             m_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
-            //RectTransform transform = GetComponent<RectTransform>();
-            //transform.anchorMin = new Vector2(0.5f,0.5f);
-            //transform.anchorMax = new Vector2(0.5f,0.5f);
-            /*switch (UIFormTab.Id)
-            {
-                case 107:
-                    transform.anchorMin = new Vector2(0.5f,0.5f);
-                    transform.anchorMax = new Vector2(0.5f,0.5f);
-                    break;
-                case 108 :
-                    transform.anchorMin = new Vector2(0.5f,0.5f);
-                    transform.anchorMax = new Vector2(0.5f,0.5f);
-                    /*transform.anchorMin = new Vector2(0f,0f);
-                    transform.anchorMax = new Vector2(1f,1f);
-                    transform.anchoredPosition = Vector2.zero;
-                    transform.sizeDelta = Vector2.zero;#1#
-                    break;
-            }*/
-            //transform.localPosition = Vector3.zero;
 
             gameObject.GetOrAddComponent<GraphicRaycaster>();
-
-            //Text[] texts = GetComponentsInChildren<Text>(true);
-            //for (int i = 0; i < texts.Length; i++)
-            //{
-            //    texts[i].font = s_MainFont;
-            //    if (!string.IsNullOrEmpty(texts[i].text))
-            //    {
-            //        texts[i].text = GameEntry.Localization.GetString(texts[i].text);
-            //    }
-            //}
         }
 
         protected override void OnRecycle()
@@ -326,14 +305,7 @@ namespace ProHA
                 currentTween = transform.DOScale(Vector3.one, FadeTime);
                 currentTween.onComplete = () =>
                 {
-                    if (UIKey != null)
-                    {
-                        PanelLine panel = TableTools.Tables.Panel.GetLineById(UIKey);
-                        if (panel.ShowRes)
-                        {
-                            LC.SendEvent("Show_Res_on_UI", this.transform);
-                        }
-                    }
+                    
                 };
             }else if (type == 1)
             {
@@ -347,14 +319,7 @@ namespace ProHA
                 currentQuenece.Play();
                 currentQuenece.onComplete = () =>
                 {
-                    if (UIKey != null)
-                    {
-                        PanelLine panel = TableTools.Tables.Panel.GetLineById(UIKey);
-                        if (panel.ShowRes)
-                        {
-                            LC.SendEvent("Show_Res_on_UI", this.transform);
-                        }
-                    }
+                    
                 };
             }
 
@@ -364,12 +329,7 @@ namespace ProHA
            
             if (UIKey!=null)
             {
-                PanelLine panel = TableTools.Tables.Panel.GetLineById(UIKey);
-                if (panel.ShowRes)
-                {
-                    LC.SendEvent("Show_Res_on_UI",null);
-                }
-                if (panel.UITween == 0)
+                if (UITween == 0)
                 {
                     transform.localScale = Vector3.one;
                     currentTween?.Pause();
@@ -377,10 +337,10 @@ namespace ProHA
                     currentTween.onComplete = () =>
                     {
                         base.OnClose(isShutdown, userData);
-                        if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                        if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                       
                     };
-                }else if (panel.UITween == 1)
+                }else if (UITween == 1)
                 {
                     transform.localScale = Vector3.one;
                     currentQuenece?.Kill();
@@ -391,22 +351,22 @@ namespace ProHA
                     currentQuenece.OnComplete(() =>
                     {
                         base.OnClose(isShutdown, userData);
-                        if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                        if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                     });
                     currentQuenece.Play();
                 }
-                else if (panel.UITween == -1 && luaCloseTween != null)
+                else if (UITween == -1 && luaCloseTween != null)
                 {
                     luaCloseTween.Invoke(LuaClass, () =>
                      {
                          base.OnClose(isShutdown, userData);
-                         if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                         if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                      });
                 }
                 else
                 {
                     base.OnClose(isShutdown, userData);
-                    if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                    if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                 }
             }
             else
@@ -422,18 +382,13 @@ namespace ProHA
         {
             if (UIKey!=null)
             {
-                PanelLine panel = TableTools.Tables.Panel.GetLineById(UIKey);
-                if (panel.ShowRes)
-                {
-                    LC.SendEvent("Show_Res_on_UI",null);
-                }
-                if (panel.UITween == 0)
+                if (UITween == 0)
                 {
                     transform.localScale = Vector3.one;
                     currentTween?.Pause();
                     currentTween = transform.DOScale(Vector3.one * 1.1f, FadeTime);
-                    currentTween.onComplete = () => { base.OnPause(); if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);};
-                }else if (panel.UITween == 1)
+                    currentTween.onComplete = () => { base.OnPause(); if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);};
+                }else if (UITween == 1)
                 {
                     transform.localScale = Vector3.one;
                     currentQuenece?.Kill();
@@ -444,23 +399,23 @@ namespace ProHA
                     currentQuenece.OnComplete(() =>
                     {
                         base.OnPause();
-                        if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                        if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                     });
                     currentQuenece.Play();
                 }
-                else if (panel.UITween == -1 && luaCloseTween != null)
+                else if (UITween == -1 && luaCloseTween != null)
                 {
                     luaCloseTween.Invoke(LuaClass, () =>
                     {
 
                         base.OnPause();
-                        if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                        if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                     });
                 }
                 else
                 {
                     base.OnPause();
-                    if (panel.Mask)GameEntry.UI.CheckMask(UIForm.UIGroup);
+                    if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
                 }
             }
             else
@@ -476,18 +431,14 @@ namespace ProHA
             base.OnResume();
             if (UIKey!=null)
             {
-                PanelLine panel = TableTools.Tables.Panel.GetLineById(UIKey);
-                if (panel.UITween >= 0)
+                if (UITween >= 0)
                 {
-                    TweenToShow(panel.UITween);
+                    TweenToShow(UITween);
                 }
             }
             if (LuaClass!=null)
                 luaShowTween?.Invoke(LuaClass);
 
-            /*m_CanvasGroup.alpha = 0f;
-            StopAllCoroutines();
-            StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));*/
         }
 
         protected override void OnCover()

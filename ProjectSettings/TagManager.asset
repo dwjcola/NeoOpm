@@ -13,16 +13,16 @@ TagManager:
   - 
   - Water
   - UI
+  - main
   - 
   - 
   - 
   - 
-  - Targetable Object
-  - 3DUI
-  - HeroScene
-  - WorldUI
-  - BattleSkillUI
   - 
+  - 
+  - 
+  - 
+  - BattleScene
   - 
   - 
   - 

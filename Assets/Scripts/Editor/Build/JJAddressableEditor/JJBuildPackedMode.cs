@@ -474,7 +474,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
             string[] dependencyHashes = null;
             if (aaContext.Settings.BuildRemoteCatalog)
             {
-                dependencyHashes = CreateRemoteCatalog(jsonText, aaContext.runtimeData.CatalogLocations, aaContext.Settings, builderInput, new ProviderLoadRequestOptions() { IgnoreFailures = true });
+                dependencyHashes = CreateRemoteCatalog(jsonText, aaContext.runtimeData.CatalogLocations, aaContext.Settings, builderInput, new ProHA.ProviderLoadRequestOptions() { IgnoreFailures = true });
             }
 
             aaContext.runtimeData.CatalogLocations.Add(new ResourceLocationData(
@@ -895,7 +895,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
             return assetsInputDef;
         }
 
-        static string[] CreateRemoteCatalog(string jsonText, List<ResourceLocationData> locations, AddressableAssetSettings aaSettings, AddressablesDataBuilderInput builderInput, ProviderLoadRequestOptions catalogLoadOptions)
+        static string[] CreateRemoteCatalog(string jsonText, List<ResourceLocationData> locations, AddressableAssetSettings aaSettings, AddressablesDataBuilderInput builderInput, ProHA.ProviderLoadRequestOptions catalogLoadOptions)
         {
             string[] dependencyHashes = null;
 

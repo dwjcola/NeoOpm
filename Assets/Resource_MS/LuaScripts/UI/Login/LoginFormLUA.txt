@@ -17,9 +17,17 @@ function LoginFormLUA:Init(param)
 end
 
 function LoginFormLUA:Login()
+--[[	local s = string.format("%saaaaa","rr")
+	self:Error(s)
+	s = string.format("{0}aaa{1}bbb","rr","555")
+	s = self:GetDicValue("tid#HeroAdvanced002","a",2,0)
+	self.ttt.text = s;
+	self:Error(s)]]
 	if self.ProcedureLogin ~= nil then
 		self.ProcedureLogin:LoginGame();
 	end
+--[[	local lv = ConfigReader:getDataByNameAndId("Hero_Level",1)
+	self:Error(lv.name)]]
 end
 
 --ui组件添加事件

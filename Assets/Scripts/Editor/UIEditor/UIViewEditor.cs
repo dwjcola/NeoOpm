@@ -3,15 +3,15 @@ using UnityEditor;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 using ProHA;
 
 [CustomEditor(typeof(UIMonoPanel))]
 public class UIViewEditor : Editor
 {
     private static UIViewEditorWin wind;
-
     private string UIRootPath = "UIForms";
-    //static bool isBuildCSharpScript = false;
+    private const string panelTxt = "Assets/Resource_MS/LuaScripts/tableRead/TPanel.txt";
     public override void OnInspectorGUI()
     {
         uimono = target as UIMonoPanel;
@@ -29,105 +29,72 @@ public class UIViewEditor : Editor
             }
             wind = UIViewEditorWin.OnInit(uimono);
         }
-        //isBuildCSharpScript = GUILayout.Toggle(isBuildCSharpScript, "构建C#脚本");
         if (GUILayout.Button("生成资源"))
         {
-            UnityEngine.Object[] arr = Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.TopLevel);
+            Object[] arr = Selection.GetFiltered(typeof(Object), SelectionMode.TopLevel);
             string resPath = AssetDatabase.GetAssetPath(arr[0]);
             string resname = target.name;
             {
-                TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Resource_MS/DataTables/Panel.txt");
+                TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(panelTxt);
                 if (textAsset == null)
                 {
                     return;
                 }
                 int nret = textAsset.text.IndexOf(resname);
                 Resources.UnloadAsset(textAsset);
-                textAsset = null;
                 if (nret >= 0)
                 {
                     Debug.LogError("resname is existed !!! resname:" + resname);
                     return;
                 }
             }
-            //string delims = "\t";
             int nstart = resPath.IndexOf(UIRootPath) + UIRootPath.Length + 1;
             int nend = resPath.IndexOf(resname);
             int nlen = nend - nstart;
             string id = resname;
-            //string depth = "";
             string path = resPath.Substring(nstart, nlen);
             string tmpStr = path;
             string AssetName = path + resname;
             Debug.Log("ui path:" + path + " resname:" + resname);
-            //prefabname
-            /*string prefabname = resname;
-            //C#
-            string clacc = "";
-            if (isBuildCSharpScript)
-            {
-                clacc = resname;
-            }*/
-            //lua
+            //生成lua模板
             string luaFileName = resname + "LUA";
             string clacclua = luaFileName;
             tmpStr = tmpStr.Substring(0, tmpStr.Length - 1);
             nstart = tmpStr.LastIndexOf("/");
             string luapath = "UI/" + tmpStr.Substring(nstart + 1);
-            using (FileStream targetFile = new FileStream("Assets/Resource_MS/DataTables/Panel.txt", FileMode.Append, FileAccess.Write, FileShare.Write))
+            string dataPath = Application.dataPath + "/Resource_MS/LuaScripts/" + luapath;
+            if (!Directory.Exists(dataPath))
             {
-                string dataPath = Application.dataPath + "/Resource_MS/LuaScripts/" + luapath;
-                if (!Directory.Exists(dataPath))
-                {
-                    Directory.CreateDirectory(dataPath);
-                }
-                string outfile = dataPath + "/" + luaFileName + ".txt";
-                if (!File.Exists(outfile))
-                {
-                    TextAsset textAsset1 = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Resource_MS/LuaScripts/UI/UICtrlTemplate.txt");
-                    string tableTxt = textAsset1.text.Replace("UICtrlTemplate", resname);
-                    Resources.UnloadAsset(textAsset1);
-                    File.WriteAllText(outfile, tableTxt);
-                    AssetDatabase.Refresh();
-                }
-                StreamWriter sw = new StreamWriter(targetFile, Encoding.UTF8);
-                sw.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\t{7}\t{8}\t{9}\t{10}", id,  AssetName, "Default", "FALSE", "FALSE", luapath,clacclua, "FALSE","FALSE","FALSE","");
-                sw.Close();
-
-                string excelPath = "../Res/Tables/UI表.xlsx";
-                FileInfo file = new FileInfo(excelPath);
-                /*if (file.Exists)
-                {
-                    using (ExcelPackage package = new ExcelPackage(file))
-                    {
-                        ExcelWorksheet sheet = package.Workbook.Worksheets[2];
-                        int row = sheet.Dimension.End.Row+1;
-                        sheet.Cells[row,1].Value = id;
-                        sheet.Cells[row,2].Value = AssetName;
-                        sheet.Cells[row,3].Value = "Default";
-                        sheet.Cells[row,4].Value = "FALSE";
-                        sheet.Cells[row,5].Value = "FALSE";
-                        sheet.Cells[row,6].Value = luapath;
-                        sheet.Cells[row,7].Value = clacclua;
-                        sheet.Cells[row,8].Value = "FALSE";
-                        sheet.Cells[row,9].Value = "FALSE";
-                        sheet.Cells[row,10].Value = "FALSE";
-                        sheet.Cells[row,1].AutoFitColumns();
-                        sheet.Cells[row,2].AutoFitColumns();
-                        sheet.Cells[row,3].AutoFitColumns();
-                        sheet.Cells[row,4].AutoFitColumns();
-                        sheet.Cells[row,5].AutoFitColumns();
-                        sheet.Cells[row,6].AutoFitColumns();
-                        sheet.Cells[row,7].AutoFitColumns();
-                        sheet.Cells[row,8].AutoFitColumns();
-                        sheet.Cells[row,9].AutoFitColumns();
-                        sheet.Cells[row,10].AutoFitColumns();
-                        package.Save();
-                    }
-                    
-                }*/
-                
+                Directory.CreateDirectory(dataPath);
             }
+            string outfile = dataPath + "/" + luaFileName + ".txt";
+            if (!File.Exists(outfile))
+            {
+                TextAsset textAsset1 = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Resource_MS/LuaScripts/UI/UICtrlTemplate.txt");
+                string tableTxt = textAsset1.text.Replace("UICtrlTemplate", resname);
+                Resources.UnloadAsset(textAsset1);
+                File.WriteAllText(outfile, tableTxt);
+                AssetDatabase.Refresh();
+            }
+            List<string> lines = new List<string>(File.ReadAllLines(panelTxt));
+            string l = "['" + id + "']={";
+            l += string.Format(
+                "Id='{0}'," +
+                "AssetName='{1}'," +
+                "UIGroupName='Default'," +
+                "AllowMultiInstance=false," +
+                "PauseCoveredUIForm=false," +
+                "LuaPath='{2}'," +
+                "LuaName='{3}'," +
+                "Mask=false," +
+                "ShowHead=false," +
+                "ShowRes=false," +
+                "UITween=false,",
+                id,AssetName,luapath,clacclua
+            );
+            l += "},";
+            lines.Insert(lines.Count-2,l);
+            File.WriteAllLines(panelTxt,lines.ToArray());
         }
         base.OnInspectorGUI();
        

@@ -39,6 +39,15 @@ namespace ProHA
         {
             return Utility.Text.Format("Assets/Resource_MS/UI/UISpines/{0}.prefab", assetName);
         }
-        
+
+        public static string GetSpineAssetBattle(string assetName)
+        {
+            return Utility.Text.Format("Assets/Resource_MS/Prefabs/Heroes/{0}.prefab", assetName);
+        }
+
+        public static string GetBattleScene(string assetName)
+        {
+            return Utility.Text.Format("Assets/Resource_MS/Prefabs/HeroScenes/{0}.prefab", assetName);
+        }
     }
 }

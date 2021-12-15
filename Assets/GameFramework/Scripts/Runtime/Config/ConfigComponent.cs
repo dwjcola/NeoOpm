@@ -44,6 +44,12 @@ namespace UnityGameFramework.Runtime
         [SerializeField]
         public bool SkipGuide = false;
 
+        [SerializeField]
+        public bool IsUseLocalConfig = false;
+
+       
+        public bool IsEditor = false;
+
         /// <summary>
         /// 获取全局配置项数量。
         /// </summary>
@@ -81,6 +87,12 @@ namespace UnityGameFramework.Runtime
             {
                 m_ConfigManager.ReadDataDependencyAsset += OnReadDataDependencyAsset;
             }
+#if !UNITY_EDITOR
+            IsEditor = false; 
+#else
+            IsEditor = true;
+#endif
+
         }
 
         private void Start()

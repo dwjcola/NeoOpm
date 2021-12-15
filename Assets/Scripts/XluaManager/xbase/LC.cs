@@ -132,18 +132,27 @@ public class LC
     /// <param name="key"></param>
     public static void CloseUI(string key)
     {
-        PanelLine panel = TableTools.Tables.Panel.GetLineById(key);
+        LuaTable panel = GetUITable(key);
+        if (panel == null)
+        {
+            return;
+        }
 
-        string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
+        string tAssetName = panel.Get<string>("AssetName");
+            
+        string tLuaName = panel.Get<string>("LuaName");
+        string tLuaPath = panel.Get<string>("LuaPath");
+
+        string assetName = AssetUtility.GetUIFormAsset(tAssetName);
         if (GameEntry.UI.IsLoadingUIForm(assetName))
         {
             return;//如果ui正在打开停止close
         }
         LuaTable ui;
         var luaEnv = XluaManager.instance.LuaEnv;
-        if (XluaManager.instance.HasLua(panel.LuaName, panel.LuaPath))
+        if (XluaManager.instance.HasLua(tLuaName, tLuaPath))
         {
-            ui = luaEnv.Global.Get<LuaTable>(panel.LuaName);
+            ui = luaEnv.Global.Get<LuaTable>(tLuaName);
             if (ui != null)
             {
                 UGuiForm view;
@@ -155,6 +164,32 @@ public class LC
             }
         }
     }
+    //读取xlua表
+    public static LuaTable GetTable(string tableName,string key)
+    {
+        LuaTable t = XluaManager.instance.GetLua("ConfigReader");
+        Func<LuaTable, string, string,LuaTable> func;
+        t.Get("getDataByNameAndId",out func);
+        LuaTable lt = func(t, tableName, key);
+        return lt;
+    }
+    public static LuaTable GetTable(string tableName,int key)
+    {
+        LuaTable t = XluaManager.instance.GetLua("ConfigReader");
+        Func<LuaTable, string, int,LuaTable> func;
+        t.Get("getDataByNameAndId",out func);
+        LuaTable lt = func(t, tableName, key);
+        return lt;
+    }
+
+    public static void CallLuaFunc(string fileName, string funcName)
+    {
+        LuaTable t = XluaManager.instance.GetLua(fileName);
+        Func<LuaTable, LuaTable> func;
+        t.Get(funcName, out func);
+        func(t);
+    }
+
 
     public static void ChangeStateTo(Type procedureType)
     {
@@ -185,6 +220,19 @@ public class LC
     public static LuaTable ShowPartPanel(string key, Transform parent, object para = null)
     {
         return GameEntry.UI.ShowPartUIForm(key, parent, para);
+    }
+
+    public static LuaTable GetUITable(string uiKey)
+    {
+        LuaTable ui = null;
+        var luaEnv = XluaManager.instance.LuaEnv;
+        LuaTable panel = luaEnv.Global.Get<LuaTable>("TPanel");
+        if (panel != null)
+        {
+           ui = panel.Get<LuaTable>(uiKey);
+        }
+
+        return ui;
     }
     public static LuaTable CreateItem(GameObject item, Transform parent, LuaTable lua)
     {
@@ -422,10 +470,7 @@ public class LC
     {
         sp.material = null;
     }
-    public static UIFormLogic GetUILogicById(int formId)
-    {
-        return GameEntry.UI.GetUILogic(formId);
-    }
+
     public static UIFormLogic GetUILogicByKey(string uikey)
     {
         return GameEntry.UI.GetUILogic(uikey);
@@ -439,6 +484,23 @@ public class LC
         GameObject skeleGo = Object.Instantiate(go, parent, false);
         SkeletonGraphic sa = skeleGo.GetComponent<SkeletonGraphic>();
         callback?.Invoke(lua, sa);
+    }
+
+    public static async void LoadSpineAnimation(string spineName, Transform parent, Action<LuaTable, SkeletonAnimation> callback, LuaTable lua)
+    {
+        string path = AssetUtility.GetSpineAssetBattle(spineName); ;
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        GameObject go = await resMgr.LoadAssetAsync<GameObject>(path).Task;
+        GameObject skeleGo = Object.Instantiate(go, parent, false);
+        SkeletonAnimation sa = skeleGo.GetComponent<SkeletonAnimation>();      
+        callback?.Invoke(lua, sa);
+    }
+    public static async void LoadBattleScene(string sceneName, LuaTable lua, Action<LuaTable, GameObject> action)
+    {
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        GameObject per = await resMgr.LoadAssetAsync<GameObject>(AssetUtility.GetBattleScene(sceneName)).Task;
+        GameObject go = Object.Instantiate(per);
+        action?.Invoke(lua, go);
     }
 
     public static void AddButtonEvent(Button btn, Action<LuaTable, object> action, LuaTable lua, bool isOverride = true)
@@ -514,22 +576,7 @@ public class LC
         GameObject go = await resMgr.LoadAssetAsync<GameObject>(AssetUtility.GetUIFormAsset("Guide/GuideForm")).Task;
         action?.Invoke(lua, go, param);
     }
-
    
-    public static bool HasUIFormByPanelKey(string uiKey)
-    {
-        PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
-        if (panel == null)
-        {
-            Debug.LogWarningFormat("Can not load UI form '{0}' from data table.",uiKey);
-            return false;
-        }
-
-        string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-        return GameEntry.UI.HasUIForm(assetName);
-    }
-  
-
     public static void ClearAll()
     {
         GameEntry.UI.RemoveAllUI();

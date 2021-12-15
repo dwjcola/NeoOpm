@@ -162,5 +162,6 @@ TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowM
 ['UnionJoinTipForm']={Id='UnionJoinTipForm',AssetName='Union/UnionJoinTipForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Union',LuaName='UnionJoinTipFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['EquipBuildForm']={Id='EquipBuildForm',AssetName='EquipFactory/EquipBuildForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/EquipFactory',LuaName='EquipBuildFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['MailUnionInveteForm']={Id='MailUnionInveteForm',AssetName='Mail/MailUnionInveteForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Mail',LuaName='MailUnionInveteFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
+['MainUI']={Id='MainUI',AssetName='Main/MainUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Main',LuaName='MainUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 });
 return TPanel;

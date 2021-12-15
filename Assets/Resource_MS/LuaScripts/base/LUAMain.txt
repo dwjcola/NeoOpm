@@ -13,20 +13,18 @@ end
 LUAMain.name="luamain"
 LUAMain.LuaIdBaseNum=1
 
-require("LUAUIBase");
-LUAUIBase:init();
 
-require("LUADefine");
---网络
-PomeloCLUA=require("PomeloCLUA")
-PomeloCLUA:Init()
---表格
-TblManager=require "TblManager";
-TblManager:InitAllTbl()
+require_path = function(className,classPath)
+  if CS.ProHA.GameEntry.Config.IsEditor then
+    return require(classPath)
+  else
+    return require(className)
+  end
+end
 
-require("UtilsLUA")--一些扩展函数
+require("MianInit")
 
-require("LUAInitProxy");
+
 function pairsSortKey( t,f )
   local a={}
   for k in pairs(t) do
@@ -52,6 +50,31 @@ function LUAMain:clearcache(list )
 end
 
 
---[[ package.cpath = package.cpath .. ';C:/Users/dongwj/AppData/Roaming/JetBrains/Rider2020.1/plugins/intellij-emmylua/classes/debugger/emmy/windows/x64/?.dll'
- local dbg = require('emmy_core')
- dbg.tcpConnect('localhost', 10192)]]
+----------------------------------------------------------------------
+LUAMain._list_behaviour = {}
+-- todo 优化：1.去重优化  2.update 优先级处理
+function LUAMain:addBehaviour(behaviour)
+  if behaviour and self._list_behaviour[behaviour] == nil  then
+    self._list_behaviour[behaviour] = behaviour
+  end
+end
+
+function LUAMain:removeBehaviour(behaviour)
+   self._list_behaviour[behaviour] = nil
+end
+
+function LUAMain:update(dt,timeScale)
+  for i, v in pairs(  self._list_behaviour) do
+    if v and v.update then
+      v:update(dt,timeScale)
+    end
+  end
+end
+
+function LUAMain:lateUpdate(dt,timeScale)
+
+end
+
+--[[package.cpath = package.cpath .. ';C:/Users/dongwenjun/AppData/Roaming/JetBrains/Rider2020.1/plugins/intellij-emmylua/classes/debugger/emmy/windows/x64/?.dll'
+local dbg = require('emmy_core')
+dbg.tcpConnect('localhost', 19656)]]

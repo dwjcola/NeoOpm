@@ -22,6 +22,8 @@ namespace UnityGameFramework.Editor
         private HelperInfo<ConfigHelperBase> m_ConfigHelperInfo = new HelperInfo<ConfigHelperBase>("Config");
 
         private SerializedProperty SkipGuide = null;
+
+        private SerializedProperty IsUseLocalConfig = null;
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
@@ -40,6 +42,7 @@ namespace UnityGameFramework.Editor
             }
             EditorGUI.EndDisabledGroup();
             EditorGUILayout.PropertyField(SkipGuide);
+            EditorGUILayout.PropertyField(IsUseLocalConfig);
             if (EditorApplication.isPlaying && IsPrefabInHierarchy(t.gameObject))
             {
                 EditorGUILayout.LabelField("Config Count", t.Count.ToString());
@@ -64,7 +67,8 @@ namespace UnityGameFramework.Editor
 
             UseDebug = serializedObject.FindProperty("UseDebug");
             SkipGuide = serializedObject.FindProperty("SkipGuide");
-        ShowBuildingArea = serializedObject.FindProperty("ShowBuildingArea");
+            IsUseLocalConfig = serializedObject.FindProperty("IsUseLocalConfig");
+            ShowBuildingArea = serializedObject.FindProperty("ShowBuildingArea");
             m_ConfigHelperInfo.Init(serializedObject);
 
             RefreshTypeNames();

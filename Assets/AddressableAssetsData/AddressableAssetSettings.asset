@@ -16,13 +16,19 @@ MonoBehaviour:
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
+  m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
   m_IgnoreUnsupportedFilesInBuild: 1
   m_UniqueBundleIds: 0
+  m_NonRecursiveBuilding: 0
   m_maxConcurrentWebRequests: 500
   m_ContiguousBundles: 0
+  m_StripUnityVersionFromBundleBuild: 0
+  m_DisableVisibleSubAssetRepresentations: 0
   m_ShaderBundleNaming: 0
   m_ShaderBundleCustomNaming: 
+  m_MonoScriptBundleNaming: 0
+  m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
     m_Id: a9143a438744dc84781e661819ab4880
   m_RemoteCatalogLoadPath:
@@ -32,23 +38,16 @@ MonoBehaviour:
   m_GroupAssets:
   - {fileID: 11400000, guid: 9051266063dcdda469eb15a50c1b8d97, type: 2}
   - {fileID: 11400000, guid: bfae0ea9f9fff4c438a7ddc938dad8c3, type: 2}
-  - {fileID: 11400000, guid: 6b06dc06bfc4dd948bc70e4adcc3a90e, type: 2}
   - {fileID: 11400000, guid: d1e376fadb80d3e4aa9abd35ca4607b5, type: 2}
-  - {fileID: 11400000, guid: 8fd925c8ce798fc4f94aa7be6e25f408, type: 2}
   - {fileID: 11400000, guid: edce595cbe6b1c746ad1264c98f76af2, type: 2}
   - {fileID: 11400000, guid: da70df79712891e49a504e5bafb741e1, type: 2}
-  - {fileID: 11400000, guid: d0bf260fb108003469f9ebe2eb821485, type: 2}
   - {fileID: 11400000, guid: f3ca1f25346635a40aee43a0eb61c5fb, type: 2}
-  - {fileID: 11400000, guid: 580cbd8f8ef01d8408c652a379cf474e, type: 2}
   - {fileID: 11400000, guid: 1f30a1152225f944d9ae7d51230ba937, type: 2}
-  - {fileID: 11400000, guid: d435cfbd13b4e4e458e30e7f82c87035, type: 2}
   - {fileID: 11400000, guid: 7fa2a615305d5204d9612cffacd027e6, type: 2}
   - {fileID: 11400000, guid: f602ecab5c4537f46b130be10f6f3144, type: 2}
   - {fileID: 11400000, guid: a52e72a3bb82e4c4f8f6ed7f17e4e1de, type: 2}
-  - {fileID: 11400000, guid: 0672839f245a0f74e87f0bfad0af73b4, type: 2}
   - {fileID: 11400000, guid: e10eac3d7de263f45b90f181a59b190c, type: 2}
   - {fileID: 11400000, guid: 52dfbbfba92153c4fa96cf1fe95f9b27, type: 2}
-  - {fileID: 11400000, guid: b92e1c36ee8671146994ce086def75b2, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -153,7 +152,7 @@ MonoBehaviour:
           m_Key: HostingServicePort
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.String
-          m_Data: Library/com.unity.addressables/aa/Android/Android
+          m_Data: Library/com.unity.addressables/aa/Windows/StandaloneWindows64
           m_Key: ContentRoot
         - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
           m_ClassName: System.Boolean
@@ -167,6 +166,10 @@ MonoBehaviour:
           m_ClassName: System.Int32
           m_Data: 0
           m_Key: InstanceId
+        - m_AssemblyName: mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+          m_ClassName: System.Int32
+          m_Data: 0
+          m_Key: HostingServiceUploadSpeed
     m_Settings: {fileID: 11400000}
     m_NextInstanceId: 4
     m_RegisteredServiceTypeRefs:

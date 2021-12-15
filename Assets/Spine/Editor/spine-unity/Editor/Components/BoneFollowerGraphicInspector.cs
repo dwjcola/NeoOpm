@@ -27,9 +27,9 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-using UnityEngine;
-using UnityEditor;
 using Spine.Unity;
+using UnityEditor;
+using UnityEngine;
 
 namespace Spine.Unity.Editor {
 
@@ -39,12 +39,13 @@ namespace Spine.Unity.Editor {
 	[CustomEditor(typeof(BoneFollowerGraphic)), CanEditMultipleObjects]
 	public class BoneFollowerGraphicInspector : Editor {
 
-		SerializedProperty boneName, skeletonGraphic, followXYPosition, followZPosition, followBoneRotation, followLocalScale, followSkeletonFlip;
+		SerializedProperty boneName, skeletonGraphic, followXYPosition, followZPosition, followBoneRotation,
+			followLocalScale, followSkeletonFlip, maintainedAxisOrientation;
 		BoneFollowerGraphic targetBoneFollower;
 		bool needsReset;
 
 		#region Context Menu Item
-		[MenuItem ("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject")]
+		[MenuItem("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject")]
 		static void AddBoneFollowerGameObject (MenuCommand cmd) {
 			var skeletonGraphic = cmd.context as SkeletonGraphic;
 			var go = EditorInstantiation.NewGameObject("BoneFollower", true, typeof(RectTransform));
@@ -62,7 +63,7 @@ namespace Spine.Unity.Editor {
 		}
 
 		// Validate
-		[MenuItem ("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject", true)]
+		[MenuItem("CONTEXT/SkeletonGraphic/Add BoneFollower GameObject", true)]
 		static bool ValidateAddBoneFollowerGameObject (MenuCommand cmd) {
 			var skeletonGraphic = cmd.context as SkeletonGraphic;
 			return skeletonGraphic.IsValid;
@@ -77,6 +78,7 @@ namespace Spine.Unity.Editor {
 			followZPosition = serializedObject.FindProperty("followZPosition");
 			followLocalScale = serializedObject.FindProperty("followLocalScale");
 			followSkeletonFlip = serializedObject.FindProperty("followSkeletonFlip");
+			maintainedAxisOrientation = serializedObject.FindProperty("maintainedAxisOrientation");
 
 			targetBoneFollower = (BoneFollowerGraphic)target;
 			if (targetBoneFollower.SkeletonGraphic != null)
@@ -171,6 +173,11 @@ namespace Spine.Unity.Editor {
 				EditorGUILayout.PropertyField(followZPosition);
 				EditorGUILayout.PropertyField(followLocalScale);
 				EditorGUILayout.PropertyField(followSkeletonFlip);
+				if ((followSkeletonFlip.hasMultipleDifferentValues || followSkeletonFlip.boolValue == false) &&
+					(followBoneRotation.hasMultipleDifferentValues || followBoneRotation.boolValue == true)) {
+					using (new SpineInspectorUtility.IndentScope())
+						EditorGUILayout.PropertyField(maintainedAxisOrientation);
+				}
 
 				//BoneFollowerInspector.RecommendRigidbodyButton(targetBoneFollower);
 			} else {

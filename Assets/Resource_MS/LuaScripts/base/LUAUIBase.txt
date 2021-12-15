@@ -43,9 +43,7 @@ function LUAUIBase:init()
   self.UIReminder=CS.UIReminder;
   self.EventTriggerListener=CS.GameFramework.UI.EventTriggerListener
 end
-function LUAUIBase:GetUILogicById(formId)
-  return CS.LC.GetUILogicById(formId);
-end
+
 function LUAUIBase:GetUILogicByKey(uiKey)
   return CS.LC.GetUILogicByKey(uiKey);
 end
@@ -104,37 +102,15 @@ function LUAUIBase:AddTabEvent(tab,callBack)
 end
 --log信息
 function LUAUIBase:Log(...)
-  local temp = ""
-  for k,v in ipairs({...})
-  do
-    temp = temp ..tostring(v)
-  end
-
-  CS.LC.Log(temp);
+  Logger.Log(...)
 end
 function LUAUIBase:Warning(...)
-  local temp = ""
-  for k,v in ipairs({...})
-  do
-    temp = temp ..tostring(v)
-  end
-
-  CS.LC.Warning(temp);
+  Logger.Warning(...)
 end
 
 --error信息
 function LUAUIBase:Error(...)
-  -- if not CS.GameSetting.hasLog then
-  --   return
-  -- end
-
-  local temp = "LUA_LOG->"
-  for k,v in ipairs({...})
-  do
-    temp = temp ..tostring(v)
-  end
-
-  CS.LC.Error(temp);
+  Logger.Error(...)
 end
 
 --添加事件
@@ -192,12 +168,17 @@ end
 ---@param atls string
 ---@param name string
 ---@param native bool
-function LUAUIBase:SetSprite(image,atls,name,native)
+function LUAUIBase:SetSprite(image,name,native)
   local n = native
   if n == nil then
     n = false
   end
-  CS.LC.SetSprite(image,atls,name,n)
+  local atlas = TAtlas[name]
+  if atlas == nil or atlas == "" then
+    self:Error("图片："..name.."没有找到图集")
+    return
+  end
+  CS.LC.SetSprite(image,atlas,name,n)
 end
 
 ---@param image UnityEngine.UI.RawImage
@@ -241,14 +222,14 @@ end
  --打开UI
 function LUAUIBase:OpenUI(...)
   local arg = {...};
-  NewbieGuideProxy:CheckNewbieGuide(NewbieGuideProxy.ConditionType.OpenUI, arg[1]) --首次打开界面，新手指引
   return CS.LC.OpenUI(arg[1],arg[2]);
 end
 function LUAUIBase:SetCloseData(table)
  self.CloseOpenData = table
 end
 function LUAUIBase:GetDicValue(key,...)
-  return CS.ProHA.TableDic.GetDicValue(key,...);
+  --return CS.ProHA.TableDic.GetDicValue(key,...);
+  return ConfigReader:GetDicValue(key,...)
 end
 function LUAUIBase:GetDicFormateValue(key,argsTable)
   local array = CS.System.Array.CreateInstance(typeof(CS.System.Object), #argsTable);

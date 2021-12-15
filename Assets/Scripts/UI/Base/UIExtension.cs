@@ -49,116 +49,44 @@ namespace ProHA
 
             slider.value = value;
         }
-        /*public static bool HasUIForm(this UIComponent uiComponent, int uiFormId, string uiGroupName = null)
+        public static bool HasUIForm(this UIComponent uiComponent, string uiKey)
         {
-            UIFormLine drUIForm = TableTools.Tables.UIForm.GetLineById(uiFormId);
-            if (drUIForm == null)
-            {
-                return false;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(drUIForm.AssetName);
-            if (string.IsNullOrEmpty(uiGroupName))
-            {
-                return uiComponent.HasUIForm(assetName);
-            }
-
-            IUIGroup uiGroup = uiComponent.GetUIGroup(uiGroupName);
-            if (uiGroup == null)
-            {
-                return false;
-            }
-
-            return uiGroup.HasUIForm(assetName);
+            string assetName = uiComponent.GetAssetNameByKey(uiKey);
+            return uiComponent.HasUIForm(assetName);
         }
-        */
-
-        /*public static UGuiForm GetUIForm(this UIComponent uiComponent, int uiFormId, string uiGroupName = null)
-        {
-            UIFormLine drUIForm = TableTools.Tables.UIForm.GetLineById(uiFormId);
-            if (drUIForm == null)
-            {
-                return null;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(drUIForm.AssetName);
-            UIForm uiForm = null;
-            if (string.IsNullOrEmpty(uiGroupName))
-            {
-                uiForm = uiComponent.GetUIForm(assetName);
-                if (uiForm == null)
-                {
-                    return null;
-                }
-
-                return (UGuiForm)uiForm.Logic;
-            }
-
-            IUIGroup uiGroup = uiComponent.GetUIGroup(uiGroupName);
-            if (uiGroup == null)
-            {
-                return null;
-            }
-
-            uiForm = (UIForm)uiGroup.GetUIForm(assetName);
-            if (uiForm == null)
-            {
-                return null;
-            }
-
-            return (UGuiForm)uiForm.Logic;
-        }*/
-
         public static void CloseUIForm(this UIComponent uiComponent, UGuiForm uiForm)
         {
-            /*UIForm[] childer = uiForm.GetChildForm();
-            for (int i = childer.Length-1; i >=0; i--)
-            {
-                uiComponent.CloseUIForm(childer[i]);
-            }*/
-            uiComponent.GetResRoot(uiForm.UIForm.UIGroup,uiForm.UIKey);
             uiComponent.CloseUIForm(uiForm.UIForm);
-            
-            //uiComponent.CheckMask(uiForm.UIForm.UIGroup);
+        }
+        public static UIForm GetUIFormByKey(this UIComponent uiComponent, string uiKey)
+        {
+            string assetName = uiComponent.GetAssetNameByKey(uiKey);
+            UIForm form = uiComponent.GetUIForm(assetName);
+            return form;
+        }
+        public static string GetAssetNameByKey(this UIComponent uiComponent, string uiKey)
+        {
+            LuaTable panel = LC.GetUITable(uiKey);
+            if (panel == null)
+            {
+                Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
+                return null;
+            }
+            string tAssetName = panel.Get<string>("AssetName");
+            return  AssetUtility.GetUIFormAsset(tAssetName);
         }
         public static void CloseUI(this UIComponent uiComponent, string uiKey)
         {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
-            if (panel == null)
-            {
-                Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
-                return;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-            UIForm form = uiComponent.GetUIForm(assetName);
+            UIForm form = uiComponent.GetUIFormByKey(uiKey);
             if (form!=null)
             {
                 uiComponent.CloseUIForm(form.Logic as UGuiForm);
-                //uiComponent.CheckMask(form.UIGroup);
             }
         }
-        public static UIFormLogic GetUILogic(this UIComponent uiComponent, int serialId)
-        {
-            UIForm form = uiComponent.GetUIForm(serialId);
-            if (form!=null)
-            {
-                return form.Logic;
-            }
 
-            return null;
-        }
         public static UIFormLogic GetUILogic(this UIComponent uiComponent, string uiKey)
         {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
-            if (panel == null)
-            {
-                Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
-                return null;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-            UIForm form = uiComponent.GetUIForm(assetName);
+            UIForm form = uiComponent.GetUIFormByKey(uiKey);
             if (form!=null)
             {
                 return form.Logic;
@@ -166,60 +94,27 @@ namespace ProHA
 
             return null;
         }
-        public static UIForm GetLuaUIForm(this UIComponent uiComponent, string uiKey)
-        {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
-            if (panel == null)
-            {
-                Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
-                return null;
-            }
 
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-            UIForm form = uiComponent.GetUIForm(assetName);
-            if (form != null)
-            {
-                return form;
-            }
-
-            return null;
-        }
-        /*public static int? OpenUIForm(this UIComponent uiComponent, int uiFormId, object userData = null)
-        {
-            UIFormLine drUIForm = TableTools.Tables.UIForm.GetLineById(uiFormId);
-            if (drUIForm == null)
-            {
-                Log.Warning("Can not load UI form '{0}' from data table.", uiFormId.ToString());
-                return null;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(drUIForm.AssetName);
-            if (!drUIForm.AllowMultiInstance)
-            {
-                if (uiComponent.IsLoadingUIForm(assetName))
-                {
-                    return null;
-                }
-
-                if (uiComponent.HasUIForm(assetName))
-                {
-                    return null;
-                }
-            }
-
-            return uiComponent.OpenUIForm(assetName, drUIForm.UIGroupName, Constant.AssetPriority.UIFormAsset, drUIForm.PauseCoveredUIForm, userData);
-        }*/
         public static int? OpenUI(this UIComponent uiComponent, string uiKey, object userData = null)
         {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
+            LuaTable panel = LC.GetUITable(uiKey);
             if (panel == null)
             {
                 Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
                 return null;
             }
 
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-            if (!panel.AllowMultiInstance)
+            string tAssetName = panel.Get<string>("AssetName");
+            bool tAllowMultiInstance = panel.Get<bool>("AllowMultiInstance");
+            string tUIGroupName = panel.Get<string>("UIGroupName");
+            bool tPauseCoveredUIForm = panel.Get<bool>("PauseCoveredUIForm");
+            
+            string tLuaName = panel.Get<string>("LuaName");
+            string tLuaPath = panel.Get<string>("LuaPath");
+            bool tMask = panel.Get<bool>("Mask");
+            
+            string assetName = AssetUtility.GetUIFormAsset(tAssetName);
+            if (!tAllowMultiInstance)
             {
                 if (uiComponent.IsLoadingUIForm(assetName))
                 {
@@ -231,7 +126,7 @@ namespace ProHA
                     return null;
                 }
             }
-            int serialId = uiComponent.OpenUIForm(assetName, panel.UIGroupName, Constant.AssetPriority.UIFormAsset, panel.PauseCoveredUIForm, userData);
+            int serialId = uiComponent.OpenUIForm(assetName, tUIGroupName, Constant.AssetPriority.UIFormAsset, tPauseCoveredUIForm, userData);
             UIForm form;
             GameEntry.Event.Subscribe(OpenUIFormSuccessEventArgs.EventId, (object sender, GameEventArgs e) =>
             {
@@ -243,14 +138,14 @@ namespace ProHA
                     
                 form = (UIForm) ne.UIForm;
                 UGuiForm ctrl = (UGuiForm) form.Logic;
-                ctrl.UIKey = panel.Id;
-                if (!string.IsNullOrEmpty(panel.LuaName) && XluaManager.instance.HasLua(panel.LuaName, panel.LuaPath))
+                ctrl.UIKey = uiKey;
+                if (!string.IsNullOrEmpty(tLuaName) && XluaManager.instance.HasLua(tLuaName, tLuaPath))
                 {
-                    ctrl.InitLua(panel.LuaName,panel.LuaPath);
+                    ctrl.InitLua(tLuaName,tLuaPath);
                     ctrl.LuaOpen(userData);
                 }
                 LC.SendEvent("OpenUIFormSuccessEvent", ne.UIForm.SerialId);
-                if (panel.Mask)
+                if (tMask)
                 {
                     uiComponent.CheckMask(form.UIGroup);
                 }
@@ -273,18 +168,14 @@ namespace ProHA
                 UGuiForm ctrl = (UGuiForm) form.Logic;
                 if(ctrl.UIKey!=null)
                 {
-                    PanelLine panel = TableTools.Tables.Panel.GetLineById(ctrl.UIKey);
+                    LuaTable panel = LC.GetUITable(ctrl.UIKey);
+                    bool tMask = panel.Get<bool>("Mask");
                     
-                    if (panel.Mask && !mask)
+                    if (tMask && !mask)
                     {
                         help.SetMask(ctrl.Depth - 1);
                         mask = true;
-                        if (panel.ShowHead)
-                        {
-                            LC.SendEvent("Show_Head_on_UI",1);
-                        }
                     }
-
                     
                 }
             }
@@ -296,42 +187,19 @@ namespace ProHA
             }
             //if(!res)LC.SendEvent("Show_Res_on_UI",null);
         }
-        public static void GetResRoot(this UIComponent uiComponent,IUIGroup group,string uikey)
-        {
-            IUIForm[] forms = group.GetAllUIForms();
-            for (int i = 0;i<forms.Length;i++)
-            {
-                UIForm form = (UIForm) forms[i];
-                UGuiForm ctrl = (UGuiForm) form.Logic;
-                if(ctrl.UIKey!=null && ctrl.UIKey != uikey)
-                {
-                    PanelLine panel = TableTools.Tables.Panel.GetLineById(ctrl.UIKey);
-                    if (panel.ShowRes)
-                    {
-                        LC.SendEvent("Change_Res_Root",1);
-                    }
-                    if (panel.ShowRes)
-                    {
-                        LC.SendEvent("Change_Res_Root",form.transform);
-                        return;
-                    }
-                    
-                }
-            }
-
-            LC.SendEvent("Change_Res_Root",null);
-            LC.SendEvent("Change_Res_Root");
-        }
         public static LuaTable ShowPartUIForm(this UIComponent uiComponent, string uiKey, Transform parent,object userData = null)
         {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
+            LuaTable panel = LC.GetUITable(uiKey);
             if (panel == null)
             {
                 Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
-                return null ;
+                return null;
             }
+            string tAssetName = panel.Get<string>("AssetName");
+            string tLuaName = panel.Get<string>("LuaName");
+            string tLuaPath = panel.Get<string>("LuaPath");
             LuaTable lua = null;
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
+            string assetName = AssetUtility.GetUIFormAsset(tAssetName);
             GameObject go=LC.ResMgr.InstantiateAsset(assetName);
             if (go)
             {
@@ -341,7 +209,7 @@ namespace ProHA
                 UIMonoItem item = go.GetComponent<UIMonoItem>();
                 if (item)
                 {
-                    item.InitLua(panel.LuaName, panel.LuaPath);
+                    item.InitLua(tLuaName, tLuaPath);
                     item.Open(userData);
                     lua = item.Lua;
                 }
@@ -408,34 +276,15 @@ namespace ProHA
         }
 		public static void PauseUIForm(this UIComponent uiComponent,string uiKey)
         {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
-            if (panel == null)
-            {
-                Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
-                return;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-
-            UIForm form = uiComponent.GetUIForm(assetName);
+            UIForm form = uiComponent.GetUIFormByKey(uiKey);
             if (form != null)
             {
                 form.OnPause();
-                //uiComponent.CheckMask(form.UIGroup);
             }
         }
         public static void ResumeUIForm(this UIComponent uiComponent, string uiKey)
         {
-            PanelLine panel = TableTools.Tables.Panel.GetLineById(uiKey);
-            if (panel == null)
-            {
-                Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
-                return;
-            }
-
-            string assetName = AssetUtility.GetUIFormAsset(panel.AssetName);
-
-            UIForm form = uiComponent.GetUIForm(assetName);
+            UIForm form = uiComponent.GetUIFormByKey(uiKey);
             if (form != null)
             {
                 form.OnResume();

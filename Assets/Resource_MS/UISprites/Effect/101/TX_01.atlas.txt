@@ -1,0 +1,78 @@
+TX_01.png
+size:2048,2048
+filter:Linear,Linear
+pma:true
+scale:0.35
+sprite 1050001
+bounds:1889,1134,102,99
+sprite 1050002
+bounds:1034,1137,389,462
+offsets:1,1,391,464
+rotate:90
+sprite 1050003
+bounds:1037,1528,513,503
+offsets:2,0,516,504
+sprite 1050004
+bounds:519,1028,513,500
+offsets:2,0,516,502
+sprite 1050005
+bounds:519,1530,516,501
+offsets:2,1,519,505
+sprite 1050006
+bounds:2,1528,515,503
+offsets:2,1,518,505
+sprite 1050008
+bounds:2,1030,504,496
+offsets:2,1,507,498
+sprite 1050009
+bounds:2,535,504,493
+offsets:2,1,507,495
+sprite 1050011
+bounds:1552,1521,510,474
+offsets:2,1,513,476
+rotate:90
+sprite 1240001
+bounds:1498,1270,389,249
+offsets:15,9,414,264
+sprite 1240002
+bounds:1498,1019,389,249
+offsets:15,9,414,264
+sprite 1240003
+bounds:1034,886,389,249
+offsets:15,9,414,264
+sprite 1240004
+bounds:508,777,389,249
+offsets:15,9,414,264
+sprite 1240005
+bounds:1425,768,389,249
+offsets:15,9,414,264
+sprite 1240006
+bounds:899,635,389,249
+offsets:15,9,414,264
+sprite 1240007
+bounds:508,526,389,249
+offsets:15,9,414,264
+sprite 1240008
+bounds:2,284,389,249
+offsets:15,9,414,264
+sprite 1240009
+bounds:1290,532,389,234
+offsets:15,9,414,264
+sprite 1240010
+bounds:1681,240,388,234
+offsets:16,9,414,264
+rotate:90
+sprite 1240011
+bounds:1816,630,387,215
+offsets:16,10,414,264
+rotate:90
+sprite 1240012
+bounds:899,423,386,210
+offsets:16,11,414,264
+sprite 1240013
+bounds:1287,330,388,200
+offsets:13,12,414,264
+sprite 1240014
+bounds:1889,1235,284,131
+offsets:74,50,414,264
+rotate:90

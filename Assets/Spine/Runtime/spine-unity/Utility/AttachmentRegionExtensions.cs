@@ -27,33 +27,12 @@
  * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
-using UnityEngine;
-using System.Collections.Generic;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Spine.Unity.AttachmentTools {
 	public static class AttachmentRegionExtensions {
-		#region GetRegion
-		/// <summary>
-		/// Tries to get the region (image) of a renderable attachment. If the attachment is not renderable, it returns null.</summary>
-		public static AtlasRegion GetRegion (this Attachment attachment) {
-			var renderableAttachment = attachment as IHasRendererObject;
-			if (renderableAttachment != null)
-				return renderableAttachment.RendererObject as AtlasRegion;
-
-			return null;
-		}
-
-		/// <summary>Gets the region (image) of a RegionAttachment</summary>
-		public static AtlasRegion GetRegion (this RegionAttachment regionAttachment) {
-			return regionAttachment.RendererObject as AtlasRegion;
-		}
-
-		/// <summary>Gets the region (image) of a MeshAttachment</summary>
-		public static AtlasRegion GetRegion (this MeshAttachment meshAttachment) {
-			return meshAttachment.RendererObject as AtlasRegion;
-		}
-		#endregion
 		#region SetRegion
 		/// <summary>
 		/// Tries to set the region (image) of a renderable attachment. If the attachment is not renderable, nothing is applied.</summary>
@@ -73,13 +52,13 @@ namespace Spine.Unity.AttachmentTools {
 
 			// (AtlasAttachmentLoader.cs)
 			attachment.RendererObject = region;
-			attachment.SetUVs(region.u, region.v, region.u2, region.v2, region.rotate);
-			attachment.regionOffsetX = region.offsetX;
-			attachment.regionOffsetY = region.offsetY;
-			attachment.regionWidth = region.width;
-			attachment.regionHeight = region.height;
-			attachment.regionOriginalWidth = region.originalWidth;
-			attachment.regionOriginalHeight = region.originalHeight;
+			attachment.SetUVs(region.u, region.v, region.u2, region.v2, region.degrees);
+			attachment.RegionOffsetX = region.offsetX;
+			attachment.RegionOffsetY = region.offsetY;
+			attachment.RegionWidth = region.width;
+			attachment.RegionHeight = region.height;
+			attachment.RegionOriginalWidth = region.originalWidth;
+			attachment.RegionOriginalHeight = region.originalHeight;
 
 			if (updateOffset) attachment.UpdateOffset();
 		}
@@ -94,13 +73,13 @@ namespace Spine.Unity.AttachmentTools {
 			attachment.RegionV = region.v;
 			attachment.RegionU2 = region.u2;
 			attachment.RegionV2 = region.v2;
-			attachment.RegionRotate = region.rotate;
-			attachment.regionOffsetX = region.offsetX;
-			attachment.regionOffsetY = region.offsetY;
-			attachment.regionWidth = region.width;
-			attachment.regionHeight = region.height;
-			attachment.regionOriginalWidth = region.originalWidth;
-			attachment.regionOriginalHeight = region.originalHeight;
+			attachment.RegionDegrees = region.degrees;
+			attachment.RegionOffsetX = region.offsetX;
+			attachment.RegionOffsetY = region.offsetY;
+			attachment.RegionWidth = region.width;
+			attachment.RegionHeight = region.height;
+			attachment.RegionOriginalWidth = region.originalWidth;
+			attachment.RegionOriginalHeight = region.originalHeight;
 
 			if (updateUVs) attachment.UpdateUVs();
 		}
@@ -124,7 +103,10 @@ namespace Spine.Unity.AttachmentTools {
 		}
 
 		/// <summary>
-		/// Creates a Spine.AtlasRegion that uses a premultiplied alpha duplicate texture of the Sprite's texture data. Returns a RegionAttachment that uses it. Use this if you plan to use a premultiply alpha shader such as "Spine/Skeleton"</summary>
+		/// Creates a Spine.AtlasRegion that uses a premultiplied alpha duplicate texture of the Sprite's texture data.
+		/// Returns a RegionAttachment that uses it. Use this if you plan to use a premultiply alpha shader such as "Spine/Skeleton".</summary>
+		/// <remarks>The duplicate texture is cached for later re-use. See documentation of
+		/// <see cref="AttachmentCloneExtensions.GetRemappedClone"/> for additional details.</remarks>
 		public static RegionAttachment ToRegionAttachmentPMAClone (this Sprite sprite, Shader shader, TextureFormat textureFormat = AtlasUtilities.SpineTextureFormat, bool mipmaps = AtlasUtilities.UseMipMaps, Material materialPropertySource = null, float rotation = 0f) {
 			if (sprite == null) throw new System.ArgumentNullException("sprite");
 			if (shader == null) throw new System.ArgumentNullException("shader");
@@ -147,27 +129,27 @@ namespace Spine.Unity.AttachmentTools {
 			var attachment = new RegionAttachment(attachmentName);
 
 			attachment.RendererObject = region;
-			attachment.SetUVs(region.u, region.v, region.u2, region.v2, region.rotate);
-			attachment.regionOffsetX = region.offsetX;
-			attachment.regionOffsetY = region.offsetY;
-			attachment.regionWidth = region.width;
-			attachment.regionHeight = region.height;
-			attachment.regionOriginalWidth = region.originalWidth;
-			attachment.regionOriginalHeight = region.originalHeight;
+			attachment.SetUVs(region.u, region.v, region.u2, region.v2, region.degrees);
+			attachment.RegionOffsetX = region.offsetX;
+			attachment.RegionOffsetY = region.offsetY;
+			attachment.RegionWidth = region.width;
+			attachment.RegionHeight = region.height;
+			attachment.RegionOriginalWidth = region.originalWidth;
+			attachment.RegionOriginalHeight = region.originalHeight;
 
 			attachment.Path = region.name;
-			attachment.scaleX = 1;
-			attachment.scaleY = 1;
-			attachment.rotation = rotation;
+			attachment.ScaleX = 1;
+			attachment.ScaleY = 1;
+			attachment.Rotation = rotation;
 
-			attachment.r = 1;
-			attachment.g = 1;
-			attachment.b = 1;
-			attachment.a = 1;
+			attachment.R = 1;
+			attachment.G = 1;
+			attachment.B = 1;
+			attachment.A = 1;
 
 			// pass OriginalWidth and OriginalHeight because UpdateOffset uses it in its calculation.
-			attachment.width = attachment.regionOriginalWidth * scale;
-			attachment.height = attachment.regionOriginalHeight * scale;
+			attachment.Width = attachment.RegionOriginalWidth * scale;
+			attachment.Height = attachment.RegionOriginalHeight * scale;
 
 			attachment.SetColor(Color.white);
 			attachment.UpdateOffset();
@@ -176,31 +158,31 @@ namespace Spine.Unity.AttachmentTools {
 
 		/// <summary> Sets the scale. Call regionAttachment.UpdateOffset to apply the change.</summary>
 		public static void SetScale (this RegionAttachment regionAttachment, Vector2 scale) {
-			regionAttachment.scaleX = scale.x;
-			regionAttachment.scaleY = scale.y;
+			regionAttachment.ScaleX = scale.x;
+			regionAttachment.ScaleY = scale.y;
 		}
 
 		/// <summary> Sets the scale. Call regionAttachment.UpdateOffset to apply the change.</summary>
 		public static void SetScale (this RegionAttachment regionAttachment, float x, float y) {
-			regionAttachment.scaleX = x;
-			regionAttachment.scaleY = y;
+			regionAttachment.ScaleX = x;
+			regionAttachment.ScaleY = y;
 		}
 
 		/// <summary> Sets the position offset. Call regionAttachment.UpdateOffset to apply the change.</summary>
 		public static void SetPositionOffset (this RegionAttachment regionAttachment, Vector2 offset) {
-			regionAttachment.x = offset.x;
-			regionAttachment.y = offset.y;
+			regionAttachment.X = offset.x;
+			regionAttachment.Y = offset.y;
 		}
 
 		/// <summary> Sets the position offset. Call regionAttachment.UpdateOffset to apply the change.</summary>
 		public static void SetPositionOffset (this RegionAttachment regionAttachment, float x, float y) {
-			regionAttachment.x = x;
-			regionAttachment.y = y;
+			regionAttachment.X = x;
+			regionAttachment.Y = y;
 		}
 
 		/// <summary> Sets the rotation. Call regionAttachment.UpdateOffset to apply the change.</summary>
 		public static void SetRotation (this RegionAttachment regionAttachment, float rotation) {
-			regionAttachment.rotation = rotation;
+			regionAttachment.Rotation = rotation;
 		}
 		#endregion
 	}

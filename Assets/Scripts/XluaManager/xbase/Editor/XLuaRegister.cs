@@ -6,6 +6,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 #undef UNITY_EDITOR
+using Spine.Unity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -130,10 +131,13 @@ public static class XLuaRegister
         
         typeof (   Action<LuaTable, float>),
         typeof (Action<LuaTable, string>),
+        typeof (Action<LuaTable, string,string>),
+        typeof (Action<LuaTable, string,int>),
         typeof (Action<LuaTable, LuaTable, Toggle>),
         typeof (Action<LuaTable, LuaTable, object, int>),
         typeof (Action<LuaTable, GameObject, LuaTable>),
         typeof (Action<LuaTable, GameObject, GameObject>),
+        typeof (Action<LuaTable, GameObject>),
         typeof (Action<LuaTable, int, LuaTable>),
         typeof (Action<LuaTable, LuaTable>),
           typeof (Action<LuaTable, int, object>),
@@ -146,6 +150,8 @@ public static class XLuaRegister
         typeof (Func<LuaTable, ulong,string>),
         typeof (Func<double, double, double>),
         typeof (Func<LuaTable, string, object>),
+        typeof (Func<LuaTable, string, string,LuaTable>),
+        typeof (Func<LuaTable, string, int,LuaTable>),
         typeof (Func<LuaTable, LuaTable, object, int,PointerEventData, bool>),
         typeof (Func<LuaTable, List<SLG.AttrInc>>),
         typeof (Action<LuaTable, LuaTable, object, int,PointerEventData>),
@@ -170,7 +176,8 @@ public static class XLuaRegister
         typeof(UnityEngine.Events.UnityAction<float>),
         typeof(UnityEngine.Events.UnityAction<bool>),
         typeof (UnityEngine.Events.UnityAction<Vector2>),
-
+        typeof ( Action<LuaTable, SkeletonAnimation> ),
+        typeof (Func<LuaTable, float, float,LuaTable>),
     };
     //HOTFIX_ENABLE
 

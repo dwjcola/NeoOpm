@@ -17,7 +17,7 @@ namespace ProHA
 {
     public class ProcedureCity : ProcedureBase
     {
-        private bool m_GoToWorld = false;
+        private bool m_GoToBattle = false;
 
         public override bool UseNativeDialog
         {
@@ -27,14 +27,15 @@ namespace ProHA
             }
         }
 
-        public void GoToWorld()
+        public void GoToBattle()
         {
-            m_GoToWorld = true;
+            m_GoToBattle = true;
         }
         protected override void OnEnter(ProcedureOwner procedureOwner)
         {
             base.OnEnter(procedureOwner);
-            GameEntry.HeroScene.Open();
+            GameEntry.UI.OpenUI("MainUI", this);
+            /*GameEntry.HeroScene.Open();
             m_GoToWorld = false;
             List<int> heros = new List<int>();
             heros.Add(201);
@@ -43,7 +44,7 @@ namespace ProHA
             heros.Add(204);
             heros.Add(205);
             
-            HeroSceneMgr.instance.InitHeroScene(heros);
+            HeroSceneMgr.instance.InitHeroScene(heros);*/
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
@@ -55,11 +56,12 @@ namespace ProHA
         {
             base.OnUpdate(procedureOwner, elapseSeconds, realElapseSeconds);
 
-            if (m_GoToWorld)
+            if (m_GoToBattle)
             {
-                procedureOwner.SetData<VarInt>(Constant.ProcedureData.NextSceneId, Constant.Scene.World);
+                procedureOwner.SetData<VarInt>(Constant.ProcedureData.NextSceneId, Constant.Scene.Battle);
                 ChangeState<ProcedureChangeScene>(procedureOwner);
             }
+            
         }
     }
 }

@@ -63,8 +63,16 @@ namespace ProHA
             {
                 return;
             }
-            procedureOwner.SetData<VarInt>(Constant.ProcedureData.NextSceneId, Constant.Scene.City);
-            ChangeState<ProcedureChangeScene>(procedureOwner);
+
+
+            ChangeState<ProcedureCity>(procedureOwner);
+
+            /*procedureOwner.SetData<VarInt>(Constant.ProcedureData.NextSceneId, Constant.Scene.City);
+            ChangeState<ProcedureChangeScene>(procedureOwner);*/
+
+
+            /*procedureOwner.SetData<VarInt>(Constant.ProcedureData.NextSceneId, Constant.Scene.Battle);
+            ChangeState<ProcedureChangeScene>(procedureOwner);*/
         }
     }
 }

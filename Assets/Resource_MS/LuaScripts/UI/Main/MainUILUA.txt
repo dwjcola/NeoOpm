@@ -1,0 +1,75 @@
+--主界面
+MainUILUA=LUAUIBase:new({
+	procedure=nil
+	});
+
+function MainUILUA:Open(param)
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self.procedure = param
+	self:Init();
+end
+function MainUILUA:Init()
+	local datas = {11,22,33,44,55,666,77,88,99}
+	--self.root:InitListLua(self,datas,"UpdateList");
+	
+	--self.tabs:SelectTab(1)
+	self:SetSprite(self.icon1,"Icon_Bag_Hud")
+	self:SetSprite(self.icon2,"Icon_Bag_Hud",true)
+
+--[[	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb{1}",1,2))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{1}bbbbbb{0}",1,2))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{1}bbbbbb",1,2))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{{1}}eeeebbbbbb{0}",1,2))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{{1eeeebbbbbb{0}",1,2))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{{{{1eeeebbbbbb{0}",1,2))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{{{1eeeebbbbbb{0}",1,2))]]
+	--self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb{1}",1))
+	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb",1,2))
+
+end
+function MainUILUA:UpdateList( item,data,index )
+	item.txt.text = tostring(data)
+end
+
+function MainUILUA:SelectOne(  )
+	self.root:Move2SelectItem(2)
+	self:AddUIEvent("onclick", self.loginBtn, self.SelectOne);
+end
+function MainUILUA:TabClick( index )
+	self:Error("select --> "..index)
+end
+function MainUILUA:Fight()
+	self:HideSelf()
+	self.procedure:GoToBattle()
+end
+function MainUILUA:HideSelf()
+	self.bg.alpha = 0
+end
+--ui组件添加事件
+function MainUILUA:AddUIEventListener( )
+	--self:AddTabEvent(self.tabs,self.TabClick)
+	self:AddUIEvent("onclick", self.fightBtn, self.Fight);
+end
+--模块添加全局事件
+function MainUILUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function MainUILUA:RemoveEventListener( )
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function MainUILUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("MainUI")
+		end
+	end
+end
+function MainUILUA:OnDestroy()
+	self:RemoveEventListener()
+	MainUILUA = nil;
+end
+return MainUILUA

@@ -35,26 +35,26 @@
 #define NEW_PREFERENCES_SETTINGS_PROVIDER
 #endif
 
-using UnityEngine;
-using UnityEditor;
 using System.Threading;
+using UnityEditor;
+using UnityEngine;
 
 namespace Spine.Unity.Editor {
 
 	public class SpinePreferences : ScriptableObject {
 
-		#if NEW_PREFERENCES_SETTINGS_PROVIDER
+#if NEW_PREFERENCES_SETTINGS_PROVIDER
 		static int wasPreferencesDirCreated = 0;
 		static int wasPreferencesAssetCreated = 0;
-		#endif
+#endif
 
 		public const string SPINE_SETTINGS_ASSET_PATH = "Assets/Editor/SpineSettings.asset";
 
-		#if SPINE_TK2D
+#if SPINE_TK2D
 		internal const float DEFAULT_DEFAULT_SCALE = 1f;
-		#else
+#else
 		internal const float DEFAULT_DEFAULT_SCALE = 0.01f;
-		#endif
+#endif
 		public float defaultScale = DEFAULT_DEFAULT_SCALE;
 
 		internal const float DEFAULT_DEFAULT_MIX = 0.2f;
@@ -77,6 +77,65 @@ namespace Spine.Unity.Editor {
 
 		internal const string DEFAULT_TEXTURE_SETTINGS_REFERENCE = "";
 		public string textureSettingsReference = DEFAULT_TEXTURE_SETTINGS_REFERENCE;
+
+		public bool UsesPMAWorkflow {
+			get {
+				return IsPMAWorkflow(textureSettingsReference);
+			}
+		}
+		public static bool IsPMAWorkflow (string textureSettingsReference) {
+			if (textureSettingsReference == null)
+				return true;
+			string settingsReference = textureSettingsReference.ToLower();
+			if (settingsReference.Contains("straight") || !settingsReference.Contains("pma"))
+				return false;
+			return true;
+		}
+
+		public const string DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL = "SkeletonPMAMultiply";
+		public const string DEFAULT_BLEND_MODE_SCREEN_MATERIAL = "SkeletonPMAScreen";
+		public const string DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL = "SkeletonPMAAdditive";
+
+		public Material blendModeMaterialMultiply = null;
+		public Material blendModeMaterialScreen = null;
+		public Material blendModeMaterialAdditive = null;
+
+		public string FindPathOfAsset (string assetName) {
+			string typeSearchString = assetName;
+			string[] guids = AssetDatabase.FindAssets(typeSearchString);
+			if (guids.Length > 0) {
+				return AssetDatabase.GUIDToAssetPath(guids[0]);
+			}
+			return null;
+		}
+
+		public Material BlendModeMaterialMultiply {
+			get {
+				if (blendModeMaterialMultiply == null) {
+					string path = FindPathOfAsset(DEFAULT_BLEND_MODE_MULTIPLY_MATERIAL);
+					blendModeMaterialMultiply = AssetDatabase.LoadAssetAtPath<Material>(path);
+				}
+				return blendModeMaterialMultiply;
+			}
+		}
+		public Material BlendModeMaterialScreen {
+			get {
+				if (blendModeMaterialScreen == null) {
+					string path = FindPathOfAsset(DEFAULT_BLEND_MODE_SCREEN_MATERIAL);
+					blendModeMaterialScreen = AssetDatabase.LoadAssetAtPath<Material>(path);
+				}
+				return blendModeMaterialScreen;
+			}
+		}
+		public Material BlendModeMaterialAdditive {
+			get {
+				if (blendModeMaterialAdditive == null) {
+					string path = FindPathOfAsset(DEFAULT_BLEND_MODE_ADDITIVE_MATERIAL);
+					blendModeMaterialAdditive = AssetDatabase.LoadAssetAtPath<Material>(path);
+				}
+				return blendModeMaterialAdditive;
+			}
+		}
 
 		internal const bool DEFAULT_ATLASTXT_WARNING = true;
 		public bool atlasTxtImportWarning = DEFAULT_ATLASTXT_WARNING;
@@ -177,9 +236,15 @@ namespace Spine.Unity.Editor {
 					if (string.IsNullOrEmpty(textureSettingsRef.stringValue)) {
 						var pmaTextureSettingsReferenceGUIDS = AssetDatabase.FindAssets("PMATexturePreset");
 						if (pmaTextureSettingsReferenceGUIDS.Length > 0) {
-							textureSettingsRef.stringValue = AssetDatabase.GUIDToAssetPath(pmaTextureSettingsReferenceGUIDS[0]);
+							var assetPath = AssetDatabase.GUIDToAssetPath(pmaTextureSettingsReferenceGUIDS[0]);
+							if (!string.IsNullOrEmpty(assetPath))
+								textureSettingsRef.stringValue = assetPath;
 						}
 					}
+
+					EditorGUILayout.PropertyField(settings.FindProperty("blendModeMaterialAdditive"), new GUIContent("Additive Material", "Additive blend mode Material template."));
+					EditorGUILayout.PropertyField(settings.FindProperty("blendModeMaterialMultiply"), new GUIContent("Multiply Material", "Multiply blend mode Material template."));
+					EditorGUILayout.PropertyField(settings.FindProperty("blendModeMaterialScreen"), new GUIContent("Screen Material", "Screen blend mode Material template."));
 				}
 
 				EditorGUILayout.Space();
@@ -215,11 +280,11 @@ namespace Spine.Unity.Editor {
 					}
 				}
 
-				#if SPINE_TK2D_DEFINE
+#if SPINE_TK2D_DEFINE
 				bool isTK2DDefineSet = true;
-				#else
+#else
 				bool isTK2DDefineSet = false;
-				#endif
+#endif
 				bool isTK2DAllowed = SpineEditorUtilities.SpineTK2DEditorUtility.IsTK2DAllowed;
 				if (SpineEditorUtilities.SpineTK2DEditorUtility.IsTK2DInstalled() || isTK2DDefineSet) {
 					GUILayout.Space(20);
@@ -231,12 +296,12 @@ namespace Spine.Unity.Editor {
 						if (GUILayout.Button("Disable", GUILayout.Width(64)))
 							SpineEditorUtilities.SpineTK2DEditorUtility.DisableTK2D();
 					}
-					#if !SPINE_TK2D_DEFINE
+#if !SPINE_TK2D_DEFINE
 					if (!isTK2DAllowed) {
 						EditorGUILayout.LabelField("To allow TK2D support, please modify line 67 in", EditorStyles.boldLabel);
 						EditorGUILayout.LabelField("Spine/Editor/spine-unity/Editor/Util./BuildSettings.cs", EditorStyles.boldLabel);
 					}
-					#endif
+#endif
 				}
 
 				GUILayout.Space(20);

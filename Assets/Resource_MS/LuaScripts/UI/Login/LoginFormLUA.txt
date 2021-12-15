@@ -1,0 +1,41 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:登录界面
+--]]
+LoginFormLUA=LUAUIBase:new({
+	ProcedureLogin = nil
+	});
+function LoginFormLUA:Open(param)
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init(param);
+end
+function LoginFormLUA:Init(param)
+	self.loginBtn.gameObject:SetActive(true)
+	self.ProcedureLogin = param;
+end
+
+function LoginFormLUA:Login()
+	if self.ProcedureLogin ~= nil then
+		self.ProcedureLogin:LoginGame();
+	end
+end
+
+--ui组件添加事件
+function LoginFormLUA:AddUIEventListener( )
+	self:AddUIEvent("onclick", self.loginBtn.gameObject, self.Login);
+end
+--模块添加全局事件
+function LoginFormLUA:AddEventListener( )
+end
+--模块移除全局事件
+function LoginFormLUA:RemoveEventListener( )
+end
+function LoginFormLUA:CloseMe()
+	self:CloseUI("LoginFormLUA")
+end
+function LoginFormLUA:OnDestroy()
+	self:RemoveEventListener()
+	LoginFormLUA = nil;
+end

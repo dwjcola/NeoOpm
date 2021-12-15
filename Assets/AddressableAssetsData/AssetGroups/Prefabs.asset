@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Prefabs
+  m_EditorClassIdentifier: 
+  m_GroupName: Prefabs
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 807ecd712d5c8194f8ea1111eea5ccac
+  m_SerializeEntries:
+  - m_GUID: dadef4c535bd7494683136f2b54272a4
+    m_Address: Assets/Resource_MS/Prefabs
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+  - m_GUID: 6b971a997067ac846a0d2f38616ba349
+    m_Address: Assets/Resource_MS/Prefabs/HeroScenes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+  - m_GUID: b1451370182dcd74287cc7db3f008a07
+    m_Address: Assets/Resource_MS/Prefabs/Heroes
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 724c1c18cb4c0cf44ac143809c8dda4f, type: 2}
+    - {fileID: 11400000, guid: 4e66d7641ab927641bfb82bdae2b4fbf, type: 2}

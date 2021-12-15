@@ -1,0 +1,261 @@
+--[[
+    带PB字样的函数 都是适用于lua-protobuf的函数，把table encode为byte[]，把byte[]再decode回 lua table lua-protobuf需要load一个存放协议的文件
+    其他是 适用于lua-rapidjson的，把table encode为json string，把json string再decode回 lua table
+]]
+PomeloCLUA={
+    pomeloClient= CS.Pomelo.DotNetClient.PomeloClient.Instance;
+    LC=CS.LC;
+    XluaManager=CS.XluaManager.instance;
+};
+PomeloCLUA.pb=require("pb");
+PomeloCLUA.protoc=require("protoc");
+PomeloCLUA.rapid=require("rapidjson");
+
+function PomeloCLUA:Init()
+    --local message=CS.UnityEditor.AssetDatabase.LoadAssetAtPath("Assets/Resource_MS/LuaScripts/proto/Message.txt",typeof(CS.UnityEngine.TextAsset));
+    local  message = self.XluaManager:GetLuaStrInDic("Message")
+    assert(PomeloCLUA.protoc:load(message));
+    self.pb.option("use_default_metatable")--将默认值表作为解码目标表的元表使用
+    self.pb.option("enum_as_value")--解码枚举的时候，设置值为枚举值数字
+    require("RPCLUA");
+    -- self.XluaManager:DoLuaString("RPCLUA","proto")
+    -- self.XluaManager:DoLuaString("PushEventLUA","proto")
+    CS.LC.AddEvent(self,"Connect_server_succ",self.ConnectServerInit);
+    require("MessageEnum")
+end
+function PomeloCLUA:ConnectServerInit()
+    CS.LC.Log("PomeloCLUA:ConnectServerInit")
+    require("PushEventLUA"):InitOn();
+end
+-- assert(PomeloCLUA.protoc:load(""));
+--[[使用 lua-protobuf方式，把table转为byte[]
+    serviceid：消息id；
+    requstMsgType：传递的数据对应的 proto的协议名
+    requstMsg：一个lua table，格式和 requstMsgType表示的协议格式、其中的字段名必须一致，不设值的字段表示为空
+    callbackParaType：返回的数据对应的 proto的协议名
+    callback：回调函数，没有建议传一个空的function或者使用PBNotify,返回的数据会转为lua table
+    backTable：callback执行的那个lua table
+]]
+function PomeloCLUA:PbRequest(serviceid,requstMsgType,requstMsg,callbackParaType,callback,backTable)
+    if(not self.pomeloClient.isConnect)then
+        self.LC.Error("SerVer Connect False")
+        return false
+    end
+    local reqMsg=nil;
+    if(requstMsg~=nil and requstMsgType~=nil)then
+        reqMsg=self.pb.encode(requstMsgType,requstMsg);
+    end
+    local cbFunc=function(byteArray)
+        local self=PomeloCLUA;
+        if(self==nil)then
+            CS.LC.Error("PomeloCLUA==nil")
+            return;
+        end
+        local ans =self.pb.decode(callbackParaType,byteArray)
+        callback(backTable,ans);
+    end
+    self.pomeloClient:LuaPBRequest(serviceid,reqMsg,cbFunc);
+    return true
+end
+--[[使用 lua-protobuf方式，把table转为byte[]
+    serviceid：消息id；
+    requstMsgType：传递的数据对应的 proto的协议名
+    requstMsg：一个lua table，格式和 requstMsgType表示的协议格式、其中的字段名必须一致，不设值的字段表示为空
+]]
+function PomeloCLUA:PBNotify(serviceid,requstMsgType,requstMsg)
+    if(not self.pomeloClient.isConnect)then
+        self.LC.Error("SerVer Connect False")
+        return false
+    end
+    local reqMsg=nil;
+    if(requstMsg~=nil and requstMsgType~=nil)then
+        reqMsg=self.pb.encode(requstMsgType,requstMsg);
+    end
+    self.pomeloClient:LuaPBNotify(serviceid,reqMsg);
+    return true
+end
+--[[使用 lua-protobuf方式，把table转为byte[]
+    serviceid：消息id；
+    callbackParaType：返回的数据对应的 proto的协议名
+    callback：回调函数，没有建议传一个空的function,返回的数据会转为lua table
+    backTable：callback执行的那个lua table
+    返回的这个cbFunc是用来删除的,注意仅能使用 RemovePBEvent 删除
+]]
+function PomeloCLUA:PBOnEvent(serviceid,callbackParaType,callback,backTable)
+    local cbFunc=function(byteArray)
+        local self=PomeloCLUA;
+        if(self==nil)then
+            CS.LC.Error("PomeloCLUA==nil")
+            return;
+        end
+        local ans=nil;
+        if(callbackParaType~=nil and byteArray~=nil)then
+            ans =self.pb.decode(callbackParaType,byteArray)
+        end
+        print("callback--"..callbackParaType)
+        callback(backTable,ans);
+    end
+    self.pomeloClient:LuaPBOn(serviceid,cbFunc);
+    return cbFunc;
+end
+function PomeloCLUA:RemovePBEvent(serviceid,callback)
+    self.pomeloClient:RemoveLuaPBEvent(serviceid,callback);
+end
+
+-------------------------------------------------------------------以下为json格式
+--[[使用 lua-rapidjson方式 把table 转成json 字符串
+    serviceid：消息id；
+    requstMsg：一个lua table，格式和 要使用的协议格式、其中的字段名必须一致，不设值的字段表示为空
+    callback：回调函数，没有建议传一个空的function或者使用PBNotify，返回的数据会转为lua table
+    backTable：callback执行的那个lua table
+]]
+function PomeloCLUA:JsonRequest(serviceid,requstMsg,callback,backTable)
+    if(not self.pomeloClient.isConnect)then
+        self.LC.Error("SerVer Connect False")
+        return false
+    end
+    local reqMsg=nil
+    if(requstMsg~=nil)then
+        reqMsg=self.rapid.encode(requstMsg);
+    end
+    local cbFunc=function(jsonStr)
+        local self=PomeloCLUA;
+        if(self==nil)then
+            CS.LC.Error("PomeloCLUA==nil")
+            return;
+        end
+        local ans=self.rapid.decode(jsonStr)
+        callback(backTable,ans);
+    end
+    self.pomeloClient:LuaJsonRequest(serviceid,reqMsg,cbFunc);
+    return true
+end
+
+--[[使用 lua-rapidjson方式 把table 转成json 字符串
+    serviceid：消息id；
+    requstMsg：一个lua table，格式和 要使用的协议格式、其中的字段名必须一致，不设值的字段表示为空
+]]
+function PomeloCLUA:Notify(serviceid,requstMsg)
+    if(not self.pomeloClient.isConnect)then
+        self.LC.Error("SerVer Connect False")
+        return false
+    end
+    local reqMsg=nil
+    if(requstMsg~=nil)then
+        reqMsg=self.rapid.encode(requstMsg);
+    end
+    self.pomeloClient:notify(serviceid,reqMsg);
+    return true
+end
+
+--[[使用 lua-rapidjson方式 把table 转成json 字符串
+    serviceid：消息id；
+    callback：回调函数，没有建议传一个空的function，返回的数据会转为lua table
+    backTable：callback执行的那个lua table
+    
+    返回的这个cbFunc是用来删除的,注意仅能使用 RemoveEvent 删除
+]]
+function PomeloCLUA:JsonOnEvent(serviceid,callback,backTable)
+    local cbFunc=function(jsonStr)
+        local self=PomeloCLUA;
+        if(self==nil)then
+            CS.LC.Error("PomeloCLUA==nil")
+            return;
+        end
+        local ans=nil
+        if(jsonStr~=nil)then
+            ans=self.rapid.decode(jsonStr)
+        end
+        callback(backTable,ans);
+    end
+    self.pomeloClient:on(serviceid,cbFunc);
+    return cbFunc;
+end
+
+function PomeloCLUA:RemoveEvent(serviceid,callback)
+    self.pomeloClient:RemoveEvent(serviceid,callback);
+end
+
+
+--[[
+    这种形式是用于返回值是一个PB和Json之外的基本类型(int32、int64、string等),
+    buffer是一个byte[]，callback是执行函数
+    fmt的格式，参见lua https://www.runoob.com/manual/lua53doc/manual.html#pdf-string.packsize 6.4.2 – 打包和解包用到的格式串
+    返回的这个cbFunc是用来删除的,注意仅能使用 RemoveByteEvent 删除
+]]
+function  PomeloCLUA:BuiltInOn(serviceid,fmt, isstring,callback,backTable)
+    local cbFunc=function(buffer,offset)
+        local self=PomeloCLUA;
+        if(self==nil)then
+            CS.LC.Error("PomeloCLUA==nil")
+            return;
+        end
+        local ans=nil
+        if(buffer~=nil)then
+            ans=isstring and self:StringDecode(buffer, offset) or self:BuiltInDecode(fmt, buffer, offset)
+        end
+        callback(backTable,ans);
+    end  
+    self.pomeloClient:on(serviceid,cbFunc);
+    return cbFunc;
+end
+function PomeloCLUA:RemoveByteEvent(serviceid,callback)
+    self.pomeloClient:RemoveEvent(serviceid,callback);
+end
+
+
+function PomeloCLUA:PBEncode(requstMsgType,requstMsg)
+    return self.pb.encode(requstMsgType,requstMsg);
+end
+function PomeloCLUA:PBDecode(callbackParaType,buffer,offset)
+    local respMsg=self:StringDecode(buffer, offset)
+    return self.pb.decode(callbackParaType,respMsg)
+end
+
+function  PomeloCLUA:JsonEncode(luatable)---不带开头长度
+    local jsonStr=self.rapid.encode(luatable);
+    return string.sub(string.pack(">s2",jsonStr),3);
+end
+
+function  PomeloCLUA:JsonDecode(buffer,offset)
+    local ans=self:StringDecode(buffer,offset)
+    local r=self.rapid.decode(ans);
+    return r;
+end
+
+function PomeloCLUA:BuiltInEncode(fmt,value)---value 是一个table，包含所有的fmt对应的数据，或者默认值
+    -- int,long,string
+    --fmt=">i4i8s2";
+    if(fmt==nil or value==nil)then --没有格式串无法转换
+        return nil;
+    end
+    if(type(value)~="table")then
+        return string.pack(fmt,value);
+    else
+        return string.pack(fmt,table.unpack(value));
+    end
+end
+
+function PomeloCLUA:BuiltInDecode(fmt,buffer,offset)---类型混杂的时候使用这个解码
+    if(fmt==nil or buffer==nil)then --没有格式串无法转换
+        return nil;
+    end
+    offset=offset or 0
+    return string.unpack(fmt, buffer, offset+1)
+end
+function  PomeloCLUA:StringDecode(buffer,offset)--只有string的时候，因为转换需要设置长度，只能使用这个
+    if(buffer==nil)then
+        return "";
+    end
+    offset=offset or 0
+    local  len = #buffer-offset;
+    local ret=string.pack(">I2",len)..string.sub(buffer,offset+1);
+    local ans=string.unpack(">s2",ret);
+    return ans
+end
+function PomeloCLUA:ondestroy()
+    -- body
+    CS.LC.RemoveEvent(self,"Connect_server_succ",self.ConnectServerInit);
+end
+
+return PomeloCLUA;

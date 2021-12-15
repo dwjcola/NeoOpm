@@ -1,0 +1,433 @@
+
+slg_zhende.png
+size: 1024,1024
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+slg_zhende0
+  rotate: false
+  xy: 396, 640
+  size: 222, 382
+  orig: 222, 382
+  offset: 0, 0
+  index: -1
+slg_zhende1
+  rotate: false
+  xy: 549, 365
+  size: 24, 14
+  orig: 24, 14
+  offset: 0, 0
+  index: -1
+slg_zhende10
+  rotate: true
+  xy: 562, 7
+  size: 34, 61
+  orig: 34, 61
+  offset: 0, 0
+  index: -1
+slg_zhende11
+  rotate: true
+  xy: 953, 668
+  size: 28, 40
+  orig: 28, 40
+  offset: 0, 0
+  index: -1
+slg_zhende12
+  rotate: true
+  xy: 472, 363
+  size: 16, 43
+  orig: 16, 43
+  offset: 0, 0
+  index: -1
+slg_zhende13
+  rotate: false
+  xy: 791, 442
+  size: 10, 59
+  orig: 10, 59
+  offset: 0, 0
+  index: -1
+slg_zhende14
+  rotate: true
+  xy: 252, 6
+  size: 22, 63
+  orig: 22, 63
+  offset: 0, 0
+  index: -1
+slg_zhende15
+  rotate: false
+  xy: 431, 362
+  size: 19, 17
+  orig: 19, 17
+  offset: 0, 0
+  index: -1
+slg_zhende16
+  rotate: true
+  xy: 517, 365
+  size: 14, 30
+  orig: 14, 30
+  offset: 0, 0
+  index: -1
+slg_zhende17
+  rotate: false
+  xy: 814, 405
+  size: 89, 96
+  orig: 89, 96
+  offset: 0, 0
+  index: -1
+slg_zhende18
+  rotate: true
+  xy: 620, 724
+  size: 166, 179
+  orig: 166, 179
+  offset: 0, 0
+  index: -1
+slg_zhende19
+  rotate: true
+  xy: 600, 366
+  size: 13, 26
+  orig: 13, 26
+  offset: 0, 0
+  index: -1
+slg_zhende2
+  rotate: false
+  xy: 955, 566
+  size: 31, 29
+  orig: 31, 29
+  offset: 0, 0
+  index: -1
+slg_zhende20
+  rotate: true
+  xy: 396, 361
+  size: 18, 33
+  orig: 18, 33
+  offset: 0, 0
+  index: -1
+slg_zhende21
+  rotate: false
+  xy: 452, 362
+  size: 18, 17
+  orig: 18, 17
+  offset: 0, 0
+  index: -1
+slg_zhende22
+  rotate: true
+  xy: 953, 698
+  size: 27, 54
+  orig: 27, 54
+  offset: 0, 0
+  index: -1
+slg_zhende23
+  rotate: false
+  xy: 718, 450
+  size: 71, 63
+  orig: 72, 63
+  offset: 0, 0
+  index: -1
+slg_zhende24
+  rotate: false
+  xy: 827, 393
+  size: 10, 10
+  orig: 10, 10
+  offset: 0, 0
+  index: -1
+slg_zhende25
+  rotate: true
+  xy: 803, 491
+  size: 10, 9
+  orig: 10, 9
+  offset: 0, 0
+  index: -1
+slg_zhende26
+  rotate: false
+  xy: 749, 650
+  size: 20, 12
+  orig: 20, 12
+  offset: 0, 0
+  index: -1
+slg_zhende27
+  rotate: false
+  xy: 771, 651
+  size: 19, 11
+  orig: 19, 11
+  offset: 0, 0
+  index: -1
+slg_zhende28
+  rotate: true
+  xy: 955, 597
+  size: 28, 54
+  orig: 28, 54
+  offset: 0, 0
+  index: -1
+slg_zhende29
+  rotate: true
+  xy: 891, 613
+  size: 43, 59
+  orig: 43, 59
+  offset: 0, 0
+  index: -1
+slg_zhende3
+  rotate: false
+  xy: 814, 392
+  size: 11, 11
+  orig: 11, 11
+  offset: 0, 0
+  index: -1
+slg_zhende30
+  rotate: true
+  xy: 2, 5
+  size: 125, 199
+  orig: 125, 199
+  offset: 0, 0
+  index: -1
+slg_zhende31
+  rotate: true
+  xy: 891, 793
+  size: 97, 66
+  orig: 97, 66
+  offset: 0, 0
+  index: -1
+slg_zhende32
+  rotate: true
+  xy: 760, 5
+  size: 81, 87
+  orig: 81, 87
+  offset: 0, 0
+  index: -1
+slg_zhende33
+  rotate: false
+  xy: 632, 46
+  size: 32, 40
+  orig: 32, 40
+  offset: 0, 0
+  index: -1
+slg_zhende34
+  rotate: false
+  xy: 952, 627
+  size: 47, 29
+  orig: 47, 29
+  offset: 0, 0
+  index: -1
+slg_zhende35
+  rotate: true
+  xy: 625, 7
+  size: 34, 39
+  orig: 34, 39
+  offset: 0, 0
+  index: -1
+slg_zhende36
+  rotate: true
+  xy: 798, 503
+  size: 61, 106
+  orig: 61, 106
+  offset: 0, 0
+  index: -1
+slg_zhende37
+  rotate: false
+  xy: 801, 613
+  size: 88, 277
+  orig: 88, 277
+  offset: 0, 0
+  index: -1
+slg_zhende38
+  rotate: true
+  xy: 620, 892
+  size: 130, 313
+  orig: 130, 313
+  offset: 0, 0
+  index: -1
+slg_zhende39
+  rotate: true
+  xy: 396, 441
+  size: 197, 320
+  orig: 197, 320
+  offset: 0, 0
+  index: -1
+slg_zhende4
+  rotate: true
+  xy: 798, 566
+  size: 45, 155
+  orig: 45, 155
+  offset: 0, 0
+  index: -1
+slg_zhende40
+  rotate: true
+  xy: 317, 43
+  size: 311, 313
+  orig: 311, 313
+  offset: 0, 0
+  index: -1
+slg_zhende41
+  rotate: true
+  xy: 632, 88
+  size: 291, 331
+  orig: 291, 331
+  offset: 0, 0
+  index: -1
+slg_zhende42
+  rotate: false
+  xy: 935, 894
+  size: 59, 128
+  orig: 59, 128
+  offset: 0, 0
+  index: -1
+slg_zhende43
+  rotate: false
+  xy: 891, 658
+  size: 60, 133
+  orig: 60, 133
+  offset: 0, 0
+  index: -1
+slg_zhende44
+  rotate: false
+  xy: 749, 664
+  size: 46, 58
+  orig: 46, 58
+  offset: 0, 0
+  index: -1
+slg_zhende45
+  rotate: false
+  xy: 203, 5
+  size: 47, 23
+  orig: 47, 23
+  offset: 0, 0
+  index: -1
+slg_zhende46
+  rotate: true
+  xy: 575, 365
+  size: 14, 23
+  orig: 14, 23
+  offset: 0, 0
+  index: -1
+slg_zhende47
+  rotate: false
+  xy: 509, 6
+  size: 51, 35
+  orig: 51, 35
+  offset: 0, 0
+  index: -1
+slg_zhende48
+  rotate: true
+  xy: 905, 399
+  size: 67, 87
+  orig: 67, 87
+  offset: 0, 0
+  index: -1
+slg_zhende49
+  rotate: false
+  xy: 718, 515
+  size: 78, 124
+  orig: 78, 124
+  offset: 0, 0
+  index: -1
+slg_zhende5
+  rotate: true
+  xy: 317, 8
+  size: 33, 115
+  orig: 33, 115
+  offset: 0, 0
+  index: -1
+slg_zhende501
+  rotate: true
+  xy: 396, 381
+  size: 58, 416
+  orig: 58, 416
+  offset: 0, 0
+  index: -1
+slg_zhende51
+  rotate: false
+  xy: 959, 800
+  size: 35, 32
+  orig: 35, 32
+  offset: 0, 0
+  index: -1
+slg_zhende52
+  rotate: false
+  xy: 932, 11
+  size: 89, 75
+  orig: 89, 75
+  offset: 0, 0
+  index: -1
+slg_zhende53
+  rotate: false
+  xy: 906, 468
+  size: 96, 96
+  orig: 96, 96
+  offset: 0, 0
+  index: -1
+slg_zhende54
+  rotate: false
+  xy: 434, 2
+  size: 73, 39
+  orig: 73, 39
+  offset: 0, 0
+  index: -1
+slg_zhende55
+  rotate: false
+  xy: 620, 643
+  size: 95, 79
+  orig: 95, 79
+  offset: 0, 0
+  index: -1
+slg_zhende56
+  rotate: false
+  xy: 849, 5
+  size: 81, 81
+  orig: 81, 81
+  offset: 0, 0
+  index: -1
+slg_zhende57
+  rotate: true
+  xy: 959, 834
+  size: 58, 57
+  orig: 58, 57
+  offset: 0, 0
+  index: -1
+slg_zhende58
+  rotate: false
+  xy: 666, 5
+  size: 92, 81
+  orig: 92, 81
+  offset: 0, 0
+  index: -1
+slg_zhende59
+  rotate: true
+  xy: 953, 727
+  size: 64, 61
+  orig: 64, 61
+  offset: 0, 0
+  index: -1
+slg_zhende6
+  rotate: false
+  xy: 965, 309
+  size: 31, 88
+  orig: 31, 88
+  offset: 0, 0
+  index: -1
+slg_zhende60
+  rotate: true
+  xy: 317, 356
+  size: 666, 77
+  orig: 666, 77
+  offset: 0, 0
+  index: -1
+slg_zhende7
+  rotate: false
+  xy: 717, 641
+  size: 30, 81
+  orig: 30, 81
+  offset: 0, 0
+  index: -1
+slg_zhende8
+  rotate: false
+  xy: 2, 132
+  size: 307, 890
+  orig: 307, 890
+  offset: 0, 0
+  index: -1
+slg_zhende9
+  rotate: true
+  xy: 203, 30
+  size: 100, 111
+  orig: 100, 111
+  offset: 0, 0
+  index: -1

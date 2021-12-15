@@ -1,0 +1,59 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:loading界面
+--]]
+LoadingUIFormLUA=LUAUIBase:new({
+	
+	});
+
+function LoadingUIFormLUA:Open(arg)
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init();
+	if(arg==-1)then
+		self.trans.localPosition=self.Vector3.one*10000;
+	end
+	self.loaddesc.text="Loading";
+end
+function LoadingUIFormLUA:Init()
+	self.slider.value=0
+	if(not isNil(self.bgImage.sprite))then
+		CS.LC.ResMgr:UnloadAsset(self.bgImage.sprite)
+	end
+	CS.LC.SetImageSprite(self.bgImage,"Assets/Resource_MS/UI/UITexture/start_Landingpage1.jpg","start_Landingpage1")
+end
+function LoadingUIFormLUA:SetPercent(va)
+	self.slider.value=va.Param1;
+	self.percentage.text=self:GetDicValue("Loading_2",mathLUA:FloatToInt_100_2(va.Param1));
+	-- body
+end
+--ui组件添加事件
+function LoadingUIFormLUA:AddUIEventListener( )
+	--self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+end
+--模块添加全局事件
+function LoadingUIFormLUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+	self:AddEvent("UPDATE_LOADING_PROGRESS",self.SetPercent)
+	self:AddEvent("SHOW_LOADING_UI",self.ShowUI)
+end
+function LoadingUIFormLUA:ShowUI(param)
+	local isshow=param.Param1;
+	self.trans:SetAsLastSibling();
+	self.trans.localPosition=isshow and self.Vector3.zero or self.Vector3.one*10000;
+end
+--模块移除全局事件
+function LoadingUIFormLUA:RemoveEventListener( )
+	self:RemoveEvent("UPDATE_LOADING_PROGRESS",self.SetPercent)
+	self:RemoveEvent("SHOW_LOADING_UI",self.ShowUI)
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function LoadingUIFormLUA:OnCloseMe()
+	self:CloseUI("LoadingUIForm")
+end
+function LoadingUIFormLUA:OnDestroy()
+	self:RemoveEventListener()
+	LoadingUIFormLUA = nil;
+end
+return LoadingUIFormLUA

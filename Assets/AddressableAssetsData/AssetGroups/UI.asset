@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  m_GroupName: UI
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 748a91defc4178c4fb723d6e80c05b31
+  m_SerializeEntries:
+  - m_GUID: ccc9cc620d7731e40a2d6765694537dc
+    m_Address: Assets/Resource_MS/UI/UISpines
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 871a87dc5ec966f4390ac5f4ff8f983a
+    m_Address: Assets/Resource_MS/UI/UIForms
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fd456d6375700e44ab9f271ddc572eb4
+    m_Address: Assets/Resource_MS/UI/UIAtlas
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 1b4f365128ca0464e92e3807ed00659e
+    m_Address: Assets/Resource_MS/UI
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - UI
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: fbae2dbdbfb57634d976125ed4dea27e, type: 2}
+    - {fileID: 11400000, guid: d974f4447f896a24380b61fbf221ec44, type: 2}

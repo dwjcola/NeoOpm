@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe75f45980cfe1147a34d9b663ceb203, type: 3}
+  m_Name: Zhende
+  m_EditorClassIdentifier: 
+  rid: 2
+  tid: 2
+  prefab: {fileID: 6573251803396761007, guid: 6d9544cfae8beec4b8526fc61575fc0a, type: 3}
+  scale: {x: 0.09, y: 0.09}
+  offset: {x: 0.13, y: -0.23}
+  bgSceneData: {fileID: 11400000, guid: fa560289100aa164eac26e95b7bbd349, type: 2}

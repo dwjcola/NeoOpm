@@ -1,0 +1,37 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:热修复入口
+--]]
+HotfixMain = {
+    xluaManager=CS.XluaManager.instance
+}
+
+-- 需要被加载的热修复模块
+local modules = { --脚本名字，路径统一都放到 LuaScripts/hotfix,不需要配置到panel表
+    --LoginFormHotfix"
+}
+function HotfixMain:reimport(name)
+    local package = package
+    package.loaded[name] = nil
+    package.preload[name] = nil
+    return self.xluaManager:DoLuaString(name,"hotfix")--require(name)    
+end
+
+function HotfixMain:Start()
+	print("HotfixMain start...")
+	for _,v in ipairs(modules) do
+		local hotfix_module = self:reimport(v)
+		hotfix_module.Register()
+	end
+end
+
+function HotfixMain:Stop()
+	print("HotfixMain stop...")
+	for _,v in ipairs(modules) do
+		local hotfix_module = self.xluaManager:DoLuaString(v,"hotfix")--require(v)
+		hotfix_module.Unregister()
+	end
+end
+
+return HotfixMain

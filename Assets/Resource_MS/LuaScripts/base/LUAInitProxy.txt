@@ -1,0 +1,8 @@
+﻿--[[
+Author: DWJ
+Date: 2021-11-18
+Description:初始化proxy
+--]]
+LUAInitProxy={};
+LoginProxy=require("LoginProxy")
+LoginProxy:Init()

@@ -1,0 +1,8 @@
+﻿--[[
+Author: DWJ
+Date: 2021-11-18
+Description:存放一些固定定义的Const
+--]]
+LUADefine={};
+
+LUADefine.TEST="TEST"

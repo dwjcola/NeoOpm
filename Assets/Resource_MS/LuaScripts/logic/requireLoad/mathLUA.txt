@@ -1,0 +1,76 @@
+﻿--[[
+Author: DWJ
+Date: 2021-11-18
+Description:数学类
+--]]
+mathLUA={}
+function mathLUA:roundex(number,count)
+	number = tonumber(number) or 0
+	count= count or 5
+	local factor=10^count
+	number=number*factor
+	number=self:round(number)
+  return number/factor
+end
+
+function mathLUA:round(value)
+	value = tonumber(value) or 0
+	return math.floor(value + 0.5)
+end
+
+--精确到小数点后两位
+function mathLUA:FloatToInt_100(val)
+	local ret = string.format("%.1f",(self:roundex(val) * 100));
+	local t1, t2 = math.modf(ret);
+	-- self:Log("t1:",t1,"　t2:",t2," ret:",ret);
+	---小数如果为0，则去掉
+	if t2 > 0 then
+		return ret
+	else
+		return t1
+	end
+  end
+  
+  function mathLUA:FloatToInt_100_2(val)
+	local ret = string.format("%.2f",(self:roundex(val) * 100));
+	local t1, t2 = math.modf(ret);
+	-- self:Log("t1:",t1,"　t2:",t2," ret:",ret);
+	---小数如果为0，则去掉
+	if t2 > 0 then
+		local  ret2 = string.format("%.1f",t2*10) 
+		local t3,t4 = math.modf(ret2) 
+		if t4 > 0 then
+		  return ret
+		else
+		  return t1 + t3/10
+		end
+	else
+		return t1
+	end
+  end
+  
+  function mathLUA:FloatToInt(val)
+	return self:round(val);
+  end
+  
+  function  mathLUA:GetPreciseDecimal(nNum, n,forceDecimal)--取nNum的n位小数,forceDecimal为true强制保留小数
+		if type(nNum) ~= "number" then
+			return nNum;
+		end
+		n = n or 0;
+		n = math.floor(n)
+		if n < 0 then
+			n = 0;
+		end
+		local nDecimal = 10 ^ n
+		local nTemp = math.floor(nNum * nDecimal);
+		local nRet = nTemp / nDecimal;
+		local ret = string.format("%."..n.."f",nRet);
+		local t1, t2 = math.modf(ret);
+		if(t2>0 or forceDecimal)then
+			return ret;
+		else
+			return t1;
+		end
+	end	
+return mathLUA

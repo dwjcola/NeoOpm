@@ -1,0 +1,57 @@
+﻿--[[
+Author: DWJ
+Date: 2021-11-18
+Description:LUAMain
+--]]
+LUAMain={};
+function LUAMain:new (o)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+LUAMain.name="luamain"
+LUAMain.LuaIdBaseNum=1
+
+require("LUAUIBase");
+LUAUIBase:init();
+
+require("LUADefine");
+--网络
+PomeloCLUA=require("PomeloCLUA")
+PomeloCLUA:Init()
+--表格
+TblManager=require "TblManager";
+TblManager:InitAllTbl()
+
+require("UtilsLUA")--一些扩展函数
+
+require("LUAInitProxy");
+function pairsSortKey( t,f )
+  local a={}
+  for k in pairs(t) do
+    a[#a+1]=k
+  end
+  table.sort( a,f )
+  local i=0
+  return function (  )
+    i=i+1
+    return a[i],t[a[i]]
+  end
+end
+
+function LUAMain:clearcache(list )
+  local count=list.Count
+  if count<=0 then
+    return
+  end
+  count=count-1
+  for i=0,count do
+    package.loaded[list[i]]=nil
+  end
+end
+
+
+--[[ package.cpath = package.cpath .. ';C:/Users/dongwj/AppData/Roaming/JetBrains/Rider2020.1/plugins/intellij-emmylua/classes/debugger/emmy/windows/x64/?.dll'
+ local dbg = require('emmy_core')
+ dbg.tcpConnect('localhost', 10192)]]

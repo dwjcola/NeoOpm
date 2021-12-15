@@ -1,0 +1,31 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:
+--]]
+TblBase={
+    new= function(self, o)
+        o=o or {}
+        self.__index=self;
+        setmetatable(o, self)
+        return o
+    end;
+}
+TblManager={
+    new= function(self, o)
+        o=o or {}
+        self.__index=self;
+        setmetatable(o, self)
+        return o
+    end;
+    XluaManager=CS.XluaManager.instance;
+};
+local infoList = require("TinfoList");
+
+function TblManager:InitAllTbl()
+    local allpath=infoList or {};
+    for i=1,#allpath do
+        require(allpath[i])
+    end
+end
+return TblManager;

@@ -1,0 +1,5 @@
+ProfileName	RemoteBuildPath	RemoteLoadPath	
+string	string	string	
+c	c	c	
+Develop	ServerData/[BuildTarget]	http://[[PrivateIpAddress]]:[[HostingServicePort]]	
+Product	ServerData/[BuildTarget]	http://[[PrivateIpAddress]]:[[HostingServicePort]]	

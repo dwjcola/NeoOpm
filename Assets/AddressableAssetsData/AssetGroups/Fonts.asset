@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Fonts
+  m_EditorClassIdentifier: 
+  m_GroupName: Fonts
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 56906a34305f58948aaa4aed9b1b7d3f
+  m_SerializeEntries:
+  - m_GUID: 3373117442a3db046b7f61e8693d7205
+    m_Address: Assets/Resource_MS/TextMeshPro/msyhl.ttc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: fd34113d2bc45004ebb54b455a75a939
+    m_Address: Assets/Resource_MS/TextMeshPro/msyhbd.ttc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 01afff732ce099f439657260fa024e10
+    m_Address: Assets/Resource_MS/TextMeshPro/msyh.ttc
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: aef99784d083b8a4c8459ec1151b1f15
+    m_Address: Assets/Resource_MS/TextMeshPro/MSYH SDF.asset
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 77cbb7c5404c10242ab59953e0746314
+    m_Address: Assets/Resource_MS/Fonts/MainFont.ttf
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 2f30707fab563a54aae9c516f8dd5e79, type: 2}
+    - {fileID: 11400000, guid: 3d444ad88a1bd694c9d2125fdaf53887, type: 2}

@@ -1,0 +1,67 @@
+TestForm1LUA=LUAUIBase:new({
+	items={}
+	});
+
+function TestForm1LUA:Open()
+    self:AddEventListener();
+    self:AddUIEventListener();
+    self:Init();
+end
+function TestForm1LUA:Init()
+    
+    local count = self.Root.childCount;
+    for i = count - 1,1,-1  do
+        local itemTemp = self.Root:GetChild(i);
+        itemTemp.transform.parent = nil;
+        CS.UnityEngine.GameObject.Destroy(itemTemp.gameObject);
+    end
+    self.items = {}
+    for i = 1, 10 do
+        local itemCtrl = self:CreateOneItem("TestForm1ItemLUA", self.Item,self.Root);
+        self.items[#self.items+1] = itemCtrl;
+    end
+    self.Sr.verticalNormalizedPosition = 1;
+end
+function TestForm1LUA:EventTest(arg)
+    self:Error("收到事件："..arg.EventKey)
+    self:Error(arg.Param1)
+    self:Error(arg.Param2)
+    self:Error(arg.Param3)
+    self:Error(arg.Param4)
+end
+function TestForm1LUA:AddItem()
+    local itemCtrl = self:CreateOneItem("TestForm1ItemLUA", self.Item,self.Root);
+    itemCtrl:Init(tostring(CS.System.DateTime.Now.Ticks));
+    self.items[#self.items+1] = itemCtrl;
+    self:SendEvent("my_event","param1",3333,"p3")
+end
+function TestForm1LUA:MinusItem()
+    if #self.items > 0 then
+        local ctrl = self.items[#self.items];
+        table.remove(self.items,#self.items)
+        ctrl.trans.parent = nil;
+        CS.UnityEngine.GameObject.Destroy(ctrl.trans.gameObject);
+    end
+end
+function TestForm1LUA:CloseMe()
+    self:RemoveEventListener();
+    self:CloseUI("TestForm1")
+end
+--ui组件添加事件
+function TestForm1LUA:AddUIEventListener( )
+    self:AddUIEvent("onclick",self.CloseBtn.gameObject,self.CloseMe);
+    self:AddUIEvent("onclick",self.AddItemBtn.gameObject,self.AddItem);
+    self:AddUIEvent("onclick",self.MinusItemBtn.gameObject,self.MinusItem);
+end
+
+--添加自定义事件
+function TestForm1LUA:AddEventListener( )
+    self:AddEvent("my_event",self.EventTest);
+end
+--移除自定义事件
+function TestForm1LUA:RemoveEventListener( )
+    self:RemoveEvent("my_event",self.EventTest)
+end
+function TestForm1LUA:OnDestroy()
+	TestForm1LUA = nil;
+end

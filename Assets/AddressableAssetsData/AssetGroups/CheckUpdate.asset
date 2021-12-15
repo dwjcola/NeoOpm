@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: CheckUpdate
+  m_EditorClassIdentifier: 
+  m_GroupName: CheckUpdate
+  m_Data:
+    m_SerializedData: []
+  m_GUID: aa7198de22ee8434a9cb00763368c552
+  m_SerializeEntries:
+  - m_GUID: b38a9fe652867084ba4a021d3d9a89c9
+    m_Address: Assets/Resource_MS/UI/UIForms/CheckUpdate
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - 
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b48c1fdce1d6ed64c9d475c6cfb0497d, type: 2}
+    - {fileID: 11400000, guid: a739aba7466a0cc4b8df626016a3677b, type: 2}

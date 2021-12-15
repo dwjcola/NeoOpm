@@ -1,0 +1,414 @@
+﻿--[[
+Author: DWJ
+Date: 2021-11-18
+Description:所有UI的base类
+--]]
+LUAUIBase={
+};
+
+function LUAUIBase:new (o)
+  o = o or {}
+  self.__index = self
+  LUAMain.LuaIdBaseNum = LUAMain.LuaIdBaseNum + 1
+  o.luaId=LUAMain.LuaIdBaseNum.."LUA"
+  setmetatable(o, self)
+  return o
+end
+
+LUAUIBase.name="luauibase"
+
+--lua init 函数
+function LUAUIBase:init()
+  print("LUAUIBase init...")
+  self.UnityEngine=CS.UnityEngine;
+  self.System=CS.System;
+  self.Texture2D=self.UnityEngine.Texture2D;
+  self.GameObject=self.UnityEngine.GameObject;
+  self.Vector4=self.UnityEngine.Vector4;
+  self.Vector3=self.UnityEngine.Vector3;
+  self.Vector2=self.UnityEngine.Vector2;
+  self.Color = self.UnityEngine.Color;
+  self.Rect = self.UnityEngine.Rect;
+  self.Quaternion = self.UnityEngine.Quaternion;
+  self.Camera = CS.UnityEngine.Camera;
+  self.RectTransformUtility = self.UnityEngine.RectTransformUtility
+  self.Input = self.UnityEngine.Input;
+  self.RectTransform = self.UnityEngine.RectTransform;
+  self.Iamge = self.UnityEngine.UI.Image;
+  self.TMP_Text = CS.TMPro.TMP_Text
+  self.TMPUGUI = CS.TMPro.TextMeshProUGUI
+  self.Slider = self.UnityEngine.UI.Slider
+  self.mathLua= require("mathLUA")
+  self.cs_coroutine=require("cs_coroutine")
+  self.UIReminder=CS.UIReminder;
+  self.EventTriggerListener=CS.GameFramework.UI.EventTriggerListener
+end
+function LUAUIBase:GetUILogicById(formId)
+  return CS.LC.GetUILogicById(formId);
+end
+function LUAUIBase:GetUILogicByKey(uiKey)
+  return CS.LC.GetUILogicByKey(uiKey);
+end
+ --添加UI事件
+function LUAUIBase:AddUIEvent(eventType,gameObject,callBack)
+  CS.LC.AddUIEvent(self,eventType,gameObject,callBack);
+end
+function LUAUIBase:AddSliderValueChanged(input,callBack)
+  CS.LC.AddSliderEvent(input,callBack,self);
+end
+function LUAUIBase:AddToggleEventChanged(toggle,callBack)
+  CS.LC.AddToggleEvent(toggle,callBack,self);
+end
+function LUAUIBase:AddDropDownValueChanged(input,callBack)
+  CS.LC.AddDropDownEvent(input,callBack,self);
+end
+function LUAUIBase:AddButtonEvent(btn,callBack)
+  CS.LC.AddButtonEvent(btn,callBack,self);
+end
+-- --添加UI事件
+function LUAUIBase:AddUIDataEvent(eventType,gameObject,callBack,data)
+   CS.LC.AddUIDataEvent(self,eventType,gameObject,callBack,data);
+end
+---添加input内容变化监听，input是InputField或者TMP_InputField都可以，LC做了重载
+function LUAUIBase:AddInputValueChanged(input,callBack)
+  CS.LC.AddInputEvent(input,callBack,self);
+end
+function LUAUIBase:AddInputEndEdit(input,callBack)
+  CS.LC.AddInputEditEvent(input,callBack,self);
+end
+
+function LUAUIBase:SetImageNormal(image)
+  image.material = nil;
+end
+
+function LUAUIBase:SetImageGrey(image)
+  CS.LC.SetMaterial(image, LUADefine.GREY_MAT)
+end
+
+
+function LUAUIBase:SetRawImageNormal(image)
+  image.material = nil;
+end
+
+function LUAUIBase:SetRawImageGrey(image)
+  CS.LC.SetRawImageMaterial(image, LUADefine.GREY_MAT)
+end
+
+function LUAUIBase:PlaySound(soundId)
+  CS.LC.PlaySound(soundId)
+end
+
+ --添加Tab事件
+function LUAUIBase:AddTabEvent(tab,callBack)
+    CS.LC.AddTabSelectEvent(self,tab,callBack);
+end
+--log信息
+function LUAUIBase:Log(...)
+  local temp = ""
+  for k,v in ipairs({...})
+  do
+    temp = temp ..tostring(v)
+  end
+
+  CS.LC.Log(temp);
+end
+function LUAUIBase:Warning(...)
+  local temp = ""
+  for k,v in ipairs({...})
+  do
+    temp = temp ..tostring(v)
+  end
+
+  CS.LC.Warning(temp);
+end
+
+--error信息
+function LUAUIBase:Error(...)
+  -- if not CS.GameSetting.hasLog then
+  --   return
+  -- end
+
+  local temp = "LUA_LOG->"
+  for k,v in ipairs({...})
+  do
+    temp = temp ..tostring(v)
+  end
+
+  CS.LC.Error(temp);
+end
+
+--添加事件
+function LUAUIBase:AddEvent(key,callBack)
+  CS.LC.AddEvent(self,key,callBack);
+end
+
+--SendEvent事件
+function LUAUIBase:SendEvent(key,para,p2,p3,p4)
+  CS.LC.SendEvent(key,para,p2,p3,p4);
+end
+--移除事件
+function LUAUIBase:RemoveEvent(key,callBack)
+  CS.LC.RemoveEvent(self,key,callBack);
+end
+--添加框架事件
+function LUAUIBase:AddFrameWorkEvent(key,callBack)
+  CS.LC.AddCSEvent(self,key, callBack);
+end
+
+--移除框架事件
+function LUAUIBase:RemoveFrameWorkEvent(key,callBack)
+  CS.LC.RemoveCSEvent(self,key,callBack);
+end
+--播放自定义movieClip
+function LUAUIBase:PlayMovieClip(mc,atlas,sname,Framerate)
+  CS.LC.PlayMovieClip(mc,atlas,sname,Framerate);
+end
+
+ --关闭UI
+function LUAUIBase:CloseUI(key)
+  local lua=_G[key];
+  if(lua==nil)then
+    local panel= self.TableTools.Tables.Panel:GetLineById(key);
+    local luaname=(panel or {LuaName=""}).LuaName
+    lua=_G[luaname]
+  end
+  if(lua~=nil and lua.DestroyAllMonoItemLua~=nil)then
+    lua.DestroyAllMonoItemLua(lua);
+  end
+  local result = CS.LC.CloseUI(key)
+  if self.CloseOpenData ~= nil then
+    local t = type(self.CloseOpenData);
+    if t ~= "number" then
+      if self.CloseOpenData.jumpId ~= nil then
+        self:DoFile(self.CloseOpenData.jumpId,self.CloseOpenData.param)
+      end
+    end
+    self.CloseOpenData = nil
+  end
+  return result;
+end
+--设置Image
+---@param image UnityEngine.UI.Image
+---@param atls string
+---@param name string
+---@param native bool
+function LUAUIBase:SetSprite(image,atls,name,native)
+  local n = native
+  if n == nil then
+    n = false
+  end
+  CS.LC.SetSprite(image,atls,name,n)
+end
+
+---@param image UnityEngine.UI.RawImage
+---@param atls string
+---@param name string
+---@param native bool
+function LUAUIBase:SetRawImageSprite(image,name,native)
+  local n = native
+  if n == nil then
+    n = false
+  end
+  CS.LC.SetRawImageSprite(image,name,n)
+end
+
+
+function LUAUIBase:SetSingleSpriteByFolderPath(image,folderPath,name,native)
+  local n = native
+  if n == nil then
+    n = false
+  end
+  CS.LC.SetSingleSpriteByFolderPath(image,folderPath,name,n)
+end
+
+
+
+
+function LUAUIBase:SetImageSprite(image,atls,name,native)
+  local n = native
+  if n == nil then
+    n = false
+  end
+  CS.LC.SetImageSprite(image,atls,name,n)
+end
+
+function LUAUIBase:ItemTableData(_itemId)---现在道具表分了好几个，这个函数可以找到_itemId所在表的那一行,如果表里没有就为空
+  if(ItemData==nil)then
+    require("ItemData")
+  end
+  return ItemData.tableById(_itemId)
+end
+ --打开UI
+function LUAUIBase:OpenUI(...)
+  local arg = {...};
+  NewbieGuideProxy:CheckNewbieGuide(NewbieGuideProxy.ConditionType.OpenUI, arg[1]) --首次打开界面，新手指引
+  return CS.LC.OpenUI(arg[1],arg[2]);
+end
+function LUAUIBase:SetCloseData(table)
+ self.CloseOpenData = table
+end
+function LUAUIBase:GetDicValue(key,...)
+  return CS.ProHA.TableDic.GetDicValue(key,...);
+end
+function LUAUIBase:GetDicFormateValue(key,argsTable)
+  local array = CS.System.Array.CreateInstance(typeof(CS.System.Object), #argsTable);
+  for i = 1, #argsTable do
+    array[i-1] = argsTable[i]
+  end
+  return self.ProHA.TableDic.GetDicFormateValue(key,array);
+end
+
+  -- -- 创建Item
+   function LUAUIBase:CreateItem(prefab,parent,count)
+     if count==nil or count<=0 then
+       count=1;
+     end
+     local result={}
+     for i=1,count do
+       result[i]=CS.LC.CreateItem(prefab,parent,{})
+       result[i]._name=i;
+       self:AddMonoItemLua(result[i])
+     end
+     return result;
+   end
+  -- -- 创建Item
+  function LUAUIBase:CreateOneItem(luakey,prefab,parent)
+    local luaTable = require (luakey)
+    local result =luaTable:new()
+    result=CS.LC.CreateItem(prefab,parent,result)
+    self:AddMonoItemLua(result)
+    return result
+  end
+  
+   -- 显示部分界面
+   function LUAUIBase:ShowPartPanel(key,parent,para)
+    local result = CS.LC.ShowPartPanel(key,parent,para);
+    self:AddMonoItemLua(result)
+    return result
+   end
+
+  ---@param l_item {} 
+  --UI内创建的monoitem,其lua都加到这个列表中，关闭界面的时候做了销毁
+   function LUAUIBase:AddMonoItemLua(l_item)
+      self.MonoItemList=self.MonoItemList or {}
+      table.insert(self.MonoItemList,l_item)
+   end
+  function LUAUIBase:DestroyAllMonoItemLua()
+      if(self.MonoItemList==nil)then
+        return;
+      end
+      for _, m_item in pairs(self.MonoItemList) do
+        if(m_item~=nil)then
+            if(m_item.DestroyAllMonoItemLua~=nil)then
+              m_item.DestroyAllMonoItemLua(m_item)
+            end
+            if(not isNil(m_item.trans) and (not isNil(m_item.trans.gameObject)))then
+              self.GameObject.Destroy(m_item.trans.gameObject);
+            end
+        end
+      end
+      self.MonoItemList=nil;
+  end
+
+  function LUAUIBase:RemoveItem(luaTable)
+    -- if(luaTable.DestroyAllMonoItemLua~=nil)then
+    --   luaTable.DestroyAllMonoItemLua(luaTable)
+    -- end
+    if luaTable.OnDestroy~=nil then
+      luaTable:OnDestroy()
+    end
+    if luaTable.trans ~= nil then
+      luaTable.trans.parent = nil
+      self.GameObject.Destroy(luaTable.trans.gameObject);
+    end
+  end
+  --隐藏自身
+  function LUAUIBase:HideSelf(state)
+    state = state or false
+    if self.trans ~= nil then
+      self.trans.gameObject:SetActive(state);
+    end
+  end
+  
+  --销毁自身
+  function LUAUIBase:DestroySelf()
+    if self.trans ~= nil then
+      self.trans.parent = nil
+      self.GameObject.Destroy(self.trans.gameObject);
+    end
+  end
+  
+  function LUAUIBase:DestroyChildren(parent)
+    self.UIUtility.DestroyChildren(parent);
+  end
+  -- --精确到小数点后两位
+  function LUAUIBase:FloatToInt_100(val)
+    return self.mathLua:FloatToInt_100(val);
+  end
+  
+  function LUAUIBase:FloatToInt_100_2(val)
+    return self.mathLua:FloatToInt_100_2(val)
+  end
+  
+  function LUAUIBase:FloatToInt(val)
+    return self.mathLua:round(val);
+  end
+  --消零
+  function LUAUIBase:GetZeroSuppressionValue(value)
+    local v = tonumber(value);
+    local tempValue = v - math.floor(v);
+    if tempValue > 0 then
+      return v;
+    else
+      return math.floor(value);
+    end
+  end
+
+--用来更直观地打印table
+function LUAUIBase:FormatTable(t, tabcount)
+    tabcount = tabcount or 0
+    if tabcount > 5 then
+        --防止栈溢出
+        return "<table too deep>"..tostring(t)
+    end
+    local str = ""
+    if type(t) == "table" then
+        for k, v in pairs(t) do
+            local tab = string.rep("\t", tabcount)
+            if type(v) == "table" then
+                str = str..tab..string.format("[%s] = {", self:FormatValue(k))..'\n'
+                str = str..FormatTable(v, tabcount + 1)..tab..'}\n'
+            else
+                str = str..tab..string.format("[%s] = %s", self:FormatValue(k), self:FormatValue(v))..',\n'
+            end
+        end
+    else
+        str = str..tostring(t)..'\n'
+    end
+    return str
+end
+
+function LUAUIBase:FormatValue(val)
+  if type(val) == "string" then
+      return string.format("%q", val)
+  end
+  return tostring(val)
+end
+function LUAUIBase:split( str,reps )
+  local resultStrList = {}
+  string.gsub(str,'[^'..reps..']+',function ( w )
+    table.insert(resultStrList,w)
+  end)
+  return resultStrList
+end
+function LUAUIBase:CheckSameDay(flag)
+  local s = CS.ProHA.PlayerPreferenceData.GetString(flag)
+  local isSameDay = false
+  if s ~= nil and s ~= "" then
+    local time = tonumber(s)
+    isSameDay = self.ServerTime.IsSameDay(self.ServerTime.CurrentTime(),time)
+  end
+  return isSameDay
+end
+
+  

@@ -1,0 +1,337 @@
+﻿[{
+	"GroupName": "UI",
+	"entries": [{
+		"path": "Assets/Resource_MS/UI",
+		"Address": "Assets/Resource_MS/UI",
+		"Lable": "UI",
+		"extension": "f",
+		"updateType": 0
+	},{
+		"path": "Assets/Resource_MS/UI/UIAtlas",
+		"Address": "Assets/Resource_MS/UI/UIAtlas",
+		"Lable": "UI",
+		"extension": "*.spriteatlas",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "Buildings",
+	"entries": [{
+		"path": "Assets/Resource_MS/Buildings",
+		"Address": "Assets/Resource_MS/Buildings",
+		"Lable": "Buildings",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "Scenes",
+	"entries": [{
+		"path": "Assets/Resource_MS/Scenes",
+		"Address": "Assets/Resource_MS/Scenes",
+		"Lable": "Scenes",
+		"extension": "*.unity",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Scenes/NavMesh",
+		"Address": "Assets/Resource_MS/Scenes/NavMesh",
+		"Lable": "NavMesh",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "SpriteSheetAnimaitorAssets",
+	"entries": [{
+		"path": "Assets/Resource_MS/Animations",
+		"Address": "Assets/Resource_MS/Animations",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/CharacterModels",
+		"Address": "Assets/Resource_MS/CharacterModels",
+		"Lable": "",
+		"extension": "f",
+		"updateType": 1
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "LuaScripts",
+	"entries": [{
+		"path": "Assets/Resource_MS/LuaScripts",
+		"Address": "Assets/Resource_MS/LuaScripts",
+		"Lable": "LuaScripts",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "Materials",
+	"entries": [{
+		"path": "Assets/Resource_MS/Materials",
+		"Address": "Assets/Resource_MS/Materials",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Effect/City/vfx_Scene_Whirlpools/Materials",
+		"Address": "Assets/Resource_MS/Effect/City/vfx_Scene_Whirlpools/Materials",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Effect/City/vfx_Scene_Dituxuanzhong/material",
+		"Address": "Assets/Resource_MS/Effect/City/vfx_Scene_Dituxuanzhong/material",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "Other",
+	"entries": [{
+		"path": "Assets/Resource_MS/Spines/Heroes",
+		"Address": "Assets/Resource_MS/Spines/Heroes",
+		"Lable": "",
+		"extension": "f",
+		"updateType": 1
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "AnimationsPrefabsAssets",
+	"entries": [{
+		"path": "Assets/Resource_MS/Prefabs/BuildingAnims",
+		"Address": "Assets/Resource_MS/Prefabs/BuildingAnims",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "DataTables",
+	"entries": [{
+		"path": "Assets/Resource_MS/DataTables",
+		"Address": "Assets/Resource_MS/DataTables",
+		"Lable": "Tables",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/SoTables",
+		"Address": "Assets/Resource_MS/SoTables",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/GameData",
+		"Address": "Assets/GameData",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+},  {
+	"GroupName": "EffectAssets",
+	"entries": [{
+		"path": "Assets/Resource_MS/Prefabs/Effect",
+		"Address": "Assets/Resource_MS/Prefabs/Effect",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "Prefabs",
+	"entries": [{
+		"path": "Assets/Resource_MS/Prefabs",
+		"Address": "Assets/Resource_MS/Prefabs",
+		"Lable": "",
+		"extension": "f",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Prefabs/BattleGroup/BattleBloodNumText",
+		"Address": "Assets/Resource_MS/Prefabs/BattleGroup/BattleBloodNumText",
+		"Lable": "BattleBlood",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Entities",
+		"Address": "Assets/Resource_MS/Entities",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/ScriptsEditor/CityBuildEditor/PveMapEditor/EnnemyPos.prefab",
+		"Address": "Assets/ScriptsEditor/CityBuildEditor/PveMapEditor/EnnemyPos.prefab",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/ScriptsEditor/WorldEditor/WorldBigBlock.prefab",
+		"Address": "Assets/ScriptsEditor/WorldEditor/WorldBigBlock.prefab",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "BattleAtlas",
+	"entries": [{
+		"path": "Assets/Resource_MS/Atlas",
+		"Address": "Assets/Resource_MS/Atlas",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "Shader",
+	"entries": [{
+		"path": "Assets/Resource_MS/Shader",
+		"Address": "Assets/Resource_MS/Shader",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Effect/vfx_common/shader",
+		"Address": "Assets/Resource_MS/Effect/vfx_common/shader",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Spine/Runtime/spine-unity/Shaders",
+		"Address": "Assets/Spine/Runtime/spine-unity/Shaders",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/TextMesh Pro/Resources_moved/Shaders",
+		"Address": "Assets/TextMesh Pro/Resources_moved/Shaders",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "Fonts",
+	"entries": [{
+		"path": "Assets/Resource_MS/Fonts",
+		"Address": "Assets/Resource_MS/Fonts",
+		"Lable": "",
+		"extension": "*.*",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/TextMeshPro",
+		"Address": "Assets/Resource_MS/TextMeshPro",
+		"Lable": "",
+		"extension": "*.*",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "Textures",
+	"entries": [{
+		"path": "Assets/Resource_MS/Textures/Battle",
+		"Address": "Assets/Resource_MS/Textures/Battle",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/UI/UITexture/soldierimage",
+		"Address": "Assets/Resource_MS/UI/UITexture/soldierimage",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/UI/UITexture",
+		"Address": "Assets/Resource_MS/UI/UITexture",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Textures",
+		"Address": "Assets/Resource_MS/Textures",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 1
+}, {
+	"GroupName": "ArtMaterials",
+	"entries": [{
+		"path": "Assets/Art/plane",
+		"Address": "Assets/Art/plane",
+		"Lable": "",
+		"extension": "*.mat",
+		"updateType": 0
+	}, {
+		"path": "Assets/Art/Scenes",
+		"Address": "Assets/Art/Scenes",
+		"Lable": "",
+		"extension": "*.mat",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "CheckUpdate",
+	"entries": [{
+		"path": "Assets/Resource_MS/UI/UIForms/CheckUpdate",
+		"Address": "Assets/Resource_MS/UI/UIForms/CheckUpdate",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}, {
+	"GroupName": "wwise",
+	"entries": [{
+		"path": "Assets/Resource_MS/Audio/GeneratedSoundBanks/[BuildTarget]",
+		"Address": "Assets/Resource_MS/Audio/GeneratedSoundBanks/[BuildTarget]",
+		"Lable": "WwiseBanks",
+		"extension": "*.bytes",
+		"updateType": 0
+	}, {
+		"path": "Assets/Resource_MS/Configs/BuildInfo.txt",
+		"Address": "Assets/Resource_MS/Configs/BuildInfo.txt",
+		"Lable": "",
+		"extension": "",
+		"updateType": 0
+	}],
+	"isLocal": true,
+	"isStatic": true,
+	"BundleMode": 0
+}]

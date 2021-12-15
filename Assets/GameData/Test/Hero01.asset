@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe75f45980cfe1147a34d9b663ceb203, type: 3}
+  m_Name: Hero01
+  m_EditorClassIdentifier: 
+  rid: 1
+  tid: 1
+  prefab: {fileID: 502613169558544738, guid: 7b46292dd83812f49b0318aceafc1645, type: 3}
+  scale: {x: 0.065, y: 0.065}
+  offset: {x: 0, y: -0.2}
+  bgSceneData: {fileID: 11400000, guid: 88ca63282c299124e9dfb00db71e1122, type: 2}

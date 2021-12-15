@@ -1,0 +1,43 @@
+TestForm3LUA=LUAUIBase:new({
+	
+	});
+function TestForm3LUA:Open(list)
+	self:Error("open!!!!!!!!!!!")
+	self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+	--self.scrollP:InitListLua(self,list,"UpdateItem");
+	--self:SetSprite(self.icon,"Assets/Resource_MS/Buildings/building1.png","Barracks_1_2")
+	--self:AddEvent(CS.UnityGameFramework.Runtime.OpenUIFormSuccessEventArgs.EventId,self.OpenOne)
+end
+function TestForm3LUA:OpenOne()
+	self:Error(OpenOne)
+end
+function TestForm3LUA:OnCloseMe()
+	self:CloseUI("TestForm3")
+	--self:RemoveEvent(CS.UnityGameFramework.Runtime.OpenUIFormSuccessEventArgs.EventId,self.OpenOne)
+end
+function TestForm3LUA:OnEnable(lua)
+	self:Error("TestForm3LUA:onEnable");
+end
+function TestForm3LUA:OnDisable(lua)
+	self:Error("TestForm3LUA:onDisable");
+end
+function TestForm3LUA:Update(lua)
+	--self:Error("TestForm3LUA:Update");
+end
+function TestForm3LUA:UpdateItem(item,data,index)
+	item.txt.text = data;
+end
+function TestForm3LUA:onDrag(item,data,index,e)
+	self:Error(e.position)
+	return false;
+end
+function TestForm3LUA:onDragStart(item,data,index,e)
+	self:Error("dragStart--->"..tostring(e.position))
+end
+function TestForm3LUA:onDragEnd(item,data,index,e)
+	self:Error("dragEnd--->"..tostring(e.position))
+end
+function TestForm3LUA:OnDestroy()
+	self:Error("TestForm3LUA:ondestroy");
+	TestForm3LUA = nil;
+end

@@ -1,0 +1,12 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:登录相关数据
+--]]
+LoginProxy=LUAUIBase:new({
+	});
+function LoginProxy:Init()
+	
+end
+
+return LoginProxy

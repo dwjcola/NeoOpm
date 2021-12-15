@@ -1,0 +1,333 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:Utils工具类
+--]]
+local unpack = unpack or table.unpack
+-----------------------------------------以下是string扩展------------------------------------------------------------
+function string.split(str,sep)  
+    local sep, fields = sep or "\t", {}  
+    local pattern = string.format("([^%s]+)", sep)  
+    string.gsub(str,pattern, function(c) fields[#fields+1] = c end)  
+    return fields  
+end 
+-- 字符串连接 string.join({"str1","str2","str3"},"-")->"str1-str2-str3"
+function string.join(join_table, joiner)
+	if #join_table == 0 then
+		return ""
+	end
+
+	local fmt = "%s"
+	for i = 2, #join_table do
+		fmt = fmt .. joiner .. "%s"
+	end
+
+	return string.format(fmt, unpack(join_table))
+end
+-- 是否包含
+-- 注意：plain为true时，关闭模式匹配机制，此时函数仅做直接的 “查找子串”的操作
+function string.contains(target_string, pattern, plain)
+	plain = plain or true
+	local find_pos_begin, find_pos_end = string.find(target_string, pattern, 1, plain)
+	return find_pos_begin ~= nil
+end
+
+-- 以某个字符串开始
+function string.startswith(target_string, start_pattern, plain)
+	plain = plain or true
+	local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, 1, plain)
+	return find_pos_begin == 1
+end
+
+-- 以某个字符串结尾
+function string.endswith(target_string, start_pattern, plain)
+	plain = plain or true
+	local find_pos_begin, find_pos_end = string.find(target_string, start_pattern, -#start_pattern, plain)
+	return find_pos_end == #target_string
+end
+--去掉空格
+function string.trim(s)
+	return (s:gsub("^%s+", ""):gsub("%s+$", ""))
+end
+-----------------------------------------以上是string扩展------------------------------------------------------------
+
+function padzero(s, count)
+    return string.rep("0", count-string.len(s)) .. s 
+end
+
+--min:sec
+--t: second
+function formatTimeMS(t)    
+    t = t % 3600
+    local m = math.floor(t/60)
+    local s = math.floor(t%60)
+    return padzero(m,2) .. ":" .. padzero(s,2)
+end
+
+--hour:min
+--t: millseconds from 1970.1.1
+function formatTimeHM(t)
+    local date = CS.ProHA.ServerTime.GetStandardTime(t)
+    return padzero(date.Hour,2) .. ":" .. padzero(date.Minute,2)
+end
+
+function isNil(gameObj)    
+    if gameObj==nil then return true end
+    if gameObj.Equals~=nil then
+        return gameObj:Equals(nil)
+    end
+    return false
+end
+-- 深拷贝对象
+function DeepCopy(object)
+	local lookup_table = {}
+	
+	local function _copy(object)
+		if type(object) ~= "table" then
+			return object
+		elseif lookup_table[object] then
+			return lookup_table[object]
+		end
+
+		local new_table = {}
+		lookup_table[object] = new_table
+		for index, value in pairs(object) do
+			new_table[_copy(index)] = _copy(value)
+		end
+
+		return setmetatable(new_table, getmetatable(object))
+	end
+
+	return _copy(object)
+end
+
+function checknumber( value, base)
+	return tonumber(value, base) or 0
+end
+function formatnumberthousands( num)-----这个函数把数字转化为千分位数字,小数点后的不支持
+	local formatted = tostring( checknumber(num))
+	local k
+	while true do
+		formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+		if k == 0 then break end
+	end
+	return formatted
+end
+---------------------------------------------------------以下是table的扩展-------------------------------------------------
+-- 解决原生pack的nil截断问题，SafePack与SafeUnpack要成对使用
+function table.SafePack(...)
+	local params = {...}
+	params.n = select('#', ...)
+	return params
+end
+
+-- 解决原生unpack的nil截断问题，SafeUnpack与SafePack要成对使用
+function table.SafeUnpack(safe_pack_tb)
+	return unpack(safe_pack_tb, 1, safe_pack_tb.n)
+end
+-- 对两个SafePack的表执行连接
+function table.ConcatSafePack(safe_pack_l, safe_pack_r)
+	local concat = {}
+	for i = 1,safe_pack_l.n do
+		concat[i] = safe_pack_l[i]
+	end
+	for i = 1,safe_pack_r.n do
+		concat[safe_pack_l.n + i] = safe_pack_r[i]
+	end
+	concat.n = safe_pack_l.n + safe_pack_r.n
+	return concat
+end
+
+-- 计算哈希表长度
+function table.count(hashtable)
+	local count = 0
+	for _,_ in pairs(hashtable) do
+		count = count + 1
+	end
+	return count
+end
+
+-- 计算数组长度
+function table.length(array)
+	if array.n ~= nil then
+		return array.n
+	end
+	
+	local count = 0
+	for i,_ in pairs(array) do
+		if count < i then
+			count = i
+		end		
+	end
+	return count
+end
+
+-- 设置数组长度
+function table.setlen(array, n)
+	array.n = n
+end
+
+-- 获取哈希表所有键
+function table.keys(hashtable)
+    local keys = {}
+    for k, v in pairs(hashtable) do
+        keys[#keys + 1] = k
+    end
+    return keys
+end
+
+-- 获取哈希表所有值,可选择不符合条件的值不取
+function table.values(hashtable,func)
+    local values = {}
+	for k, v in pairs(hashtable) do
+		if(func==nil and true or func(v))then
+			values[#values + 1] = v
+		end
+    end
+    return values
+end
+
+-- 合并哈希表：将src_hashtable表合并到dest_hashtable表，相同键值执行覆盖
+function table.mergehash(dest_hashtable, src_hashtable)
+    for k, v in pairs(src_hashtable) do
+        dest_hashtable[k] = v
+    end
+end
+
+-- 合并数组：将src_array数组从begin位置开始插入到dest_array数组
+-- 注意：begin <= 0被认为没有指定起始位置，则将两个数组执行拼接
+function table.mergearray(dest_array, src_array, begin)
+	assert(begin == nil or type(begin) == "number")
+	if begin == nil or begin <= 0 then
+		begin = #dest_array 
+	end
+
+	local src_len = #src_array
+	for i = 1, src_len  do
+		dest_array[i + begin] = src_array[i ]
+	end
+end
+
+-- 从数组中查找指定值，返回其索引，没找到返回-1
+function table.indexof(array, value, begin)
+    for i = begin or 1, #array do
+        if array[i] == value then 
+			return i 
+		end
+    end
+	return -1
+end
+
+-- 从哈希表查找指定值，返回其键，没找到返回nil
+-- 注意：
+-- 1、containskey用hashtable[key] ~= nil快速判断
+-- 2、containsvalue由本函数返回结果是否为nil判断
+function table.keyof(hashtable, value)
+    for k, v in pairs(hashtable) do
+        if v == value then 
+			return k 
+		end
+    end
+    return nil
+end
+
+-- 从数组中删除指定值，返回删除的值的个数
+function table.removebyvalue(array, value, removeall)
+    local remove_count = 0
+	for i = #array, 1, -1 do
+		if array[i] == value then
+			table.remove(array, i)
+			remove_count = remove_count + 1
+            if not removeall then 
+				break 
+			end
+		end
+	end
+	return remove_count
+end
+
+-- 遍历写：用函数返回值更新表格内容
+function table.map(tb, func)
+    for k, v in pairs(tb) do
+        tb[k] = func(k, v)
+    end
+end
+
+-- 遍历读：不修改表格
+function table.walk(tb, func)
+    for k,v in pairs(tb) do
+        func(k, v)
+    end
+end
+
+-- 按指定的排序方式遍历：不修改表格
+function table.walksort(tb, sort_func, walk_func)
+	local keys = table.keys(tb)
+	table.sort(keys, function(lkey, rkey)
+		return sort_func(lkey, rkey)
+	end)
+	for i = 1, table.length(keys) do
+		walk_func(keys[i], tb[keys[i]])
+	end
+end
+
+-- 过滤掉不符合条件的项：不对原表执行操作
+function table.filter(tb, func)
+	local filter = {}
+    for k, v in pairs(tb) do
+        if not func(k, v) then 
+			filter[k] = v
+		end
+    end
+	return filter
+end
+
+-- 筛选出符合条件的项：不对原表执行操作
+function table.choose(tb, func)
+	local choose = {}
+    for k, v in pairs(tb) do
+        if func(k, v) then 
+			choose[k] = v
+		end
+    end
+	return choose
+end
+
+-- 获取数据循环器：用于循环数组遍历，每次调用走一步，到数组末尾从新从头开始
+function table.circulator(array)
+	local i = 1
+	local iter = function()
+		i = i >= #array and 1 or i + 1
+		return array[i]
+	end
+	return iter
+end
+
+---------------------------------------------------------以上是table的扩展-------------------------------------------------
+
+---起一个unity的协程,数字变化返回func处理，每0.1秒执行一次 func的第一个参数可能是nil,
+---d_Time 计次，变化多少次达到目的,
+---故整体时间为d_Time/10
+---@param d_Time number 
+function LerpNumChange(oldNum,NewNum,d_Time,corou,loopfunc,...)
+	loopfunc=loopfunc or function()end;
+	local param={...}
+	local cs_coroutine=require("cs_coroutine")
+    if(corou~=nil)then
+        cs_coroutine.stop(corou)
+    end
+	local jumpTime=d_Time
+    corou=cs_coroutine.start(function()
+        -- body
+        loopfunc(table.unpack(param),math.floor(oldNum))
+		local step=(NewNum-oldNum)/jumpTime
+        while jumpTime>0 do
+			oldNum=oldNum+step;
+            loopfunc(table.unpack(param),math.floor(oldNum))
+			jumpTime=jumpTime-1
+            coroutine.yield(CS.UnityEngine.WaitForSeconds(0.1))
+        end
+		loopfunc(table.unpack(param),math.floor(NewNum))
+    end)
+	return corou
+end

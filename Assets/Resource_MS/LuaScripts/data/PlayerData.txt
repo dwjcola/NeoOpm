@@ -1,0 +1,21 @@
+--[[
+Author: DWJ
+Date: 2021-11-18
+Description:玩家数据
+--]]
+--player数据
+PlayerData=LUAUIBase:new({
+	RoleId = nil,
+	RoleName = "2222",
+	Level = nil
+	});
+function PlayerData:UpdateInfo(info)
+	self.Level = info.Level or 0
+	self.RoleId = info.RoleId or 0
+	self.RoleName = info.RoleName or ""
+end
+
+function PlayerData:GetRoleID()
+	return self.RoleId
+end
+

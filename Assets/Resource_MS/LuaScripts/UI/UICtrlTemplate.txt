@@ -1,0 +1,40 @@
+﻿--界面
+UICtrlTemplateLUA=LUAUIBase:new({
+	
+	});
+
+function UICtrlTemplateLUA:Open()
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init();
+end
+function UICtrlTemplateLUA:Init()
+	
+end
+
+--ui组件添加事件
+function UICtrlTemplateLUA:AddUIEventListener( )
+	--self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+end
+--模块添加全局事件
+function UICtrlTemplateLUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function UICtrlTemplateLUA:RemoveEventListener( )
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function UICtrlTemplateLUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("UICtrlTemplate")
+		end
+	end
+end
+function UICtrlTemplateLUA:OnDestroy()
+	self:RemoveEventListener()
+	UICtrlTemplateLUA = nil;
+end
+return UICtrlTemplateLUA

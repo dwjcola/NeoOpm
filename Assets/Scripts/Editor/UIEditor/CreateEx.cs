@@ -20,6 +20,7 @@ public class CreateEx : Editor
             }
         }
     }
+
     
     [MenuItem("GameObject/UI/Text - TextMeshPro")]
     static void CreatText()

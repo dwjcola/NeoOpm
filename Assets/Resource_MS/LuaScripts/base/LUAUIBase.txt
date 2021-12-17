@@ -144,7 +144,7 @@ end
 function LUAUIBase:CloseUI(key)
   local lua=_G[key];
   if(lua==nil)then
-    local panel= self.TableTools.Tables.Panel:GetLineById(key);
+    local panel=  TPanel[key];
     local luaname=(panel or {LuaName=""}).LuaName
     lua=_G[luaname]
   end

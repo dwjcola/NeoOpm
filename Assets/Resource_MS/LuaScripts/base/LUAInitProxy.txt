@@ -6,4 +6,13 @@ Description:初始化proxy
 LUAInitProxy={};
 LoginProxy=require("LoginProxy")
 LoginProxy:Init()
+
+---@type SetUpTeamProxy
+SetUpTeamProxy = require("SetUpTeamProxy")
+SetUpTeamProxy:Init()
+
+---@type BattleProxy
+BattleProxy = require("BattleProxy")
+BattleProxy:Init()
+
 require("PlayerData")

@@ -3,13 +3,13 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/6 15:40
 ---
-
+--- 暂时废弃掉 不做场景的概念
 BattleScene = {}
 
 
 function BattleScene:enter(enterData)
-    self:enterBattle()
-    LUAMain:addBehaviour(self)
+    --self:enterBattle()
+    --LUAMain:addBehaviour(self)
 end
 
 function BattleScene:enterBattle(data)

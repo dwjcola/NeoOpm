@@ -1,0 +1,46 @@
+--界面
+UISetUpTeamLUA=LUAUIBase:new({
+	
+	});
+
+function UISetUpTeamLUA:Open()
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init();
+end
+function UISetUpTeamLUA:Init()
+	BattleProxy:EnterTeamSetUp(Enum.SetUpTeamEnum.TeamType.MainType)
+end
+
+--ui组件添加事件
+function UISetUpTeamLUA:AddUIEventListener( )
+	self:AddUIEvent("onclick", self.btn_close.gameObject, self.OnCloseMe);
+	self:AddUIEvent("onclick", self.btn_battle.gameObject, self.OnBattleClick)
+end
+--模块添加全局事件
+function UISetUpTeamLUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function UISetUpTeamLUA:RemoveEventListener( )
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function UISetUpTeamLUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("UISetUpTeam")
+		end
+	end
+end
+function UISetUpTeamLUA:OnDestroy()
+	self:RemoveEventListener()
+	UISetUpTeamLUA = nil;
+end
+
+function UISetUpTeamLUA:OnBattleClick()
+
+end
+
+return UISetUpTeamLUA

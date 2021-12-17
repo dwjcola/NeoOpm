@@ -14,7 +14,7 @@ require_path("BattleContext","battle/context/BattleContext")
 
 BattleLoader = require_path("BattleLoader","battle/manager/BattleLoader")
 
-EventManager = require_path("EventManager","battle/eventCode/EventManager")
+
 
 BattleUtils = require_path("BattleUtils","battle/utils/BattleUtils")
 
@@ -34,6 +34,8 @@ BattleLogicContext = require_path("BattleLogicContext","battle/battleLogic/Battl
 BattleRenderWorld = require_path("BattleRenderWorld","battle/battleRender/BattleRenderWorld")
 
 require_path("Enum_Battle","battle/Enum_Battle")
+
+BattleSceneManager = require_path("BattleSceneManager","battle/manager/BattleSceneManager"):new()
 
 
 

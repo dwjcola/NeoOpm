@@ -40,8 +40,9 @@ function MainUILUA:TabClick( index )
 	self:Error("select --> "..index)
 end
 function MainUILUA:Fight()
-	self:HideSelf()
-	self.procedure:GoToBattle()
+	--self:HideSelf()
+	SetUpTeamProxy:OpenSetUpTeam(Enum.SetUpTeamEnum.TeamType.MainType)
+	--self.procedure:GoToBattle()
 end
 function MainUILUA:HideSelf()
 	self.bg.alpha = 0

@@ -6,3 +6,14 @@ Description:存放一些固定定义的Const
 LUADefine={};
 
 LUADefine.TEST="TEST"
+
+
+
+Enum = {
+    --- 布阵
+    SetUpTeamEnum = {
+        TeamType = {
+            MainType = 1,
+        }
+    }
+}

@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
 ---@class NodeLeaf : NodeBase
-local NodeLeaf = Class("NodeLeaf",NodeBase)
+local NodeLeaf = SimpleClassUtil:class(NodeBase)
 
 function NodeLeaf:initialize(nodeType)
     self.super:initialize()

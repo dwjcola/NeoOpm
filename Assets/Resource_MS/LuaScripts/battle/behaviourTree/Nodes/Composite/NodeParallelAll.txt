@@ -13,7 +13,7 @@
 ---
 
 ---@class NodeParallelAll : NodeComposite
-local NodeParallelAll = Class("NodeParallelAll",NodeComposite)
+local NodeParallelAll = SimpleClassUtil:class(NodeComposite)
 
 function NodeParallelAll:initialize()
     self.super:initialize(Enum_BT.Node_Type.Parallel_All)

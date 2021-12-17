@@ -12,7 +12,7 @@
 
 
 ---@class NodeRandomSelect : NodeRandom
-local NodeRandomSelect = Class("NodeRandomSelect",NodeRandom)
+local NodeRandomSelect = SimpleClassUtil:class(NodeRandom)
 
 function NodeRandomSelect:initialize()
     self.super:initialize(Enum_BT.Node_Type.Random)

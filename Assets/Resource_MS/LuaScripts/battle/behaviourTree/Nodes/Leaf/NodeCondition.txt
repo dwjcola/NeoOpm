@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 --- 条件节点(叶节点)
 ---@class NodeCondition : NodeLeaf
-local NodeCondition = Class("NodeCondition",NodeLeaf)
+local NodeCondition = SimpleClassUtil:class(NodeLeaf)
 
 function NodeCondition:initialize()
     self.super:initialize(Enum_BT.Node_Type.Condition)

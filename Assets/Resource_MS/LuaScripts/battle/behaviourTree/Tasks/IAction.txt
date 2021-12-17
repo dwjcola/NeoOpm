@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 --- 接口IAction
 ---@class IAction : NodeLeaf
-local IAction = Class("IAction")
+local IAction = SimpleClassUtil:class()
 
 function IAction:initialize()
 

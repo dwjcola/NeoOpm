@@ -3,8 +3,8 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/7 17:56
 --- 基础节点
----@class NodeBase : MiddleClass
-local NodeBase = Class("NodeBase")
+---@class NodeBase : SimpleClassUtil
+local NodeBase = SimpleClassUtil:class()
 
 function NodeBase:initialize()
    self:initAttribute()

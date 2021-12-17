@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 ---
 ---@class bt_ac_ui_start_battle : IAction
-local bt_ac_ui_start_battle = Class("bt_ac_ui_start_battle",IAction)
+local bt_ac_ui_start_battle = SimpleClassUtil:class(IAction)
 
 function bt_ac_ui_start_battle:doAction()
     Logger.Error("战斗开始 ！！！")

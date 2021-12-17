@@ -57,6 +57,19 @@ function Logger.Warning(...)
     LC.Warning(temp)
 end
 
+
+function Logger.log(...)
+    Logger.Log(...)
+end
+
+function Logger.error(...)
+    Logger.Error(...)
+end
+
+function Logger.warning(...)
+    Logger.Warning(...)
+end
+
 function Logger.LogTable(table)
     if not isLogEnable then
         return

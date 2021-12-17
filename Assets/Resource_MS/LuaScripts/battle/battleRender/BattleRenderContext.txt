@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/15 14:15
 ---
 ---@class BattleRenderContext
-local BattleRenderContext = Class("BattleRenderContext")
+local BattleRenderContext = SimpleClassUtil:class()
 
 function BattleRenderContext:initialize()
 

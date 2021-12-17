@@ -4,10 +4,10 @@
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
 ---@class NodeAction : NodeLeaf
-local NodeAction = Class("NodeAction",NodeLeaf)
+local NodeAction = SimpleClassUtil:class(NodeLeaf)
 
 function NodeAction:initialize()
-    NodeLeaf:initialize(Enum_BT.Node_Type.Action)
+    self.super:initialize(Enum_BT.Node_Type.Action)
     ---@type IAction 因为lua 无法定义 接口 所以带有 doAction 方法得 表 就认为是 IAction
     self._iAction = nil
     self._list_parameterList = {}

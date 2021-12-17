@@ -13,7 +13,7 @@
 
 
 ---@class NodeRandomPriority : NodeRandom
-local NodeRandomPriority = Class("NodeRandomPriority",NodeRandom)
+local NodeRandomPriority = SimpleClassUtil:class(NodeRandom)
 
 function NodeRandomPriority:initialize()
     self.super:initialize(Enum_BT.Node_Type.Random_Priority)

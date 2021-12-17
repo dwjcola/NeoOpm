@@ -3,7 +3,7 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/15 10:23
 ---@class BattleLogicWorld
-local BattleLogicWorld = Class("BattleLogicWorld")
+local BattleLogicWorld = SimpleClassUtil:class()
 
 function BattleLogicWorld:initialize()
 

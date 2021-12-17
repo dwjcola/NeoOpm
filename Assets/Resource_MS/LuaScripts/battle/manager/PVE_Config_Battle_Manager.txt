@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/13 15:30
 ---
 ---@class PVE_Config_Battle_Manager:MiddleClass
-local PVE_Config_Battle_Manager = Class("PVE_Config_Battle_Manager")
+local PVE_Config_Battle_Manager = SimpleClassUtil:class()
 
 function PVE_Config_Battle_Manager:initialize(data)
     -- todo 检查 data 合法性

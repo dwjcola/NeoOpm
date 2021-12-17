@@ -14,7 +14,7 @@
 --- Until Success   直到成功，一直执行子节点
 ---
 ---@class NodeDecorator : NodeComposite
-local NodeDecorator = Class("NodeDecorator",NodeComposite)
+local NodeDecorator = SimpleClassUtil:class(NodeComposite)
 
 
 return NodeDecorator

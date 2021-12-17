@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 1:02
 ---  修饰节点：一直执行节点，直到达到条件
 ---@class NodeDecoratorUntil : NodeDecorator
-local NodeDecoratorUntil = Class("NodeDecoratorUntil",NodeDecorator)
+local NodeDecoratorUntil = SimpleClassUtil:class(NodeDecorator)
 
 function NodeDecoratorUntil:initialize(resultType)
     self.super:initialize(resultType)

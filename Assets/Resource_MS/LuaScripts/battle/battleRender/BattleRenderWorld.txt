@@ -4,6 +4,6 @@
 --- DateTime: 2021/12/15 10:22
 ---
 ---@class BattleRenderWorld
-local BattleRenderWorld = Class("BattleRenderWorld")
+local BattleRenderWorld = SimpleClassUtil:class()
 
 return BattleRenderWorld

@@ -6,7 +6,7 @@
 ---       执行节点，无论节点返回 Success、Fail、Running 执行结束后永远向父节点返回 Success
 ---
 ---@class NodeDecoratorReturnSuccess : NodeDecoratorReturnConst
-local NodeDecoratorReturnSuccess = Class("NodeDecoratorReturnSuccess",NodeDecoratorReturnConst)
+local NodeDecoratorReturnSuccess = SimpleClassUtil:class(NodeDecoratorReturnConst)
 
 function NodeDecoratorReturnSuccess:initialize()
     self.super:initialize(Enum_BT.Node_Type.Decorator_Return_Success)

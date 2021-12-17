@@ -3,7 +3,7 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/15 14:12
 ---@class BattleLogicContext
-local BattleLogicContext = Class("BattleLogicContext")
+local BattleLogicContext = SimpleClassUtil:class()
 
 function BattleLogicContext:initialize()
 

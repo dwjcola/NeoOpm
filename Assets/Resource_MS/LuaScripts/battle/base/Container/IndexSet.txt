@@ -1,0 +1,125 @@
+--[[
+   FileName: IndexSet.lua
+   Author: lyb
+   Date: 2019-05-14 11:53:00
+   Desc: List和Set的结合，可迭代，元素唯一，增删O(1)，无序。
+--]]
+
+---@class IndexSet @可迭代的集合
+local IndexSet =  SimpleClassUtil:class()
+
+function IndexSet:initialize()
+    self._list = {}
+    ---@type table<any, number> | table
+    self._dict = {}
+end
+
+---返回指定下标的元素
+---@param index number @1, 2, 3, ...
+function IndexSet:get(index)
+    return self._list and self._list[index]
+end
+
+---添加元素，不能添加相同元素
+---@param item any @元素
+---@return boolean @添加成功
+function IndexSet:add(item)
+    if self._list == nil then
+        self:initialize()
+    end
+    if self._dict[item] or item==nil then
+        return false
+    end
+    table.insert(self._list, item)
+    self._dict[item] = #self._list
+    return true
+end
+
+---删除元素，最后一个元素会顶替空的位置
+---@param item any @元素
+---@return boolean @删除成功
+function IndexSet:remove(item)
+    local index = self._dict and self._dict[item]
+    if index==nil then
+        return false
+    end
+
+    self:removeAt(index)
+    return true
+end
+
+---删除指定下标的元素
+---@param index number @1, 2, 3, ...
+function IndexSet:removeAt(index)
+    local list = self._list
+    if list then
+        local item = list[index]
+        if item==nil then
+            return
+        end
+
+        self._dict[item] = nil
+        local os = #list -- old size
+        if index == os then
+            list[os] = nil
+        else
+            local rItem = list[os] -- replace item
+            list[index] = rItem
+            self._dict[rItem] = index
+            list[os] = nil
+        end
+    end
+end
+
+---检查是否存在元素
+---@param item any
+---@return boolean
+function IndexSet:contains(item)
+    return self._dict and self._dict[item]~=nil or false
+end
+
+---返回item的下标
+---@param item any
+---@return number @不存在返回nil
+function IndexSet:indexOf(item)
+    return self._dict and self._dict[item]
+end
+
+---@param index number
+function IndexSet:at(index)
+    local list = self._list
+    return list and list[index]
+end
+
+---返回集合的元素数量
+---@return number
+function IndexSet:size()
+    local list = self._list
+    return list and #list or 0
+end
+
+---清空集合
+function IndexSet:clear()
+    if self._list then
+        self._list = nil
+        self._dict = nil
+    end
+end
+
+---@private
+function IndexSet._pair_func(_t, i)
+    i = i + 1
+    local list = _t._list
+    if list then
+        local v = list[i]
+        if v then
+            return i, v
+        end
+    end
+end
+
+function IndexSet:pairs()
+    return self._pair_func, self, 0
+end
+
+return IndexSet

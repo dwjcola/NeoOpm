@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/6 18:06
 ---
 ---@class BattleLoader:MiddleClass
-local BattleLoader = Class("BattleLoader")
+local BattleLoader = SimpleClassUtil:class()
 
 function BattleLoader:initialize(data)
     self._data = data

@@ -3,8 +3,9 @@
 --- Created by liuyubao.
 --- DateTime: 2021/11/25 15:05
 ---
+GameStatic = require("GameStatic")
 
-Class = require("MiddleClass")
+SimpleClassUtil = require("SimpleClassUtil")
 
 require("CSImport")
 

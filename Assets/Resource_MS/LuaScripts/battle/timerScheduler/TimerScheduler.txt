@@ -1,0 +1,434 @@
+--[[
+   FileName: TimerScheduler.txt
+   Author: lyb
+   Date: 2019-05-14 12:00:00
+   Desc: 计时器管理者
+--]]
+---@class TimerScheduler.Timer
+---@field delay number @延迟秒回调
+---@field times number @调用次数
+---@field cntdn number @还剩下多少次调用；重复调用cntdn为-1；
+---@field keep boolean @真则不自动进入缓存池。在RemoveSchedule之前置为false才进缓存池；
+---@field obj table @回调函数的self
+---@field func function @回调函数
+---@field data any @回调参数
+---@field affectSpeed boolean @是否受全局加速影响
+local Timer = {}
+
+---@class TimerScheduler @计时器管理者。由于性能考虑， 计时器之间的顺序不能保证。若计时器keep为false，将会被回收。
+---@field deltaTime number @当前帧的间隔秒
+local TimerScheduler = SimpleClassUtil:class()
+
+function TimerScheduler:initialize()
+    self._poolOwner = {k = "PoolOwner_TimerScheduler"}
+    self._list = IndexSet:new()
+    self._toAdd = IndexSet:new()
+    self._toRmv = IndexSet:new()
+
+    self._pool =
+    TablePool:new(
+            12,
+            function()
+                return {obj = self._poolOwner}
+            end
+    )
+
+    self._hubClass = SchedulerHub
+    self._hubPool =
+    TablePool:new(
+            12,
+            function()
+                local newHub = self._hubClass:new()
+                newHub.obj = self._poolOwner
+                return newHub
+            end,
+            function(hub)
+                ---@type SchedulerHub
+                hub:release()
+            end
+    )
+end
+---@param owner any
+---@return SchedulerHub
+function TimerScheduler:createSchedulerHub(owner)
+    local hub = self._hubPool:getObj()
+    hub.obj = owner
+    return hub
+end
+
+---@param hub SchedulerHub
+function TimerScheduler:removeSchedulerHub(hub)
+    -- 这种防重复机制有点蛋疼啊
+    if hub.obj == self._poolOwner then
+        return
+    end
+    hub.obj = self._poolOwner
+    self._hubPool:releaseObj(hub)
+end
+
+---延迟回调一次，默认保留Timer(keep=true)
+---@param delay number @延迟秒回调
+---@param func fun(obj:table, data:any) | fun(data:any) | fun() @回调方法
+---@param obj table @回调self
+---@param data any @回调参数
+---@param affect boolean @是否受全局加速影响
+---@return TimerScheduler.Timer
+function TimerScheduler:scheduleOnce(delay, func, obj, data,affect)
+    ---@type TimerScheduler.Timer
+    local t = self._pool:getObj()
+    if t.obj ~= self._poolOwner then
+        Logger.error("从池子里拿出的Timer有问题！", t)
+    end
+    assert(delay, "delay 不能为nil")
+    t.step = 0
+    t.delay = delay
+    t.func = func
+    t.obj = obj
+    t.data = data
+    t.keep = true
+    t.times = 1
+    t.cntdn = 1 -- count down
+    t.affectSpeed = affect
+    self._toAdd:add(t)
+    return t
+end
+
+
+
+---延迟回调多次，默认保留Timer(keep=true)
+---@param delay number @延迟秒回调
+---@param func fun(obj:table, data:any) | fun(data:any) @回调方法
+---@param obj table @回调self
+---@param data any @回调参数
+---@param times number @调用次数
+---@param affect boolean @是否受全局加速影响
+---@return TimerScheduler.Timer
+function TimerScheduler:scheduleTimes(delay, func, obj, data, times,affect)
+    ---@type TimerScheduler.Timer
+    local t = self._pool:getObj()
+    if t.obj ~= self._poolOwner then
+        Logger.error("从池子里拿出的Timer有问题！", t)
+    end
+    assert(delay, "delay 不能为nil")
+    t.step = 0
+    t.delay = delay
+    t.func = func
+    t.obj = obj
+    t.data = data
+    t.keep = true
+    t.times = times
+    t.cntdn = times
+    t.affectSpeed = affect
+
+    self._toAdd:add(t)
+    return t
+end
+
+---重复间隔回调，默认保留Timer(keep=true)
+---@param delay number @延迟秒回调
+---@param func fun(obj:table, data:any) | fun(data:any) @回调方法
+---@param obj table @回调self
+---@param data any @回调参数
+---@param affect boolean @是否受全局加速影响
+---@return TimerScheduler.Timer
+function TimerScheduler:scheduleRepeat(delay, func, obj, data,affect)
+    ---@type TimerScheduler.Timer
+    local t = self._pool:getObj()
+    if t.obj ~= self._poolOwner then
+        Logger.error("从池子里拿出的Timer有问题！", t)
+    end
+    assert(delay, "delay 不能为nil")
+    t.step = 0
+    t.delay = delay
+    t.func = func
+    t.obj = obj
+    t.data = data
+    t.keep = true
+    t.times = -1
+    t.cntdn = -1
+
+    self._toAdd:add(t)
+
+    self:_debug_schedulePerFrame(t)
+    return t
+end
+
+
+
+
+
+---每帧回调，默认保留Timer(keep=true)
+---@param func fun(obj:table, data:any) | fun(data:any) @回调方法
+---@param obj table @回调self
+---@param data any @回调参数
+---@param affect boolean @是否受全局加速影响
+---@return TimerScheduler.Timer
+function TimerScheduler:schedulePerFrame(func, obj, data,affect)
+    return self:scheduleRepeat(0, func, obj, data,affect)
+end
+
+---调用RemoveSchedule之后，切记不要再引用timer。另timer = nil为妙。
+---Mananger底层使用了缓存timer池
+---@param timer TimerScheduler.Timer | LateTimerScheduler.Timer
+function TimerScheduler:removeSchedule(timer)
+    if timer.obj == self._poolOwner then
+        Logger.error("Timer has been Removed. Can not Remove Again", timer)
+        return
+    end
+    timer.keep = false
+
+    self._toAdd:remove(timer)
+    self._toRmv:add(timer)
+    self:_debug_removeSchedule(timer)
+end
+
+---下一帧回调
+---@param func fun(obj:table, data:any) | fun(data:any) @回调方法
+---@param obj table @回调self
+---@param data any @回调参数
+---@param affect boolean @是否受全局加速影响
+---@return TimerScheduler.Timer
+function TimerScheduler:nextFrame(func, obj, data,affect)
+    return self:scheduleOnce(0, func, obj, data,affect)
+end
+
+---停止timer的回调功能。但仍然拥有timer的所有权。 Mananger不会复用该timer。
+---@param timer TimerScheduler.Timer
+function TimerScheduler:disableSchedule(timer)
+    if timer.obj == self._poolOwner then
+        Logger.error("You try to disable a invalid timer.", timer)
+    end
+    timer.keep = true
+
+    self._toAdd:remove(timer)
+    self._toRmv:add(timer)
+end
+
+---重置 已经停止的timer。timer计时重新计算。
+---@param timer TimerScheduler.Timer
+---@param delay number
+function TimerScheduler:resetSchedule(timer, delay)
+    if timer.obj == self._poolOwner then
+        Logger.error("You try to reset a invalid timer.", timer)
+    end
+    timer.delay = delay or timer.delay
+    timer.step = 0
+    timer.cntdn = timer.times
+
+    self._toRmv:remove(timer)
+    self._toAdd:add(timer)
+end
+
+---暂停timer。已经结束的timer不能被暂停。
+---@param timer TimerScheduler.Timer
+function TimerScheduler:pauseSchedule(timer)
+    if timer.obj == self._poolOwner then
+        Logger.error("You try to pause a invalid timer.", timer)
+    end
+    timer.keep = true
+
+    self._toAdd:remove(timer)
+    self._toRmv:add(timer)
+end
+
+---恢复 已经暂停的timer。timer计时继承暂停时的状态。
+---@param timer TimerScheduler.Timer
+function TimerScheduler:resumeSchedule(timer)
+    if timer.obj == self._poolOwner then
+        Logger.error("You try to resume a invalid timer.", timer)
+    end
+    if self:isFinished(timer) then
+        Logger.warning("You try to resume a finished timer. Call TimerScheduler:resetSchedule instead.", timer)
+        self:resetSchedule(timer)
+    else
+        self._toRmv:remove(timer)
+        self._toAdd:add(timer)
+    end
+end
+
+---Timer是否完成固定次数。
+---重复的Timer永远不会结束（如，scheduleRepeat返回的Timer）。
+---@param timer TimerScheduler.Timer
+function TimerScheduler:isFinished(timer)
+    if timer.times > 0 then
+        return timer.cntdn <= 0
+    end
+    -- 重复的回调，永远不会结束
+    return false
+end
+
+-- 清除所有的计时器
+function TimerScheduler:clearAllScheduler()
+    local timer
+    local nCnt = self._list:size()
+    if nCnt > 0 then
+        for i = 1, nCnt do
+            timer = self._list:at(i)
+            self._toRmv:add(timer)
+        end
+        self._list:clear()
+    end
+    nCnt = self._toAdd:size()
+    if nCnt > 0 then
+        for i = 1, nCnt do
+            timer = self._toAdd:at(i)
+            self._toRmv:add(timer)
+        end
+        self._toAdd:clear()
+    end
+
+    nCnt = self._toRmv:size()
+    if nCnt > 0 then
+        for i = 1, nCnt do
+            timer = self._toRmv:at(i)
+            if timer.obj ~= self._poolOwner then
+                timer.obj = self._poolOwner
+                timer.func = self._emptyFunc
+                self:_debug_setTimerData(timer)
+
+                self._pool:releaseObj(timer)
+            end
+        end
+        self._toRmv:clear()
+    end
+
+end
+
+
+local _hookList = {}
+local _hookDict = {}
+
+function TimerScheduler._debug_show_traceback(b ,c )
+
+    if not GameStatic.enableTimeCheck then
+        return
+    end
+
+    local a = b or c
+    print(_hookDict[a])
+end
+
+
+function TimerScheduler:_debug_schedulePerFrame(t)
+
+    if not GameStatic.enableTimeCheck then
+        return
+    end
+    table.insert(_hookList,t)
+    _hookDict[#_hookList] = {debug.traceback(), false}
+end
+
+function TimerScheduler:_debug_removeSchedule(timer)
+    if not GameStatic.enableTimeCheck then
+        return
+    end
+    local index = self:_debug_calTimerIndex(timer)
+    if index == -1 then
+        return
+    end
+    _hookDict[index][2] = true
+end
+
+function TimerScheduler:_debug_calTimerIndex(timer)
+
+    for index, value in ipairs(_hookList) do
+        if timer == value then
+            return  index
+        end
+    end
+    return -1
+end
+
+
+function TimerScheduler:_debug_setTimerData(timer)
+
+    if not GameStatic.enableTimeCheck then
+        return
+    end
+    local index = self:_debug_calTimerIndex(timer)
+    timer.data = index
+end
+
+---@private
+function TimerScheduler._emptyFunc(a, b,c)
+    Logger.error("call func of timer in pool", a, b)
+
+    local x = c or b
+
+    if c then
+        print(_hookDict[c])
+    else
+        if b then
+            print(_hookDict[b])
+        end
+    end
+
+
+    print(_hookDict[x])
+    TimerScheduler._debug_show_traceback(b, c)
+end
+
+---@private
+---@param dt number
+function TimerScheduler:update(dt,timeScale)
+    self.deltaTime = dt
+    ---@type TimerScheduler.Timer
+    local timer
+    local nCnt = self._toRmv:size()
+    if nCnt > 0 then
+        for i = 1, nCnt do
+            timer = self._toRmv:at(i)
+            self._list:remove(timer) -- 只能在这remove，防止迭代失效
+            if not timer.keep and timer.obj ~= self._poolOwner then
+                --timer.trace = timer.trace or {}
+                --table.insert(timer.trace, timer.obj)
+                timer.obj = self._poolOwner
+                timer.func = self._emptyFunc
+                self:_debug_setTimerData(timer)
+
+                self._pool:releaseObj(timer)
+            end
+        end
+        self._toRmv:clear()
+    end
+
+    nCnt = self._list:size()
+    for i = 1, nCnt do
+        timer = self._list:at(i)
+        if not self._toRmv:contains(timer) then
+            if timer.affectSpeed then
+                timer.step = timer.step + dt*timeScale
+            else
+                timer.step = timer.step + dt
+            end
+
+            if timer.step >= timer.delay then
+                if timer.times > 0 then
+                    timer.cntdn = timer.cntdn - 1
+                    if timer.cntdn <= 0 then
+                        self._toRmv:add(timer)
+                    end
+                end
+                if timer.obj then
+                    xpcall(timer.func, Logger.error, timer.obj, timer.data)
+                else
+                    xpcall(timer.func, Logger.error, timer.data)
+                end
+                timer.step = 0
+            end
+        end
+    end
+
+    nCnt = self._toAdd:size()
+    if nCnt > 0 then
+        for i = 1, nCnt do
+            timer = self._toAdd:at(i)
+            self._list:add(timer)
+        end
+        self._toAdd:clear()
+    end
+
+    timer = nil
+end
+
+return TimerScheduler

@@ -10,10 +10,10 @@
 ---      如果所有节点都返回 Success，向父节点返回 Success
 
 ---@class NodeSequence : NodeComposite
-local NodeSequence = Class("NodeSequence",NodeComposite)
+local NodeSequence = SimpleClassUtil:class(NodeComposite)
 
 function NodeSequence:initialize()
-    NodeComposite:initialize(Enum_BT.Node_Type.NodeSequence)
+    self.super:initialize(Enum_BT.Node_Type.NodeSequence)
     ---@type NodeBase
     self._lastRunningNode = nil
 end

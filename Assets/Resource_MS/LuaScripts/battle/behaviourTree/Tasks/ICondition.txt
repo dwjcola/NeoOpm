@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 --- 接口ICondition
 ---@class ICondition : NodeLeaf
-local ICondition = Class("ICondition")
+local ICondition = SimpleClassUtil:class()
 
 function ICondition:initialize()
 

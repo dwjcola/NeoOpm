@@ -12,10 +12,10 @@
 
 
 ---@class NodeRandomSequence : NodeRandom
-local NodeRandomSequence = Class("NodeRandomSequence",NodeRandom)
+local NodeRandomSequence = SimpleClassUtil:class(NodeRandom)
 
 function NodeRandomSequence:initialize()
-    NodeRandom:initialize(Enum_BT.Node_Type.Random_Sequence)
+    self.super:initialize(Enum_BT.Node_Type.Random_Sequence)
     ---@type NodeBase
     self._lastRunningNode = nil
 end

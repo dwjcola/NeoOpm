@@ -15,7 +15,7 @@
 ---      第一个节点返回 Fail 执行第二个节点
 ---      第一个节点返回 Success 执行第三个节点
 ---@class NodeIfJudge : NodeComposite
-local NodeIfJudge = Class("NodeIfJudge",NodeComposite)
+local NodeIfJudge = SimpleClassUtil:class(NodeComposite)
 
 function NodeIfJudge:initialize()
     self.super:initialize(Enum_BT.Node_Type.IF_Judge)

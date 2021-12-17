@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/9 15:03
 --- 行为树黑板
 ---@class BehaviourTreeEntity:MiddleClass
-local BehaviourTreeEntity = Class("BehaviourTreeEntity")
+local BehaviourTreeEntity = SimpleClassUtil:class()
 
 function BehaviourTreeEntity:initialize(treeData,blackboard,contextManager)
    ---@type Blackboard

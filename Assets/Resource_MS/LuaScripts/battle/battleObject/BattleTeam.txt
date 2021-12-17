@@ -3,7 +3,7 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/13 15:37
 ---@class BattleTeam
-local BattleTeam = Class("BattleTeam")
+local BattleTeam = SimpleClassUtil:class()
 
 function BattleTeam:initialize(data)
     self._data = data

@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
 ---@class bt_ac_enter_scene_ani : IAction
-local bt_ac_enter_scene_ani = Class("bt_ac_enter_scene_ani",IAction)
+local bt_ac_enter_scene_ani = SimpleClassUtil:class(IAction)
 
 function bt_ac_enter_scene_ani:doAction()
     Logger.Error("播放日常动画！！！")

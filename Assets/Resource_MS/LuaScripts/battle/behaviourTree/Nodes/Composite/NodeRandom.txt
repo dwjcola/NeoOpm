@@ -7,7 +7,7 @@
 
 
 ---@class NodeRandom : NodeComposite
-local NodeRandom = Class("NodeRandom",NodeComposite)
+local NodeRandom = SimpleClassUtil:class(NodeComposite)
 
 function NodeRandom:initialize(nodeType)
     self.super:initialize(nodeType)

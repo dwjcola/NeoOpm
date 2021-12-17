@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 0:03
 ---
 ---@class bt_ac_round_test : IAction
-local bt_ac_round_test = Class("bt_ac_round_test",IAction)
+local bt_ac_round_test = SimpleClassUtil:class(IAction)
 
 function bt_ac_round_test:doAction()
     Logger.Error("战斗回合 进行中 ！！！")

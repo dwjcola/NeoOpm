@@ -3,7 +3,8 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/3 19:44
 ---
-
+require_path("Init_base","battle/base/Init_base")
+require_path("Init_event","battle/eventCode/Init_event")
 
 require_path("BattleScene","battle/BattleScene")
 
@@ -33,3 +34,8 @@ BattleLogicContext = require_path("BattleLogicContext","battle/battleLogic/Battl
 BattleRenderWorld = require_path("BattleRenderWorld","battle/battleRender/BattleRenderWorld")
 
 require_path("Enum_Battle","battle/Enum_Battle")
+
+
+
+
+

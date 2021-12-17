@@ -1,0 +1,68 @@
+---@class TablePool
+local TablePool = SimpleClassUtil:class()
+
+---@param capacity number
+---@param newFunc fun() : table
+---@param rlsFunc fun(t : table)  void
+function TablePool:initialize(capacity, newFunc, rlsFunc)
+    local cap = capacity or 4
+    ---@type Queue
+    self._ts = Queue:new()
+    self._newFunc = newFunc -- or _defaultNew
+    self._rlsFunc = rlsFunc
+    if newFunc then
+        for i = 1, cap do
+            self._ts:pushBack(newFunc())
+        end
+    else
+        for i = 1, cap do
+            self._ts:pushBack({})
+        end
+    end
+end
+
+---@return table @从池子里获取的table
+function TablePool:getObj()
+    if self._ts then
+        local cnt = self._ts:size()
+        if cnt <= 0 then
+            if self._newFunc then
+                return self._newFunc()
+            else
+                return {}
+            end
+        else
+            return self._ts:popFront()
+        end
+    end
+end
+
+---@param item table @一定是Get返回的table
+function TablePool:releaseObj(item)
+    if self._ts then
+        if self._rlsFunc then
+            self._rlsFunc(item)
+        end
+
+        if self._ts:peekBack() == item then
+            Logger.error("Try Release item to TablePool Failed! You try Release same item twice.", item)
+        else
+            self._ts:pushBack(item)
+        end
+    end
+end
+
+---@overload fun()
+function TablePool:release(obsolete)
+    if obsolete then
+        Logger.error("TablePool:release has Changed Name to TablePool:releaseObj!")
+        self:releaseObj(obsolete)
+        return
+    end
+
+    self._newFunc = nil
+    self._rlsFunc = nil
+    self._ts = nil
+end
+
+return TablePool

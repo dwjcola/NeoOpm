@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/7 16:30
 ---
 
-local EventManager = Class("EventManager")
+local EventManager = SimpleClassUtil:class()
 
 function EventManager:initialize()
 

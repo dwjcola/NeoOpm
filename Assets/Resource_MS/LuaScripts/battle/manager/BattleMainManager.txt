@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/3 20:08
 ---
 ---@class  BattleMainManager:MiddleClass
-local BattleMainManager = Class("BattleMainManager")
+local BattleMainManager = SimpleClassUtil:class()
 
 function BattleMainManager:initialize(data)
 

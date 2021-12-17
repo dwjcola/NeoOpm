@@ -13,10 +13,10 @@
 ---
 
 ---@class NodeParallel : NodeComposite
-local NodeParallel = Class("NodeParallel",NodeComposite)
+local NodeParallel = SimpleClassUtil:class(NodeComposite)
 
 function NodeParallel:initialize()
-    NodeComposite:initialize(Enum_BT.Node_Type.Parallel)
+    self.super:initialize(Enum_BT.Node_Type.Parallel)
     self._runningNode = 0
 end
 

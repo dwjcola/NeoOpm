@@ -6,10 +6,10 @@
 ---
 
 ---@class NodeComposite : NodeBase
-local NodeComposite = Class("NodeComposite",NodeBase)
+local NodeComposite = SimpleClassUtil:class(NodeBase)
 
 function NodeComposite:initialize(nodeType)
-    NodeBase:initialize()
+    self.super:initialize()
     ---@type NodeBase[]
     self._list_nodeChild = {}
 

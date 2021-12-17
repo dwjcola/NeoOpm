@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/9 15:03
 --- 行为树黑板
 ---@class BlackBoard
-local BlackBoard = Class("BlackBoard")
+local BlackBoard = SimpleClassUtil:class()
 
 function BlackBoard:initialize(contextManager)
 

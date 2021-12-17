@@ -6,7 +6,7 @@
 
 
 ---@class NodeSubTree : NodeComposite
-local NodeSubTree = Class("NodeSubTree",NodeComposite)
+local NodeSubTree = SimpleClassUtil:class(NodeComposite)
 
 function NodeSubTree:initialize()
     self.super:initialize(Enum_BT.Node_Type.Sub_Tree)

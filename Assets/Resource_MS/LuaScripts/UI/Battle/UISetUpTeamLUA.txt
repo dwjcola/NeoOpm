@@ -9,7 +9,7 @@ function UISetUpTeamLUA:Open()
 	self:Init();
 end
 function UISetUpTeamLUA:Init()
-	BattleProxy:EnterTeamSetUp(Enum.SetUpTeamEnum.TeamType.MainType)
+
 end
 
 --ui组件添加事件

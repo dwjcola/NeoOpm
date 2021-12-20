@@ -13,4 +13,16 @@ function BattleUtils:getHeroInitOffsetPos(heroId,isLeft)
     end
 end
 
+function BattleUtils:getHeroAssetPathByHeroId(heroId)
+    --local heroInfo = ConfigReader:getDataByNameAndId("HeroInfo",heroId)
+    --if heroInfo then
+    --    return heroInfo.path
+    --else
+    --    Logger.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
+    --    return ""
+    --end
+
+    return ""
+end
+
 return BattleUtils

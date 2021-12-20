@@ -8,8 +8,8 @@ local SetUpTeamProxy = {}
 function SetUpTeamProxy:Init()
 
 end
-
-function SetUpTeamProxy:OpenSetUpTeam(type)
+---@param type Enum_Battle.BattleType
+function SetUpTeamProxy:OpenSetUpTeamView(type)
     LC.OpenUI("UISetUpTeam",{ openType = type})
 end
 

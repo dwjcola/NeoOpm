@@ -4,17 +4,100 @@
 --- DateTime: 2021/12/13 15:37
 ---@class BattleTeam
 local BattleTeam = SimpleClassUtil:class()
-
+local params = {
+    isOnlyLogic = false,
+    sceneData = data or {},
+    scenePath = "",
+    battleList = {
+        {
+            battleType = Enum_Battle.BattleType.PVE_C,
+            team_self = {
+                teamMap = {
+                    ["1"] = {
+                        heroId = "101",
+                    },
+                    ["3"] = {
+                        heroId = "101",
+                    },
+                    ["5"] = {
+                        heroId = "101",
+                    }
+                },
+            },
+            team_enemy = {
+                blockId = "block_20_10",
+                teamMap = {
+                    ["1"] = {
+                        heroId = "101",
+                    },
+                    ["3"] = {
+                        heroId = "101",
+                    },
+                    ["5"] = {
+                        heroId = "101",
+                    }
+                },
+            }
+        }
+    }
+}
 function BattleTeam:initialize(data)
     self._data = data
 
-    self._teamData = data.teamData
+    self._sceneAssetPath = data.scenePath
 
-    self._go_root = data.go_root
+    self._rootAssetPath = data.rootAssetPath
 
-    self._list_ski = data.list_ski
+    self._teamData = data.battleList
+
+    self._go_root = nil
+
+    self._go_scene = nil
+
+    self._list_left_roots = {}
+
+    self._list_right_roots = {}
+
+    self._map_left_role = {}
+
+    self._map_right_role = {}
+
+end
+
+function BattleTeam:tryLoad()
+   self:tryLoadScene()
+end
+
+function BattleTeam:tryLoadScene()
+    BattleLoaderManager:pop(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,function(scene)
+        self._go_scene = scene
+    end)
+end
+
+function BattleTeam:tryLoadScene()
+    BattleLoaderManager:pop(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,function(root)
+        self._go_root = root
+    end)
 end
 
 
+function BattleTeam:tryLoadLeftRole()
+    for i, v in pairs(self._teamData.team_self) do
+        local pos = i
+        BattleLoaderManager:pop(BattleUtils:getHeroAssetPathByHeroId(v),Enum_Battle.BattleAssetType.Model,function(model)
+            self._map_left_role[pos] = model
+        end)
+    end
+
+end
+
+function BattleTeam:tryLoadRightRole()
+    for i, v in pairs(self._teamData.team_enemy) do
+        local pos = i
+        BattleLoaderManager:pop(BattleUtils:getHeroAssetPathByHeroId(v),Enum_Battle.BattleAssetType.Model,function(model)
+            self._map_left_role[pos] = model
+        end)
+    end
+end
 
 return BattleTeam

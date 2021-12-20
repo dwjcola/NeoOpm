@@ -41,7 +41,7 @@ function MainUILUA:TabClick( index )
 end
 function MainUILUA:Fight()
 	--self:HideSelf()
-	SetUpTeamProxy:OpenSetUpTeam(Enum.SetUpTeamEnum.TeamType.MainType)
+	BattleProxy:EnterBattle(Enum_Battle.BattleEntityType.MainBattle,{teamType = Enum_Battle.BattleTeamType.MainTeam})
 	--self.procedure:GoToBattle()
 end
 function MainUILUA:HideSelf()

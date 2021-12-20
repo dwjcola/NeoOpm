@@ -6,14 +6,11 @@
 require_path("Init_base","battle/base/Init_base")
 require_path("Init_event","battle/eventCode/Init_event")
 
-require_path("BattleScene","battle/BattleScene")
-
 BattleMainManager = require_path("BattleMainManager","battle/manager/BattleMainManager")
 
 require_path("BattleContext","battle/context/BattleContext")
 
-BattleLoader = require_path("BattleLoader","battle/manager/BattleLoader")
-
+BattleLoaderManager = require_path("BattleLoaderManager","battle/manager/BattleLoaderManager"):new()
 
 
 BattleUtils = require_path("BattleUtils","battle/utils/BattleUtils")
@@ -37,6 +34,7 @@ require_path("Enum_Battle","battle/Enum_Battle")
 
 BattleSceneManager = require_path("BattleSceneManager","battle/manager/BattleSceneManager"):new()
 
+require_path("Init_Process","battle/processTree/Init_Process")
 
 
 

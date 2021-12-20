@@ -21,20 +21,22 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Scenes/scene_battle_01.unity
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   - m_GUID: 4fe57fb546c42db47a7109c95abdcb03
     m_Address: Assets/Resource_MS/Prefabs/HeroScenes/playerRoot.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
   - m_GUID: edcd51f1773d6dd408e3d1694c35a33c
     m_Address: Assets/Resource_MS/Prefabs/HeroScenes/scene_root_test.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-    m_MainAsset: {fileID: 0}
-    m_TargetAsset: {fileID: 0}
+  - m_GUID: 9b1e32f9b181e1743b0679f1d24b4773
+    m_Address: Assets/Resource_MS/Battle
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e61f415efdf2ae54b8f7f0e7e37728b0
+    m_Address: Assets/Resource_MS/Battle/General
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
   m_SchemaSet:

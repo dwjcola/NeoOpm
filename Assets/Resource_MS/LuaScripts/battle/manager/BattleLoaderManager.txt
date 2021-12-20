@@ -12,7 +12,7 @@ end
 
 function BattleLoaderManager:loadAssetAsync(assetName,assetType,cb)
     if assetType == Enum_Battle.BattleAssetType.Scene then
-        LC.LoadBattleScene(assetName,function(sceneObject)
+        LC.LoadAsset(assetName,function(sceneObject)
             if cb then
                 cb(sceneObject)
             end

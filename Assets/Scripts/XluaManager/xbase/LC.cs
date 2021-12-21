@@ -502,7 +502,14 @@ public class LC
         GameObject go = Object.Instantiate(per);
         action?.Invoke(lua, go);
     }
-
+    public static async void LoadAsset(string assetPath, Action<GameObject> action)
+    {
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        GameObject per = await resMgr.LoadAssetAsync<GameObject>(assetPath).Task;
+        GameObject go = Object.Instantiate(per);
+        action?.Invoke(go);
+    }
+   
     public static void AddButtonEvent(Button btn, Action<LuaTable, object> action, LuaTable lua, bool isOverride = true)
     {
         if (isOverride)

@@ -7,7 +7,7 @@ local SetUpTeamNode = SimpleClassUtil:class(ProcessNodeBase)
 
 function SetUpTeamNode:onStart()
     SetUpTeamProxy:OpenSetUpTeamView(entityType)
-    self._battleTeam = BattleTeam:new({})
+    self._battleTeam = BattleTeam:new(self._data)
     self._battleTeam:tryLoad()
 end
 

@@ -22,7 +22,49 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    return ""
     --end
 
-    return ""
+    return "Assets/Resource_MS/Battle/General/TmpModel/Model/NinjaMale_Base.prefab"
+end
+
+function BattleUtils:getTestBattleData()
+    local params = {
+        isOnlyLogic = false,
+        sceneData =  {},
+        battleList = {
+            {
+                scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
+                rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
+                battleType = Enum_Battle.BattleType.PVE_C,
+                team_self = {
+                    teamMap = {
+                        ["1"] = {
+                            heroId = "101",
+                        },
+                        ["3"] = {
+                            heroId = "101",
+                        },
+                        ["5"] = {
+                            heroId = "101",
+                        }
+                    },
+                },
+                team_enemy = {
+                    blockId = "block_20_10",
+                    teamMap = {
+                        ["1"] = {
+                            heroId = "101",
+                        },
+                        ["3"] = {
+                            heroId = "101",
+                        },
+                        ["5"] = {
+                            heroId = "101",
+                        }
+                    },
+                }
+            }
+        }
+    }
+    return params
 end
 
 return BattleUtils

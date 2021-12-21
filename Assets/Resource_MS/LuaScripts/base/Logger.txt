@@ -113,9 +113,9 @@ end
         -- 打印{
         str = string.format("%s%s{ ", str, ex)
     end
-
+    tbl = tbl or {}
     -- 如果tbl非空
-    if next(tbl) then
+    if tbl and next(tbl) then
         local isFull = layer >= MAX_TABLE_DEEP
         for k, v in pairs(tbl) do
             if type(v) ~= "table" or isFull then

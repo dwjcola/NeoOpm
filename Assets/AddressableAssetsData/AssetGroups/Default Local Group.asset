@@ -41,8 +41,12 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Battle/General/TmpModel
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: cc7aca7dd7fa6d641a778e40737a5906
-    m_Address: Assets/Resource_MS/Battle/General/TmpModel/Model/NinjaMale_Base.FBX
+  - m_GUID: a916a3a7795fce244a27c189ea2b1825
+    m_Address: Assets/Resource_MS/Battle/General/TmpModel/Model
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 210007182b2c53a49a88d5f139f1511d
+    m_Address: Assets/Resource_MS/Battle/General/TmpModel/Controller/Test Controller.controller
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

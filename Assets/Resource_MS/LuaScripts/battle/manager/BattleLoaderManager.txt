@@ -18,7 +18,11 @@ function BattleLoaderManager:loadAssetAsync(assetName,assetType,cb)
             end
         end)
     elseif assetType == Enum_Battle.BattleAssetType.Model then
-
+        LC.LoadAsset(assetName,function(sceneObject)
+            if cb then
+                cb(sceneObject)
+            end
+        end)
     elseif assetType == Enum_Battle.BattleAssetType.Effect then
 
     else

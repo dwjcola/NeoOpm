@@ -5,10 +5,16 @@
 ---@class SetUpTeamNode:ProcessNodeBase
 local SetUpTeamNode = SimpleClassUtil:class(ProcessNodeBase)
 
+
+
 function SetUpTeamNode:onStart()
-    SetUpTeamProxy:OpenSetUpTeamView(entityType)
-    self._battleTeam = BattleTeam:new(self._data)
-    self._battleTeam:tryLoad()
+    ---@type MainBattleProcessTree
+    local _tree = self._tree
+
+    SetUpTeamProxy:OpenSetUpTeamView(Enum_Battle.BattleTeamType.MainTeam,self._data,self)
+
+    _tree._battleTeam:setLoadData(self._data)
+    _tree._battleTeam:tryLoad()
 end
 
 function SetUpTeamNode:toLoadAsset(loadData)
@@ -21,6 +27,12 @@ end
 
 function SetUpTeamNode:onEnd()
 
+end
+
+function SetUpTeamNode:onExit()
+    ---@type MainBattleProcessTree
+    local _tree = self._tree
+    _tree._battleTeam:destroy()
 end
 
 return SetUpTeamNode

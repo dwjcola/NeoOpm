@@ -33,7 +33,7 @@ function TimerScheduler:initialize()
             end
     )
 
-    self._hubClass = SchedulerHub
+    self._hubClass =  require_path("SchedulerHub","battle/timerScheduler/SchedulerHub")
     self._hubPool =
     TablePool:new(
             12,

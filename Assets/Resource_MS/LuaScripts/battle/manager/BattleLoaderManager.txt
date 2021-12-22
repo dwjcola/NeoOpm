@@ -51,11 +51,11 @@ function BattleLoaderManager:pop(assetName,assetType,cb)
     end
 end
 
-function BattleLoaderManager:put(assetName,asset)
-    if self._list_asset[assetName]  then
-        table.insert(self._list_asset[assetName],asset)
+function BattleLoaderManager:put(assetName,assetType,asset)
+    if self._list_asset[assetType][assetName]  then
+        table.insert(self._list_asset[assetType][assetName],asset)
     else
-       Logger.error("资源  没有 对应得池子 请查看 资源来源  assetName == ",assetName)
+       Logger.error("资源  没有 对应得池子 请查看 资源来源 assetType ==  ",assetType,"    assetName ==  ",assetName)
     end
 end
 

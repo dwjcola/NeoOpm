@@ -39,7 +39,13 @@ function BattleUtils:getTestBattleData()
                         ["1"] = {
                             heroId = "101",
                         },
+                        ["2"] = {
+                            heroId = "101",
+                        },
                         ["3"] = {
+                            heroId = "101",
+                        },
+                        ["4"] = {
                             heroId = "101",
                         },
                         ["5"] = {
@@ -53,7 +59,13 @@ function BattleUtils:getTestBattleData()
                         ["1"] = {
                             heroId = "101",
                         },
+                        ["2"] = {
+                            heroId = "101",
+                        },
                         ["3"] = {
+                            heroId = "101",
+                        },
+                        ["4"] = {
                             heroId = "101",
                         },
                         ["5"] = {

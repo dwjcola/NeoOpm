@@ -12,6 +12,9 @@ BehaviourAnalysis         =  require_path("BehaviourAnalysis","battle/behaviourT
 
 ------- node data ---------
 BlackBoard                 = require_path("BlackBoard","battle/behaviourTree/Bt_Data/BlackBoard")
+
+BlackBoard_BattleBase      = require_path("BlackBoard_BattleBase","battle/behaviourTree/Bt_Data/BlackBoard_BattleBase")
+
 IfJudgeData                = require_path("IfJudgeData","battle/behaviourTree/Nodes/NodeAsset/IfJudgeData")
 ------- node ---------
 NodeBase                   = require_path("NodeBase","battle/behaviourTree/Nodes/AbstractNode/NodeBase")

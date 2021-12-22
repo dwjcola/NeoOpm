@@ -3,9 +3,18 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/17 15:13
 ---
-
+SchedulerHub = require_path("SchedulerHub","battle/timerScheduler/SchedulerHub")
 TimerScheduler = require_path("TimerScheduler","battle/timerScheduler/TimerScheduler"):new()
+
 LUAMain:addBehaviour(TimerScheduler)
 
 
 SchedulerHub = require_path("SchedulerHub","battle/timerScheduler/SchedulerHub")
+
+local BattleSchedulers = require_path("BattleScheduler","battle/timerScheduler/BattleScheduler")
+---@type ScheduleEntry
+ScheduleEntry = BattleSchedulers[1]
+---@type BattleScheduler
+BattleScheduler = BattleSchedulers[2]
+---@type BattleSchedulerMode
+BattleSchedulerMode = BattleSchedulers[3]

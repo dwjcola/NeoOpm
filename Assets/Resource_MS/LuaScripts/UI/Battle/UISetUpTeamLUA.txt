@@ -3,18 +3,21 @@ UISetUpTeamLUA=LUAUIBase:new({
 	
 	});
 
-function UISetUpTeamLUA:Open()
+function UISetUpTeamLUA:Open(param)
 	self:AddUIEventListener()
 	self:AddEventListener()
-	self:Init();
+	self:Init(param);
 end
-function UISetUpTeamLUA:Init()
-
+function UISetUpTeamLUA:Init(param)
+    self._teamYpe = param.openType
+	self._data = param.data
+	---@type SetUpTeamNode
+	self._node = param.node
 end
 
 --ui组件添加事件
 function UISetUpTeamLUA:AddUIEventListener( )
-	self:AddUIEvent("onclick", self.btn_close.gameObject, self.OnCloseMe);
+	self:AddUIEvent("onclick", self.btn_close.gameObject, self.OnCloseClick);
 	self:AddUIEvent("onclick", self.btn_battle.gameObject, self.OnBattleClick)
 end
 --模块添加全局事件
@@ -25,6 +28,7 @@ end
 function UISetUpTeamLUA:RemoveEventListener( )
 	-- self:RemoveEvent("EventStringKey", self.EventHandle);
 end
+
 function UISetUpTeamLUA:OnCloseMe()
 	if(self.view~=nil)then
 		if(self.view.isUIMonoItem)then
@@ -40,6 +44,17 @@ function UISetUpTeamLUA:OnDestroy()
 end
 
 function UISetUpTeamLUA:OnBattleClick()
+	-- todo 保存战斗阵型
+	--EventManager:Dispatch(EventType.Event_GoBattle)
+	--self:OnCloseMe()
+	self._node:onLeave()
+end
+
+function UISetUpTeamLUA:OnCloseClick()
+	-- todo 关闭
+	--EventManager:Dispatch(EventType.Event_CloseSetUpView)
+	self:OnCloseMe()
+	BattleProxy:ExitBattle()
 
 end
 

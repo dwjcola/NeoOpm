@@ -5,13 +5,15 @@
 ---@class ProcessTree
 local ProcessTree = SimpleClassUtil:class()
 
-function ProcessTree:initialize()
+function ProcessTree:initialize(data)
     ---@type ProcessNodeBase[]
     self._list_node = {}
     ---@type number
     self._doIndex = 1
 
     self._endDelegate = nil
+    ---@type BlackBoard
+    self._blackBoard = BlackBoard:new()
 end
 ---@type ProcessNodeBase
 function ProcessTree:addNode(node)
@@ -29,7 +31,8 @@ function ProcessTree:setDelegate(delegate)
 end
 
 function ProcessTree:start()
-    local node = self:getNode(1)
+    self._doIndex = 1
+    local node = self:getNode(self._doIndex)
     if node  then
         self:doNode(node)
     end
@@ -42,14 +45,17 @@ function ProcessTree:doNode(node)
 end
 
 function ProcessTree:onEnd()
+    if self._doIndex and self:getNode(self._doIndex) then
+        self:getNode(self._doIndex):onExit()
+    end
     if self._endDelegate then
         self._endDelegate()
     end
 end
 ---@param node ProcessNodeBase
 function ProcessTree:onNext(node)
-    local nextIndex = node:getIndex() + 1
-    local nextNode = self:getNode(nextIndex)
+    self._doIndex = node:getIndex() + 1
+    local nextNode = self:getNode(self._doIndex)
     if nextNode  then
         self:doNode(nextNode)
     else
@@ -57,4 +63,17 @@ function ProcessTree:onNext(node)
     end
 end
 
+function ProcessTree:exit()
+    if self._doIndex and self:getNode(self._doIndex) then
+        self:getNode(self._doIndex):onExit()
+    end
+    self:clear()
+end
+
+function ProcessTree:clear()
+    self._list_node = nil
+    self._doIndex = 1
+    self._blackBoard = nil
+    self._endDelegate = nil
+end
 return ProcessTree

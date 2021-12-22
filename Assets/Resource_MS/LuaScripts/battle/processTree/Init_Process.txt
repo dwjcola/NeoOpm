@@ -8,6 +8,6 @@ ProcessTree = require_path("ProcessTree","battle/processTree/ProcessTree")
 ProcessNodeBase = require_path("ProcessNodeBase","battle/processTree/ProcessNodeBase")
 ProcessUtil = require_path("ProcessUtil","battle/processTree/ProcessUtil")
 
-
+MainBattleProcessTree = require_path("MainBattleProcessTree","battle/processTree/apply/MainBattleProcessTree")
 SetUpTeamNode = require_path("SetUpTeamNode","battle/processTree/apply/SetUpTeamNode")
 BattleMainNode = require_path("BattleMainNode","battle/processTree/apply/BattleMainNode")

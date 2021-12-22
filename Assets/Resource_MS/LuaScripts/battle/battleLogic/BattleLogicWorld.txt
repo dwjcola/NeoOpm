@@ -9,4 +9,8 @@ function BattleLogicWorld:initialize()
 
 end
 
+function BattleLogicWorld:update(dt)
+    Logger.Error("BattleLogicWorld  ",dt)
+end
+
 return BattleLogicWorld

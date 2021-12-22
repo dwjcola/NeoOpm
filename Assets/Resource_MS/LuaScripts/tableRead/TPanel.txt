@@ -164,5 +164,6 @@ TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowM
 ['MailUnionInveteForm']={Id='MailUnionInveteForm',AssetName='Mail/MailUnionInveteForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Mail',LuaName='MailUnionInveteFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['MainUI']={Id='MainUI',AssetName='Main/MainUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Main',LuaName='MainUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 ['UISetUpTeam']={Id='UISetUpTeam',AssetName='Battle/UISetUpTeam',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Battle',LuaName='UISetUpTeamLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
+['UIBattleMain']={Id='UIBattleMain',AssetName='Battle/UIBattleMain',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Battle',LuaName='UIBattleMainLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 });
 return TPanel;

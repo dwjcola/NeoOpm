@@ -6,10 +6,18 @@
 local ProcessNodeBase = SimpleClassUtil:class()
 ---@param tree ProcessTree
 function ProcessNodeBase:initialize(tree,index,data)
+    ---@type ProcessTree
    self._tree = tree
+    ---@type number
    self._index = index
 
    self._data = data
+
+
+end
+
+function ProcessNodeBase:getIndex()
+    return  self._index
 end
 
 function ProcessNodeBase:getIndex()
@@ -18,11 +26,10 @@ end
 
 function ProcessNodeBase:onEnter()
    self:onStart()
-   self:onUpdate()
 end
 
 function ProcessNodeBase:onLeave()
-    self:onEnd()
+   self:onEnd()
    self._tree:onNext(self)
 end
 
@@ -35,6 +42,10 @@ function ProcessNodeBase:onUpdate()
 end
 function ProcessNodeBase:onEnd()
     Logger.error("onEnd ## overwrite me !!")
+end
+
+function ProcessNodeBase:onExit()
+    Logger.error("onExit ## overwrite me !!")
 end
 
 return ProcessNodeBase

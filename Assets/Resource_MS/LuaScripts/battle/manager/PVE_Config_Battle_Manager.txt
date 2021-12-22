@@ -6,76 +6,83 @@
 ---@class PVE_Config_Battle_Manager:MiddleClass
 local PVE_Config_Battle_Manager = SimpleClassUtil:class()
 
-function PVE_Config_Battle_Manager:initialize(data)
+function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic)
     -- todo 检查 data 合法性
     self._data = data or {}
     ---@type boolean 是否只跑逻辑
-    self._isOnlyLogic = self._data.isOnlyLogic or false
+    self._isOnlyLogic = isOnlyLogic or false
+
+    self._interval = 0.033334
+
+    self._battleTime = 0
+
+    self._loop = 0
+
+    self._maxLoop = 10
+
+    self:formalInit()
 end
 
-function PVE_Config_Battle_Manager:beginBattle()
-    if self._isOnlyLogic then
-        self:proLoadEnd()
-    else
-        ---@type BattleLoader
-        self._battleLoader = BattleLoader:new(self._data)
-        self._battleLoader:proLoad(function()
-            self:proLoadEnd()
-        end)
-    end
-
-end
-
---- 这里 开始正式的逻辑
-function PVE_Config_Battle_Manager:proLoadEnd()
-    self:formalInit(self._data)
-end
-
-function PVE_Config_Battle_Manager:formalInit(data)
-
-    ---@type BlackBoard
-    self._blackBoard = BlackBoard:new()
+function PVE_Config_Battle_Manager:formalInit()
 
     if not self._isOnlyLogic then
-        self._battleRenderContext = BattleRenderWorld:new(data,self._battleLoader)
         self._world_render = BattleRenderWorld:new(self._battleRenderContext)
     end
+    self._world_logic = BattleLogicWorld:new()
 
 
-    self._battleLogicContext = BattleLogicContext:new(data)
-    self._world_logic = BattleLogicWorld:new(self._battleLogicContext)
-
-
-    ---@type BattleTeam
-    self._team_self = BattleTeam:new( {
-        teamData = self._data.teamSelf,
-        go_root = self._battleLoader._go_left,
-        list_ski = self._battleLoader._list_left_ski,
-        blackBoard = self._blackBoard,
-    } )
-    ---@type BattleTeam
-    self._team_enemy = BattleTeam:new({
-        teamData = self._data.teamEnemy,
-        go_root = self._battleLoader._go_right,
-        list_ski = self._battleLoader._list_right_ski,
-        blackBoard = self._blackBoard,
-    } )
-
-
-
-
-
-
-    --local treeData = btConfigMap:getClass("bt_con_battle_process")
-   -- ---@type BehaviourTreeEntity
-    --self._bt_battle_process = BehaviourAnalysis:Analysis(treeData.body(),self._blackBoard,self)
 end
 
-function PVE_Config_Battle_Manager:update(dt,timeScale)
-    --if self._bt_battle_process then
-    --    self._bt_battle_process:execute()
-    --end
+function PVE_Config_Battle_Manager:update(dt)
+    if not self:_updateBattle(dt)  then
+        self:_updateRender(dt)
+    end
 end
+
+function PVE_Config_Battle_Manager:_updateBattle(dt)
+    local actime = self._battleTime + dt
+    self._loop = 0
+    -- Logger.filter("PVEBattle","_updateBattle",dt,actime)
+    while actime >= self._interval and self._loop < self._maxLoop do
+        actime = actime - self._interval
+        self._loop = self._loop + 1
+        --if self:updateLogic(BattleConstant.FrameTime) then
+        --    self:_changeToWait()
+        --    return
+        --end
+        self:updateLogic(BattleConstant.FrameTime)
+    end
+    self._battleTime = actime
+
+    -- 后续优化帧率，先打开所有
+    do
+        return false
+    end
+
+    return self._loop > 0
+end
+
+function PVE_Config_Battle_Manager:updateLogic(dt)
+    -- CSharpImport.BeginSample("PVEBattle_updateLogic")
+    self._battleResult = self._world_logic:update(dt)
+    -- CSharpImport.EndSample()
+    return self._battleResult
+end
+
+
+function PVE_Config_Battle_Manager:_updateRender(dt)
+    local interpolation = self._battleTime / self._interval
+    --Logger.filter("BattleManager.updateBattle",1000*dt,interpolation)
+    self:updateRender(dt * 1000, interpolation)
+end
+
+function PVE_Config_Battle_Manager:updateRender(dt, interpolation)
+    -- CSharpImport.BeginSample("PVEBattle_updateRender")
+    --self:processFrame()
+    self._world_render:update(dt, interpolation)
+    -- CSharpImport.EndSample()
+end
+
 
 return PVE_Config_Battle_Manager
 

@@ -7,6 +7,10 @@
 local EventType = {
     ---diff event type
     Diff_Lv = "",               --等级
+
+
+    Event_CloseSetUpView = "",
+    Event_GoBattle = "",
 }
 
 --给所有的Event赋值

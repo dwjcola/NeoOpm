@@ -22,7 +22,7 @@ require_path = function(className,classPath)
   end
 end
 
-require("MianInit")
+
 
 
 function pairsSortKey( t,f )
@@ -74,6 +74,10 @@ end
 function LUAMain:lateUpdate(dt,timeScale)
 
 end
+
+
+
+require("MianInit")
 
 --[[package.cpath = package.cpath .. ';C:/Users/dongwenjun/AppData/Roaming/JetBrains/Rider2020.1/plugins/intellij-emmylua/classes/debugger/emmy/windows/x64/?.dll'
 local dbg = require('emmy_core')

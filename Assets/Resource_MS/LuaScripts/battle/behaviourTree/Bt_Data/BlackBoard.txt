@@ -3,7 +3,7 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/9 15:03
 --- 行为树黑板
----@class BlackBoard
+---@class BlackBoard:SimpleClassUtil
 local BlackBoard = SimpleClassUtil:class()
 
 function BlackBoard:initialize(contextManager)

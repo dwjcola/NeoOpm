@@ -6,4 +6,12 @@
 ---@class BattleRenderWorld
 local BattleRenderWorld = SimpleClassUtil:class()
 
+function BattleRenderWorld:initialize()
+
+end
+
+function BattleRenderWorld:update(dt)
+
+end
+
 return BattleRenderWorld

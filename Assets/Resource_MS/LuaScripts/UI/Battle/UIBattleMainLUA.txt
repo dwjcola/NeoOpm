@@ -1,0 +1,40 @@
+--界面
+UIBattleMainLUA=LUAUIBase:new({
+	
+	});
+
+function UIBattleMainLUA:Open()
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init();
+end
+function UIBattleMainLUA:Init()
+	
+end
+
+--ui组件添加事件
+function UIBattleMainLUA:AddUIEventListener( )
+	--self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+end
+--模块添加全局事件
+function UIBattleMainLUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function UIBattleMainLUA:RemoveEventListener( )
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function UIBattleMainLUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("UIBattleMain")
+		end
+	end
+end
+function UIBattleMainLUA:OnDestroy()
+	self:RemoveEventListener()
+	UIBattleMainLUA = nil;
+end
+return UIBattleMainLUA

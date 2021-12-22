@@ -304,7 +304,7 @@
 			}
 			ENDCG
 		}
-		Pass
+		/*Pass
         {
             Tags{ "LightMode" = "ForwardAdd" }
                 Blend One One
@@ -314,7 +314,7 @@
                 #pragma fragment frag
                 #include "Lighting.cginc"
                 #include "UnityCG.cginc"
-#					include "AutoLight.cginc"
+                #include "AutoLight.cginc"
 
 
                 sampler2D _MainTex;
@@ -384,8 +384,8 @@
                 return fixed4(finCol*atten * 2, 1);
                 }
                     ENDCG
-        }
-        Pass
+        }*/
+        /*Pass
         {
             Name "ShadowCaster"
             Tags { "LightMode" = "ShadowCaster" }
@@ -418,7 +418,7 @@
                 SHADOW_CASTER_FRAGMENT(i)
             }
             ENDCG
-        }
+        }*/
 	}
 	
 	

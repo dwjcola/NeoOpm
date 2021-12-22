@@ -121,30 +121,10 @@ namespace Pomelo.DotNetClient
             timeoutEvent.Reset();
             eventManager = new EventManager();
             NetWorkChanged(NetWorkState.CONNECTING);
-
             IPAddress ipAddress = null;
-
-            
-
             try
             {
-//#if UNITY_EDITOR
-                ipAddress = IPAddress.Parse(host);
-                /*Debug.LogError("parse--------->"+host);
-#else
-                Debug.LogError("dns--------->"+host);
-                IPAddress[] addresses = Dns.GetHostEntry(host).AddressList;
-                foreach (var item in addresses)
-                {
-                    if (item.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        ipAddress = item;
-                        break;
-                    }
-                }
-#endif*/
-                
-                
+                ipAddress = IPAddress.Parse(host);    
             }
             catch (Exception e)
             {
@@ -152,14 +132,6 @@ namespace Pomelo.DotNetClient
                 taskCS.SetResult(false);
                 return taskCS.Task;
             }
-
-            if (ipAddress == null)
-            {
-                //throw new Exception("can not parse host : " + host);
-                taskCS.SetResult(false);
-                return taskCS.Task;
-            }
-
             this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             IPEndPoint ie = new IPEndPoint(ipAddress, port);
 
@@ -171,7 +143,6 @@ namespace Pomelo.DotNetClient
                     this.protocol = new Protocol(this, this.socket);
                     NetWorkChanged(NetWorkState.CONNECTED);
                     taskCS.SetResult(true);
-
                 }
                 catch (SocketException e)
                 {
@@ -215,22 +186,6 @@ namespace Pomelo.DotNetClient
                 NetWorkStateChangedEvent(state);
             }
         }
-
-        //public void connect()
-        //{
-        //    connect(null, null);
-        //}
-
-        //public void connect(JsonData user)
-        //{
-        //    connect(user, null);
-        //}
-
-        //public void connect(Action<JsonData> handshakeCallback)
-        //{
-        //    connect(null, handshakeCallback);
-        //}
-
         public Task<JsonData> connect(JsonData user)
         {
             TaskCompletionSource<JsonData> taskCS = new TaskCompletionSource<JsonData>();
@@ -251,13 +206,23 @@ namespace Pomelo.DotNetClient
  
             }
         }
+        /// <summary>
+        /// 无参
+        /// </summary>
+        /// <param name="serviceId"></param>
+        /// <param name="action"></param>
         public void request(uint serviceId, Action<byte[], int> action)
         {
             this.eventManager.AddCallBack(reqId, new RawReceiver(action));
             protocol.send(MessageType.MSG_REQUEST, reqId, serviceId);
             reqId++;
         }
-
+        /// <summary>
+        /// byte[]
+        /// </summary>
+        /// <param name="serviceId"></param>
+        /// <param name="msgData"></param>
+        /// <param name="action"></param>
         public void request(uint serviceId, byte[] msgData, Action<byte[], int> action)
         {
             this.eventManager.AddCallBack(reqId, new RawReceiver(action));
@@ -311,7 +276,7 @@ namespace Pomelo.DotNetClient
         {
             protocol.send(MessageType.MSG_NOTIFY, 0, serviceId, msg);
         }
-        public void notify(uint serviceId  )
+        public void notify(uint serviceId )
         {
             protocol.send(MessageType.MSG_NOTIFY, 0, serviceId);
         }
@@ -329,14 +294,6 @@ namespace Pomelo.DotNetClient
             protocol.send(MessageType.MSG_NOTIFY,0, serviceId, Encoding.UTF8.GetBytes(msg));
         }
 
-
-        //public void request(string route, JsonObject msg, Action<JsonObject> action)
-        //{
-        //    this.eventManager.AddCallBack(reqId, action);
-        //    protocol.send(route, reqId, msg);
-        //    reqId++;
-
-        //}
         public void on(uint id,Action<string> action)
         {
             eventManager.AddOnEvent(id, action);
@@ -357,21 +314,6 @@ namespace Pomelo.DotNetClient
         {
             eventManager.AddOnEvent(id, action);
         }
-        //internal void processMessage(Message msg)
-        //{
-        //    if (msg.type == PackageType.PKG_DATA_RESPONSE)
-        //    {
-        //        //msg.data["__route"] = msg.route;
-        //        //msg.data["__type"] = "resp";
-        //        eventManager.InvokeCallBack(msg.id, msg);
-        //    }
-        //    else if (msg.type == PackageType.PKG_DATA_PUSH)
-        //    {
-        //        //msg.data["__route"] = msg.route;
-        //        //msg.data["__type"] = "push";
-        //        eventManager.InvokeOnEvent(msg.route, msg.data);
-        //    }
-        //}
         public void RemoveEvent(uint id,Delegate action)
         {
             eventManager.RemoveEvent(id, action);
@@ -388,7 +330,6 @@ namespace Pomelo.DotNetClient
         {
             Dispose();
             ReconnectCallBack?.Invoke(CLIENT_EVENT_SHUTDOWN);
-            
         }
 
         public void Dispose()
@@ -503,10 +444,6 @@ namespace Pomelo.DotNetClient
             {
                 ReconnectCallBack?.Invoke(CLIENT_EVENT_DISCONNECT);
                 netWorkState = NetWorkState.ERROR;
-                /*GameDirector.Instance.StopCoroutine(_curDelayReconn);
-                cstatus = CONNECT_STATUS.CSTA_FAILED;
-                invokeNotifyEvent(EVENT_DISCONNECT);
-                UICtrlLogin.loginStep = LoginStep.none;*/
             }
         }
     }

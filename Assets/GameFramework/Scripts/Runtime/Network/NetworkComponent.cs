@@ -88,7 +88,7 @@ namespace UnityGameFramework.Runtime
             {
                 //The user data is the handshake user params
                 JsonData user = new JsonData();
-                user["name"] = "slg";
+                user["name"] = "NeoOPM";
                 //Log.Error("PomeloClient Init Suc.connect ...");
                 initCB?.Invoke();
                 JsonData connRet = await PomeloClient.Instance.connect(user);

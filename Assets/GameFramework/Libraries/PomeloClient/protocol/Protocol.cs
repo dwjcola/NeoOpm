@@ -180,34 +180,11 @@ namespace Pomelo.DotNetClient
 
             transporter.send(head);
         }
-        //Send request, user request id 
-        //internal void send(string route, uint id, JsonData msg)
-        //{
-        //    if (this.state != ProtocolState.working) return;
-
-        //    byte[] body = messageProtocol.encode(route, id, msg);
-
-        //    send(PackageType.PKG_DATA, body);
-        //}
-
-
         internal void send(PackageType type)
         {
             if (this.state == ProtocolState.closed) return;
             transporter.send(PackageProtocol.encode(type));
         }
-
-        //Send system message, these message do not use messageProtocol
-        //internal void send(PackageType type, JsonObject msg)
-        //{
-        //    //This method only used to send system package
-        //    if (type == PackageType.PKG_DATA) return;
-
-        //    byte[] body = Encoding.UTF8.GetBytes(msg.ToString());
-
-        //    send(type, body);
-        //}
-
         //Send message use the transporter
         internal void send(PackageType type, byte[] body)
         {
@@ -216,16 +193,7 @@ namespace Pomelo.DotNetClient
             byte[] head = PackageProtocol.encode(type, body);
 
             transporter.send(head, body);
-        }
-
-        //Invoke by Transporter, process the message
-
-        //to do  not in main thread
-        //static public bool IsDataPackage(PackageType type)
-        //{
-        //    return type == PackageType.PKG_DATA_NOTIFY || type == PackageType.PKG_DATA_PUSH 
-        //        || type == PackageType.PKG_DATA_REQ || type == PackageType.PKG_DATA_RESPONSE;
-        //} 
+        } 
         internal void processMessage(byte[] bytes)
         {
             Package pkg = PackageProtocol.decode(bytes);
@@ -233,10 +201,6 @@ namespace Pomelo.DotNetClient
             //Ignore all the message except handshading at handshake stage
             if (pkg.type == PackageType.PKG_HANDSHAKE && this.state == ProtocolState.handshaking)
             {
-
-                //Ignore all the message except handshading
-                //JsonObject data = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
-
                 JsonData data = MsgProtocol.decode(pkg.body, 0);
                 bool flag = processHandshakeData(data);
                 if (flag == false)
@@ -274,31 +238,6 @@ namespace Pomelo.DotNetClient
 
         private bool processHandshakeData(JsonData msg)
         {
-            //Handshake error
-            //if (!msg.ContainsKey("code") || !msg.ContainsKey("sys") || Convert.ToInt32(msg["code"]) != 200)
-            //{
-            //    throw new Exception("Handshake error! Please check your handshake config.");
-            //}
-
-            //Set compress data
-            //JsonObject sys = (JsonObject)msg["sys"];
-
-            //JsonObject dict = new JsonObject();
-            //if (sys.ContainsKey("dict")) dict = (JsonObject)sys["dict"];
-
-            //JsonObject protos = new JsonObject();
-            //JsonObject serverProtos = new JsonObject();
-            //JsonObject clientProtos = new JsonObject();
-
-            //if (sys.ContainsKey("protos"))
-            //{
-            //    protos = (JsonObject)sys["protos"];
-            //    serverProtos = (JsonObject)protos["server"];
-            //    clientProtos = (JsonObject)protos["client"];
-            //}
-
-            //messageProtocol = new MessageProtocol(dict, serverProtos, clientProtos);
-
             //Init heartbeat service
             if (!msg.Keys.Contains("code") || (int)(msg["code"]) != 200)
             {

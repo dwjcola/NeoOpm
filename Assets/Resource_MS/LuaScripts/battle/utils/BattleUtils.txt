@@ -13,6 +13,27 @@ function BattleUtils:getHeroInitOffsetPos(heroId,isLeft)
     end
 end
 
+function BattleUtils:posMapToVec3(map)
+    if map and map[1] and map[2] and map[3] then
+        return Vector3(map[1],map[2],map[3])
+    else
+        Logger.error("map 数据 不合法 ")
+        Logger.ErrorTable(map)
+        return Vector3.zero
+    end
+end
+
+function BattleUtils:getPositionByIndex(isLeft,index)
+    index = tonumber(index)
+    local map = isLeft and BattleConstant.HeroInitPos_Main.left or BattleConstant.HeroInitPos_Main.right
+    if index and  map[index] then
+        return map[index]
+    else
+        Logger.error("数据 错误 ",isLeft,"  ",index)
+    end
+
+end
+
 function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --local heroInfo = ConfigReader:getDataByNameAndId("HeroInfo",heroId)
     --if heroInfo then

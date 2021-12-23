@@ -10,4 +10,12 @@ function BattleRenderContext:initialize()
 
 end
 
+function BattleRenderContext:init()
+
+end
+
+function BattleRenderContext:update()
+
+end
+
 return BattleRenderContext

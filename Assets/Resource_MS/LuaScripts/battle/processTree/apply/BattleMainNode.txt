@@ -28,25 +28,25 @@ function BattleMainNode:initialize(tree,index,battleData)
 
 end
 
+function BattleMainNode:onStart()
+   self:toStartBattle(false)
+end
+
 function BattleMainNode:toStartBattle(isServer)
    self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer)
-
+   self._battleManager:start()
    self:startScheduler()
 end
 
-function BattleMainNode:onStart()
-   self:toStartBattle()
-end
+
 
 function BattleMainNode:startScheduler()
    local updater = battleUpdateFunction(self)
    self._updateTask = self._scheduler:schedule(updater)
 end
 
-function BattleMainNode:onUpdate(dt)
-   if self._battleManager and self._battleManager.update then
-      self._battleManager:update(dt)
-   end
+function BattleMainNode:onUpdate()
+
 end
 
 function BattleMainNode:onEnd()
@@ -64,11 +64,11 @@ function BattleMainNode:onExit()
 end
 
 function BattleMainNode:update(dt)
-
    if self._battleManager and self._battleManager.update then
       self._battleManager:update(dt)
    end
 end
+
 
 
 

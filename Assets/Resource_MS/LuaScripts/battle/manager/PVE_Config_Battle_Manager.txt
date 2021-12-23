@@ -20,22 +20,31 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic)
 
     self._maxLoop = 10
 
+    self._ready = false
+end
+
+function PVE_Config_Battle_Manager:start()
     self:formalInit()
+    self._ready = true
 end
 
 function PVE_Config_Battle_Manager:formalInit()
 
+    self._blackBoard = BlackBoard:new()
+
     if not self._isOnlyLogic then
-        self._world_render = BattleRenderWorld:new(self._battleRenderContext)
+        self._world_render = BattleRenderWorld:new()
+        self._world_render:init(self._blackBoard)
     end
     self._world_logic = BattleLogicWorld:new()
-
-
+    self._world_logic:init(self._blackBoard)
 end
 
 function PVE_Config_Battle_Manager:update(dt)
-    if not self:_updateBattle(dt)  then
-        self:_updateRender(dt)
+    if self._ready then
+        if not self:_updateBattle(dt)  then
+            self:_updateRender(dt)
+        end
     end
 end
 
@@ -64,9 +73,12 @@ end
 
 function PVE_Config_Battle_Manager:updateLogic(dt)
     -- CSharpImport.BeginSample("PVEBattle_updateLogic")
-    self._battleResult = self._world_logic:update(dt)
-    -- CSharpImport.EndSample()
-    return self._battleResult
+    if self._world_logic then
+        self._battleResult = self._world_logic:update(dt)
+        -- CSharpImport.EndSample()
+        return self._battleResult
+    end
+
 end
 
 
@@ -79,7 +91,10 @@ end
 function PVE_Config_Battle_Manager:updateRender(dt, interpolation)
     -- CSharpImport.BeginSample("PVEBattle_updateRender")
     --self:processFrame()
-    self._world_render:update(dt, interpolation)
+    if self._world_render then
+        self._world_render:update(dt, interpolation)
+    end
+
     -- CSharpImport.EndSample()
 end
 

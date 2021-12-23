@@ -32,6 +32,7 @@ function NodeCondition:doCondition()
 end
 
 function NodeCondition:setParameterList(list_parameterList)
+
     self._list_parameterList = list_parameterList or {}
 end
 

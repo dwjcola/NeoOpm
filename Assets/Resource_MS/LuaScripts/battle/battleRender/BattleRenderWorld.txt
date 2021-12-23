@@ -7,11 +7,17 @@
 local BattleRenderWorld = SimpleClassUtil:class()
 
 function BattleRenderWorld:initialize()
+   self._contextManager = BattleRenderContext:new()
+end
 
+function BattleRenderWorld:init(blackBoard)
+   self._contextManager:init(blackBoard)
 end
 
 function BattleRenderWorld:update(dt)
-
+   if self._contextManager then
+      self._contextManager:update(dt)
+   end
 end
 
 return BattleRenderWorld

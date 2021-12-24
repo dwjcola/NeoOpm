@@ -10,6 +10,10 @@ function IAction:initialize()
 
 end
 
+function IAction:initData(data)
+   self._value = data
+end
+
 function IAction:doAction()
     return Enum_BT.Node_ResultType.Success
 end

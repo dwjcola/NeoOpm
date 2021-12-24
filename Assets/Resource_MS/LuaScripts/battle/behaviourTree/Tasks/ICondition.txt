@@ -10,6 +10,10 @@ function ICondition:initialize()
 
 end
 
+function ICondition:initData(data)
+
+end
+
 function ICondition:doCondition()
     return Enum_BT.Node_ResultType.Success
 end

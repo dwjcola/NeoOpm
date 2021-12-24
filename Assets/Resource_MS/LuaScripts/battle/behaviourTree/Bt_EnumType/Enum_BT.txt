@@ -52,3 +52,17 @@ Enum_BT.Node_If_Judge_Enum = {
     IF = 1,       --if 判断节点
     Action = 2,   --执行节点
 }
+
+Enum_BT.Condition_Relation= {
+   BT_AND = 1,
+   BT_OR = 2,
+}
+
+Enum_BT.CompareType = {
+    BT_BOOL = 1,
+    BT_INT = 2,
+    BT_FLOAT = 3,
+    BT_STRING = 4,
+    BT_LONG = 5,
+}
+

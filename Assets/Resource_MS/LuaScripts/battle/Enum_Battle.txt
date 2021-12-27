@@ -33,15 +33,9 @@ Enum_Battle.BattleTeamType = {
     MainTeam = 1,  --- 主战斗类型
 }
 
---- 技能类型
+--- 技能目标选择类型
 ---@class Enum_Battle.SkillTargetType
 Enum_Battle.SkillTargetType = {
-    Directivity = 1,  --- 指向性 必须有目标
-    UnDirectivity = 2, --- 非指向性 必须有范围
-}
---- 指向性技能目标选择类型
----@class Enum_Battle.ChooseSkillTargetType
-Enum_Battle.ChooseSkillTargetType = {
     FacePos  = 1,         --- 对位得
     XiangQianShiFang = 2, --- 向前释放得（没懂）
     HpMin = 3,            --- 血量最少得
@@ -52,7 +46,14 @@ Enum_Battle.ChooseSkillTargetType = {
     BackMost = 8,         --- 最靠后得
     AngleMin = 9,         --- 角度最小
 }
-
+--- 技能标识 ：表示是什么技能
+Enum_Battle.SkillTag = {
+    Skill_1 = 1, -- 大招
+    Skill_2 = 2, -- 技能1
+    Skill_3 = 3, -- 技能2
+    Skill_4 = 4, -- 技能3
+    Skill_5 = 5, -- 普攻
+}
 
 
 

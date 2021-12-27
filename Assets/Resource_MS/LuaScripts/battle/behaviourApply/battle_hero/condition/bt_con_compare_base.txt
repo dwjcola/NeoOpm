@@ -5,12 +5,15 @@
 ---@class bt_con_compare_base:ICondition
 local bt_con_compare_base = SimpleClassUtil:class(ICondition)
 
-function bt_con_compare_base:initData(data)
-   self._compareType = data._compareType
+function bt_con_compare_base:initData(compareData)
+    self._compareType = compareData._compareType
+    self._key = compareData._key
+    self._compareTargetValue = compareData._compareTargetValue
 end
 
-function bt_con_compare_base:doCondition()
-    return Enum_BT.Node_ResultType.Success
+function bt_con_compare_base:doCondition(blackBoard,battleManager)
+   local v = blackBoard[self._key]
+    return v == self._compareTargetValue and  Enum_BT.Node_ResultType.Success or  Enum_BT.Node_ResultType.Fail
 end
 
 

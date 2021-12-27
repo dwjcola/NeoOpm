@@ -34,10 +34,10 @@ function PVE_Config_Battle_Manager:formalInit()
 
     if not self._isOnlyLogic then
         self._world_render = BattleRenderWorld:new()
-        self._world_render:init(self._blackBoard)
+        self._world_render:init(self._blackBoard,self)
     end
     self._world_logic = BattleLogicWorld:new()
-    self._world_logic:init(self._blackBoard)
+    self._world_logic:init(self._blackBoard,self)
 end
 
 function PVE_Config_Battle_Manager:update(dt)

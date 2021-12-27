@@ -8,11 +8,11 @@ function BattleEntityContext:initialize()
 
 end
 
-function BattleEntityContext:init(baseBlackBoard)
+function BattleEntityContext:init(baseBlackBoard,battleManager)
 
     self._baseBlackBoard = baseBlackBoard
 
-
+    self._battleManager = battleManager
 
 end
 

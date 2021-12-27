@@ -14,7 +14,7 @@ function ICondition:initData(data)
 
 end
 
-function ICondition:doCondition()
+function ICondition:doCondition(blackBoard,battleManager)
     return Enum_BT.Node_ResultType.Success
 end
 

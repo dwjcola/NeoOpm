@@ -19,15 +19,15 @@ function NodeCondition:setICondition(iCondition)
     self._iCondition = iCondition
 end
 
-function NodeCondition:execute()
+function NodeCondition:execute(blackBoard,battleManager)
     local resultType = Enum_BT.Node_ResultType.Fail
     if self._iCondition then
-        resultType = self._iCondition:doCondition()
+        resultType = self._iCondition:doCondition(blackBoard,battleManager)
     end
     return resultType
 end
 
-function NodeCondition:doCondition()
+function NodeCondition:doCondition(blackBoard,battleManager)
     return Enum_BT.Node_ResultType.Fail
 end
 

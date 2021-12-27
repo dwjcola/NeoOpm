@@ -20,5 +20,4 @@ function bt_con_hero_skillRangeTarget:doCondition()
     return Enum_BT.Node_ResultType.Success
 end
 
-
 return bt_con_hero_skillRangeTarget

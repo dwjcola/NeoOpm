@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -38,7 +39,9 @@ public class SmoothNormalsTool : Editor
         }
         Mesh target = _srcMesh.Copy();
         target.SetTangents(smoothNormals.ToList().Select(p => p.ToVector4()).ToArray());
-        AssetDatabase.CreateAsset(target, "Assets/aa_smooth.asset");
+        string path = AssetDatabase.GetAssetPath( Selection.activeObject);
+        string directoryName = Path.GetDirectoryName(path);
+        AssetDatabase.CreateAsset(target, directoryName+"/"+_srcMesh.name+"_smooth.asset");
     }
     static Vector3[] RenegerateNormals(int[] _indices, Vector3[] _verticies)
     {

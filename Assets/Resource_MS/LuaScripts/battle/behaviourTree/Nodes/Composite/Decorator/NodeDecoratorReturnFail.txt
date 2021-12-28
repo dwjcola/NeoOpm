@@ -29,21 +29,21 @@ function NodeDecoratorReturnFail:onExit()
     end
 end
 
-function NodeDecoratorReturnFail:execute()
+function NodeDecoratorReturnFail:execute(blackboard,contextManager)
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
     for i = 1, count do
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Running then
             self._runningNode =  self._runningNode | (1 << i)
         end
     end
-
+    self:log("NodeDecoratorReturnFail    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return Enum_BT.Node_ResultType.Fail
 end
 

@@ -8,7 +8,8 @@ local NodeCondition = SimpleClassUtil:class(NodeLeaf)
 
 function NodeCondition:initialize()
     self.super:initialize(Enum_BT.Node_Type.Condition)
-    ---@type ICondition 因为lua 无法定义 接口 所以带有 condition 方法得 表 就认为是 ICondition
+    ---@type ICondition 因为lua 无法定义 接口 所以带
+    ---有 condition 方法得 表 就认为是 ICondition
     self._iCondition = nil
     self._list_parameterList = {}
     self._list_conditionGroup = {}
@@ -24,6 +25,7 @@ function NodeCondition:execute(blackBoard,battleManager)
     if self._iCondition then
         resultType = self._iCondition:doCondition(blackBoard,battleManager)
     end
+    self:log("NodeCondition   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

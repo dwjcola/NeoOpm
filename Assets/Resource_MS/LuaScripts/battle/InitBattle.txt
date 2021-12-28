@@ -31,10 +31,12 @@ BattleConstant =  require_path("BattleConstant","battle/model/BattleConstant")
 
 BattleLogicWorld = require_path("BattleLogicWorld","battle/battleLogic/BattleLogicWorld")
 
+BattleEntityContext = require_path("BattleEntityContext","battle/battleLogic/BattleEntityContext")
 BattleLogicContext = require_path("BattleLogicContext","battle/battleLogic/BattleLogicContext")
 
-BattleRenderWorld = require_path("BattleRenderWorld","battle/battleRender/BattleRenderWorld")
 BattleRenderContext = require_path("BattleRenderContext","battle/battleRender/BattleRenderContext")
+BattleRenderWorld = require_path("BattleRenderWorld","battle/battleRender/BattleRenderWorld")
+
 
 require_path("Enum_Battle","battle/Enum_Battle")
 

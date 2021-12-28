@@ -9,7 +9,6 @@ local bt_con_find_s_live = SimpleClassUtil:class(ICondition)
 
 function bt_con_find_s_live:initData(data)
     self._skillTag = data.skillTag
-    self._cdTime = data.cdTime
 end
 ---@param battleManager PVE_Config_Battle_Manager
 function bt_con_find_s_live:doCondition(blackBoard,battleManager)

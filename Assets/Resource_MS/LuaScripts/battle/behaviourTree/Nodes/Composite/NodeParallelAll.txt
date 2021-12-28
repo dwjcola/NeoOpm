@@ -37,14 +37,14 @@ function NodeParallelAll:onExit()
     end
 end
 
-function NodeParallelAll:execute()
+function NodeParallelAll:execute(blackboard,contextManager)
     local resultType = Enum_BT.Node_ResultType.Fail
     local successCount = 0
     local failCount = 0
     local list_childes = self:getChildes() or {}
     for index, nodeChild in ipairs(list_childes) do
         nodeChild:prePosition()
-        resultType = nodeChild:execute()
+        resultType = nodeChild:execute(blackboard,contextManager)
         nodeChild:postPosition(resultType)
         if resultType == Enum_BT.Node_ResultType.Fail then
             failCount = failCount + 1
@@ -64,7 +64,7 @@ function NodeParallelAll:execute()
     else
         resultType = Enum_BT.Node_ResultType.Running
     end
-
+    self:log("NodeParallelAll    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 return NodeParallelAll

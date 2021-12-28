@@ -37,7 +37,7 @@ function NodeDecoratorRepeat:onExit()
 end
 
 
-function NodeDecoratorRepeat:execute()
+function NodeDecoratorRepeat:execute(blackboard,contextManager)
     self._executeCount = self._executeCount + 1
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
@@ -45,7 +45,7 @@ function NodeDecoratorRepeat:execute()
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Running then
@@ -58,7 +58,7 @@ function NodeDecoratorRepeat:execute()
     else
         resultType = Enum_BT.Node_ResultType.Success
     end
-
+    self:log("NodeDecoratorRepeat   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

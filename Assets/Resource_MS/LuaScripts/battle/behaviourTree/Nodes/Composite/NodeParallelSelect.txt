@@ -35,13 +35,13 @@ function NodeParallelSelect:onExit()
     end
 end
 
-function NodeParallelSelect:execute()
+function NodeParallelSelect:execute(blackboard,contextManager)
     local resultType = Enum_BT.Node_ResultType.Fail
     local failCount = 0
     local list_childes = self:getChildes() or {}
     for index, nodeChild in ipairs(list_childes) do
         nodeChild:prePosition()
-        resultType = nodeChild:execute()
+        resultType = nodeChild:execute(blackboard,contextManager)
         nodeChild:postPosition(resultType)
         if resultType == Enum_BT.Node_ResultType.Success then
             break
@@ -56,7 +56,7 @@ function NodeParallelSelect:execute()
     if resultType ~= Enum_BT.Node_ResultType.Success then
         resultType = (failCount >= #list_childes) and Enum_BT.Node_ResultType.Fail or Enum_BT.Node_ResultType.Running
     end
-
+    self:log("NodeParallelSelect    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 return NodeParallelSelect

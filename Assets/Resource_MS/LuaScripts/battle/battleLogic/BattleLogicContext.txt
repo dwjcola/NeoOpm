@@ -15,7 +15,7 @@ end
 
 function BattleLogicContext:update(dt)
     if self._entityContext and self._entityContext.update then
-        self._entityContext:update()
+        self._entityContext:update(dt)
     end
 end
 

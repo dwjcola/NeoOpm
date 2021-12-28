@@ -12,8 +12,8 @@ function bt_con_astrict:initData(data)
 end
 ---@param battleManager PVE_Config_Battle_Manager
 function bt_con_astrict:doCondition(blackBoard,battleManager)
-    local isUnPutSkill = blackBoard.isUnPutSkill
-    if not isUnPutSkill or self._isDefy then
+    local _isUnPutSkill = blackBoard._isUnPutSkill
+    if not _isUnPutSkill or self._isDefy then
         return Enum_BT.Node_ResultType.Success
     else
         return Enum_BT.Node_ResultType.Fail

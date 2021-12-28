@@ -10,6 +10,19 @@ btApplyMap.classPath = {
     ["bt_ac_enter_scene_ani"] = "battle/behaviourApply/battle_frame/bt_ac_enter_scene_ani",
     ["bt_ac_round_test"]      = "battle/behaviourApply/battle_frame/bt_ac_round_test",
     ["bt_ac_ui_start_battle"] = "battle/behaviourApply/battle_frame/bt_ac_ui_start_battle",
+
+
+    ["bt_ac_died"] = "battle/behaviourApply/battle_hero/action/bt_ac_died",
+    ["bt_ac_log"] = "battle/behaviourApply/battle_hero/action/bt_ac_log",
+    ["bt_ac_playSkill"] = "battle/behaviourApply/battle_hero/action/bt_ac_playSkill",
+    ["bt_ac_sendMag"] = "battle/behaviourApply/battle_hero/action/bt_ac_sendMag",
+    ["bt_ac_setValue"] = "battle/behaviourApply/battle_hero/action/bt_ac_setValue",
+
+    ["bt_con_astrict"] = "battle/behaviourApply/battle_hero/condition/bt_con_astrict",
+    ["bt_con_cd"] = "battle/behaviourApply/battle_hero/condition/bt_con_cd",
+    ["bt_con_compare_base"] = "battle/behaviourApply/battle_hero/condition/bt_con_compare_base",
+    ["bt_con_find_s_live"] = "battle/behaviourApply/battle_hero/condition/bt_con_find_s_live",
+    ["bt_con_hero_skillRangeTarget"] = "battle/behaviourApply/battle_hero/condition/bt_con_hero_skillRangeTarget",
 }
 
 

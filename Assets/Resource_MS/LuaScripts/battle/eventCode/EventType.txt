@@ -11,6 +11,10 @@ local EventType = {
 
     Event_CloseSetUpView = "",
     Event_GoBattle = "",
+
+
+    Event_BigSkillCanRelease = "",
+    Event_BigSkillCannotRelease = "",
 }
 
 --给所有的Event赋值

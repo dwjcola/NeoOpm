@@ -7,13 +7,13 @@
 local bt_ac_log = SimpleClassUtil:class(IAction)
 
 
-function bt_ac_log:initData(data)
-    self._value = data
+function bt_ac_log:initData(txt)
+    self._txt = txt
 end
 
 
 function bt_ac_log:doAction()
-    Logger.error( self._value.txt)
+    Logger.error( self._txt )
     return Enum_BT.Node_ResultType.Success
 end
 

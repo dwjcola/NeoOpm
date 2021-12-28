@@ -29,14 +29,14 @@ function NodeDecoratorUntil:onExit()
     end
 end
 
-function NodeDecoratorUntil:execute()
+function NodeDecoratorUntil:execute(blackboard,contextManager)
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
     for i = 1, count do
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Running then
@@ -47,8 +47,9 @@ function NodeDecoratorUntil:execute()
             return Enum_BT.Node_ResultType.Success
         end
     end
-
-    return Enum_BT.Node_ResultType.Running
+    resultType = Enum_BT.Node_ResultType.Running
+    self:log("NodeDecoratorUntil   Entity: ",self:getEntityId(),    "  resultType :", resultType)
+    return resultType
 end
 
 function NodeDecoratorUntil:setDesiredResult(resultType)

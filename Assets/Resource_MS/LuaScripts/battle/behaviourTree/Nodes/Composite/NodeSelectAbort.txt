@@ -13,7 +13,7 @@
 local NodeSelectAbort = SimpleClassUtil:class(NodeComposite)
 
 function NodeSelectAbort:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Select)
+    self.super:initialize(Enum_BT.Node_Type.SelectAbort)
     ---@type NodeBase
     self._lastRunningNode = nil
 end
@@ -31,7 +31,7 @@ function NodeSelectAbort:onExit()
 end
 
 
-function NodeSelectAbort:execute()
+function NodeSelectAbort:execute(blackboard,contextManager)
     local index = #self:getChildes() + 1
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -40,12 +40,12 @@ function NodeSelectAbort:execute()
     local resultType = Enum_BT.Node_ResultType.Fail
 
     local count = #self:getChildes()
-     count = count < index and count or index
+    count = count < index and count or index
     for i = 1, count do
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -69,7 +69,7 @@ function NodeSelectAbort:execute()
             end
         end
     end
-
+    self:log("NodeSelectAbort   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

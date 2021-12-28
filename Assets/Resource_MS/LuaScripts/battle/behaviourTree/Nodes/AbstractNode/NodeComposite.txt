@@ -37,7 +37,7 @@ end
 function NodeComposite:getChildesCount()
     return #self._list_nodeChild or 0
 end
-function NodeComposite:execute()
+function NodeComposite:execute(blackboard,contextManager)
     return Enum_BT.Node_ResultType.Fail
 end
 

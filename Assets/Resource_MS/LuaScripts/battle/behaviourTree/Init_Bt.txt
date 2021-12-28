@@ -9,7 +9,7 @@
 require_path("Bt_Enum","battle/behaviourTree/Bt_EnumType/Enum_BT")
 
 BehaviourAnalysis         =  require_path("BehaviourAnalysis","battle/behaviourTree/Analysis/BehaviourAnalysis")
-
+CreateUtils               =  require_path("CreateUtils","battle/behaviourTree/CreateUtils/CreateUtils")
 ------- node data ---------
 BlackBoard                 = require_path("BlackBoard","battle/behaviourTree/Bt_Data/BlackBoard")
 
@@ -51,6 +51,10 @@ NodeDecoratorUntilSuccess  = require_path("NodeDecoratorUntilSuccess","battle/be
 
 NodeAction                 = require_path("NodeAction","battle/behaviourTree/Nodes/Leaf/NodeAction")
 NodeCondition              = require_path("NodeCondition","battle/behaviourTree/Nodes/Leaf/NodeCondition")
+NodeConditionGroup         = require_path("NodeConditionGroup","battle/behaviourTree/Nodes/Leaf/NodeConditionGroup")
+
+
+BehaviourTreeEntity        = require_path("BehaviourTreeEntity","battle/behaviourTree/BehaviourTreeEntity")
 ----------------------------------------------------------------------------------------------------------------------------------------
 btConfigMap                 = require_path("btConfigMap","battle/behaviourConfig/btConfigMap")
 btApplyMap                  = require_path("btConfigMap","battle/behaviourApply/btApplyMap")

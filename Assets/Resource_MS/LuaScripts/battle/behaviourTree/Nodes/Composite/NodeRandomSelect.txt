@@ -33,7 +33,7 @@ function NodeRandomSelect:onExit()
 end
 
 
-function NodeRandomSelect:execute()
+function NodeRandomSelect:execute(blackboard,contextManager)
     local index = 0
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -49,7 +49,7 @@ function NodeRandomSelect:execute()
         index = 0
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -61,7 +61,7 @@ function NodeRandomSelect:execute()
             break
         end
     end
-
+    self:log("NodeRandomSelect   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

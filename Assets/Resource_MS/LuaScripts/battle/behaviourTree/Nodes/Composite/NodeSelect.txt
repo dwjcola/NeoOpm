@@ -31,7 +31,7 @@ function NodeSelect:onExit()
 end
 
 
-function NodeSelect:execute()
+function NodeSelect:execute(blackboard,contextManager)
     local index = 1
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -44,7 +44,7 @@ function NodeSelect:execute()
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -56,7 +56,7 @@ function NodeSelect:execute()
             break
         end
     end
-
+    self:log("NodeSelect   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

@@ -8,8 +8,15 @@ local BehaviourTreeEntity = SimpleClassUtil:class()
 
 function BehaviourTreeEntity:initialize(treeData,blackboard,contextManager)
    ---@type Blackboard
-   self._blackboard = blackboard
-
+   --self._blackboard = blackboard
+    self._blackboard =  {
+        _alive = true,
+        _anger = 100,
+        _isUnPutSkill = false,
+        _smallSkillIng = false,
+        _bigSkillReady = false,
+        _isKeyDownBigSkill = true,
+    }
    ---@type NodeBase
    self._rootNode = self:initTree(treeData,blackboard,contextManager)
 
@@ -17,10 +24,13 @@ function BehaviourTreeEntity:initialize(treeData,blackboard,contextManager)
 end
 
 function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
-    self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
+    --self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
+    self._rootNode = CreateUtils:createTree("hero101",{},{})
+
     if self._rootNode == nil then
         Logger.Error("行为树 初始化失败")
     end
+    return self._rootNode
 end
 
 function BehaviourTreeEntity:getBlackBoard()
@@ -31,10 +41,10 @@ function BehaviourTreeEntity:getRootNode()
     return self._rootNode
 end
 
-function BehaviourTreeEntity:execute()
+function BehaviourTreeEntity:execute(dt)
     if self._rootNode then
         self._rootNode:prePosition()
-        local  resultType = self._rootNode:execute()
+        local  resultType = self._rootNode:execute(self._blackboard,self._contextManager)
         self._rootNode:postPosition(resultType)
     end
 end

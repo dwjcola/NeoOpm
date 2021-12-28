@@ -59,6 +59,12 @@ function EventManager:Dispatch(eventName, ...)
     end
 end
 
+
+---@param eventName any  @ 事件回调函数的参数
+function EventManager:Dispatch_battle(eventName, ...)
+   self:Dispatch(eventName, ...)
+end
+
 function EventManager:Clear(eventName)
     local evt = self._events[eventName]
     if evt then

@@ -25,6 +25,7 @@ require_path("BattleUtils","battle/behaviourTree/Init_Bt")
 PVE_Config_Battle_Manager = require_path("PVE_Config_Battle_Manager","battle/manager/PVE_Config_Battle_Manager")
 
 BattleTeam = require_path("BattleTeam","battle/battleObject/BattleTeam")
+BattleCharacter = require_path("BattleTeam","battle/battleObject/BattleCharacter")
 
 BattleConstant =  require_path("BattleConstant","battle/model/BattleConstant")
 

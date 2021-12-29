@@ -8,8 +8,23 @@ local BlackBoard_BattleBase = SimpleClassUtil:class(BlackBoard)
 
 function BlackBoard_BattleBase:initialize(contextManager)
     self.super:initialize()
-    ---@type Enum_Battle.BattleEntityType
-    self._battleEntityType = Enum_Battle.BattleEntityType.MainBattle
+    self._heroId = "hero101"
+    self._campType = Enum_Battle.Camp.CampEnemy
+    self._index_pos = 1
+    ---@type Vector3
+    self._position = Vector3.zero --BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(self._campType == Enum_Battle.Camp.CampSelf,self._index_pos))
+
+    self._alive = true
+    self._anger = 0
+    self._isUnPutSkill = false
+    -- 小技能进行中
+    self._smallSkillIng = false
+    -- 大招是否可以释放
+    self._bigSkillReady = false
+    -- 大招释放按钮是否按下
+    self._isKeyDownBigSkill = false
+    -- 是否能被 选定为目标
+    self._isCanBeSelected = true
 end
 
 return BlackBoard_BattleBase

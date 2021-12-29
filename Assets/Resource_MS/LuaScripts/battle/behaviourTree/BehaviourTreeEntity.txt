@@ -6,21 +6,20 @@
 ---@class BehaviourTreeEntity:MiddleClass
 local BehaviourTreeEntity = SimpleClassUtil:class()
 
-function BehaviourTreeEntity:initialize(treeData,blackboard,contextManager)
-   ---@type Blackboard
-   --self._blackboard = blackboard
-    self._blackboard =  {
-        _alive = true,
-        _anger = 100,
-        _isUnPutSkill = false,
-        _smallSkillIng = false,
-        _bigSkillReady = false,
-        _isKeyDownBigSkill = true,
-    }
+function BehaviourTreeEntity:initialize(treeData,data,agent)
+    ---@type BlackBoard_BattleBase
+    self._blackboard = BlackBoard_BattleBase:new()
+    self:initBlackBoard(data)
    ---@type NodeBase
-   self._rootNode = self:initTree(treeData,blackboard,contextManager)
+   self._rootNode = self:initTree(treeData,self._blackboard,agent)
 
-   self._contextManager = contextManager
+   self._agent = agent
+end
+
+function BehaviourTreeEntity:initBlackBoard(data)
+    for i, v in pairs(data) do
+        self._blackboard[i] = v
+    end
 end
 
 function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
@@ -44,7 +43,7 @@ end
 function BehaviourTreeEntity:execute(dt)
     if self._rootNode then
         self._rootNode:prePosition()
-        local  resultType = self._rootNode:execute(self._blackboard,self._contextManager)
+        local  resultType = self._rootNode:execute(self._blackboard, self._agent)
         self._rootNode:postPosition(resultType)
     end
 end

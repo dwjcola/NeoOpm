@@ -54,7 +54,11 @@ Enum_Battle.SkillTag = {
     Skill_4 = 4, -- 技能3
     Skill_5 = 5, -- 普攻
 }
-
+--- 战斗阵营 敌我 双方
+Enum_Battle.Camp = {
+   CampSelf = 1,
+   CampEnemy = 2,
+}
 
 
 

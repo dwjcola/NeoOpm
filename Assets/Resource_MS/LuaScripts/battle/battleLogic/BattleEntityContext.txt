@@ -14,13 +14,58 @@ function BattleEntityContext:init(baseBlackBoard,battleManager)
 
     self._battleManager = battleManager
 
-    self._textHero = BehaviourTreeEntity:new({},BlackBoard:new(),self._battleManager)
+    self._list_camp = {
+        [Enum_Battle.Camp.CampSelf] = {},
+        [Enum_Battle.Camp.CampEnemy] = {},
+    }
+
+    self:initCharacters()
+
+end
+
+function BattleEntityContext:initCharacters()
+    local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,1,self._battleManager,self)
+    self._list_camp[Enum_Battle.Camp.CampSelf][1] = character
+    --for i = 1, 5 do
+    --    local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,i,self._battleManager,self)
+    --    self._list_camp[Enum_Battle.Camp.CampSelf][i] = character
+    --
+    --end
+
+    --for i = 1, 5 do
+    --    self._list_camp[Enum_Battle.Camp.CampEnemy][i] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,i,self._battleManager,self)
+    --end
 end
 
 function BattleEntityContext:update(dt)
-    if  self._textHero then
-        self._textHero:execute(dt)
+    for camp, _campList in pairs(self._list_camp) do
+        for index_pos, character in ipairs(_campList) do
+            if character and character.update then
+                character:update(dt)
+            end
+        end
     end
+end
+
+function BattleEntityContext:getEnemyCamp(camp)
+    if camp == Enum_Battle.Camp.CampSelf then
+        return  Enum_Battle.Camp.CampEnemy
+    else
+        return  Enum_Battle.Camp.CampSelf
+    end
+end
+
+function BattleEntityContext:getEntityListByCamp(camp)
+   return self._list_camp[camp]
+end
+---@return BattleCharacter[]
+function BattleEntityContext:getEnemyEntityList(camp)
+    local enemyCamp = self:getEnemyCamp(camp)
+    return self._list_camp[enemyCamp]
+end
+
+function BattleEntityContext:getSelfEntityByIndex(index)
+    return self._list_camp[Enum_Battle.Camp.CampSelf][index]
 end
 
 return BattleEntityContext

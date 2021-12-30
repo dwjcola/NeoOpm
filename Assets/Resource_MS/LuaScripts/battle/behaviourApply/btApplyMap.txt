@@ -17,18 +17,27 @@ btApplyMap.classPath = {
     ["bt_ac_playSkill"] = "battle/behaviourApply/battle_hero/action/bt_ac_playSkill",
     ["bt_ac_sendMag"] = "battle/behaviourApply/battle_hero/action/bt_ac_sendMag",
     ["bt_ac_setValue"] = "battle/behaviourApply/battle_hero/action/bt_ac_setValue",
+    ["bt_ac_idle_battle"] = "battle/behaviourApply/battle_hero/action/bt_ac_idle_battle",
+    ["bt_ac_way_finding"] = "battle/behaviourApply/battle_hero/action/bt_ac_way_finding",
+
 
     ["bt_con_astrict"] = "battle/behaviourApply/battle_hero/condition/bt_con_astrict",
     ["bt_con_cd"] = "battle/behaviourApply/battle_hero/condition/bt_con_cd",
     ["bt_con_compare_base"] = "battle/behaviourApply/battle_hero/condition/bt_con_compare_base",
     ["bt_con_find_s_live"] = "battle/behaviourApply/battle_hero/condition/bt_con_find_s_live",
     ["bt_con_hero_skillRangeTarget"] = "battle/behaviourApply/battle_hero/condition/bt_con_hero_skillRangeTarget",
+    ["bt_ac_controlled"] = "battle/behaviourApply/battle_hero/condition/bt_ac_controlled",
+    ["bt_con_baseControlled"] = "battle/behaviourApply/battle_hero/condition/bt_con_baseControlled",
+    ["bt_con_isHadEnemyTarget"] = "battle/behaviourApply/battle_hero/condition/bt_con_isHadEnemyTarget",
+    ["bt_con_monomer"] = "battle/behaviourApply/battle_hero/condition/bt_con_monomer",
+
 }
 
 
 function btApplyMap:getClass(className)
     if self.classPath and self.classPath[className] then
-        return require_path(className, self.classPath[className])
+        local c =  require_path(className, self.classPath[className])
+        return c:new()
     else
         Logger.Error("btApplyMap 文件 没有配置  ",className ," 数据 ")
     end

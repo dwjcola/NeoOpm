@@ -29,11 +29,17 @@ function BattleMainNode:initialize(tree,index,battleData)
 end
 
 function BattleMainNode:onStart()
-   self:toStartBattle(false)
+   if self._tree._battleTeam  and self._tree._battleTeam._loadingFinish then
+      self:toStartBattle(false)
+   else
+      Logger.error("等待加载完成")
+   end
+
 end
 
 function BattleMainNode:toStartBattle(isServer)
-   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer)
+
+   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer,self._tree._battleTeam)
    self._battleManager:start()
    self:startScheduler()
 end

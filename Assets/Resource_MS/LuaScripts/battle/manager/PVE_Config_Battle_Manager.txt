@@ -6,7 +6,7 @@
 ---@class PVE_Config_Battle_Manager:MiddleClass
 local PVE_Config_Battle_Manager = SimpleClassUtil:class()
 
-function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic)
+function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     -- todo 检查 data 合法性
     self._data = data or {}
     ---@type boolean 是否只跑逻辑
@@ -21,6 +21,8 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic)
     self._maxLoop = 10
 
     self._ready = false
+    ---@type BattleTeam
+    self._battleTeam = battleTeam
 end
 
 function PVE_Config_Battle_Manager:start()

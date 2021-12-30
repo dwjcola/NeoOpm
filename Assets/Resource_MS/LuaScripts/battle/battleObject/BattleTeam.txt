@@ -39,7 +39,7 @@ function BattleTeam:initialize()
 
     self._positionCount = 5
 
-
+    self._loadingFinish = false
 end
 
 function BattleTeam:initLoadMap()
@@ -153,6 +153,7 @@ function BattleTeam:tryLoadFinish()
     --    Logger.Error(" ****** loadFinishFunc ***** ")
     --end
     if self._loadCount <= 0 then
+        self._loadingFinish = true
         Logger.Error(" ****** loadFinishSuccess ***** ")
     end
 end
@@ -184,6 +185,8 @@ function BattleTeam:reset()
     self._isRootLoadFinish = false
     self._isSelfTeamLoadFinish = false
     self._isEnemyTeamLoadFinish = false
+
+    self._loadingFinish = false
 end
 
 function BattleTeam:destroy()

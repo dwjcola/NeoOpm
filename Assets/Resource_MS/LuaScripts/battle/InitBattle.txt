@@ -35,9 +35,12 @@ BattleLogicWorld = require_path("BattleLogicWorld","battle/battleLogic/BattleLog
 BattleEntityContext = require_path("BattleEntityContext","battle/battleLogic/BattleEntityContext")
 BattleLogicContext = require_path("BattleLogicContext","battle/battleLogic/BattleLogicContext")
 
+BattleRenderCharacter =  require_path("BattleRenderContext","battle/battleRender/BattleRenderCharacter")
+BattleRenderEntityContext = require_path("BattleRenderContext","battle/battleRender/BattleRenderEntityContext")
 BattleRenderContext = require_path("BattleRenderContext","battle/battleRender/BattleRenderContext")
 BattleRenderWorld = require_path("BattleRenderWorld","battle/battleRender/BattleRenderWorld")
 
+AnimatorSystem =  require_path("AnimatorSystem","battle/battleRender/system/AnimatorSystem")
 
 require_path("Enum_Battle","battle/Enum_Battle")
 

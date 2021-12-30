@@ -29,7 +29,7 @@ function BattleCharacter:init()
     }
     local agent = {
         _battleManager =  self._battleManager,
-        _entityContext = self
+        _entityContext = self._entityContext
     }
 
     self._logicTree = BehaviourTreeEntity:new({},data,agent)

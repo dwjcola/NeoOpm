@@ -37,16 +37,8 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Battle/General
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 6aa73db9ef09c374f9dda5d3689649e8
-    m_Address: Assets/Resource_MS/Battle/General/TmpModel
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: a916a3a7795fce244a27c189ea2b1825
-    m_Address: Assets/Resource_MS/Battle/General/TmpModel/Model
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 210007182b2c53a49a88d5f139f1511d
-    m_Address: Assets/Resource_MS/Battle/General/TmpModel/Controller/Test Controller.controller
+  - m_GUID: c1b1566d0a0535549abd7f5b7c54afd7
+    m_Address: Assets/Resource_MS/Battle/General/animation
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

@@ -10,10 +10,12 @@ function BehaviourTreeEntity:initialize(treeData,data,agent)
     ---@type BlackBoard_BattleBase
     self._blackboard = BlackBoard_BattleBase:new()
     self:initBlackBoard(data)
+    self._agent = agent
+
+
    ---@type NodeBase
    self._rootNode = self:initTree(treeData,self._blackboard,agent)
 
-   self._agent = agent
 end
 
 function BehaviourTreeEntity:initBlackBoard(data)

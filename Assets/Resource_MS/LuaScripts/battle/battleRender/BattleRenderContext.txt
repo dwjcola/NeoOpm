@@ -7,15 +7,17 @@
 local BattleRenderContext = SimpleClassUtil:class()
 
 function BattleRenderContext:initialize()
-
+   self._entityContext = BattleRenderEntityContext:new()
 end
 
-function BattleRenderContext:init()
-
+function BattleRenderContext:init(blackBoard,battleManager)
+   self._entityContext:init(blackBoard,battleManager)
 end
 
-function BattleRenderContext:update()
-
+function BattleRenderContext:update(dt)
+   if self._entityContext then
+      self._entityContext:update(dt)
+   end
 end
 
 return BattleRenderContext

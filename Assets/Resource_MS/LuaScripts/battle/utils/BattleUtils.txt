@@ -43,7 +43,7 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    return ""
     --end
 
-    return "Assets/Resource_MS/Battle/General/TmpModel/Model/NinjaMale_Base.prefab"
+    return "Assets/Resource_MS/Battle/General/prefab/bibidong_3.prefab"
 end
 
 function BattleUtils:getTestBattleData()
@@ -57,40 +57,40 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        ["1"] = {
-                            heroId = "101",
-                        },
-                        ["2"] = {
-                            heroId = "101",
-                        },
-                        ["3"] = {
-                            heroId = "101",
-                        },
+                        --["1"] = {
+                        --    heroId = "101",
+                        --},
+                        --["2"] = {
+                        --    heroId = "101",
+                        --},
+                        --["3"] = {
+                        --    heroId = "101",
+                        --},
                         ["4"] = {
                             heroId = "101",
                         },
-                        ["5"] = {
-                            heroId = "101",
-                        }
+                        --["5"] = {
+                        --    heroId = "101",
+                        --}
                     },
                 },
                 team_enemy = {
                     blockId = "block_20_10",
                     teamMap = {
                         ["1"] = {
-                            heroId = "101",
+                            heroId = "102",
                         },
                         ["2"] = {
-                            heroId = "101",
+                            heroId = "102",
                         },
                         ["3"] = {
-                            heroId = "101",
+                            heroId = "102",
                         },
                         ["4"] = {
-                            heroId = "101",
+                            heroId = "102",
                         },
                         ["5"] = {
-                            heroId = "101",
+                            heroId = "102",
                         }
                     },
                 }

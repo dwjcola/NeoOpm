@@ -59,6 +59,22 @@ Enum_Battle.Camp = {
    CampSelf = 1,
    CampEnemy = 2,
 }
+--- 战斗动画 状态
+Enum_Battle.AniState = {
+    idle = "stand",
+    run = "run",
+    appear = "appear",
+    bigSkill = "bigSkill",
+    skill1 = "skill1",
+    skill2 = "skill2",
+    skill3 = "skill3",
+    baseSkill = "baseSkill",
+    hit = "hited",
+    hitDown = "hitDown",
+    death = "death",
+
+    win = "win",
+}
 
 
 

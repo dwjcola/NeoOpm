@@ -33,12 +33,12 @@ namespace Pomelo.DotNetClient
             if (timeout > interval * 2)
             {
                 this.resetTimeout();
-                PomeloClient.Instance.StartReconnect(protocol);
+                //PomeloClient.Instance.StartReconnect(protocol);
                 return;
             }
 
             //Send heart beat
-            protocol.send(PackageType.PKG_HEARTBEAT);
+            protocol.sendHeartbeat();
             //Debug.LogError(string.Format("============================3============================send heart beat{0}", DateTime.Now));
         }
 

@@ -63,7 +63,7 @@ namespace UnityGameFramework.Runtime
         private void Update()
         {
             PomeloClient.Instance.Update(Time.deltaTime, Time.deltaTime);
-            if (m_ReconnectTime>=0f)
+            /*if (m_ReconnectTime>=0f)
             {
                 m_ReconnectTime += Time.deltaTime;
                 if (m_ReconnectTime>=m_DelayReconnectTime)
@@ -73,33 +73,21 @@ namespace UnityGameFramework.Runtime
                     PomeloClient.Instance.reconnect();
                     
                 }
-            }
+            }*/
         }
-        public void StartReconnect()
+        /*public void StartReconnect()
         {
             m_ReconnectTime = 0f;
-        }
+        }*/
         //const string host = "127.0.0.1";
         //const int port = 11303;
         public async void ConnectToServer(string host,int port,Action succ,Action initCB)
         {
             bool ret = await PomeloClient.Instance.initClient(host, port);
-            if (ret == true)
+            if (ret)
             {
-                //The user data is the handshake user params
-                JsonData user = new JsonData();
-                user["name"] = "NeoOPM";
-                //Log.Error("PomeloClient Init Suc.connect ...");
                 initCB?.Invoke();
-                JsonData connRet = await PomeloClient.Instance.connect(user);
-                if (connRet.Keys.Contains("error"))
-                {
-                    Log.Error("connect error!" + connRet["error"]);
-                }
-                else
-                {
-                    succ();  
-                }
+                succ();  
             }
             else
             {
@@ -116,8 +104,8 @@ namespace UnityGameFramework.Runtime
                 Log.Fatal("Event component is invalid.");
                 return;
             }
-            PomeloClient pc = PomeloClient.Instance;
-            pc.DelayAndReconnect = StartReconnect;
+            //PomeloClient pc = PomeloClient.Instance;
+            //pc.DelayAndReconnect = StartReconnect;
         }
         /*private void DelayAndReconnect(float delay,Action func)
         {

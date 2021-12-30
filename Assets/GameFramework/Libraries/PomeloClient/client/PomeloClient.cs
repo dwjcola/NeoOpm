@@ -115,8 +115,8 @@ namespace Pomelo.DotNetClient
         /// <param name="callback">socket successfully connected callback(in network thread)</param>
         public  Task<bool> initClient(string host, int port )
         {
-            connectIP = host;
-            connectPort = port;
+            /*connectIP = host;
+            connectPort = port;*/
             TaskCompletionSource<bool> taskCS = new TaskCompletionSource<bool>();
             timeoutEvent.Reset();
             eventManager = new EventManager();
@@ -169,7 +169,6 @@ namespace Pomelo.DotNetClient
                     taskCS.SetResult(false);
                 }
             }
-
             return taskCS.Task;
         }
 
@@ -186,26 +185,7 @@ namespace Pomelo.DotNetClient
                 NetWorkStateChangedEvent(state);
             }
         }
-        public Task<JsonData> connect(JsonData user)
-        {
-            TaskCompletionSource<JsonData> taskCS = new TaskCompletionSource<JsonData>();
-            try
-            {
-                protocol.start(user, (JsonData data)=> {
-                    taskCS.SetResult(data);
-                });
-                return taskCS.Task;
-            }
-            catch (Exception e)
-            {
-                //Console.WriteLine(e.ToString());
-                JsonData jsData = new JsonData();
-                jsData["error"] = e.ToString();
-                taskCS.SetResult(jsData);
-                return taskCS.Task;
- 
-            }
-        }
+
         /// <summary>
         /// 无参
         /// </summary>
@@ -214,7 +194,7 @@ namespace Pomelo.DotNetClient
         public void request(uint serviceId, Action<byte[], int> action)
         {
             this.eventManager.AddCallBack(reqId, new RawReceiver(action));
-            protocol.send(MessageType.MSG_REQUEST, reqId, serviceId);
+            protocol.send(reqId, serviceId);
             reqId++;
         }
         /// <summary>
@@ -226,11 +206,11 @@ namespace Pomelo.DotNetClient
         public void request(uint serviceId, byte[] msgData, Action<byte[], int> action)
         {
             this.eventManager.AddCallBack(reqId, new RawReceiver(action));
-            protocol.send(MessageType.MSG_REQUEST, reqId, serviceId, msgData);
+            protocol.send(reqId, serviceId, msgData);
             reqId++;
         }
 
-        public void request<R>(uint serviceId, pb.IMessage msg,Action<R> action) where R:pb.IMessage,new()
+        /*public void request<R>(uint serviceId, pb.IMessage msg,Action<R> action) where R:pb.IMessage,new()
         {
             this.eventManager.AddCallBack(reqId, new ProtobufReceiver<R>(action));
             protocol.send(MessageType.MSG_REQUEST, reqId, serviceId, msg);
@@ -245,7 +225,7 @@ namespace Pomelo.DotNetClient
         public void request<R>(uint serviceId, Action<R> action) where R : pb.IMessage, new()
         {
             this.eventManager.AddCallBack(reqId, new ProtobufReceiver<R>(action));
-            protocol.send(MessageType.MSG_REQUEST, reqId, serviceId );
+            protocol.send(reqId, serviceId );
             reqId++;
         }
         public void request(uint serviceId, JsonData msg, Action<JsonData> action)
@@ -253,22 +233,22 @@ namespace Pomelo.DotNetClient
             this.eventManager.AddCallBack(reqId, new JsonReceiver(action));
             protocol.send(MessageType.MSG_REQUEST, reqId, serviceId, msg);
             reqId++;
-        }
+        }*/
         public void LuaPBRequest(uint serviceId, byte[] msg, Action<byte[]> action)
         {
             this.eventManager.AddCallBack(reqId, new LuaProtobufReceiver(action));
-            protocol.send(MessageType.MSG_REQUEST, reqId, serviceId, msg);
+            protocol.send(reqId, serviceId, msg);
             reqId++;
         }
         public void LuaJsonRequest(uint serviceid,string msg,Action<string> action)
         {
             this.eventManager.AddCallBack(reqId, new LuajsonReceiver(action));
-            protocol.send(MessageType.MSG_REQUEST, reqId, serviceid, Encoding.UTF8.GetBytes(msg));
+            protocol.send(reqId, serviceid, Encoding.UTF8.GetBytes(msg));
             reqId++;
 
         }
 
-        public void notify(uint serviceId, pb.IMessage msg)        
+        /*public void notify(uint serviceId, pb.IMessage msg)        
         {
             protocol.send(MessageType.MSG_NOTIFY,0, serviceId, msg);
         }
@@ -279,20 +259,20 @@ namespace Pomelo.DotNetClient
         public void notify(uint serviceId )
         {
             protocol.send(MessageType.MSG_NOTIFY, 0, serviceId);
-        }
+        }*/
         /// <summary>
         /// 这里和string参数的名字区分开是因为lua传到c# ,byte[]也是string，其他地方一样的方式
         /// </summary>
         /// <param name="serviceid"></param>
         /// <param name="msg"></param>
-        public void LuaPBNotify(uint serviceid, byte[] msg)
+        /*public void LuaPBNotify(uint serviceid, byte[] msg)
         {
             protocol.send(MessageType.MSG_NOTIFY, 0, serviceid, msg);
         }
         public void notify(uint serviceId, string msg)
         {
             protocol.send(MessageType.MSG_NOTIFY,0, serviceId, Encoding.UTF8.GetBytes(msg));
-        }
+        }*/
 
         public void on(uint id,Action<string> action)
         {
@@ -329,7 +309,7 @@ namespace Pomelo.DotNetClient
         public void disconnect()
         {
             Dispose();
-            ReconnectCallBack?.Invoke(CLIENT_EVENT_SHUTDOWN);
+            //ReconnectCallBack?.Invoke(CLIENT_EVENT_SHUTDOWN);
         }
 
         public void Dispose()
@@ -380,7 +360,7 @@ namespace Pomelo.DotNetClient
                 return protocol != null && socket != null && this.netWorkState == NetWorkState.CONNECTED;
             }
         }
-        /// <summary>
+        /*/// <summary>
         /// 重连用
         /// </summary>
         /// <param name="old"></param>
@@ -445,6 +425,6 @@ namespace Pomelo.DotNetClient
                 ReconnectCallBack?.Invoke(CLIENT_EVENT_DISCONNECT);
                 netWorkState = NetWorkState.ERROR;
             }
-        }
+        }*/
     }
 }

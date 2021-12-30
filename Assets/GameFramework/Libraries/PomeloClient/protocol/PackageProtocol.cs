@@ -4,98 +4,49 @@ namespace Pomelo.DotNetClient
 {
     public class PackageProtocol
     {
-        public const int HEADER_LENGTH = 4;
+        //0x75DD(2 Byte)  --Header(1 Byte)  --Length（4 Byte） --MsgId（2 Byte）  --requestId（2 Byte）
+        public const int HEADER_LENGTH = 11;
+        public const int HEADER_LENGTH_SC = 5;//返回包包头长度
+        public const int MSG_HEAD = 4;//服务器用包头
 
-        public static byte[] encode(PackageType type)
+        public static byte[] encodeHeartbeat()
         {
-            return new byte[] { Convert.ToByte(type), 0, 0, 0 };
+            return new byte[] { 1 };
         }
-        public static byte[] encode(PackageType type, byte[] pkgBody)
-        {
-            int length = HEADER_LENGTH;
-
-            byte[] buf = new byte[length];
-
-            int index = 0;
-
-            buf[index++] = Convert.ToByte(type);
-            buf[index++] = Convert.ToByte(pkgBody.Length >> 16 & 0xFF);
-            buf[index++] = Convert.ToByte(pkgBody.Length >> 8 & 0xFF);
-            buf[index++] = Convert.ToByte(pkgBody.Length & 0xFF);
-            return buf;
-        }
-        //public static byte[] encode(PackageType type, byte[] body)
-        //{
-        //    int length = HEADER_LENGTH;
-
-        //    if (body != null) length += body.Length;
-
-        //    byte[] buf = new byte[length];
-
-        //    int index = 0;
-
-        //    buf[index++] = Convert.ToByte(type);
-        //    buf[index++] = Convert.ToByte(body.Length >> 16 & 0xFF);
-        //    buf[index++] = Convert.ToByte(body.Length >> 8 & 0xFF);
-        //    buf[index++] = Convert.ToByte(body.Length & 0xFF);
-
-        //    while (index < length)
-        //    {
-        //        buf[index] = body[index - HEADER_LENGTH];
-        //        index++;
-        //    }
-
-        //    return buf;
-        //}
-
         /**
         *  format:
-        * +------+------------+-------------+------------------+
-        * | type |body length |   body (msgHead + msgBody)     |
-        * +------+------------+-------------+------------------+
+        * +------+------+------------+-------------+------------------+
+        * | head(3b) | body length(4b) | serviceId(2b)| reqId(2b) | body |
+        * +------+------+------------+-------------+------------------+
         **/
-
-        public static byte[] encode(MessageType type, uint reqId, uint serviceId, byte[] msgBody)
+        public static byte[] encode(uint reqId, uint serviceId, byte[] msgBody)
         {
-            int length = HEADER_LENGTH;
-
             int pkgBodyLen = 0;
             if (msgBody != null) pkgBodyLen += msgBody.Length;
-
-            int msgHeadLen = reqId > 0 ? 8 : 4;
-            length += msgHeadLen;
-            pkgBodyLen += msgHeadLen;
-
-            byte[] buf = new byte[length];
-
-            int index = 0;
-
-            buf[index++] = Convert.ToByte(PackageType.PKG_DATA);
-            buf[index++] = Convert.ToByte(pkgBodyLen >> 16 & 0xFF);
-            buf[index++] = Convert.ToByte(pkgBodyLen >> 8 & 0xFF);
-            buf[index++] = Convert.ToByte(pkgBodyLen & 0xFF);
-
-
-            int offset = HEADER_LENGTH;
-            serviceId = (serviceId & 0xFFF) | (uint)( (byte)type << 24 );
-
-            offset += MsgProtocol.WriteInt32BE(buf, offset, (int)serviceId);
-
-            if (reqId > 0)
-            {
-                offset += MsgProtocol.WriteInt32BE(buf, offset, (int)reqId);
-            }
+            byte[] buf = new byte[HEADER_LENGTH];
+            int offset = 0;
+            buf[offset++] = ((byte)(MSG_HEAD >> 8));
+            buf[offset++] = ((byte)MSG_HEAD);
+            buf[offset++] = ((byte)0);//预留1byte
+            offset += MsgProtocol.WriteInt32BE(buf, offset, pkgBodyLen);
+            uint srId = (serviceId << 16) | reqId;
+            offset += MsgProtocol.WriteInt32BE(buf, offset, (int)srId);
             return buf;
         }
         public static Package decode(byte[] buf)
         {
-            PackageType type = (PackageType)buf[0];
+            PackageType type = PackageType.PKG_DATA;
+            int serviceId = buf[5] << 8 | buf[6];
+            if (serviceId < (int)PackageType.PKG_LEN-1)
+            {
+                type = (PackageType)serviceId;
+            }
 
-            byte[] body = new byte[buf.Length - HEADER_LENGTH];
+            byte[] body = new byte[buf.Length - HEADER_LENGTH_SC];
 
             for (int i = 0; i < body.Length; i++)
             {
-                body[i] = buf[i + HEADER_LENGTH];
+                body[i] = buf[i + HEADER_LENGTH_SC];
             }
 
             return new Package(type, body);
@@ -107,34 +58,15 @@ namespace Pomelo.DotNetClient
             //Decode head
             //Get flag
             var buffer = pkg.body;
-            //var type = pkg.type;
-            //Set offset to 1, for the 1st byte will always be the flag
-
-            //Get type from flag;
-
-            var type =(MessageType)buffer[0];
-
-
-            uint id = 0;
-
-            int offset = 1;
-            if (type == MessageType.MSG_RESPONSE )
+            uint serviceId = MsgProtocol.ReadUShortBE(buffer, 0);
+            MessageType type = MessageType.MSG_RESPONSE;
+            if (serviceId >= (int)MessageType.MSG_PUSH_START)
             {
-                id = MsgProtocol.ReadUInt32BE(buffer, offset);
-                offset += 4;
-            }
-            else if (type == MessageType.MSG_PUSH )
-            {
-                id = MsgProtocol.ReadUShortBE(buffer, offset);
-                offset += 2;
-            }
-            else
-            {
-                return null;
+                type = MessageType.MSG_PUSH;
             }
 
             //Construct the message
-            return new Message(type, id, buffer, offset);
+            return new Message(type, serviceId, buffer, 2);
 
         }
 

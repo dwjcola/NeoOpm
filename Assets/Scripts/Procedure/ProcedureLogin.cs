@@ -49,6 +49,23 @@ namespace ProHA
                 GameEntry.UI.CheckMask(updateForm.UIGroup);
             }
         }
+        public void ConnectServer(string ip,int port)
+        {
+            //ip = "127.0.0.1";
+            Log.Warning("connect game server->{0}---{1}",ip,port);
+            GameEntry.Network.ConnectToServer(ip,port, () =>
+            {
+                Log.Warning("connect game server succ->{0}---{1}",ip,port);
+                //Log.Error("Connect_server_succ");
+                LC.SendEvent("Connect_server_succ");
+            }, () =>
+            {
+                PomeloClient pc = PomeloClient.Instance;
+                Rpc.PushEvent.Init(pc);
+                /*pc.ReconnectCallBack = ReConnectCallBack;
+                pc.ServerTimeResetCB = ResetServerTime;*/
+            });
+        }
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)
         {
             base.OnLeave(procedureOwner, isShutdown);

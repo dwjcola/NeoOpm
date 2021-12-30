@@ -12,7 +12,7 @@ namespace Pomelo.DotNetClient
 
     public class Transporter
     {
-        public const int HeadLength = 4;
+        public const int HeadLength = 5;
 
         private Socket socket;
         private Action<byte[]> messageProcesser;
@@ -24,7 +24,7 @@ namespace Pomelo.DotNetClient
         private IAsyncResult asyncSend;
         private bool onSending = false;
         private bool onReceiving = false;
-        private byte[] headBuffer = new byte[4];
+        private byte[] headBuffer = new byte[5];
         private byte[] buffer;
         private int bufferOffset = 0;
         private int pkgLength = 0;
@@ -49,12 +49,6 @@ namespace Pomelo.DotNetClient
         {
             if (this.transportState != TransportState.closed)
             {
-                //string str = "";
-                //foreach (byte code in buffer)
-                //{
-                //    str += code.ToString();
-                //}
-                //Console.WriteLine("send:" + buffer.Length + " " + str.Length + "  " + str);
                 this.asyncSend = socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(sendCallback), socket);
 
                 this.onSending = true;
@@ -164,8 +158,10 @@ namespace Pomelo.DotNetClient
                 //Write head buffer
                 writeBytes(bytes, offset, headNum, bufferOffset, headBuffer);
                 //Get package length
-                pkgLength = (headBuffer[1] << 16) + (headBuffer[2] << 8) + headBuffer[3];
-
+                pkgLength = (headBuffer[1] << 24) | (headBuffer[2] << 16) |
+                                 (headBuffer[3] << 8) | (headBuffer[4] ) ;
+                //pkgLength = (headBuffer[1] << 16) + (headBuffer[2] << 8) + headBuffer[3];
+                pkgLength += 2;//2是serviceId
                 //Init message buffer
                 buffer = new byte[HeadLength + pkgLength];
                 writeBytes(headBuffer, 0, HeadLength, buffer);

@@ -117,7 +117,7 @@ function BattleTeam:tryLoadLeftRole()
     Logger.Error("临时得 to do 修改为正式得 ")
     for i, v in pairs(self._teamData_self.teamMap) do
         local pos = i
-        local path = BattleUtils:getHeroAssetPathByHeroId(v)
+        local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)
 
         BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
             self:removeLoadMap()
@@ -135,7 +135,7 @@ function BattleTeam:tryLoadRightRole()
     Logger.Error("临时得 to do 修改为正式得 ")
     for i, v in pairs(self._teamData_enemy.teamMap) do
         local pos = i
-        local path = BattleUtils:getHeroAssetPathByHeroId(v)
+        local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)
         BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
             self:removeLoadMap()
             self._map_right_role[pos] = {

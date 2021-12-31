@@ -42,8 +42,12 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    Logger.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
     --    return ""
     --end
+    if heroId == "101" then
+        return "Assets/Resource_MS/Battle/General/prefab/bibidong_3.prefab"
+    else
+        return "Assets/Resource_MS/Battle/General/prefab/xulizhi_2.prefab"
+    end
 
-    return "Assets/Resource_MS/Battle/General/prefab/bibidong_3.prefab"
 end
 
 function BattleUtils:getTestBattleData()

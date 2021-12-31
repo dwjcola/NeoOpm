@@ -8,11 +8,13 @@ function BattleEntityContext:initialize()
 
 end
 
-function BattleEntityContext:init(baseBlackBoard,battleManager)
+function BattleEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self._baseBlackBoard = baseBlackBoard
 
     self._battleManager = battleManager
+
+    self._battleData = battleData
 
     self._list_camp = {
         [Enum_Battle.Camp.CampSelf] = {},
@@ -24,17 +26,18 @@ function BattleEntityContext:init(baseBlackBoard,battleManager)
 end
 
 function BattleEntityContext:initCharacters()
-    local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,1,self._battleManager,self)
-    self._list_camp[Enum_Battle.Camp.CampSelf][1] = character
-    --for i = 1, 5 do
-    --    local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,i,self._battleManager,self)
-    --    self._list_camp[Enum_Battle.Camp.CampSelf][i] = character
-    --
-    --end
 
-    --for i = 1, 5 do
-    --    self._list_camp[Enum_Battle.Camp.CampEnemy][i] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,i,self._battleManager,self)
-    --end
+    local data = self._battleData
+    for i, v in pairs(data.team_enemy.teamMap) do
+        local index = tonumber(i)
+        self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self)
+    end
+    for i, v in pairs(data.team_self.teamMap) do
+        local index = tonumber(i)
+        local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self)
+        self._list_camp[Enum_Battle.Camp.CampSelf][index] = character
+
+    end
 end
 
 function BattleEntityContext:update(dt)

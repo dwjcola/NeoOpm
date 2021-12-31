@@ -8,7 +8,7 @@ local BattleRenderCharacter = SimpleClassUtil:class()
 function BattleRenderCharacter:initialize(data)
 
     self._go_model = data.go_model
-
+    ---@type string
     self._index = data.index
 
     self._heroId = data.heroId

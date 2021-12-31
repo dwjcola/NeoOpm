@@ -9,8 +9,8 @@ function BattleLogicContext:initialize()
     self._entityContext = BattleEntityContext:new()
 end
 
-function BattleLogicContext:init(blackBoard,battleManager)
-    self._entityContext:init(blackBoard,battleManager)
+function BattleLogicContext:init(blackBoard,battleData,battleManager)
+    self._entityContext:init(blackBoard,battleData,battleManager)
 end
 
 function BattleLogicContext:update(dt)

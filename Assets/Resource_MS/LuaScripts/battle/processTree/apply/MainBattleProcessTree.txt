@@ -4,9 +4,8 @@
 --- DateTime: 2021/12/20 14:18
 ---@class MainBattleProcessTree:ProcessTree
 local MainBattleProcessTree = SimpleClassUtil:class(ProcessTree)
-function MainBattleProcessTree:initialize(data)
-    self.super:initialize(data)
-    self._blackBoard._battleData = data._battleData
+function MainBattleProcessTree:initialize()
+    self.super:initialize()
 
 end
 

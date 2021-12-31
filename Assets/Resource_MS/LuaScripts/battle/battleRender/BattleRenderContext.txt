@@ -10,8 +10,8 @@ function BattleRenderContext:initialize()
    self._entityContext = BattleRenderEntityContext:new()
 end
 
-function BattleRenderContext:init(blackBoard,battleManager)
-   self._entityContext:init(blackBoard,battleManager)
+function BattleRenderContext:init(blackBoard,battleData,battleManager)
+   self._entityContext:init(blackBoard,battleData,battleManager)
 end
 
 function BattleRenderContext:update(dt)

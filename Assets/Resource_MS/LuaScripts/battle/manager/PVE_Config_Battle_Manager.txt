@@ -8,7 +8,7 @@ local PVE_Config_Battle_Manager = SimpleClassUtil:class()
 
 function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     -- todo 检查 data 合法性
-    self._data = data or {}
+    self._battleData = data or {}
     ---@type boolean 是否只跑逻辑
     self._isOnlyLogic = isOnlyLogic or false
 
@@ -23,6 +23,7 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     self._ready = false
     ---@type BattleTeam
     self._battleTeam = battleTeam
+
 end
 
 function PVE_Config_Battle_Manager:start()
@@ -36,10 +37,10 @@ function PVE_Config_Battle_Manager:formalInit()
 
     if not self._isOnlyLogic then
         self._world_render = BattleRenderWorld:new()
-        self._world_render:init(self._blackBoard,self)
+        self._world_render:init(self._blackBoard,self._battleData,self)
     end
     self._world_logic = BattleLogicWorld:new()
-    self._world_logic:init(self._blackBoard,self)
+    self._world_logic:init(self._blackBoard,self._battleData,self)
 end
 
 function PVE_Config_Battle_Manager:update(dt)

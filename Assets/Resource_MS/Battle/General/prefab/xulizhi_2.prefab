@@ -1621,7 +1621,7 @@ GameObject:
   - component: {fileID: 3739105421413198397}
   - component: {fileID: 1734817825158674109}
   m_Layer: 0
-  m_Name: xulizhi_2@
+  m_Name: xulizhi_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

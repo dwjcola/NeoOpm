@@ -9,11 +9,13 @@ function BattleRenderEntityContext:initialize(data)
 
 end
 ---@param battleManager PVE_Config_Battle_Manager
-function BattleRenderEntityContext:init(baseBlackBoard,battleManager)
+function BattleRenderEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self._baseBlackBoard = baseBlackBoard
 
     self._battleManager = battleManager
+
+    self._battleData = battleData
 
     self._list_camp = {
         [Enum_Battle.Camp.CampSelf] = {},
@@ -24,27 +26,22 @@ function BattleRenderEntityContext:init(baseBlackBoard,battleManager)
 end
 ---@param battleTeam BattleTeam
 function BattleRenderEntityContext:initCharacters(battleTeam)
-    --Logger.ErrorTable(battleTeam)
-    --local character = BattleRenderCharacter:new()
-    --self._list_camp[Enum_Battle.Camp.CampSelf][1] = character
-    for i = 1, 5 do
+    local data = self._battleData
+    for i, v in pairs(data.team_self.teamMap) do
         local character = BattleRenderCharacter:new({
-            go_model = battleTeam._map_left_role[tostring(i)].model,
+            go_model = battleTeam._map_left_role[i].model,
             index = i,
-            heroId = "hero101",
+            heroId = v.heroId,
         })
-        self._list_camp[Enum_Battle.Camp.CampSelf][i] = character
+        self._list_camp[Enum_Battle.Camp.CampSelf][tonumber(i)] = character
     end
-
-
-
-    for i = 1, 5 do
+    for i, v in pairs(data.team_enemy.teamMap) do
         local character = BattleRenderCharacter:new({
-            go_model = battleTeam._map_right_role[tostring(i)].model,
+            go_model = battleTeam._map_right_role[i].model,
             index = i,
-            heroId = "hero101",
+            heroId = v.heroId,
         })
-        self._list_camp[Enum_Battle.Camp.CampEnemy][i] =  character
+        self._list_camp[Enum_Battle.Camp.CampEnemy][tonumber(i)] = character
     end
 end
 

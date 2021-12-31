@@ -9,8 +9,8 @@ function BattleLogicWorld:initialize()
     self._battleLogicContext = BattleLogicContext:new()
 end
 
-function BattleLogicWorld:init(blackBoard,battleManager)
-    self._battleLogicContext:init(blackBoard,battleManager)
+function BattleLogicWorld:init(blackBoard,battleData,battleManager)
+    self._battleLogicContext:init(blackBoard,battleData,battleManager)
 end
 
 

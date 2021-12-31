@@ -8,22 +8,21 @@ local BattleProxy = {}
 function BattleProxy:Init()
 
 end
----@return BlackBoard
-function BattleProxy:GetBlockBoard()
-    if self._blackBord == nil then
-        self._blackBord = BlackBoard:new()
+
+function BattleProxy:GetData()
+    if self._data == nil then
+        self._data = {  }
     end
-    return self._blackBord
+    return  self._data
 end
 
 ---进入战斗
 ---@param type Enum_Battle.BattleEntityType
 function BattleProxy:EnterBattle(type,data)
+    self._data = BattleUtils:getTestBattleData()
+    self._data._battleEntityType = type
 
-    self:GetBlockBoard()._battleEntityType = type
-    self:GetBlockBoard()._battleData = BattleUtils:getTestBattleData()
-
-    self._processTree = ProcessUtil:creatMainBattleProcessTree(self:GetBlockBoard())
+    self._processTree = ProcessUtil:creatMainBattleProcessTree(self._data)
     self._processTree:setDelegate(function()  self:EndBattle() end)
     self._processTree:start()
 end
@@ -31,7 +30,7 @@ end
 ---结束战斗
 function BattleProxy:EndBattle()
     Logger.error(" ****** BattleProxy:EndBattle ****** ")
-    self._blackBord = nil
+    self._data = nil
 
 end
 --- 退出战斗或者布阵
@@ -42,7 +41,7 @@ function BattleProxy:ExitBattle()
 end
 
 function BattleProxy:onClear()
-    self._blackBord = nil
+    self._data = nil
     self._processTree = nil
 end
 

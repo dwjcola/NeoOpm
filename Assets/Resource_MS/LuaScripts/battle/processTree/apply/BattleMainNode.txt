@@ -12,7 +12,7 @@ local function battleUpdateFunction(target)
    end
 end
 
-function BattleMainNode:initialize(tree,index,battleData)
+function BattleMainNode:initialize(tree,index,battleData,battleTimes)
 
    ---@type MainBattleProcessTree
    self._tree = tree
@@ -21,6 +21,8 @@ function BattleMainNode:initialize(tree,index,battleData)
 
    self._data = battleData
 
+   self._battleTimes = battleTimes
+
    self._scheduler = BattleScheduler:new(1)
 
    self._scheduler:start()
@@ -28,8 +30,13 @@ function BattleMainNode:initialize(tree,index,battleData)
 
 end
 
+function BattleMainNode:init()
+
+end
+
 function BattleMainNode:onStart()
-   if self._tree._battleTeam  and self._tree._battleTeam._loadingFinish then
+   local battleTeam = self:getBattleTeam()
+   if battleTeam  and battleTeam._loadingFinish then
       self:toStartBattle(false)
    else
       Logger.error("等待加载完成")
@@ -37,9 +44,16 @@ function BattleMainNode:onStart()
 
 end
 
+function BattleMainNode:getBattleTeam()
+   if self._tree and self._tree._blackBoard and self._tree._blackBoard._teamList then
+      return self._tree._blackBoard._teamList[self._battleTimes]
+   end
+   return { }
+end
+
 function BattleMainNode:toStartBattle(isServer)
 
-   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer,self._tree._battleTeam)
+   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer,self:getBattleTeam())
    self._battleManager:start()
    self:startScheduler()
 end

@@ -10,8 +10,8 @@ function BattleRenderWorld:initialize()
    self._contextManager = BattleRenderContext:new()
 end
 
-function BattleRenderWorld:init(blackBoard,battleManager)
-   self._contextManager:init(blackBoard,battleManager)
+function BattleRenderWorld:init(blackBoard,battleData,battleManager)
+   self._contextManager:init(blackBoard,battleData,battleManager)
 end
 
 function BattleRenderWorld:update(dt)

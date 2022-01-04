@@ -13,7 +13,7 @@ end
 
 
 function bt_ac_log:doAction()
-    Logger.error( self._txt )
+    Logger.error( self._txt or " 没有输入 log " )
     return Enum_BT.Node_ResultType.Success
 end
 

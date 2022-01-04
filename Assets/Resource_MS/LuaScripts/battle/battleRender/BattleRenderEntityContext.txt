@@ -33,7 +33,7 @@ function BattleRenderEntityContext:initCharacters(battleTeam)
             index = i,
             heroId = v.heroId,
         })
-        self._list_camp[Enum_Battle.Camp.CampSelf][tonumber(i)] = character
+        self._list_camp[Enum_Battle.Camp.CampSelf][i] = character
     end
     for i, v in pairs(data.team_enemy.teamMap) do
         local character = BattleRenderCharacter:new({
@@ -41,7 +41,7 @@ function BattleRenderEntityContext:initCharacters(battleTeam)
             index = i,
             heroId = v.heroId,
         })
-        self._list_camp[Enum_Battle.Camp.CampEnemy][tonumber(i)] = character
+        self._list_camp[Enum_Battle.Camp.CampEnemy][i] = character
     end
 end
 

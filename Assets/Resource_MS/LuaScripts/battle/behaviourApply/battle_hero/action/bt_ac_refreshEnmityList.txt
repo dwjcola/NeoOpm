@@ -59,7 +59,7 @@ function bt_ac_refreshEnmityList:doAction(blackBoard,agent)
     blackBoard._enmity_map = tmp_enmity_map
 
 
-
+    Logger.ErrorTable(blackBoard)
     return Enum_BT.Node_ResultType.Success
 end
 

@@ -30,13 +30,13 @@ function BattleEntityContext:initCharacters()
     local data = self._battleData
 
     for i, v in pairs(data.team_self.teamMap) do
-        local index = tonumber(i)
+        local index = i
         local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self,v)
         self._list_camp[Enum_Battle.Camp.CampSelf][index] = character
     end
 
     for i, v in pairs(data.team_enemy.teamMap) do
-        local index = tonumber(i)
+        local index = i
         self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self,v)
     end
 
@@ -44,7 +44,7 @@ end
 
 function BattleEntityContext:update(dt)
     for camp, _campList in pairs(self._list_camp) do
-        for index_pos, character in ipairs(_campList) do
+        for index_pos, character in pairs(_campList) do
             if character and character.update then
                 character:update(dt)
             end

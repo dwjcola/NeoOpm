@@ -42,7 +42,7 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    Logger.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
     --    return ""
     --end
-    if heroId == "101" then
+    if heroId == "hero101" then
         return "Assets/Resource_MS/Battle/General/prefab/bibidong_3.prefab"
     else
         return "Assets/Resource_MS/Battle/General/prefab/xulizhi_2.prefab"
@@ -70,8 +70,8 @@ function BattleUtils:getTestBattleData()
                         --["3"] = {
                         --    heroId = "101",
                         --},
-                        ["4"] = {
-                            heroId = "101",
+                        [4] = {
+                            heroId = "hero101",
                         },
                         --["5"] = {
                         --    heroId = "101",
@@ -81,20 +81,20 @@ function BattleUtils:getTestBattleData()
                 team_enemy = {
                     blockId = "block_20_10",
                     teamMap = {
-                        ["1"] = {
-                            heroId = "102",
+                        [1] = {
+                            heroId = "hero102",
                         },
-                        ["2"] = {
-                            heroId = "102",
+                        [2] = {
+                            heroId = "hero102",
                         },
-                        ["3"] = {
-                            heroId = "102",
+                        [3] = {
+                            heroId = "hero102",
                         },
-                        ["4"] = {
-                            heroId = "102",
+                        [4] = {
+                            heroId = "hero102",
                         },
-                        ["5"] = {
-                            heroId = "102",
+                        [5] = {
+                            heroId = "hero102",
                         }
                     },
                 }

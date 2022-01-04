@@ -12,7 +12,7 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
     self._entityContext = entityContext
     self._heroData = heroData
     self._heroId = heroData.heroId
-    Logger.Error( self._heroId)
+    --Logger.Error( self._heroId)
     self:init()
 end
 

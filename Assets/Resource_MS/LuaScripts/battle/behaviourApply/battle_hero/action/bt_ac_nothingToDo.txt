@@ -3,12 +3,11 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
----@class bt_ac_died : IAction
-local bt_ac_died = SimpleClassUtil:class(IAction)
+---@class bt_ac_nothingToDo : IAction
+local bt_ac_nothingToDo = SimpleClassUtil:class(IAction)
 
-function bt_ac_died:doAction()
-    --Logger.error( "bt_ac_died ")
+function bt_ac_nothingToDo:doAction()
     return Enum_BT.Node_ResultType.Success
 end
 
-return bt_ac_died
+return bt_ac_nothingToDo

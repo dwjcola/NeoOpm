@@ -11,7 +11,7 @@ function BehaviourTreeEntity:initialize(treeData,data,agent)
     self._blackboard = BlackBoard_BattleBase:new()
     self:initBlackBoard(data)
     self._agent = agent
-
+    self._tree_end = false
 
    ---@type NodeBase
    self._rootNode = self:initTree(treeData,self._blackboard,agent)
@@ -26,7 +26,7 @@ end
 
 function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
     --self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
-    self._rootNode = CreateUtils:createTree("hero101",{},{})
+    self._rootNode = CreateUtils:createTree(self._blackboard._heroId,{},{})
 
     if self._rootNode == nil then
         Logger.Error("行为树 初始化失败")
@@ -43,16 +43,33 @@ function BehaviourTreeEntity:getRootNode()
 end
 
 function BehaviourTreeEntity:execute(dt)
-    if self._rootNode then
+    if self._rootNode and not self._tree_end then
         self._rootNode:prePosition()
         local  resultType = self._rootNode:execute(self._blackboard, self._agent)
         self._rootNode:postPosition(resultType)
+
+        self:postPosition(resultType)
     end
+end
+
+function BehaviourTreeEntity:postPosition(resultType)
+    if resultType ~= Enum_BT.Node_ResultType.Running then
+        self:onExit()
+    end
+end
+
+function BehaviourTreeEntity:onExit()
+    self._tree_end = true
+end
+
+function BehaviourTreeEntity:reset()
+    self._tree_end = false
 end
 
 function BehaviourTreeEntity:clear()
     if self._rootNode then
         self._rootNode:postPosition(Enum_BT.Node_ResultType.Fail)
     end
+    self._tree_end = true
 end
 return BehaviourTreeEntity

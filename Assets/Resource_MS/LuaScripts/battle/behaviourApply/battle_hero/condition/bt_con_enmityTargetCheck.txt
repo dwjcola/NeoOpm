@@ -9,7 +9,6 @@ function bt_con_enmityTargetCheck:initData()
 
 end
 ---@param blackBoard BlackBoard_BattleBase
-
 function bt_con_enmityTargetCheck:doCondition(blackBoard,agent)
     if blackBoard._enmityIndex == 0 then
         return Enum_BT.Node_ResultType.Success
@@ -21,6 +20,7 @@ function bt_con_enmityTargetCheck:doCondition(blackBoard,agent)
     if _enemyEntity == nil or _enemyEntity:getData()._alive == false or  _enemyEntity:getData()._isCanBeSelected == true then
         return Enum_BT.Node_ResultType.Success
     end
+    return Enum_BT.Node_ResultType.Fail
 end
 
 

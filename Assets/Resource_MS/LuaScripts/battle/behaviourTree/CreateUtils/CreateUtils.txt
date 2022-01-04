@@ -133,7 +133,12 @@ function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
 end
 
 function CreateUtils:createTree(heroId,sceneData,data)
-
+    if heroId == "hero102" then
+        local node_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"000000-1")
+        local action_3 = btApplyMap:getClass("bt_ac_died")
+        node_3:setIAction(action_3)
+        return  node_3
+    end
     ---@type NodeIfJudge
     local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
     -------------------------------------------------------------------------------
@@ -169,8 +174,10 @@ function CreateUtils:createTree(heroId,sceneData,data)
                             node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
                       node_2_1_3:addNode(node_2_1_3_1)
                             ---@type NodeAction
-                            local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action)
-                                  local ac_2_1_3_2_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
+                            local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
+                                  local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
+                            node_2_1_3_2:setIAction(ac_2_1_3_2_1)
+                      node_2_1_3:addNode(node_2_1_3_2)
                 node_2_1:addNode(node_2_1_3)
           node_2:addNode(node_2_1)
     root:addNode(node_2)

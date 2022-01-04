@@ -7,7 +7,7 @@
 local ICondition = SimpleClassUtil:class()
 
 function ICondition:initialize()
-
+   --self:registerEvent()
 end
 
 function ICondition:initData(data)
@@ -18,4 +18,15 @@ function ICondition:doCondition(blackBoard,battleManager)
     return Enum_BT.Node_ResultType.Success
 end
 
+function ICondition:registerEvent()
+   --self._event_LV =  EventManager:AddListener(EventType.Diff_Lv,self.test,self)
+end
+
+function ICondition:unRegisterEvent()
+    --EventManager:RemoveListener(EventType.Diff_Lv,self._event_LV)
+end
+
+function ICondition:onExit()
+   self:unRegisterEvent()
+end
 return ICondition

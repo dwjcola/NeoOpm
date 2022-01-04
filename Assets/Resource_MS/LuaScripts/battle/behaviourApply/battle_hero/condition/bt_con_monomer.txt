@@ -9,7 +9,7 @@ local bt_con_monomer = SimpleClassUtil:class(ICondition)
 function bt_con_monomer:initData(data)
     self._skillTag = data.skillTag
     self._skillDistance = data.skillDistance
-    self._3d_skillDistance = data.skillDistance * 0.01
+    self._3d_skillDistance = data.skillDistance * 0.1
 end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param agent PVE_Config_Battle_Manager

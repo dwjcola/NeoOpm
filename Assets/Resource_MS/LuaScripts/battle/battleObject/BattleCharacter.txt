@@ -5,27 +5,30 @@
 ---@class BattleCharacter:SimpleClassUtil
 local BattleCharacter = SimpleClassUtil:class()
 
-function BattleCharacter:initialize(campType,index,battleManager,entityContext)
+function BattleCharacter:initialize(campType,index,battleManager,entityContext,heroData)
     self._campType = campType
     self._index_pos = index
     self._battleManager = battleManager
     self._entityContext = entityContext
-
+    self._heroData = heroData
+    self._heroId = heroData.heroId
+    Logger.Error( self._heroId)
     self:init()
 end
 
 function BattleCharacter:init()
     local data = {
-        _heroId = "hero101",
+        _heroId =  self._heroData.heroId,
         _campType = self._campType,
         _index_pos = self._index_pos,
         _position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(self._campType == Enum_Battle.Camp.CampSelf,self._index_pos)),
         _alive = true,
-        _anger = 100,
+        _anger = 0,
         _isUnPutSkill = false,
         _smallSkillIng = false,
         _bigSkillReady = false,
-        _isKeyDownBigSkill = true,
+        _isKeyDownBigSkill = false,
+
     }
     local agent = {
         _battleManager =  self._battleManager,
@@ -35,6 +38,13 @@ function BattleCharacter:init()
     self._logicTree = BehaviourTreeEntity:new({},data,agent)
 end
 
+function BattleCharacter:getData()
+    if self._logicTree and self._logicTree._blackboard then
+        return self._logicTree._blackboard
+    else
+        return {}
+    end
+end
 
 function BattleCharacter:update(dt)
     if  self._logicTree then

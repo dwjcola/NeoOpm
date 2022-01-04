@@ -3,7 +3,7 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/30 14:13
 ---@class bt_ac_controlled
-local bt_ac_controlled = SimpleClassUtil:class(ICondition)
+local bt_ac_controlled = SimpleClassUtil:class(IAction)
 
 function bt_ac_controlled:initData(data)
 

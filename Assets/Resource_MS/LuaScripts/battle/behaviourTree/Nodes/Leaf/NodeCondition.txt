@@ -38,4 +38,11 @@ function NodeCondition:setParameterList(list_parameterList)
     self._list_parameterList = list_parameterList or {}
 end
 
+
+function NodeCondition:onExit()
+    if self._iCondition and self._iCondition.onExit then
+        self._iCondition:onExit()
+    end
+end
+
 return NodeCondition

@@ -28,16 +28,18 @@ end
 function BattleEntityContext:initCharacters()
 
     local data = self._battleData
-    for i, v in pairs(data.team_enemy.teamMap) do
-        local index = tonumber(i)
-        self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self)
-    end
+
     for i, v in pairs(data.team_self.teamMap) do
         local index = tonumber(i)
-        local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self)
+        local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self,v)
         self._list_camp[Enum_Battle.Camp.CampSelf][index] = character
-
     end
+
+    for i, v in pairs(data.team_enemy.teamMap) do
+        local index = tonumber(i)
+        self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self,v)
+    end
+
 end
 
 function BattleEntityContext:update(dt)
@@ -59,16 +61,20 @@ function BattleEntityContext:getEnemyCamp(camp)
 end
 
 function BattleEntityContext:getEntityListByCamp(camp)
-   return self._list_camp[camp]
+   return self._list_camp[camp] or {}
 end
 ---@return BattleCharacter[]
 function BattleEntityContext:getEnemyEntityList(camp)
     local enemyCamp = self:getEnemyCamp(camp)
-    return self._list_camp[enemyCamp]
+    return self:getEntityListByCamp(enemyCamp)
 end
 
-function BattleEntityContext:getSelfEntityByIndex(index)
-    return self._list_camp[Enum_Battle.Camp.CampSelf][index]
+function BattleEntityContext:getSelfEntityByIndex(camp,index)
+    return self:getEntityListByCamp(camp)[index]
+end
+
+function BattleEntityContext:getEnemyEntityByIndex(camp,index)
+    return self:getEnemyEntityList(camp)[index]
 end
 
 return BattleEntityContext

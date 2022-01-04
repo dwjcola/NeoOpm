@@ -114,7 +114,7 @@ function BattleTeam:tryLoadRoot()
 end
 
 function BattleTeam:tryLoadLeftRole()
-    Logger.Error("临时得 to do 修改为正式得 ")
+    Logger.Error(" to do 修改为正式得 ")
     for i, v in pairs(self._teamData_self.teamMap) do
         local pos = i
         local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)
@@ -132,7 +132,7 @@ function BattleTeam:tryLoadLeftRole()
 end
 
 function BattleTeam:tryLoadRightRole()
-    Logger.Error("临时得 to do 修改为正式得 ")
+    Logger.Error(" to do 修改为正式得 ")
     for i, v in pairs(self._teamData_enemy.teamMap) do
         local pos = i
         local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)

@@ -15,6 +15,7 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._position = Vector3.zero --BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(self._campType == Enum_Battle.Camp.CampSelf,self._index_pos))
 
     self._alive = true
+
     self._anger = 0
 
 
@@ -39,6 +40,15 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._isExiled = false
     -- 击退
     self._isBeatBack = false
+
+    -- 当前仇恨值最高得 位置
+    self._enmityIndex = 0
+    -- 上次刷新仇恨列表的时间
+    self._time_enmity = 0
+    -- 仇恨值列表
+    self._enmity_map = {}
+    -- 攻击我的敌人列表
+    self._attackMe_map ={}
 
 end
 

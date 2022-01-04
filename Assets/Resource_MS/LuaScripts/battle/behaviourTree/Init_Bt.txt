@@ -53,8 +53,11 @@ NodeAction                 = require_path("NodeAction","battle/behaviourTree/Nod
 NodeCondition              = require_path("NodeCondition","battle/behaviourTree/Nodes/Leaf/NodeCondition")
 NodeConditionGroup         = require_path("NodeConditionGroup","battle/behaviourTree/Nodes/Leaf/NodeConditionGroup")
 
+ICondition                 = require_path("ICondition","battle/behaviourTree/Tasks/ICondition")
+IAction                    = require_path("IAction","battle/behaviourTree/Tasks/IAction")
 
 BehaviourTreeEntity        = require_path("BehaviourTreeEntity","battle/behaviourTree/BehaviourTreeEntity")
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 btConfigMap                 = require_path("btConfigMap","battle/behaviourConfig/btConfigMap")
 btApplyMap                  = require_path("btConfigMap","battle/behaviourApply/btApplyMap")

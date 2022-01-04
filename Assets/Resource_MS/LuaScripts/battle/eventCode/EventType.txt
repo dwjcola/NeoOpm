@@ -15,6 +15,12 @@ local EventType = {
 
     Event_BigSkillCanRelease = "",
     Event_BigSkillCannotRelease = "",
+    Event_Battle_Died = "",
+    Event_Battle_Be_Attack = "",
+
+    Event_Battle_Be_Attack_from_newEnemy = "", -- 这个人 不在攻击我得列表里
+    Event_Battle_EnmityChange = "",
+
 }
 
 --给所有的Event赋值

@@ -23,6 +23,7 @@ function NodeConditionGroup:setIConditionS(iConditionList,type)
 end
 
 function NodeConditionGroup:execute(blackBoard,battleManager)
+    self:log_enter("NodeConditionGroup    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self._iConditionList  then
         if self._relationType == Enum_BT.Condition_Relation.BT_AND then

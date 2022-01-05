@@ -36,6 +36,7 @@ function NodeParallel:onExit()
 end
 
 function NodeParallel:execute(blackboard,contextManager)
+    self:log_enter("NodeParallel    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local successCount = 0
     local list_childes = self:getChildes() or {}

@@ -30,6 +30,7 @@ function NodeDecoratorReturnFail:onExit()
 end
 
 function NodeDecoratorReturnFail:execute(blackboard,contextManager)
+    self:log_enter("NodeDecoratorReturnFail    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
     for i = 1, count do

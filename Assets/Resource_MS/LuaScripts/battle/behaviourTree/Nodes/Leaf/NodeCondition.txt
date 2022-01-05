@@ -21,6 +21,7 @@ function NodeCondition:setICondition(iCondition)
 end
 
 function NodeCondition:execute(blackBoard,battleManager)
+    self:log_enter("NodeCondition    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self._iCondition then
         resultType = self._iCondition:doCondition(blackBoard,battleManager)

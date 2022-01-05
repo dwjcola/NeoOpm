@@ -29,6 +29,7 @@ end
 
 
 function NodeDecoratorInverter:execute(blackboard,contextManager)
+    self:log_enter("NodeDecoratorInverter    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
     for i = 1, count do

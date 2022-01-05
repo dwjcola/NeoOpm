@@ -105,9 +105,12 @@ function NodeBase:postPosition(resultType)
       self:onExit()
    end
 end
+function NodeBase:log_enter(...)
+   Logger.warning(...)
+end
 
 function NodeBase:log(...)
-   Logger.warning(...)
+   --Logger.warning(...)
 end
 
 return NodeBase

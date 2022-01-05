@@ -12,8 +12,9 @@ function bt_con_compare_base:initData(compareData)
 end
 
 function bt_con_compare_base:doCondition(blackBoard,battleManager)
+    Logger.Error("===============  ._key == ",self._key)
    local v = blackBoard[self._key]
-    return v == self._compareTargetValue and  Enum_BT.Node_ResultType.Success or  Enum_BT.Node_ResultType.Fail
+   return v == self._compareTargetValue and  Enum_BT.Node_ResultType.Success or  Enum_BT.Node_ResultType.Fail
 end
 
 

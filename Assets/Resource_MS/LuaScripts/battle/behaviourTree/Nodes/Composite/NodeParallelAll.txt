@@ -38,6 +38,7 @@ function NodeParallelAll:onExit()
 end
 
 function NodeParallelAll:execute(blackboard,contextManager)
+    self:log_enter("NodeParallelAll    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local successCount = 0
     local failCount = 0

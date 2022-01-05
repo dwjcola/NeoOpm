@@ -39,6 +39,7 @@ end
 
 
 function NodeIfJudge:execute(blackboard,contextManager)
+    self:log_enter("NodeIfJudge    Entity: ",self:getEntityId())
     if self:getChildesCount() <= 0 then
         return Enum_BT.Node_ResultType.Fail
     end
@@ -59,7 +60,6 @@ function NodeIfJudge:execute(blackboard,contextManager)
         end
         resultType = self:executeNode(nodeBase,blackboard,contextManager)
     end
-
     self:log("NodeIfJudge    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end

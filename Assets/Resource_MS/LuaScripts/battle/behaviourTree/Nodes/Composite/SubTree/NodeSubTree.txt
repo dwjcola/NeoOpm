@@ -28,7 +28,7 @@ end
 
 
 function NodeSubTree:execute(blackboard,contextManager)
-
+    self:log_enter("NodeSubTree    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self:getChildesCount() <= 0 then
         return resultType

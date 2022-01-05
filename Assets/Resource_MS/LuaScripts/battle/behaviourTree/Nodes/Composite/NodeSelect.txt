@@ -32,6 +32,7 @@ end
 
 
 function NodeSelect:execute(blackboard,contextManager)
+    self:log_enter("NodeSelect    Entity: ",self:getEntityId())
     local index = 1
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()

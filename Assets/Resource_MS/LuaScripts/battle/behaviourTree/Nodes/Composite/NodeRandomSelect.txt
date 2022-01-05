@@ -34,6 +34,7 @@ end
 
 
 function NodeRandomSelect:execute(blackboard,contextManager)
+    self:log_enter("NodeRandomSelect    Entity: ",self:getEntityId())
     local index = 0
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()

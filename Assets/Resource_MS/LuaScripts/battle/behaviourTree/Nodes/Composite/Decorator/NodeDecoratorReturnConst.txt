@@ -29,6 +29,7 @@ function NodeDecoratorReturnConst:onExit()
 end
 
 function NodeDecoratorReturnConst:execute(blackboard,contextManager)
+    self:log_enter("NodeDecoratorReturnConst    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
     for i = 1, count do

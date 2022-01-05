@@ -3,6 +3,7 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
+local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
 ---@class NodeAction : NodeLeaf
 local NodeAction = SimpleClassUtil:class(NodeLeaf)
 

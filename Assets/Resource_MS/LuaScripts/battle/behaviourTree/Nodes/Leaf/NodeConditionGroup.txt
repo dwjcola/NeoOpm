@@ -3,6 +3,7 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 条件节点(叶节点)
+local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
 ---@class NodeConditionGroup : NodeLeaf
 local NodeConditionGroup = SimpleClassUtil:class(NodeLeaf)
 

@@ -23,6 +23,19 @@ function BattleEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self:initCharacters()
 
+    self:test()
+end
+
+
+function BattleEntityContext:test()
+    --local base = testBase:new()
+
+    local test_2 = test_2:new()
+    test_2:addList({ x = 1})
+    --local test_4 = test_4:new()
+    --test_2:addList(test_4)
+    test_2:addList({ x = 1})
+    Logger.ErrorTable(test_2._test_list)
 end
 
 function BattleEntityContext:initCharacters()

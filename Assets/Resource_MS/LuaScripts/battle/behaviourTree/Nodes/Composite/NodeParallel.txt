@@ -11,7 +11,7 @@
 ---       如果没有节点  返回 Fail，
 ---       如果所有节点都返回 Success 向父节点返回 Success 否则向父节点返回 Running
 ---
-
+local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeParallel : NodeComposite
 local NodeParallel = SimpleClassUtil:class(NodeComposite)
 

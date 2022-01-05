@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/8 1:02
 ---  修饰节点_返回Success
 ---       执行节点，无论节点返回 Success、Fail、Running 执行结束后永远向父节点返回 Success
----
+local NodeDecoratorReturnConst =  require_path("NodeDecoratorReturnConst","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorReturnConst")
 ---@class NodeDecoratorReturnSuccess : NodeDecoratorReturnConst
 local NodeDecoratorReturnSuccess = SimpleClassUtil:class(NodeDecoratorReturnConst)
 

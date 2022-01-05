@@ -3,6 +3,7 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 1:02
 ---  直到为Fail修饰节点， 一直执行节点，直到返回结果为 Fail。
+local NodeDecoratorUntil = require_path("NodeDecoratorUntil","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorUntil")
 ---@class NodeDecoratorUntilFail : NodeDecoratorUntil
 local NodeDecoratorUntilFail = SimpleClassUtil:class(NodeDecoratorUntil)
 

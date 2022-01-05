@@ -13,54 +13,6 @@ function CreateUtils:isLeafNode(type)
     --end
     return type == Enum_BT.Node_Type.Action or type == Enum_BT.Node_Type.Condition
 end
----@return NodeBase
-function CreateUtils:getNode(nodeValue)
-    if nodeValue and nodeValue._type then
-        if nodeValue._type == Enum_BT.Node_Type.Select then
-            return NodeSelect:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Sequence then
-            return NodeSequence:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Random then
-            return NodeRandomSelect:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Random_Sequence then
-            return NodeRandomSequence:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Random_Priority then
-            return NodeRandomPriority:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Parallel then
-            return NodeParallel:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Parallel_Select then
-            return NodeParallelSelect:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Parallel_All then
-            return NodeParallelAll:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.IF_Judge then
-            return NodeIfJudge:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Decorator_Inverter then
-            return NodeDecoratorInverter:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Decorator_Repeat then
-            return NodeDecoratorRepeat:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Decorator_Return_Fail then
-            return NodeDecoratorReturnFail:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Decorator_Return_Success then
-            return NodeDecoratorReturnSuccess:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Decorator_Until_Fail then
-            return NodeDecoratorUntilFail:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Decorator_Until_Success then
-            return NodeDecoratorUntilSuccess:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Condition then
-            return NodeCondition:new()
-        elseif type == Enum_BT.Node_Type.ConditionGroup then
-            return NodeConditionGroup:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Action then
-            return NodeAction:new()
-        elseif nodeValue._type == Enum_BT.Node_Type.Sub_Tree then
-            return NodeSubTree:new()
-        else
-            Logger.Error("未处理类型！！！！  ： " , tostring(nodeValue._type))
-        end
-    else
-        Logger.Error("数据不合法 ！！！！  ： " , tostring(nodeValue._type))
-    end
-end
 
 ---@return NodeBase
 function CreateUtils:getNodeByType(type,entityId)
@@ -132,12 +84,37 @@ function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
     return blackBoard
 end
 
+function CreateUtils:test()
+    ---@type NodeIfJudge
+    local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
+             ---@type NodeCondition  判断是否活着
+             local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000002")
+             --local condition_1 = btApplyMap:getClass("bt_con_compare_base")
+             --condition_1:initData({ _compareType = Enum_BT.CompareType.BT_BOOL, _key = "_alive", _compareTargetValue = false, })
+             --node_1:setICondition(condition_1)
+    root:addNode(node_1)
+    Logger.Error(root._list_nodeChild)
+            ---@type NodeDecoratorRepeat
+            local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
+            --node_2:setRepeatCount(-1)
+            --local nodeAction = self:getNodeByType(Enum_BT.Node_Type.Action,"0000004")
+            --    local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_log")
+            --    nodeAction:setIAction(ac_2_1_3_2_1)
+            --node_2:addNode(nodeAction)
+    root:addNode(node_2)
+    Logger.Error(root._list_nodeChild)
+    return root
+end
+
 function CreateUtils:createTree(heroId,sceneData,data)
+
     if heroId == "hero102" then
-        local node_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"000000-1")
+        local node_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"*********")
         local action_3 = btApplyMap:getClass("bt_ac_died")
         node_3:setIAction(action_3)
         return  node_3
+    else
+        return self:test()
     end
     ---@type NodeIfJudge
     local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
@@ -161,24 +138,24 @@ function CreateUtils:createTree(heroId,sceneData,data)
                             node_2_1_2:addNode(self:createBigSkillJudgeTree())
                             node_2_1_2:addNode(self:createBigSkillTree())
                 node_2_1:addNode(node_2_1_2)
-                       --local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
-                --            ---@type NodeConditionGroup
-                --            local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
-                --                  local con_2_1_3_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
-                --                  local con_2_1_3_1_2 = btApplyMap:getClass("bt_con_enmityCd")
-                --                        con_2_1_3_1_2:initData({cdTime = 10000})
-                --                  local con_2_1_3_1_3 = btApplyMap:getClass("bt_onReceive")
-                --                        con_2_1_3_1_3:initData({eventId = EventType.Event_Battle_Died})
-                --                  local con_2_1_3_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
-                --                        con_2_1_3_1_4:initData()
-                --            node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
-                --      node_2_1_3:addNode(node_2_1_3_1)
-                --            ---@type NodeAction
-                --            local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
-                --                  local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
-                --            node_2_1_3_2:setIAction(ac_2_1_3_2_1)
-                --      node_2_1_3:addNode(node_2_1_3_2)
-                --node_2_1:addNode(node_2_1_3)
+                       local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
+                            ---@type NodeConditionGroup
+                            local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
+                                  local con_2_1_3_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
+                                  local con_2_1_3_1_2 = btApplyMap:getClass("bt_con_enmityCd")
+                                        con_2_1_3_1_2:initData({cdTime = 10000})
+                                  local con_2_1_3_1_3 = btApplyMap:getClass("bt_onReceive")
+                                        con_2_1_3_1_3:initData({eventId = EventType.Event_Battle_Died})
+                                  local con_2_1_3_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
+                                        con_2_1_3_1_4:initData()
+                            node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
+                      node_2_1_3:addNode(node_2_1_3_1)
+                            ---@type NodeAction
+                            local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
+                                  local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
+                            node_2_1_3_2:setIAction(ac_2_1_3_2_1)
+                      node_2_1_3:addNode(node_2_1_3_2)
+                node_2_1:addNode(node_2_1_3)
           node_2:addNode(node_2_1)
     root:addNode(node_2)
     ---------------------------------------------------------------------------------

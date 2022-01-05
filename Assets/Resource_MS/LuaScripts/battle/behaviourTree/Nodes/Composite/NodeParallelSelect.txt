@@ -9,7 +9,7 @@
 ---       当前执行节点返回 Running, 记录当前节点，继续执行下一个节点，记录所有返回 Running 的节点
 ---       当前执行节点返回 Fail，继续执行下一个节点
 ---      如果没有节点返回 Success，  Running 的节点数大于 0 向父节点返回 Running 否则向父节点返回 Fail
-
+local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeParallelSelect : NodeComposite
 local NodeParallelSelect = SimpleClassUtil:class(NodeComposite)
 

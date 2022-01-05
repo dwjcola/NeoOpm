@@ -4,7 +4,7 @@
 --- DateTime: 2021/12/7 23:45
 --- 组合节点
 ---
-
+--local NodeBase =  require_path("NodeBase","battle/behaviourTree/Nodes/AbstractNode/NodeBase")
 ---@class NodeComposite : NodeBase
 local NodeComposite = SimpleClassUtil:class(NodeBase)
 
@@ -12,14 +12,17 @@ function NodeComposite:initialize(nodeType)
     self.super:initialize()
     ---@type NodeBase[]
     self._list_nodeChild = {}
-
     self:setNodeType(nodeType)
 end
 ---@param node NodeBase
 function NodeComposite:addNode(node)
-    local count = #self._list_nodeChild or 0
-    node:setNodeIndex(count + 1)
-    table.insert(self._list_nodeChild,node)
+    local count = #self._list_nodeChild
+    count = count + 1
+    node:setNodeIndex(count)
+    self._list_nodeChild[count] = node
+    Logger.Error(self:getEntityId())
+    Logger.ErrorTable( self._list_nodeChild)
+    --table.insert(self._list_nodeChild,node)
 end
 ---@return NodeBase[]
 function NodeComposite:getChildes()

@@ -13,8 +13,10 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
     self._heroData = heroData
     self._heroId = heroData.heroId
     --Logger.Error( self._heroId)
-    self:init()
+    --self:init()
+
 end
+
 
 function BattleCharacter:init()
     local data = {

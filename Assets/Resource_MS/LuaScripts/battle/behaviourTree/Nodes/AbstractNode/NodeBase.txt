@@ -106,11 +106,11 @@ function NodeBase:postPosition(resultType)
    end
 end
 function NodeBase:log_enter(...)
-   Logger.warning(...)
+   Logger.warning(" ########  enter:  ",...)
 end
 
 function NodeBase:log(...)
-   --Logger.warning(...)
+   Logger.warning(" ########  result:  ",...)
 end
 
 return NodeBase

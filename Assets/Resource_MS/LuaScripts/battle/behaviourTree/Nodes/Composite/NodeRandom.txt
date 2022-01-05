@@ -5,7 +5,7 @@
 ---  随机节点(组合节点)
 ---
 
-
+local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeRandom : NodeComposite
 local NodeRandom = SimpleClassUtil:class(NodeComposite)
 

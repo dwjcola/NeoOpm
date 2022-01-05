@@ -3,6 +3,7 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 1:02
 ---  取反修饰节点 Inverter        对子节点执行结果取反
+local NodeDecorator =  require_path("NodeDecorator","battle/behaviourTree/Nodes/Composite/NodeDecorator")
 ---@class NodeDecoratorInverter : NodeDecorator
 local NodeDecoratorInverter = SimpleClassUtil:class(NodeDecorator)
 

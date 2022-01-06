@@ -3,23 +3,23 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 1:02
 ---  修饰节点_返回 固定结果
-local NodeDecorator =  require_path("NodeDecorator","battle/behaviourTree/Nodes/Composite/NodeDecorator")
+--local NodeDecorator =  require_path("NodeDecorator","battle/behaviourTree/Nodes/Composite/NodeDecorator")
 ---@class NodeDecoratorReturnConst : NodeDecorator
 local NodeDecoratorReturnConst = SimpleClassUtil:class(NodeDecorator)
 
 function NodeDecoratorReturnConst:initialize(resultType)
-    self.super:initialize(resultType)
+    NodeDecorator.initialize(self,resultType)
     self._constResult = Enum_BT.Node_ResultType.Fail
     self._runningNode = 0
 
 end
 
 function NodeDecoratorReturnConst:onEnter()
-    self.super:onEnter()
+    NodeDecorator.onEnter(self)
 end
 
 function NodeDecoratorReturnConst:onExit()
-    self.super:onExit()
+    NodeDecorator.onExit(self)
     for i = 1, self:getChildesCount() do
         local value = 1 << i
         if (self._runningNode & value) > 0 then

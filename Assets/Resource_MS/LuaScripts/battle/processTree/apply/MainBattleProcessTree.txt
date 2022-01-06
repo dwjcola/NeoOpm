@@ -5,7 +5,7 @@
 ---@class MainBattleProcessTree:ProcessTree
 local MainBattleProcessTree = SimpleClassUtil:class(ProcessTree)
 function MainBattleProcessTree:initialize()
-    self.super:initialize()
+    ProcessTree.initialize(self)
 
 end
 

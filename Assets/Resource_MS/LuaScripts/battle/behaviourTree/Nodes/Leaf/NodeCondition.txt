@@ -3,12 +3,12 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 条件节点(叶节点)
-local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
+--local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
 ---@class NodeCondition : NodeLeaf
 local NodeCondition = SimpleClassUtil:class(NodeLeaf)
 
 function NodeCondition:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Condition)
+    NodeLeaf.initialize(self,Enum_BT.Node_Type.Condition)
     ---@type ICondition 因为lua 无法定义 接口 所以带
     ---有 condition 方法得 表 就认为是 ICondition
     self._iCondition = nil

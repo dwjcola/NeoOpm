@@ -3,12 +3,12 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 1:02
 ---  直到为Success修饰节点， 一直执行节点，直到返回结果为 Success。
-local NodeDecoratorUntil = require_path("NodeDecoratorUntil","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorUntil")
+--local NodeDecoratorUntil = require_path("NodeDecoratorUntil","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorUntil")
 ---@class NodeDecoratorUntilSuccess : NodeDecoratorUntil
 local NodeDecoratorUntilSuccess = SimpleClassUtil:class(NodeDecoratorUntil)
 
 function NodeDecoratorUntilSuccess:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Decorator_Until_Fail)
+    NodeDecoratorUntil.initialize(self,Enum_BT.Node_Type.Decorator_Until_Fail)
     self:setDesiredResult(Enum_BT.Node_ResultType.Success)
 end
 

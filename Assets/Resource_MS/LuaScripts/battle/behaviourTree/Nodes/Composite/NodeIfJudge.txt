@@ -14,12 +14,12 @@
 ---      或者
 ---      第一个节点返回 Fail 执行第二个节点
 ---      第一个节点返回 Success 执行第三个节点
-local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeIfJudge : NodeComposite
 local NodeIfJudge = SimpleClassUtil:class(NodeComposite)
 
 function NodeIfJudge:initialize()
-    self.super:initialize(Enum_BT.Node_Type.IF_Judge)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.IF_Judge)
     ---@type NodeBase
     self._lastRunningNode = nil
     ---@type IfJudgeData[]
@@ -27,11 +27,11 @@ function NodeIfJudge:initialize()
 end
 
 function NodeIfJudge:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
 end
 
 function NodeIfJudge:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -44,11 +44,9 @@ function NodeIfJudge:execute(blackboard,contextManager)
     if self:getChildesCount() <= 0 then
         return Enum_BT.Node_ResultType.Fail
     end
-    Logger.ErrorTable(self:getChildes())
     local resultType = Enum_BT.Node_ResultType.Fail
 
     local ifNode = self:getChildesByIndex(1)
-    Logger.Error("ifNode  ****** ", ifNode:getEntityId())
     resultType = self:executeNode(ifNode,blackboard,contextManager)
 
     --local nodeBase = self:getBaseNode(resultType)

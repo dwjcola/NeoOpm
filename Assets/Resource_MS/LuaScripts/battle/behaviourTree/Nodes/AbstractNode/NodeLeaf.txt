@@ -3,12 +3,12 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
-local NodeBase =  require_path("NodeBase","battle/behaviourTree/Nodes/AbstractNode/NodeBase")
+--local NodeBase =  require_path("NodeBase","battle/behaviourTree/Nodes/AbstractNode/NodeBase")
 ---@class NodeLeaf : NodeBase
 local NodeLeaf = SimpleClassUtil:class(NodeBase)
 
 function NodeLeaf:initialize(nodeType)
-    self.super:initialize()
+    NodeBase.initialize(self)
     self:setNodeType(nodeType)
 end
 

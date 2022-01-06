@@ -4,22 +4,22 @@
 --- DateTime: 2021/12/8 1:02
 ---  修饰节点_返回Success
 ---       执行节点，无论节点返回 Success、Fail、Running 执行结束后永远向父节点返回 Success
-local NodeDecoratorReturnConst =  require_path("NodeDecoratorReturnConst","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorReturnConst")
+--local NodeDecoratorReturnConst =  require_path("NodeDecoratorReturnConst","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorReturnConst")
 ---@class NodeDecoratorReturnSuccess : NodeDecoratorReturnConst
 local NodeDecoratorReturnSuccess = SimpleClassUtil:class(NodeDecoratorReturnConst)
 
 function NodeDecoratorReturnSuccess:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Decorator_Return_Success)
+    NodeDecoratorReturnConst.initialize(self,Enum_BT.Node_Type.Decorator_Return_Success)
     self._runningNode = 0
 end
 
 function NodeDecoratorReturnSuccess:onEnter()
-    self.super:onEnter()
+    NodeDecoratorReturnConst.onEnter(self)
     self._runningNode = 0
 end
 
 function NodeDecoratorReturnSuccess:onExit()
-    self.super:onExit()
+    NodeDecoratorReturnConst.onExit(self)
     for i = 1, self:getChildesCount() do
         local value = 1 << i
         if (self._runningNode & value) > 0 then

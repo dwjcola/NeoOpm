@@ -7,7 +7,7 @@
 local BlackBoard_BattleBase = SimpleClassUtil:class(BlackBoard)
 
 function BlackBoard_BattleBase:initialize(contextManager)
-    self.super:initialize()
+    BlackBoard.initialize(self)
     self._heroId = "hero101"
     self._campType = Enum_Battle.Camp.CampEnemy
     self._index_pos = 1

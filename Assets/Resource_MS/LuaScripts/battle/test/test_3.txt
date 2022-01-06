@@ -6,7 +6,7 @@
 local test_3 = SimpleClassUtil:class(test_1)
 
 function test_3:initialize()
-    self.super:initialize()
+    test_1.initialize(self)
 end
 
 return test_3

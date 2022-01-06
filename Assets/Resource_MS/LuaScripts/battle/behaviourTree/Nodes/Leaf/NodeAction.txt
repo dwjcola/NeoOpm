@@ -3,12 +3,12 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
-local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
+--local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
 ---@class NodeAction : NodeLeaf
 local NodeAction = SimpleClassUtil:class(NodeLeaf)
 
 function NodeAction:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Action)
+    NodeLeaf.initialize(self,Enum_BT.Node_Type.Action)
     ---@type IAction 因为lua 无法定义 接口 所以带有 doAction 方法得 表 就认为是 IAction
     self._iAction = nil
     self._list_parameterList = {}

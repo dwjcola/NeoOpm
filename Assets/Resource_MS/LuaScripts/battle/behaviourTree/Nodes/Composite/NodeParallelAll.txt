@@ -11,24 +11,24 @@
 ---       如果所有节点都返回 Fail 或者 有一个 Fail向父节点返回 Fail
 ---       否则一定有节点返回了Running 向父节点返回 Running
 ---
-local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeParallelAll : NodeComposite
 local NodeParallelAll = SimpleClassUtil:class(NodeComposite)
 
 function NodeParallelAll:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Parallel_All)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.Parallel_All)
 
     self._runningNode = 0
 
 end
 
 function NodeParallelAll:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
     self._runningNode = 0
 end
 
 function NodeParallelAll:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     for index, nodeChild in ipairs(self:getChildes()) do
         local value =  1 << index
         if (self._runningNode & value) > 0 then

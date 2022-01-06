@@ -8,24 +8,24 @@
 ---         顺序执行所有子节点(记为 1 次)，不关心节点返回结果
 ---         如果 执行次数 < 配置执行次数 向父节点返回 Running
 ---         如果 执行次数 >= 配置执行次数 向父节点返回 Success
-local NodeDecorator =  require_path("NodeDecorator","battle/behaviourTree/Nodes/Composite/NodeDecorator")
+--local NodeDecorator =  require_path("NodeDecorator","battle/behaviourTree/Nodes/Composite/NodeDecorator")
 ---@class NodeDecoratorRepeat : NodeDecorator
 local NodeDecoratorRepeat = SimpleClassUtil:class(NodeDecorator)
 
 function NodeDecoratorRepeat:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Decorator_Repeat)
+    NodeDecorator.initialize(self,Enum_BT.Node_Type.Decorator_Repeat)
     self._runningNode = 0
     self._repeatCount = 0
     self._executeCount = 0
 end
 
 function NodeDecoratorRepeat:onEnter()
-    self.super:onEnter()
+    NodeDecorator.onEnter(self)
     self:reStart()
 end
 
 function NodeDecoratorRepeat:onExit()
-    self.super:onExit()
+    NodeDecorator.onExit(self)
     self:reStart()
 
     for i = 1, self:getChildesCount() do

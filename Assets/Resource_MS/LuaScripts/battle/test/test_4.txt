@@ -3,10 +3,10 @@
 --- Created by liuyubao.
 --- DateTime: 2022/1/5 16:47
 --local test_2 = require_path("testBase","battle/test/test_2")
-local test_4 = SimpleClassUtil:class(test_1)
+local test_4 = SimpleClassUtil:class(test_3)
 
 function test_4:initialize()
-    self.super:initialize()
+    test_3.initialize(self)
 end
 
 return test_4

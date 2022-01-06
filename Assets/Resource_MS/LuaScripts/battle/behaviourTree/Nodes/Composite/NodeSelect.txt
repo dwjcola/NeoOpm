@@ -8,22 +8,22 @@
 ---      当前执行节点返回 Fail，退出当前节点继续执行下一个节点
 ---      当前执行节点返回 Running, 记录当前节点，向父节点返回 Running，下次执行直接从该节点开始
 ---      如果所有节点都返回Fail，执行完所有节点后向父节点返回 Fail
-local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeSelect : NodeComposite
 local NodeSelect = SimpleClassUtil:class(NodeComposite)
 
 function NodeSelect:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Select)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.Select)
     ---@type NodeBase
     self._lastRunningNode = nil
 end
 
 function NodeSelect:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
 end
 
 function NodeSelect:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil

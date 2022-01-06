@@ -5,13 +5,15 @@
 
 --local testBase = require_path("testBase","battle/test/testBase")
 local test_1 = SimpleClassUtil:class(testBase)
+
 function test_1:initialize()
-    self.super:initialize()
+    testBase.initialize(self)
+
     self._test_list = {}
 end
 
+
 function test_1:addList(testBase)
-    Logger.error(self._test_list)
     local count = #self._test_list + 1
     self._test_list[count] = {}
 end

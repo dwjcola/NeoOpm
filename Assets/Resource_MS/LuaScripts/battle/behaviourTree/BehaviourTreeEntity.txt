@@ -55,13 +55,13 @@ function BehaviourTreeEntity:getRootNode()
 end
 
 function BehaviourTreeEntity:execute(dt)
-    --if self._rootNode and not self._tree_end then
-    --    self._rootNode:prePosition()
-    --    local  resultType = self._rootNode:execute(self._blackboard, self._agent)
-    --    self._rootNode:postPosition(resultType)
-    --
-    --    self:postPosition(resultType)
-    --end
+    if self._rootNode and not self._tree_end then
+        self._rootNode:prePosition()
+        local  resultType = self._rootNode:execute(self._blackboard, self._agent)
+        self._rootNode:postPosition(resultType)
+
+        self:postPosition(resultType)
+    end
 end
 
 function BehaviourTreeEntity:postPosition(resultType)

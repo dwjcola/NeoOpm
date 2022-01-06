@@ -9,7 +9,7 @@
 local NodeComposite = SimpleClassUtil:class(NodeBase)
 
 function NodeComposite:initialize(nodeType)
-    self.super:initialize()
+    NodeBase:initialize(self)
     ---@type NodeBase[]
     self._list_nodeChild = {}
     self:setNodeType(nodeType)
@@ -20,8 +20,6 @@ function NodeComposite:addNode(node)
     count = count + 1
     node:setNodeIndex(count)
     self._list_nodeChild[count] = node
-    Logger.Error(self:getEntityId())
-    Logger.ErrorTable( self._list_nodeChild)
     --table.insert(self._list_nodeChild,node)
 end
 ---@return NodeBase[]

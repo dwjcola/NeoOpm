@@ -4,7 +4,7 @@
 --- DateTime: 2021/11/25 15:05
 ---
 GameStatic = require("GameStatic")
-
+class = require("MiddleClass")
 SimpleClassUtil = require("SimpleClassUtil")
 
 require("CSImport")

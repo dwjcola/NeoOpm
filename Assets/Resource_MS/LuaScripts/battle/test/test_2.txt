@@ -5,7 +5,7 @@
 --local testBase = require_path("testBase","battle/test/testBase")
 local test_2 = SimpleClassUtil:class(test_1)
 function test_2:initialize()
-    self.super:initialize()
+    test_1.initialize(self)
 end
 
 return test_2

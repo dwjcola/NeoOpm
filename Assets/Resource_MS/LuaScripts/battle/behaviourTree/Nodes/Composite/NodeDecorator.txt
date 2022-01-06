@@ -12,12 +12,12 @@
 --- Return Success  执行到此节点时返回成功
 --- Unitl Failure   直到失败，一直执行子节点
 --- Until Success   直到成功，一直执行子节点
-local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeDecorator : NodeComposite
 local NodeDecorator = SimpleClassUtil:class(NodeComposite)
 
 function NodeDecorator:initialize(nodeType)
-    self.super:initialize(nodeType)
+    NodeComposite.initialize(self,nodeType)
 end
 
 return NodeDecorator

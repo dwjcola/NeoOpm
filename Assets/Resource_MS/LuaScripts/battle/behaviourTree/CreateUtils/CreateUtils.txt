@@ -113,8 +113,8 @@ function CreateUtils:createTree(heroId,sceneData,data)
         local action_3 = btApplyMap:getClass("bt_ac_died")
         node_3:setIAction(action_3)
         return  node_3
-    else
-        return self:test()
+    --else
+    --    return self:test()
     end
     ---@type NodeIfJudge
     local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")

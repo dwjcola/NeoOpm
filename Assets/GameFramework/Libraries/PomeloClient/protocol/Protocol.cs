@@ -4,6 +4,7 @@ using LitJson;
 using System.Text;
 using pb = global::Google.Protobuf;
 using System.IO;
+using UnityEngine;
 
 namespace Pomelo.DotNetClient
 {
@@ -53,19 +54,34 @@ namespace Pomelo.DotNetClient
             return (int)value;
         }
 
-        static public int ReadInt64BE(byte[] buffer, int offset)
+        static public ulong ReadInt64BE(byte[] buffer, int offset)
         {
-            uint value =
-                (uint)(buffer[offset++] << 56) |
-                (uint)(buffer[offset++] << 48) |
-                (uint)(buffer[offset++] << 40) |
-                (uint)(buffer[offset++] << 32) |
-                (uint)(buffer[offset++]   << 24) |
-                (uint)(buffer[offset++] << 16) |
-                (uint)(buffer[offset++] << 8) |
-                (uint)(buffer[offset++]);
+            ulong a = buffer[offset++];
+            a = a << 56;
+            a = buffer[offset++];
+            a = a << 48;
+            a = buffer[offset++];
+            a = a << 40;
+            a = buffer[offset++];
+            a = a << 32;
+            a = buffer[offset++];
+            a = a << 24;
+            a = buffer[offset++];
+            a = a << 16;
+            a = buffer[offset++];
+            a = a << 8;
+            a = buffer[offset++];
+            ulong value =
+                (ulong)(buffer[offset++] << 56) |
+                (ulong)(buffer[offset++] << 48) |
+                (ulong)(buffer[offset++] << 40) |
+                (ulong)(buffer[offset++] << 32) |
+                (ulong)(buffer[offset++]   << 24) |
+                (ulong)(buffer[offset++] << 16) |
+                (ulong)(buffer[offset++] << 8) |
+                (ulong)(buffer[offset++]);
 
-            return (int)value;
+            return (ulong)value;
         }
 
         static public ushort ReadUShortBE(byte[] buffer, int offset)
@@ -136,7 +152,10 @@ namespace Pomelo.DotNetClient
             this.state = ProtocolState.working;
         }
 
-
+        internal void start()
+        {
+            this.transporter.start();
+        }
         /*internal void send(MessageType type, uint id, uint serviceId, JsonData msg)
         {
 
@@ -182,11 +201,11 @@ namespace Pomelo.DotNetClient
             if (pkg.type == PackageType.PKG_HEARTBEAT && this.state == ProtocolState.working)
             {
                 this.heartBeatService.resetTimeout();
-                /*if (!BitConverter.IsLittleEndian) {
-                    Array.Reverse(pkg.body);
-                }
-                ulong server_timestamp_ms = BitConverter.ToUInt64(pkg.body, 0);*/
-                //pc.ServerTimeResetCB?.Invoke((long)server_timestamp_ms);
+                pc.Log("heartbeat!!!!!!!!!!!!");
+                Array.Reverse(pkg.body);
+                ulong server_timestamp_ms = BitConverter.ToUInt64(pkg.body, 0);
+                pc.Log("-------------------"+server_timestamp_ms);
+                pc.ServerTimeResetCB?.Invoke((long)server_timestamp_ms);
             }
             else if (pkg.type == PackageType.PKG_DATA&& this.state == ProtocolState.working)
             {     

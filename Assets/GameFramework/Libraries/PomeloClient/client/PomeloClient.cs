@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using UnityEngine;
 using pb = global::Google.Protobuf;
 
 namespace Pomelo.DotNetClient
@@ -73,7 +74,7 @@ namespace Pomelo.DotNetClient
             }
         }
 
-
+        public Action<long> ServerTimeResetCB;
         public void AddMsg(Message msg)
         {
             msgQueue.Enqueue(msg);
@@ -141,6 +142,7 @@ namespace Pomelo.DotNetClient
                 {
                     this.socket.EndConnect(result);
                     this.protocol = new Protocol(this, this.socket);
+                    protocol.start();
                     NetWorkChanged(NetWorkState.CONNECTED);
                     taskCS.SetResult(true);
                 }
@@ -382,7 +384,7 @@ namespace Pomelo.DotNetClient
         private int connectPort;
         public Action<string> ReconnectCallBack;
         public Action DelayAndReconnect;
-        public Action<long> ServerTimeResetCB;
+        
         public async void reconnect()
         {
             //Debug.LogWarning("断线重连第"+reconnectCount+"次");
@@ -426,5 +428,9 @@ namespace Pomelo.DotNetClient
                 netWorkState = NetWorkState.ERROR;
             }
         }*/
+        public void Log(string msg)
+        {
+            Debug.LogError(msg);
+        }
     }
 }

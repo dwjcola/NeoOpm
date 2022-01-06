@@ -189,11 +189,11 @@ namespace Pomelo.DotNetClient
         }
         public void doHandle(byte[] buffer, int offset, byte bodyType)
         {
-            Code type = (Code)bodyType;
+            /*Code type = (Code)bodyType;
             if (type != Code.Protobufc && type != Code.Protobuf)
             {
                 return;
-            }
+            }*/
             string str = "";
             //MemoryStream m = new MemoryStream(buffer, offset, buffer.Length - offset);
             if (null != buffer)
@@ -221,11 +221,11 @@ namespace Pomelo.DotNetClient
         }
         public void doHandle(byte[] buffer, int offset, byte bodyType)
         {
-            Code type = (Code)bodyType;
+            /*Code type = (Code)bodyType;
             if (type != Code.Protobufc && type != Code.Protobuf)
             {
                 return;
-            }
+            }*/
             MemoryStream m = new MemoryStream(buffer, offset, buffer.Length - offset);
             
             callback?.Invoke(m.ToArray());

@@ -5,10 +5,10 @@ RPCLUA={};
 
 RPCLUA.test_Handle={};
 
--- requstMsg:"MessageTest2",结构的luatable 、
+-- requstMsg:"MessageTest",结构的luatable 、
 function RPCLUA.test_Handle.Test1(requstMsg,callback,backTable)--
 
-    PomeloCLUA:PbRequest(2000000, "MessageTest2",requstMsg,"MessageTest",callback,backTable);
+    PomeloCLUA:PbRequest(2000000, "MessageTest",requstMsg,"MessageTest",callback,backTable);
 end
 -- requstMsg:无参
 function RPCLUA.test_Handle.Test2(callback,backTable)--

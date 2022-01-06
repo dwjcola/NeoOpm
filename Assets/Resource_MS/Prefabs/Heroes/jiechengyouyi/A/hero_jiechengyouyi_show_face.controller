@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: hero_jiechengyouyi_show_face
+  m_Controller: {fileID: 9100000, guid: 2e4da7f8888f3f2479b4562d1f2c1abd, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 88b066a279c73174cbb07f9409dd19bd, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: ddf530a25a261794ab050d47a31ecbf1, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: be928d80b789bb542874ff2dd037bb00, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: b0f1335987820f044b71c564962d6220, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: bbe2c1344b4051b4fb512fa4040cfff7, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: 1929db65a67704f4a92d6e5a607253c8, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: 9ca0a532d9981bf4789b82263e57a81c, type: 2}
+    m_OverrideClip: {fileID: 0}
+  - m_OriginalClip: {fileID: 7400000, guid: b8f4da57e1356d846a1d865ba183637c, type: 2}
+    m_OverrideClip: {fileID: 0}

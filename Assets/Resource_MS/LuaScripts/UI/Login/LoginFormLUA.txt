@@ -4,7 +4,10 @@ Date: 2021-11-18
 Description:登录界面
 --]]
 LoginFormLUA=LUAUIBase:new({
-	ProcedureLogin = nil
+	ProcedureLogin = nil,
+	ServerInfo = nil,
+	CurrentServerInfo = nil,
+	lastClickTime = 0,--限制连点
 	});
 function LoginFormLUA:Open(param)
 	self:AddUIEventListener()
@@ -13,32 +16,176 @@ function LoginFormLUA:Open(param)
 end
 function LoginFormLUA:Init(param)
 	self.loginBtn.gameObject:SetActive(true)
+	self.bottom:SetActive(false)
+	self.inputGo:SetActive(true)
 	self.ProcedureLogin = param;
+	--开发阶段先手动输入账号方便测试
+	self.accLab.text = CS.ProHA.PlayerPreferenceData.LastAccName;
+	self:AddUIEvent("onclick", self.connectBtn.gameObject, self.ConnectLogin);
 end
-
-function LoginFormLUA:Login()
---[[	local s = string.format("%saaaaa","rr")
-	self:Error(s)
-	s = string.format("{0}aaa{1}bbb","rr","555")
-	s = self:GetDicValue("tid#HeroAdvanced002","a",2,0)
-	self.ttt.text = s;
-	self:Error(s)]]
-	if self.ProcedureLogin ~= nil then
-		self.ProcedureLogin:LoginGame();
+function LoginFormLUA:ConnectLogin()
+	if self.accLab.text == nil or self.accLab.text == "" then
+		self:Error("请输入账号")
+	else
+		if self.ProcedureLogin ~= nil then
+			local jsData = {}
+			--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
+			jsData.acc = self.accLab.text;
+			self:Log("acc->"..jsData.acc)
+			CS.ProHA.PlayerPreferenceData.LastAccName = self.accLab.text
+			self.ProcedureLogin:GetServerInfo(jsData);
+		end
 	end
+end
+function LoginFormLUA:Login()
+	if self.CurrentServerInfo ~= nil then
+		self:ConnectToServer(self.CurrentServerInfo.ip,self.CurrentServerInfo.port);
+	end
+	self:CloseUI("ServerListForm")
 --[[	local lv = ConfigReader:getDataByNameAndId("Hero_Level",1)
 	self:Error(lv.name)]]
 end
+function LoginFormLUA:ServerListBack(e)
+	self.inputGo:SetActive(false)
+	local res = e.Param1;
+	self.ServerInfo = {
+		AccId = tostring(res["acc_id"]),
+		Latest_sid = tonumber(res["latest_sid"]),
+		Latest_pid = tonumber(res["latest_pid"]),
+		Ip = tostring(res["ip"]),
+		Port = tonumber(res["port"]),
+		AreaInfos = res["svr_list"]
+	};
+	if self.ServerInfo.Latest_sid > 0 then
+		self:ConnectToServer(self.ServerInfo.Ip,self.ServerInfo.Port);
+	else
+		self.bottom:SetActive(true)
+		local lastServer = nil;
+		local tempId = 999999999;
+		for i, v in pairs(self.ServerInfo.AreaInfos) do
+			if v._id < tempId then
+				tempId = v._id;
+				lastServer = v;
+			end
+		end
+		if lastServer ~= nil then
+			self:ShowServerInfo(lastServer)
+		end
+	end
+end
+function LoginFormLUA:ConnectToServer(ip,port)
+	if self.ProcedureLogin ~= nil then
+		local now = self.ServerTime.CurrentTime()
+		--self:Error("登录点击间隔："..(now - self.lastClickTime))
+		if now - self.lastClickTime > 3000 then
+			self.lastClickTime = now;
+			--self:Error("登录连接....")
+			self.ProcedureLogin:ConnectServer(ip,port);
+		end
 
+	end
+end
+function LoginFormLUA:GetStatusStr(status)
+	if status == 0 then
+		return "<#00FF00>●正常</color>"
+	elseif status == 1 then
+		return "<#FF0000>●繁忙</color>"
+	elseif status == 2 then
+		return "<#000000>●维护</color>"
+	end
+end
+function LoginFormLUA:ShowServerInfo(info)
+	self.CurrentServerInfo = info;
+	self.serverName.text = self:GetStatusStr(info.status)..tostring(info._id).."服 "..info.sname;
+end
+function LoginFormLUA:ConnectSucc( )
+	LoginProxy:EnterServer(self.ServerInfo);
+	local msg = {
+		value_value_1 = "1111",
+		value_value_2 = 2,
+		value_value_3 = 3,
+		value_value_4 = MsgEnum.TestEnum.TEST4,
+		sm={
+			{
+				value_test1 = 11,
+				value_test2 = 22,
+				{
+					sb2_value1 = 33,
+					sb2_value2 = 44
+				}
+			},
+			{
+				value_test1 = 55,
+				value_test2 = 66,
+				{
+					sb2_value1 = 77,
+					sb2_value2 = 88
+				}
+			}
+		},
+		sm2={
+			{
+				value_test1 = 88,
+				value_test2 = 99,
+				{
+					sb2_value1 = 67,
+					sb2_value2 = 34
+				}
+			}
+		}
+	}
+	RPCLUA.test_Handle.Test1(msg,callback,function (obj,ReturnMsg)
+		if(ReturnMsg~=nil) then
+			CS.LC.Error(arg0.value_value_1);
+			CS.LC.Error(arg0.value_value_2);
+			CS.LC.Error(arg0.value_value_3);
+			CS.LC.Error(arg0.value_value_4);
+			for i, v in ipairs(arg0.sm) do
+				CS.LC.Error(v.value_test1);
+				CS.LC.Error(v.value_test2);
+				for _, vv in ipairs(v.sm) do
+					CS.LC.Error(vv.sb2_value1);
+					CS.LC.Error(vv.sb2_value2);
+				end
+
+				CS.LC.Error(v.sm2.value_test1);
+				CS.LC.Error(v.sm2.value_test2);
+				for _, vvv in ipairs(v.sm2.sm) do
+					CS.LC.Error(vvv.sb2_value1);
+					CS.LC.Error(vvv.sb2_value2);
+				end
+			end
+		end
+	end ,self)
+end
+function LoginFormLUA:EnterServerBack(rep)
+	rep = rep.Param1
+	--self:Error("EnterServerBack->"..rep.Result)
+	if rep.Result == -4 then
+		local param = {};
+		param.pl = self.ProcedureLogin
+		param.ServerInfo = self.ServerInfo
+		self.loginBtn.gameObject:SetActive(false)
+		self:OpenUI("CreateNameForm", param);
+	else
+		LoginProxy:UpdataPlayerData(rep)
+		self.ProcedureLogin:LoginGame();
+	end
+
+end
 --ui组件添加事件
 function LoginFormLUA:AddUIEventListener( )
 	self:AddUIEvent("onclick", self.loginBtn.gameObject, self.Login);
 end
 --模块添加全局事件
 function LoginFormLUA:AddEventListener( )
+	self:AddEvent("Get_server_list_back", self.ServerListBack);
+	self:AddEvent("Connect_server_succ",self.ConnectSucc)
 end
 --模块移除全局事件
 function LoginFormLUA:RemoveEventListener( )
+	self:RemoveEvent("Get_server_list_back", self.ServerListBack);
+	self:RemoveEvent("Connect_server_succ", self.ServerListBack);
 end
 function LoginFormLUA:CloseMe()
 	self:CloseUI("LoginFormLUA")

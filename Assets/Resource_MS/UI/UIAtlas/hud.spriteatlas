@@ -69,7 +69,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 4b71f7430394db449b31550065424828, type: 3}
   - {fileID: 21300000, guid: 353ccc43562ea9049b133bde6ba7166e, type: 3}
   - {fileID: 21300000, guid: d7d59393f4ea6ed4cbec34b36a307781, type: 3}
-  - {fileID: 21300000, guid: 351515d3e40956445944c7f0f2d296c7, type: 3}
   - {fileID: 21300000, guid: e8addcd36762f5b49b0008d9120975a7, type: 3}
   - {fileID: 21300000, guid: abf1ee644d48ce346a6d606711d95c76, type: 3}
   - {fileID: 21300000, guid: 84ffeca4c35aaf14fbeb53423210ad3d, type: 3}
@@ -115,7 +114,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: af43e1bbc598c484989419024bfc9461, type: 3}
   - {fileID: 21300000, guid: 07d2e91ce17a78448aed63fdbe1c47ef, type: 3}
   - {fileID: 21300000, guid: 76ef852ccfb44324c98d13c5891ec9ea, type: 3}
-  - {fileID: 21300000, guid: 4d0d73cd72220ba468bf826f2390bdaa, type: 3}
   - {fileID: 21300000, guid: 45ff880e2cd4cb74b912cebeed9e6459, type: 3}
   - {fileID: 21300000, guid: f01452fec35224f4092f81c4259ffc16, type: 3}
   - {fileID: 21300000, guid: d70e911f27eaf5e43a017d53cb586ea1, type: 3}
@@ -143,7 +141,6 @@ SpriteAtlas:
   - Panel_MainProcessBattle4_Hud
   - img_IdleReward5_Hud
   - Icon_Chat_Hud
-  - Panel_MainProcessMask_Hud
   - "_0019_\u4E3B\u754C\u9762_\u56FE\u6807_\u56FE\u9274"
   - Panel_MainProcessPoint4Off_Hud
   - "_0054_\u901A\u7528_\u56FE\u6807_\u5148\u624B\u503C_01"
@@ -189,7 +186,6 @@ SpriteAtlas:
   - Img_ActivityImg1_Hud
   - Panel_PlayerNameBg_Hud
   - Panel_MainProcessBattle1_Hud
-  - Panel_Bg_Hud
   - Panel_PlayerIconGrid2_Hud
   - img_IdleReward2_Hud
   - "_0063_\u5192\u9669_\u886C\u5E95_\u5934\u50CF_01"

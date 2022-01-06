@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using UnityEngine;
 
 namespace Pomelo.DotNetClient
 {
@@ -49,6 +50,7 @@ namespace Pomelo.DotNetClient
         {
             if (this.transportState != TransportState.closed)
             {
+                Debug.LogError("send buffer-->"+buffer.Length+"----"+buffer[0]);
                 this.asyncSend = socket.BeginSend(buffer, 0, buffer.Length, SocketFlags.None, new AsyncCallback(sendCallback), socket);
 
                 this.onSending = true;

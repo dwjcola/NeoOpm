@@ -37,15 +37,21 @@ namespace Pomelo.DotNetClient
                 return;
             }
 
-            //Send heart beat
-            protocol.sendHeartbeat();
-            //Debug.LogError(string.Format("============================3============================send heart beat{0}", DateTime.Now));
+            sendHeartBeat();
+
         }
 
+        private void sendHeartBeat()
+        {
+            //Send heart beat
+            protocol.sendHeartbeat();
+            protocol.getPomeloClient().Log("send heartbeat!!!!!!");
+            //Debug.LogError(string.Format("============================3============================send heart beat{0}", DateTime.Now));
+        }
         public void start()
         {
             if (interval < 1000) return;
-
+            sendHeartBeat();
             //start hearbeat
             this.timer = new Timer();
             timer.Interval = interval;

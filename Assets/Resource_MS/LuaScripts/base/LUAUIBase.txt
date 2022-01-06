@@ -5,7 +5,6 @@ Description:所有UI的base类
 --]]
 LUAUIBase={
 };
-
 function LUAUIBase:new (o)
   o = o or {}
   self.__index = self

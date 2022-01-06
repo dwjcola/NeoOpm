@@ -2,19 +2,33 @@
 --将代码写在Start和end之间，否则回被生成工具覆盖掉
 --===== @Head end==============================================================
 PushEventLUA={ serviceId={
-OnEvent1=300000;
-OnEvent2=300001;
+OnEvent1=500000;
 
 };}
 function PushEventLUA:InitOn()
 
         self.OnEvent1=PomeloCLUA:PBOnEvent(self.serviceId.OnEvent1,"MessageTest",function(niltable,arg0)
             --===== OnEvent1 start============================================================
+                CS.LC.Error(arg0.value_value_1);
+                CS.LC.Error(arg0.value_value_2);
+                CS.LC.Error(arg0.value_value_3);
+                CS.LC.Error(arg0.value_value_4);
+                for i, v in ipairs(arg0.sm) do
+                        CS.LC.Error(v.value_test1);
+                        CS.LC.Error(v.value_test2);
+                        for _, vv in ipairs(v.sm) do
+                                CS.LC.Error(vv.sb2_value1);
+                                CS.LC.Error(vv.sb2_value2);
+                        end
+                        
+                        CS.LC.Error(v.sm2.value_test1);
+                        CS.LC.Error(v.sm2.value_test2);
+                        for _, vvv in ipairs(v.sm2.sm) do
+                                CS.LC.Error(vvv.sb2_value1);
+                                CS.LC.Error(vvv.sb2_value2);
+                        end
+                end
 		--===== OnEvent1 end==============================================================
-        end);
-        self.OnEvent2=PomeloCLUA:BuiltInOn(self.serviceId.OnEvent2,">i4",false,function(niltable,arg0)
-            --===== OnEvent2 start============================================================
-		--===== OnEvent2 end==============================================================
         end);
 end
 return PushEventLUA;

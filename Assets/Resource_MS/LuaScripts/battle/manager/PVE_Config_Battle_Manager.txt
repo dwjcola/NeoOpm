@@ -15,6 +15,8 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     self._interval = 0.033334
 
     self._battleTime = 0
+    --- 单位 ms
+    self._time = 0
 
     self._loop = 0
 
@@ -25,6 +27,8 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     self._battleTeam = battleTeam
 
 end
+
+
 
 function PVE_Config_Battle_Manager:start()
     self:formalInit()
@@ -45,6 +49,7 @@ end
 
 function PVE_Config_Battle_Manager:update(dt)
     if self._ready then
+        self._time =  self._time + dt * 1000
         if not self:_updateBattle(dt)  then
             self:_updateRender(dt)
         end
@@ -65,7 +70,6 @@ function PVE_Config_Battle_Manager:_updateBattle(dt)
         self:updateLogic(BattleConstant.FrameTime)
     end
     self._battleTime = actime
-
     -- 后续优化帧率，先打开所有
     do
         return false

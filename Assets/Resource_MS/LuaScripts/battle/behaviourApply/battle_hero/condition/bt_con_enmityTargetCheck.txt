@@ -10,17 +10,24 @@ function bt_con_enmityTargetCheck:initData()
 end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_con_enmityTargetCheck:doCondition(blackBoard,agent)
+    local result = Enum_BT.Node_ResultType.Fail
     if blackBoard._enmityIndex == 0 then
-        return Enum_BT.Node_ResultType.Success
+        result = Enum_BT.Node_ResultType.Success
+    else
+        --- @type BattleEntityContext
+        local _entityContext = agent._entityContext
+        --- @type BattleCharacter
+        local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
+
+        if _enemyEntity == nil or _enemyEntity:getData()._alive == false or  _enemyEntity:getData()._isCanBeSelected == false then
+            result = Enum_BT.Node_ResultType.Success
+        else
+            result = Enum_BT.Node_ResultType.Fail
+        end
     end
-    --- @type BattleEntityContext
-    local _entityContext = agent._entityContext
-    --- @type BattleCharacter
-    local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
-    if _enemyEntity == nil or _enemyEntity:getData()._alive == false or  _enemyEntity:getData()._isCanBeSelected == true then
-        return Enum_BT.Node_ResultType.Success
-    end
-    return Enum_BT.Node_ResultType.Fail
+
+    self:log("bt_con_enmityTargetCheck  ",result)
+    return result
 end
 
 

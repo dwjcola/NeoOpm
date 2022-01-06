@@ -30,7 +30,7 @@ function NodeConditionGroup:execute(blackBoard,battleManager)
         if self._relationType == Enum_BT.Condition_Relation.BT_AND then
             resultType =  Enum_BT.Node_ResultType.Success
             for i, v in ipairs(self._iConditionList) do
-                if not (v and v:doCondition(blackBoard,battleManager))  then
+                if v:doCondition(blackBoard,battleManager) == Enum_BT.Node_ResultType.Fail  then
                     resultType =  Enum_BT.Node_ResultType.Fail
                     break
                 end
@@ -38,7 +38,7 @@ function NodeConditionGroup:execute(blackBoard,battleManager)
         else
             resultType =  Enum_BT.Node_ResultType.Fail
             for i, v in ipairs(self._iConditionList) do
-                if v and v:doCondition(blackBoard,battleManager)  then
+                if  v:doCondition(blackBoard,battleManager) == Enum_BT.Node_ResultType.Success then
                     resultType =  Enum_BT.Node_ResultType.Success
                     break
                 end

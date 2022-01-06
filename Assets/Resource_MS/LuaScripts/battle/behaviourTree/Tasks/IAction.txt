@@ -18,4 +18,12 @@ function IAction:doAction(blackBoard,contextManager)
     return Enum_BT.Node_ResultType.Success
 end
 
+function IAction:log_enter(...)
+    --Logger.warning(" ########  enter:  ",...)
+end
+
+function IAction:log(...)
+    Logger.warning(" ########  result:  ",...)
+end
+
 return IAction

@@ -12,11 +12,11 @@ function bt_con_cd:initData(data)
 end
 ---@param battleManager PVE_Config_Battle_Manager
 function bt_con_cd:doCondition(blackBoard,battleManager)
-    local skillData = blackBoard[self._skillTag]
+    local skillData = blackBoard._skillData[self._skillTag]
     if skillData then
-        if skillData.playTime then
-            local time = skillData.playTime +  self._cdTime
-            return battleManager._battleTime >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
+        if skillData._skill_time_play then
+            local time = skillData._skill_time_play + skillData._skill_time_cd
+            return battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
         else
             Logger.log(" 技能数据 没有播放时间戳  ",tostring(self._skillTag))
             return Enum_BT.Node_ResultType.Success

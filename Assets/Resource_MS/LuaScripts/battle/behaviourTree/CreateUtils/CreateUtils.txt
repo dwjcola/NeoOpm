@@ -131,13 +131,8 @@ function CreateUtils:createTree(heroId,sceneData,data)
           node_2:setRepeatCount(-1)
                 ---@type NodeParallelAll
                 local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000004")
-                      -- 1.todo 先添加 被动技能
-                      -- 2.技能树
-                      ---@type NodeParallelAll 技能 行为
-                      local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
-                            node_2_1_2:addNode(self:createBigSkillJudgeTree())
-                            node_2_1_2:addNode(self:createBigSkillTree())
-                node_2_1:addNode(node_2_1_2)
+                       -- 1.todo 先添加 被动技能
+                       -- 仇恨值 目标计算
                        local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
                             ---@type NodeConditionGroup
                             local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
@@ -156,6 +151,12 @@ function CreateUtils:createTree(heroId,sceneData,data)
                             node_2_1_3_2:setIAction(ac_2_1_3_2_1)
                       node_2_1_3:addNode(node_2_1_3_2)
                 node_2_1:addNode(node_2_1_3)
+                       -- 2.技能树
+                       ---@type NodeParallelAll 技能 行为
+                       local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
+                              node_2_1_2:addNode(self:createBigSkillJudgeTree())
+                              node_2_1_2:addNode(self:createBigSkillTree())
+                node_2_1:addNode(node_2_1_2)
           node_2:addNode(node_2_1)
     root:addNode(node_2)
     ---------------------------------------------------------------------------------
@@ -256,7 +257,8 @@ function CreateUtils:createSmallSkillTree()
     ---@type NodeParallelAll
     local node = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000018")
 
-    node:addNode(self:createSelectSmallSkillTree())
+    --node:addNode(self:createSelectSmallSkillTree())
+
     node:addNode(self:createOrdinarySkillTree())
     return node
 end
@@ -337,10 +339,6 @@ function CreateUtils:createOrdinarySkillTree()
                             local condition_2_3_1_1 = btApplyMap:getClass("bt_con_baseControlled")
                       node_2_3_1:setIConditionS({condition_2_3_1_1},Enum_BT.Condition_Relation.BT_AND)
                 node_2_3:addNode(node_2_3_1)
-                      local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000032")
-                            local action_2_3_2 = btApplyMap:getClass("bt_ac_controlled")
-                            node_2_3_2:setIAction(action_2_3_2)
-                node_2_3:addNode(node_2_3_2)
                        ---@type NodeIfJudge 判断 有没有 寻路 目标
                        local node_2_3_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000033")
                               ---@type NodeConditionGroup
@@ -349,14 +347,7 @@ function CreateUtils:createOrdinarySkillTree()
                                     local condition_2_3_3_1_1 = btApplyMap:getClass("bt_con_isHadEnemyTarget")
                               node_2_3_3_1:setIConditionS({condition_2_3_3_1_1}, Enum_BT.Condition_Relation.BT_AND)
                        node_2_3_3:addNode(node_2_3_3_1)
-                              ---@type NodeAction
-                              local node_2_3_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035")
-                              ---@type bt_ac_way_finding
-                                    local action_2_3_3_2_1 = btApplyMap:getClass("bt_ac_way_finding")
-                                     action_2_3_3_2_1:initData({ })
-                              node_2_3_3_2:setIAction(action_2_3_3_2_1)
-
-                       node_2_3_3:addNode(node_2_3_3_2)
+                       node_2_3_3:addNode(self:createFindWayTree())
                               ---@type NodeAction
                               local node_2_3_3_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000036")
                                     ---@type bt_ac_way_finding
@@ -364,8 +355,33 @@ function CreateUtils:createOrdinarySkillTree()
                               node_2_3_3_3:setIAction(action_2_3_3_3_1)
                        node_2_3_3:addNode(node_2_3_3_3)
                 node_2_3:addNode(node_2_3_3)
+                       local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000032")
+                             local action_2_3_2 = btApplyMap:getClass("bt_ac_controlled")
+                        node_2_3_2:setIAction(action_2_3_2)
+                node_2_3:addNode(node_2_3_2)
+          node_2:addNode(node_2_3)
     node:addNode(node_2)
     return node
+end
+
+function CreateUtils:createFindWayTree()
+    ---@type NodeSequence
+    local node_2_3_3_2 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000035")
+          ---@type NodeAction
+          local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_1")
+                ---@type bt_ac_switchAnima
+                local ac_2_3_3_2_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
+                ac_2_3_3_2_1_1:initData({aniName = Enum_Battle.AniState.run,isReset = false,speed = 1})
+          node_2_3_3_2_1:setIAction(ac_2_3_3_2_1_1)
+    node_2_3_3_2:addNode(node_2_3_3_2_1)
+          ---@type NodeAction
+          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035")
+                ---@type bt_ac_way_finding
+                local action_2_3_3_2_2_1 = btApplyMap:getClass("bt_ac_way_finding")
+                action_2_3_3_2_2_1:initData({ })
+          node_2_3_3_2_2:setIAction(action_2_3_3_2_2_1)
+    node_2_3_3_2:addNode(node_2_3_3_2_2)
+    return node_2_3_3_2
 end
 
 return CreateUtils

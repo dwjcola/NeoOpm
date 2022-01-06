@@ -12,14 +12,17 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param battleManager PVE_Config_Battle_Manager
 function bt_con_baseControlled:doCondition(blackBoard,battleManager)
+    local result = Enum_BT.Node_ResultType.Fail
     local _isUnPutSkill =  blackBoard._isSwimmy
             or blackBoard._isExiled
             or blackBoard._isBeatBack
-    if _isUnPutSkill then
-        return Enum_BT.Node_ResultType.Success
+    if not _isUnPutSkill then
+        result = Enum_BT.Node_ResultType.Success
     else
-        return Enum_BT.Node_ResultType.Fail
+        result = Enum_BT.Node_ResultType.Fail
     end
+    self:log("bt_con_baseControlled ** ",result)
+    return result
 end
 
 

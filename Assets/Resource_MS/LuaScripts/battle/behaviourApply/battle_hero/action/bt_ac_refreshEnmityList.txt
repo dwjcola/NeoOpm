@@ -9,7 +9,7 @@ local bt_ac_refreshEnmityList = SimpleClassUtil:class(IAction)
 function bt_ac_refreshEnmityList:doAction(blackBoard,agent)
 
     -- todo 后期看是不是只需要知道 谁是仇恨值最大的 现在暂时保存所有的对象仇恨值
-    blackBoard._time_enmity = agent._battleManager._battleTime
+    blackBoard._time_enmity = agent._battleManager._time
     local targetIndex = blackBoard._enmityIndex
     --- @type BattleEntityContext
     local _entityContext = agent._entityContext
@@ -52,14 +52,18 @@ function bt_ac_refreshEnmityList:doAction(blackBoard,agent)
     end)
 
     local enmityObj = tmp_enmity_map[1]
-    if targetIndex ~= enmityObj.indexPos then
-        EventManager:Dispatch_battle(EventType.Event_Battle_EnmityChange)
+    if enmityObj then
+        if targetIndex ~= enmityObj.indexPos then
+            EventManager:Dispatch_battle(EventType.Event_Battle_EnmityChange)
+        end
+        blackBoard._enmityIndex = enmityObj.indexPos
+        blackBoard._enmity_map = tmp_enmity_map
+    else
+        blackBoard._enmityIndex = 0
+        blackBoard._enmity_map = {}
     end
-    blackBoard._enmityIndex = enmityObj.indexPos
-    blackBoard._enmity_map = tmp_enmity_map
 
-
-    Logger.ErrorTable(blackBoard)
+    --Logger.ErrorTable(blackBoard)
     return Enum_BT.Node_ResultType.Success
 end
 

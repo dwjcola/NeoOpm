@@ -21,6 +21,7 @@ btApplyMap.classPath = {
     ["bt_ac_way_finding"] = "battle/behaviourApply/battle_hero/action/bt_ac_way_finding",
     ["bt_ac_controlled"] = "battle/behaviourApply/battle_hero/action/bt_ac_controlled",
     ["bt_ac_refreshEnmityList"] = "battle/behaviourApply/battle_hero/action/bt_ac_refreshEnmityList",
+    ["bt_ac_switchAnima"] = "battle/behaviourApply/battle_hero/action/bt_ac_switchAnima",
 
 
 

@@ -13,23 +13,47 @@ function BattleRenderCharacter:initialize(data)
 
     self._heroId = data.heroId
 
+    self._uid = data.uid
+
     self:init()
 
 end
 
+function BattleRenderCharacter:getUid()
+    return self._uid
+end
+
 function BattleRenderCharacter:init()
+    self:initAnimationComponent()
+end
+---animation
+function BattleRenderCharacter:initAnimationComponent()
 
-    self._animatorSystem = AnimatorSystem:new(self._go_model)
-    --self._effectSystem = EffectSystem:new()
-    --self._audioSystem = AudioSystem:new()
+    self._animator = self._go_model.transform:GetComponent("Animator")
+
+    self._aniState = Enum_Battle.AniState.idle
+
+    self._ani_speed = 1
 end
 
-function BattleRenderCharacter:handleMsg(msgType,msg,data)
-
+function BattleRenderCharacter:getAnimationComponent()
+    return {
+        animator =  self._animator,
+        aniState = self._aniState,
+        ani_speed = self._ani_speed
+    }
 end
 
-function BattleRenderCharacter:handleMsg(msgType,msg,data)
+function BattleRenderCharacter:setAnimationComponent(aniState,ani_speed)
+    if aniState then
+        self._aniState = aniState
+    end
 
+    if ani_speed then
+        self._ani_speed = ani_speed
+    end
 end
+
+
 
 return BattleRenderCharacter

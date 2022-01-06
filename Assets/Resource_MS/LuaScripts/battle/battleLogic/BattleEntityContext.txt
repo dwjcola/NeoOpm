@@ -23,23 +23,10 @@ function BattleEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self:initCharacters()
 
-    --self:test()
+
 end
 
 
---function BattleEntityContext:test()
---    --local base = testBase:new()
---
---    local test_2 = test_2:new()
---    test_2:addList({ x = 1})
---
---    --table.insert( test_2._test_list ,{ x = 1})
---    local test_4 = test_4:new()
---    --test_2:addList(test_4)
---    test_2:addList({ x = 2})
---    --table.insert( test_2._test_list ,{ x = 2})
---    Logger.ErrorTable(test_2._test_list)
---end
 
 function BattleEntityContext:initCharacters()
 
@@ -47,13 +34,13 @@ function BattleEntityContext:initCharacters()
 
     for i, v in pairs(data.team_self.teamMap) do
         local index = i
-        local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self,v)
+        local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self,v,i)
         self._list_camp[Enum_Battle.Camp.CampSelf][index] = character
     end
 
     for i, v in pairs(data.team_enemy.teamMap) do
         local index = i
-        self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self,v)
+        self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self,v,index + 5)
     end
 
 end

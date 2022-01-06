@@ -12,17 +12,24 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param agent PVE_Config_Battle_Manager
 function bt_con_isHadEnemyTarget:doCondition(blackBoard,agent)
-    ---@type BattleEntityContext
-    local _entityContext = agent._entityContext
-    local _enemyList = _entityContext:getEnemyEntityList(blackBoard._campType)
-    for i, character in pairs(_enemyList) do
-        ---@type BlackBoard_BattleBase
-        local enemy_blackBoard =  character._logicTree._blackboard
-        if enemy_blackBoard._alive and enemy_blackBoard._isCanBeSelected then
-            return Enum_BT.Node_ResultType.Success
+    local result = Enum_BT.Node_ResultType.Fail
+    if blackBoard._enmityIndex == 0 then
+        result = Enum_BT.Node_ResultType.Fail
+    else
+        --- @type BattleEntityContext
+        local _entityContext = agent._entityContext
+        --- @type BattleCharacter
+        local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
+         -- todo 确认需不需要判断目标 能不能被选取
+        if _enemyEntity == nil or _enemyEntity:getData()._alive == false or  _enemyEntity:getData()._isCanBeSelected == false then
+            result = Enum_BT.Node_ResultType.Fail
+        else
+            result = Enum_BT.Node_ResultType.Success
         end
     end
-    return Enum_BT.Node_ResultType.Fail
+    self:log("bt_con_isHadEnemyTarget  ",result)
+    return result
+
 end
 
 

@@ -14,6 +14,7 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param agent PVE_Config_Battle_Manager
 function bt_con_monomer:doCondition(blackBoard,agent)
+    local result = Enum_BT.Node_ResultType.Fail
     local self_pos = blackBoard._position
     ---@type BattleEntityContext
     local _entityContext = agent._entityContext
@@ -24,11 +25,13 @@ function bt_con_monomer:doCondition(blackBoard,agent)
         if enemy_blackBoard._alive and enemy_blackBoard._isCanBeSelected then
             local dic = Vector3.Distance(self_pos,enemy_blackBoard._position)
             if dic <= self._3d_skillDistance then
-                return Enum_BT.Node_ResultType.Success
+                result =  Enum_BT.Node_ResultType.Success
+                break
             end
         end
     end
-    return Enum_BT.Node_ResultType.Fail
+    self:log("bt_con_monomer   ",result)
+    return result
 end
 
 

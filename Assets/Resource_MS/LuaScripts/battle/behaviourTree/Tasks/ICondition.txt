@@ -3,7 +3,7 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 接口ICondition
----@class ICondition : NodeLeaf
+---@class ICondition
 local ICondition = SimpleClassUtil:class()
 
 function ICondition:initialize()
@@ -29,4 +29,13 @@ end
 function ICondition:onExit()
    self:unRegisterEvent()
 end
+
+function ICondition:log_enter(...)
+    --Logger.warning(" ########  enter:  ",...)
+end
+
+function ICondition:log(...)
+    Logger.warning(" ########  result:  ",...)
+end
+
 return ICondition

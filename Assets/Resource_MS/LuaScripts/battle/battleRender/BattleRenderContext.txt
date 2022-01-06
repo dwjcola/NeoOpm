@@ -7,16 +7,22 @@
 local BattleRenderContext = SimpleClassUtil:class()
 
 function BattleRenderContext:initialize()
-   self._entityContext = BattleRenderEntityContext:new()
+   ---@type BattleRenderSystemContext
+   self._system_context = BattleRenderSystemContext:new()
+   ---@type BattleRenderEntityContext
+   self._entity_context = BattleRenderEntityContext:new()
 end
 
 function BattleRenderContext:init(blackBoard,battleData,battleManager)
-   self._entityContext:init(blackBoard,battleData,battleManager)
+
+   self._entity_context:init(blackBoard,battleData,battleManager)
+
+   self._system_context:init(self._entity_context._list_camp)
 end
 
 function BattleRenderContext:update(dt)
-   if self._entityContext then
-      self._entityContext:update(dt)
+   if self._entity_context then
+      self._entity_context:update(dt)
    end
 end
 

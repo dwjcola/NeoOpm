@@ -11,18 +11,20 @@ function bt_con_enmityCd:initData(data)
 end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_con_enmityCd:doCondition(blackBoard,agent)
+    local result = Enum_BT.Node_ResultType.Fail
+
     local time_enmity = blackBoard._time_enmity
     --- @type PVE_Config_Battle_Manager
     local battleManager = agent._battleManager
 
     if time_enmity and time_enmity > 0 then
         local time = time_enmity +  self._cdTime
-        Logger.Error(time,"     ",battleManager._battleTime)
-
-        return battleManager._battleTime >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
+        result = battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
     else
-        return Enum_BT.Node_ResultType.Success
+        result =  Enum_BT.Node_ResultType.Success
     end
+    self:log("bt_con_enmityCd : ",result)
+    return result
 end
 
 

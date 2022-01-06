@@ -316,9 +316,9 @@ function CreateUtils:createOrdinarySkillTree()
                 ---@type NodeConditionGroup
                 local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000028")
                        local condition_2_1_1 = btApplyMap:getClass("bt_con_baseControlled")
-                       ---@type bt_con_monomer
-                       local condition_2_1_2 = btApplyMap:getClass("bt_con_monomer")
-                       condition_2_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_5, skillDistance = 70 })
+                       ---@type bt_con_skillRange_to_enmity
+                       local condition_2_1_2 = btApplyMap:getClass("bt_con_skillRange_to_enmity")
+                       condition_2_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_5 })
                 local tmp_01 = {condition_2_1_1,condition_2_1_2}
                 node_2_1:setIConditionS(tmp_01,Enum_BT.Condition_Relation.BT_AND)
           node_2:addNode(node_2_1)
@@ -375,7 +375,7 @@ function CreateUtils:createFindWayTree()
           node_2_3_3_2_1:setIAction(ac_2_3_3_2_1_1)
     node_2_3_3_2:addNode(node_2_3_3_2_1)
           ---@type NodeAction
-          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035")
+          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_2")
                 ---@type bt_ac_way_finding
                 local action_2_3_3_2_2_1 = btApplyMap:getClass("bt_ac_way_finding")
                 action_2_3_3_2_2_1:initData({ })

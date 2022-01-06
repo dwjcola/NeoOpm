@@ -18,86 +18,10 @@ function MoveSystem:initialize(go_model)
     self:registerMsg()
 
 end
----@param Entity BattleRenderCharacter
-function MoveSystem:addEntity(Entity)
-    if Entity then
-        if self._entityMap[Entity:getUid()] then
-            Logger.error("重复添加 Entity :  ",Entity:getUid())
-            return
-        end
-        self._entityMap[Entity:getUid()] = Entity
-    end
-end
----@param Entity BattleRenderCharacter
-function MoveSystem:removeEntity(Entity)
-    if Entity then
-        if self._entityMap[Entity:getUid()] == nil then
-            Logger.error("Entity 已经从删除 :  ",Entity:getUid())
-            return
-        end
-        self._entityMap[Entity:getUid()] = nil
-    end
-end
----@return BattleRenderCharacter
-function MoveSystem:getEntityByUid(uid)
-    return self._entityMap[uid]
-end
 
-function MoveSystem:crossFade(animatorComponent,state,isReset,normalizedTransitionDuration)
-    if animatorComponent and animatorComponent.animator then
-        isReset = isReset or false
-        normalizedTransitionDuration = normalizedTransitionDuration or 0.2
-        if isReset then
-            if state == animatorComponent.status then
-                animatorComponent.animator:Play(state,0,0)
-            else
-                animatorComponent.animator:CrossFade(state,normalizedTransitionDuration )
-            end
-        else
-            if state == animatorComponent.status then
-                return
-            else
-                animatorComponent.animator:CrossFade(state,normalizedTransitionDuration )
-            end
-        end
-    end
-end
 
-function MoveSystem:setSpeed(animatorComponent,speed)
-    if animatorComponent and animatorComponent.animator and speed then
-        animatorComponent.animator.speed = speed
-    end
-end
+function MoveSystem:moveLineHandle(data)
 
-function MoveSystem:registerMsg()
-    for i, v in pairs(eventHandleMap) do
-        if i and v and self[v] then
-            self._eventListenerList[i] = EventManager:AddListener(i,self[v],self)
-        end
-    end
-end
-
-function MoveSystem:unRegisterMsg()
-    for i, v in pairs(self._eventListenerList) do
-        if i and v  then
-            EventManager:RemoveListener(i,v)
-        end
-    end
-end
-
-function MoveSystem:switchAniHandle(data)
-    local uid = data.uid
-    local aniState = data.aniName
-    local isReset = data.isReset
-    local speed = data.speed
-    local entity = self:getEntityByUid(uid)
-    if entity then
-        local animationComponent = entity:getAnimationComponent()
-        Logger.ErrorTable(animationComponent)
-        self:setSpeed(animationComponent,speed)
-        self:crossFade(animationComponent,aniState,isReset)
-        entity:setAnimationComponent(aniState,speed)
-    end
 end
 
 

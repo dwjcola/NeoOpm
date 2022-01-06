@@ -6,12 +6,19 @@
 local BattleCharacter = SimpleClassUtil:class()
 
 function BattleCharacter:initialize(campType,index,battleManager,entityContext,heroData,uid)
+
     self._campType = campType
+
     self._index_pos = index
+
     self._battleManager = battleManager
+
     self._entityContext = entityContext
+
     self._heroData = heroData
+
     self._heroId = heroData.heroId
+
     self._uid = uid
     --Logger.Error( self._heroId)
     self:init()
@@ -20,8 +27,13 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
 
 end
 
-
 function BattleCharacter:init()
+
+    local skill_5 = SkillData:new()
+    skill_5._skill_r = 1
+    skill_5._skillType = Enum_Battle.SkillTag.Skill_5
+    skill_5._skill_time_cd = 0
+
     local data = {
         _heroId =  self._heroData.heroId,
         _campType = self._campType,
@@ -33,8 +45,12 @@ function BattleCharacter:init()
         _smallSkillIng = false,
         _bigSkillReady = false,
         _isKeyDownBigSkill = false,
-        _uid = self._uid
+        _uid = self._uid,
+        _skillData = {
+           [Enum_Battle.SkillTag.Skill_5] = skill_5
+        }
     }
+
     local agent = {
         _battleManager =  self._battleManager,
         _entityContext = self._entityContext

@@ -37,6 +37,8 @@ btApplyMap.classPath = {
     ["bt_con_enmityTargetCheck"] = "battle/behaviourApply/battle_hero/condition/bt_con_enmityTargetCheck",
     ["bt_onBeAttack_isNotEnmity"] = "battle/behaviourApply/battle_hero/condition/bt_onBeAttack_isNotEnmity",
     ["bt_onReceive"] = "battle/behaviourApply/battle_hero/condition/bt_onReceive",
+    ["bt_con_skillRange_to_enmity"] = "battle/behaviourApply/battle_hero/condition/bt_con_skillRange_to_enmity",
+
 }
 
 

@@ -14,7 +14,7 @@ CreateUtils               =  require_path("CreateUtils","battle/behaviourTree/Cr
 BlackBoard                 = require_path("BlackBoard","battle/behaviourTree/Bt_Data/BlackBoard")
 
 BlackBoard_BattleBase      = require_path("BlackBoard_BattleBase","battle/behaviourTree/Bt_Data/BlackBoard_BattleBase")
-
+SkillData                  = require_path("SkillData","battle/behaviourTree/Bt_Data/SkillData")
 IfJudgeData                = require_path("IfJudgeData","battle/behaviourTree/Nodes/NodeAsset/IfJudgeData")
 ------- node ---------
 NodeBase                   = require_path("NodeBase","battle/behaviourTree/Nodes/AbstractNode/NodeBase")

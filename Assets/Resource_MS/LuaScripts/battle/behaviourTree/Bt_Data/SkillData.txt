@@ -5,7 +5,7 @@
 ---@class SkillData
 local SkillData = SimpleClassUtil:class()
 
-function SkillData:initialize()
+function SkillData:initialize(con)
     self._skillType = Enum_Battle.SkillTag.Skill_1
     -- 攻击距离
     self._skill_r = 1

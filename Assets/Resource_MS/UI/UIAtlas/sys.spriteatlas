@@ -51,11 +51,9 @@ SpriteAtlas:
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 21300000, guid: 5796a2d7458562540b866d26f7cac816, type: 3}
-  - {fileID: 21300000, guid: 5ae2348917329f74a8ef2573c5050e4f, type: 3}
   - {fileID: 21300000, guid: 710710f9f7f3a8b4db067f950b98e2e5, type: 3}
   m_PackedSpriteNamesToIndex:
   - img_loading_tiaodi
-  - btn_denglu_anniu
   - img_loading_tiao
   m_RenderDataMap: {}
   m_Tag: sys

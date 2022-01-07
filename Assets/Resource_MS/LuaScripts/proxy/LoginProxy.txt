@@ -8,15 +8,18 @@ LoginProxy=LUAUIBase:new({
 function LoginProxy:Init()
 	
 end
-function LoginProxy:EnterServer(ServerInfo)
-	local EnterServerReq = {}
+function LoginProxy:EnterServer(ServerInfo,cb,lua)
+	self:Error(ServerInfo.AccId)
+	cb(lua);
+--[[	local EnterServerReq = {}
 	EnterServerReq.AccId = ServerInfo.AccId;
 	self:Warning("RPCLUA.wfGate_Handler.EnterServer")
-	RPCLUA.wfGate_Handler.EnterServer(EnterServerReq,self.EnterServerBack,self)
-end
-function LoginProxy:EnterServerBack(rep)
-	self:Warning("RPCLUA.wfGate_Handler.EnterServer   back")
-	self:SendEvent("EnterServerBack",rep)
+	RPCLUA.wfGate_Handler.EnterServer(EnterServerReq,function(rep)
+		self:UpdataPlayerData(rep)
+		if cb ~= nil then
+			cb();
+		end
+	end,self)]]
 end
 --登录返回信息
 function LoginProxy:UpdataPlayerData(info)

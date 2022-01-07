@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Login
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 0
+      compressionQuality: 0
+      maxTextureSize: 0
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 669ec9d18f33ef645abcdd2a84978483, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6b022a206ce261849b86f5dae17b248e, type: 3}
+  - {fileID: 21300000, guid: e57a407133e14ee41a0c2dab763d3a70, type: 3}
+  - {fileID: 21300000, guid: 561e7c121adae7c408b8709581390819, type: 3}
+  - {fileID: 21300000, guid: 905eb34216fb7874f9b776f54b5e1787, type: 3}
+  - {fileID: 21300000, guid: d0d84f0364c8a23489649aa268e3194a, type: 3}
+  - {fileID: 21300000, guid: 44cb8d65beb65134391eaa48b6da8b71, type: 3}
+  - {fileID: 21300000, guid: 2cfeb806f95aae049a8af828ad7288a7, type: 3}
+  - {fileID: 21300000, guid: 28425f16f34e1d84797068938b4dc760, type: 3}
+  - {fileID: 21300000, guid: 0e415f68b9503174483dba802de158d7, type: 3}
+  - {fileID: 21300000, guid: bb51eda82fa63c14a96a947cbc55fcbb, type: 3}
+  - {fileID: 21300000, guid: cff51d0904f8a9b48affaa378ab50ee7, type: 3}
+  - {fileID: 21300000, guid: 0b6ad6197f5549747a0f31a7ebe1f6d0, type: 3}
+  - {fileID: 21300000, guid: 07a8524aa8b2252448121f6d7b852a7e, type: 3}
+  - {fileID: 21300000, guid: 6f5bd5eaff5779a4daff554d349c2d8d, type: 3}
+  - {fileID: 21300000, guid: 337d1bdbcd36f374288c73d2472038ed, type: 3}
+  - {fileID: 21300000, guid: 62f1acfb16897d842acea636388515e4, type: 3}
+  - {fileID: 21300000, guid: 959ce7ef5838b3248a7fa3b580f30d7e, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Panel_Loading_Login
+  - Img_Logo1_Login
+  - Btn_ServerChange_Login
+  - Panel_BottomBg_Login
+  - Icon_ServerState2_Login
+  - Img_LoadingBg_Login
+  - Icon_ServerState1_Login
+  - Img_Logo2_Login
+  - Panel_LoadingBg_Login
+  - Panel_Loading2_Login
+  - Icon_ServerState3_Login
+  - Img_Logo4_Login
+  - Img_Loading_Login
+  - Img_Logo3_Login
+  - img_TextInfo_Login
+  - Panel_UpdateInfoBg_Login
+  - Panel_ServerListBg_Login
+  m_RenderDataMap: {}
+  m_Tag: Login
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

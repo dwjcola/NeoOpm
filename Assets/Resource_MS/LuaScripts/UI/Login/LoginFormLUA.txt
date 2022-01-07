@@ -15,24 +15,23 @@ function LoginFormLUA:Open(param)
 	self:Init(param);
 end
 function LoginFormLUA:Init(param)
-	self.loginBtn.gameObject:SetActive(true)
-	self.bottom:SetActive(false)
-	self.inputGo:SetActive(true)
+	self.login:SetActive(false)
+	self.connect:SetActive(true)
 	self.ProcedureLogin = param;
 	--开发阶段先手动输入账号方便测试
-	self.accLab.text = CS.ProHA.PlayerPreferenceData.LastAccName;
+	self.input.text = CS.ProHA.PlayerPreferenceData.LastAccName;
 	self:AddUIEvent("onclick", self.connectBtn.gameObject, self.ConnectLogin);
 end
 function LoginFormLUA:ConnectLogin()
-	if self.accLab.text == nil or self.accLab.text == "" then
+	if self.input.text == nil or self.input.text == "" then
 		self:Error("请输入账号")
 	else
 		if self.ProcedureLogin ~= nil then
 			local jsData = {}
 			--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
-			jsData.acc = self.accLab.text;
+			jsData.acc = self.input.text;
 			self:Log("acc->"..jsData.acc)
-			CS.ProHA.PlayerPreferenceData.LastAccName = self.accLab.text
+			CS.ProHA.PlayerPreferenceData.LastAccName = self.input.text
 			self.ProcedureLogin:GetServerInfo(jsData);
 		end
 	end
@@ -46,12 +45,12 @@ function LoginFormLUA:Login()
 	self:Error(lv.name)]]
 end
 function LoginFormLUA:ServerListBack(e)
-	self.inputGo:SetActive(false)
+	self.login:SetActive(true)
+	self.connect:SetActive(false)
 	local res = e.Param1;
 	self.ServerInfo = {
 		AccId = tostring(res["acc_id"]),
-		Latest_sid = tonumber(res["latest_sid"]),
-		Latest_pid = tonumber(res["latest_pid"]),
+		Latest_sid = 0,
 		Ip = tostring(res["ip"]),
 		Port = tonumber(res["port"]),
 		AreaInfos = res["svr_list"]
@@ -59,12 +58,11 @@ function LoginFormLUA:ServerListBack(e)
 	if self.ServerInfo.Latest_sid > 0 then
 		self:ConnectToServer(self.ServerInfo.Ip,self.ServerInfo.Port);
 	else
-		self.bottom:SetActive(true)
 		local lastServer = nil;
 		local tempId = 999999999;
 		for i, v in pairs(self.ServerInfo.AreaInfos) do
-			if v._id < tempId then
-				tempId = v._id;
+			if v.id < tempId then
+				tempId = v.id;
 				lastServer = v;
 			end
 		end
@@ -86,21 +84,17 @@ function LoginFormLUA:ConnectToServer(ip,port)
 	end
 end
 function LoginFormLUA:GetStatusStr(status)
-	if status == 0 then
-		return "<#00FF00>●正常</color>"
-	elseif status == 1 then
-		return "<#FF0000>●繁忙</color>"
-	elseif status == 2 then
-		return "<#000000>●维护</color>"
-	end
+	return "Icon_ServerState"..status.."_Login"
 end
 function LoginFormLUA:ShowServerInfo(info)
 	self.CurrentServerInfo = info;
-	self.serverName.text = self:GetStatusStr(info.status)..tostring(info._id).."服 "..info.sname;
+	local status = self:GetStatusStr(info.status)
+	self:SetSprite(self.serverStatus,status)
+	self.serverName.text = tostring(info.id).."  "..info.sname;
 end
 function LoginFormLUA:ConnectSucc( )
-	LoginProxy:EnterServer(self.ServerInfo);
-	local msg = {
+	LoginProxy:EnterServer(self.ServerInfo,self.EnterServerBack,self);
+--[[	local msg = {
 		value_value_1 = "1111",
 		value_value_2 = 2,
 		value_value_3 = 3,
@@ -156,22 +150,10 @@ function LoginFormLUA:ConnectSucc( )
 				end
 			end
 		end
-	end ,self)
+	end ,self)]]
 end
-function LoginFormLUA:EnterServerBack(rep)
-	rep = rep.Param1
-	--self:Error("EnterServerBack->"..rep.Result)
-	if rep.Result == -4 then
-		local param = {};
-		param.pl = self.ProcedureLogin
-		param.ServerInfo = self.ServerInfo
-		self.loginBtn.gameObject:SetActive(false)
-		self:OpenUI("CreateNameForm", param);
-	else
-		LoginProxy:UpdataPlayerData(rep)
-		self.ProcedureLogin:LoginGame();
-	end
-
+function LoginFormLUA:EnterServerBack()
+	self.ProcedureLogin:LoginGame();
 end
 --ui组件添加事件
 function LoginFormLUA:AddUIEventListener( )

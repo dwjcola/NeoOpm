@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using XLua;
 
-namespace ProHA
+namespace NeoOPM
 {
    [RequireComponent(typeof(Image))]
    public class DicImage : MonoBehaviour
@@ -23,7 +23,6 @@ namespace ProHA
          
          LuaTable lt = XluaManager.instance.GetLua("TAtlas");
          string atlas = lt.Get<string>(image.sprite.name);
-         Debug.LogError(atlas+"---->"+image.sprite.name);
          LC.SetSprite(image,atlas,spriteName,IsNative);
       }
    }

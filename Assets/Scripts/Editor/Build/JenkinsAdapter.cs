@@ -716,7 +716,7 @@ public class JenkinsAdapter
     //}
     public static string GetVersion(string branchName="Dev")
     {
-        TextAsset text=AssetDatabase.LoadAssetAtPath<TextAsset>(ProHA.AssetUtility.ResourceRoot+"Configs/BuildInfo.txt");
+        TextAsset text=AssetDatabase.LoadAssetAtPath<TextAsset>(NeoOPM.AssetUtility.ResourceRoot+"Configs/BuildInfo.txt");
         var buildInfoJson= JsonMapper.ToObject(text.text);
         string version =(string)buildInfoJson["GameVersion"];
         version = string.IsNullOrEmpty(version) ? "1.0.0" : version;
@@ -750,7 +750,7 @@ public class JenkinsAdapter
         buildInfoJson["GameVersion"] = appVersion;
         buildVerJson[branchName]= appVersion;
         SaveFile(versionPath, JsonMapper.ToJson(buildVerJson));
-        SaveFile(ProHA.AssetUtility.ResourceRoot + "Configs/BuildInfo.txt", JsonMapper.ToJson(buildInfoJson));
+        SaveFile(NeoOPM.AssetUtility.ResourceRoot + "Configs/BuildInfo.txt", JsonMapper.ToJson(buildInfoJson));
         AssetDatabase.SaveAssets();
         return appVersion;
     }

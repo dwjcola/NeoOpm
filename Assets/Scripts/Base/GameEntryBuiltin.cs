@@ -8,7 +8,7 @@
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace ProHA
+namespace NeoOPM
 {
     /// <summary>
     /// 游戏入口。

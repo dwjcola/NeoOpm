@@ -7,7 +7,7 @@ namespace Pomelo.DotNetClient
         //0x75DD(2 Byte)  --Header(1 Byte)  --Length（4 Byte） --MsgId（2 Byte）  --requestId（2 Byte）
         public const int HEADER_LENGTH = 11;
         public const int HEADER_LENGTH_SC = 5;//返回包包头长度
-        public const int MSG_HEAD = 4;//服务器用包头
+        public const int MSG_HEAD = 0x75DD;//服务器用包头常量
 
         public static byte[] encodeHeartbeat()
         {
@@ -26,7 +26,7 @@ namespace Pomelo.DotNetClient
             byte[] buf = new byte[HEADER_LENGTH];
             int offset = 0;
             buf[offset++] = ((byte)(MSG_HEAD >> 8));
-            buf[offset++] = ((byte)MSG_HEAD);
+            buf[offset++] = ((byte)(MSG_HEAD & 255));
             buf[offset++] = ((byte)0);//预留1byte
             offset += MsgProtocol.WriteInt32BE(buf, offset, pkgBodyLen);
             uint srId = (serviceId << 16) | reqId;

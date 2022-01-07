@@ -19,7 +19,7 @@ function LoginFormLUA:Init(param)
 	self.connect:SetActive(true)
 	self.ProcedureLogin = param;
 	--开发阶段先手动输入账号方便测试
-	self.input.text = CS.ProHA.PlayerPreferenceData.LastAccName;
+	self.input.text = CS.NeoOPM.PlayerPreferenceData.LastAccName;
 	self:AddUIEvent("onclick", self.connectBtn.gameObject, self.ConnectLogin);
 end
 function LoginFormLUA:ConnectLogin()
@@ -31,7 +31,7 @@ function LoginFormLUA:ConnectLogin()
 			--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
 			jsData.acc = self.input.text;
 			self:Log("acc->"..jsData.acc)
-			CS.ProHA.PlayerPreferenceData.LastAccName = self.input.text
+			CS.NeoOPM.PlayerPreferenceData.LastAccName = self.input.text
 			self.ProcedureLogin:GetServerInfo(jsData);
 		end
 	end

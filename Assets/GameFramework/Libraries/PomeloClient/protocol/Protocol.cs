@@ -201,10 +201,8 @@ namespace Pomelo.DotNetClient
             if (pkg.type == PackageType.PKG_HEARTBEAT && this.state == ProtocolState.working)
             {
                 this.heartBeatService.resetTimeout();
-                pc.Log("heartbeat!!!!!!!!!!!!");
                 Array.Reverse(pkg.body);
                 ulong server_timestamp_ms = BitConverter.ToUInt64(pkg.body, 0);
-                pc.Log("-------------------"+server_timestamp_ms);
                 pc.ServerTimeResetCB?.Invoke((long)server_timestamp_ms);
             }
             else if (pkg.type == PackageType.PKG_DATA&& this.state == ProtocolState.working)
@@ -212,12 +210,12 @@ namespace Pomelo.DotNetClient
                 this.heartBeatService.resetTimeout();
                 pc.AddMsg(PackageProtocol.decode(pkg));
             }
-            else if (pkg.type == PackageType.PKG_KICK)
+            /*else if (pkg.type == PackageType.PKG_KICK)
             {
                 this.getPomeloClient().disconnect();
                 this.close(); 
                 //pc.ReconnectCallBack?.Invoke(PomeloClient.CLIENT_EVENT_DISCONNECT);
-            }
+            }*/
         }
 
 

@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace ProHA
+namespace NeoOPM
 {
     public abstract class ProcedureBase : GameFramework.Procedure.ProcedureBase
     {

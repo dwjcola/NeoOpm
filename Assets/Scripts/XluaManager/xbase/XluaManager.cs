@@ -124,7 +124,7 @@ public class XluaManager : Singleton<XluaManager>
               Log.Error("lua file{0}load failed!", className);
 #else
                 string path = "";
-                if (ProHA.GameEntry.Config.IsUseLocalConfig)
+                if (NeoOPM.GameEntry.Config.IsUseLocalConfig)
                 {
                     path = string.Format("{0}/config/configDataFile/{1}.txt", Application.streamingAssetsPath, className);
                 }
@@ -158,7 +158,7 @@ public class XluaManager : Singleton<XluaManager>
     {
         DoLuaString("LUAMain","base");
         luaMain = luaEnv.Global.Get<LuaTable>("LUAMain");
-        ProHA.GameEntry.CallLuaCom.SetMainLua(luaMain);
+        NeoOPM.GameEntry.CallLuaCom.SetMainLua(luaMain);
 #if HOTFIX_ENABLE
         Hotfix ( );
 #endif

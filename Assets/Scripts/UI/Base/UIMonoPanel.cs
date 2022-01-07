@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using XLua;
 
-namespace ProHA
+namespace NeoOPM
 {
     [AddComponentMenu("UIMonoPanel")]
     public class UIMonoPanel : UGuiForm

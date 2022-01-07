@@ -5,7 +5,7 @@
 // Feedback: mailto:ellan@gameframework.cn
 //------------------------------------------------------------
 
-namespace ProHA
+namespace NeoOPM
 {
     public class VersionInfo
     {

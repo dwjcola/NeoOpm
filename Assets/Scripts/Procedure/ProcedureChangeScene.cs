@@ -17,7 +17,7 @@ using UnityEngine.EventSystems;
 using System.Threading.Tasks;
 using XLua;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class ProcedureChangeScene : ProcedureBase
     {

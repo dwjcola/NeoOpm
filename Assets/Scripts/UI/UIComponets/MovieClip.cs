@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
     /// <summary>
     /// 序列帧动画播放器

@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class ServerTime : MonoBehaviour
 {

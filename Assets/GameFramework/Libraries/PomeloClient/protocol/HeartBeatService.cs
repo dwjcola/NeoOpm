@@ -45,7 +45,6 @@ namespace Pomelo.DotNetClient
         {
             //Send heart beat
             protocol.sendHeartbeat();
-            protocol.getPomeloClient().Log("send heartbeat!!!!!!");
             //Debug.LogError(string.Format("============================3============================send heart beat{0}", DateTime.Now));
         }
         public void start()

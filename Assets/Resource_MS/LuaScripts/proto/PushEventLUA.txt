@@ -2,7 +2,7 @@
 --将代码写在Start和end之间，否则回被生成工具覆盖掉
 --===== @Head end==============================================================
 PushEventLUA={ serviceId={
-OnEvent1=500000;
+OnEvent1=500;
 
 };}
 function PushEventLUA:InitOn()

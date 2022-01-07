@@ -9,20 +9,36 @@ function LoginProxy:Init()
 	
 end
 function LoginProxy:EnterServer(ServerInfo,cb,lua)
-	self:Error(ServerInfo.AccId)
-	cb(lua);
---[[	local EnterServerReq = {}
-	EnterServerReq.AccId = ServerInfo.AccId;
+	local requstMsg = {}
+	requstMsg.PfId = ServerInfo.AccId;
 	self:Warning("RPCLUA.wfGate_Handler.EnterServer")
-	RPCLUA.wfGate_Handler.EnterServer(EnterServerReq,function(rep)
+	RPCLUA.server_even.Login(requstMsg,function(l,rep)
 		self:UpdataPlayerData(rep)
 		if cb ~= nil then
-			cb();
+			cb(lua);
 		end
-	end,self)]]
+	end,self)
 end
+---@class LoginResp
+---@field GameUid number
+---@field ServerTime number
+---@field VerLow boolean
+---@field Profile UserProfile
+---@class UserProfile
+---@field Name string
+---@field Level number
+---@field Exp number
+---@field Diamond number
+---@field Gold number
+---@field Dust number
+---@field VipExp number
+---@field VipLevel number
+---@field SymCrystal number
+---@field DisCoin number
+
+---@param info LoginResp
 --登录返回信息
 function LoginProxy:UpdataPlayerData(info)
-	PlayerData:UpdateInfo(info.PlayerBaseInfo)
+	PlayerData:UpdateInfo(info)
 end
 return LoginProxy

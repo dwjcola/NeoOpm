@@ -4,7 +4,7 @@ using XLua;
 /**********************************************
 * @版本号：V1.00
 **********************************************/
-namespace ProHA
+namespace NeoOPM
 {
     [AddComponentMenu("UIMonoItem")]
     public class UIMonoItem : UGuiForm

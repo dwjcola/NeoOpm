@@ -7,7 +7,7 @@
 
 using UnityEngine;
 
-namespace ProHA
+namespace NeoOPM
 {
     /// <summary>
     /// 游戏入口。

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
     public static class WebUtility
     {

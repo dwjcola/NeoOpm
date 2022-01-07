@@ -67,7 +67,7 @@ end
 --hour:min
 --t: millseconds from 1970.1.1
 function formatTimeHM(t)
-    local date = CS.ProHA.ServerTime.GetStandardTime(t)
+    local date = CS.NeoOPM.ServerTime.GetStandardTime(t)
     return padzero(date.Hour,2) .. ":" .. padzero(date.Minute,2)
 end
 

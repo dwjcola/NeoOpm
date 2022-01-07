@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace ProHA
+namespace NeoOPM
 {
     public static partial class Constant
     {

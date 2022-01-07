@@ -9,8 +9,9 @@ message MessageTest {
     string ValueValue1 = 1;
     uint64 ValueValue2 = 2;
     int32 ValueValue3 = 3;
-    repeated SubMessage Sm = 4;
-    SubMessage Sm2 = 5;
+    TestEnum ValueValue4 = 4;
+    repeated SubMessage Sm = 5;
+    SubMessage Sm2 = 6;
 }
 message SubMessage {
     int32 ValueTest1 = 1;
@@ -25,4 +26,64 @@ message MessageTest2 {
         int32 Sb2Value1 = 1;
         int32 Sb2Value2 = 2;
     }
+}
+message LoginReq {
+    string Uuid = 1;
+    string DeviceId = 2;
+    string Lang = 3;
+    string PackageName = 4;
+    string DeviceInfo = 5;
+    string Pf = 6;
+    string PfId = 7;
+    string AppVersion = 8;
+    string Referrer = 9;
+    string PhoneMode = 10;
+    string PhoneVersion = 11;
+    int32 PhoneWidth = 12;
+    int32 PhoneHeight = 13;
+    int32 ServerId = 14;
+    string PfToken = 15;
+    int32 PfState = 16;
+    string InputIP = 17;
+}
+message LoginServiceResp {
+    int64 Uid = 1;
+    int32 ServerId = 2;
+    int32 DbId = 3;
+    int32 CurrentSid = 4;
+    int32 VisaTime = 5;
+    string Lang = 6;
+    string Country = 7;
+    int32 PinCode = 8;
+    int32 PinType = 9;
+    string AppVersion = 10;
+    string Pf = 11;
+    string PfId = 12;
+    string Ip = 13;
+    string Referrer = 14;
+    int32 UpdateFlag = 15;
+    string DeviceId = 16;
+    string PhoneMode = 17;
+    string PhoneVersion = 18;
+    int32 PhoneWidth = 19;
+    int32 PhoneHeight = 20;
+    bool ServerChanged = 21;
+}
+message LoginResp {
+    int64 GameUid = 1;
+    int64 ServerTime = 2;
+    bool VerLow = 3;
+    UserProfile Profile = 4;
+}
+message UserProfile {
+    string Name = 1;
+    int32 Level = 2;
+    int32 Exp = 3;
+    int32 Diamond = 4;
+    int32 Gold = 5;
+    int32 Dust = 6;
+    int32 VipExp = 7;
+    int32 VipLevel = 8;
+    int64 SymCrystal = 9;
+    int64 DisCoin = 10;
 }

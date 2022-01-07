@@ -4,7 +4,7 @@ using System;
 using GameFramework;
 using GameFramework.AddressableResource;
 
-namespace ProHA
+namespace NeoOPM
 {
 
 /// </summary>

@@ -7,9 +7,9 @@ namespace Pomelo.DotNetClient
         /*PKG_HANDSHAKE = 1,
         PKG_HANDSHAKE_ACK = 2,*/
         PKG_HEARTBEAT = 0,
-        PKG_KICK = 1,
-        PKG_DATA =2,
-        PKG_LEN = 3
+        //PKG_KICK = 1,
+        PKG_DATA =1,
+        PKG_LEN = 2
         
 
         //PKG_DATA_REQ        = 5 ,

@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Sprites;
 using UnityEngine.UI;
 
-namespace ProHA
+namespace NeoOPM
 {
    public class CircleImage : Image
    {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-namespace ProHA
+namespace NeoOPM
 {
 // 界面用的计时器基类
     public abstract class UITimerBase : MonoBehaviour

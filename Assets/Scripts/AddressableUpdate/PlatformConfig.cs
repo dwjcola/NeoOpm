@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Networking;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class PlatformConfig
     {

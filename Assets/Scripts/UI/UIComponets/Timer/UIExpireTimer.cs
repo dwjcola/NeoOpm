@@ -1,6 +1,6 @@
 ﻿using TMPro;
 using UnityEngine;
-namespace ProHA
+namespace NeoOPM
 {
 // 到期时间计时器
     public class UIExpireTimer : UITimerBase

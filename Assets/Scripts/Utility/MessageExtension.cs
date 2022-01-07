@@ -1,7 +1,7 @@
 ﻿
 using SLG;
 
-namespace ProHA
+namespace NeoOPM
 {
     public static class MessageExtension
     {

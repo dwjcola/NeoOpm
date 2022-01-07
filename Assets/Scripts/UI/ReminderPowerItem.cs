@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEngine.UI;
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
 
 public class ReminderPowerItem : ReminderItem

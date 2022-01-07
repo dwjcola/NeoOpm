@@ -13,11 +13,11 @@ using GameFramework.Procedure;
 using XLua;
 using GameFramework.UI;
 using Pomelo.DotNetClient;
-using ProHA;
+using NeoOPM;
 using Spine.Unity;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
-using GameEntry = ProHA.GameEntry;
+using GameEntry = NeoOPM.GameEntry;
 using Object = UnityEngine.Object;
 
 

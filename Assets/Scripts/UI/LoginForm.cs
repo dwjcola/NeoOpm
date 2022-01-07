@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityGameFramework.Runtime;
 using GameFramework.UI;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class LoginForm : UGuiForm
     {

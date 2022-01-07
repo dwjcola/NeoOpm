@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
 	public static class PlayerPreferenceData
 	{

@@ -20,7 +20,7 @@ using UnityGameFramework.Runtime;
 using XLua;
 using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedureManager>;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class ProcedureLogin : ProcedureBase
     {
@@ -71,7 +71,7 @@ namespace ProHA
             {
                 jsData[key.ToString()] = data[key].ToString();
             }
-            string url = "";
+            string url = ""; 
             GameEntry.UI.StartCoroutine(DownLoadGameServerList(jsData,url));*/
         }
         private IEnumerator DownLoadGameServerList(JsonData jsData,string uri)

@@ -41,7 +41,7 @@ function LUAUIBase:init()
   self.cs_coroutine=require("cs_coroutine")
   self.UIReminder=CS.UIReminder;
   self.EventTriggerListener=CS.GameFramework.UI.EventTriggerListener
-  self.ServerTime = CS.ProHA.ServerTime
+  self.ServerTime = CS.NeoOPM.ServerTime
 end
 
 function LUAUIBase:GetUILogicByKey(uiKey)
@@ -144,7 +144,7 @@ end
 function LUAUIBase:CloseUI(key)
   local lua=_G[key];
   if(lua==nil)then
-    local panel= self.TableTools.Tables.Panel:GetLineById(key);
+    local panel= TPanel[key];
     local luaname=(panel or {LuaName=""}).LuaName
     lua=_G[luaname]
   end
@@ -164,7 +164,7 @@ function LUAUIBase:CloseUI(key)
   return result;
 end
 --设置Image
----@param image UnityEngine.UI.Image
+---@param image CS.UnityEngine.UI.Image
 ---@param atls string
 ---@param name string
 ---@param native bool
@@ -228,7 +228,7 @@ function LUAUIBase:SetCloseData(table)
  self.CloseOpenData = table
 end
 function LUAUIBase:GetDicValue(key,...)
-  --return CS.ProHA.TableDic.GetDicValue(key,...);
+  --return CS.NeoOPM.TableDic.GetDicValue(key,...);
   return ConfigReader:GetDicValue(key,...)
 end
 function LUAUIBase:GetDicFormateValue(key,argsTable)
@@ -236,7 +236,7 @@ function LUAUIBase:GetDicFormateValue(key,argsTable)
   for i = 1, #argsTable do
     array[i-1] = argsTable[i]
   end
-  return self.ProHA.TableDic.GetDicFormateValue(key,array);
+  return self.NeoOPM.TableDic.GetDicFormateValue(key,array);
 end
 
   -- -- 创建Item
@@ -383,7 +383,7 @@ function LUAUIBase:split( str,reps )
   return resultStrList
 end
 function LUAUIBase:CheckSameDay(flag)
-  local s = CS.ProHA.PlayerPreferenceData.GetString(flag)
+  local s = CS.NeoOPM.PlayerPreferenceData.GetString(flag)
   local isSameDay = false
   if s ~= nil and s ~= "" then
     local time = tonumber(s)

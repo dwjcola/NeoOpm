@@ -10,12 +10,16 @@ function MainUILUA:Open(param)
 	self:Init();
 end
 function MainUILUA:Init()
-	local datas = {11,22,33,44,55,666,77,88,99}
+	self.name.text = PlayerData.Name
+	self.lv.text = PlayerData.Level
+	
+	
+	--local datas = {11,22,33,44,55,666,77,88,99}
 	--self.root:InitListLua(self,datas,"UpdateList");
 	
 	--self.tabs:SelectTab(1)
-	self:SetSprite(self.icon1,"Icon_Bag_Hud")
-	self:SetSprite(self.icon2,"Icon_Bag_Hud",true)
+	--self:SetSprite(self.icon1,"Icon_Bag_Hud")
+	--self:SetSprite(self.icon2,"Icon_Bag_Hud",true)
 
 --[[	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb{1}",1,2))
 	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{1}bbbbbb{0}",1,2))
@@ -25,7 +29,7 @@ function MainUILUA:Init()
 	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{{{{1eeeebbbbbb{0}",1,2))
 	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{{{1eeeebbbbbb{0}",1,2))]]
 	--self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb{1}",1))
-	self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb",1,2))
+	--self:Error(CS.GameFramework.Utility.Text.Format("aaaaa{0}bbbbbb",1,2))
 
 end
 function MainUILUA:UpdateList( item,data,index )

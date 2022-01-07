@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
     public static class CommonUtility
     {

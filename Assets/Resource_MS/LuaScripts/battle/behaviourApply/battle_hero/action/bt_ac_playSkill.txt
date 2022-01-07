@@ -9,28 +9,22 @@ local bt_ac_playSkill = SimpleClassUtil:class(IAction)
 function bt_ac_playSkill:initData(data)
     self._skillTag = data.skillTag
     self._heroId = data.heroId
-    self._skillFrameList = data.skillFrameList
+    self._skillFrameList = BattleUtils:getSkillFrameList(data.heroId,data.skillTag)
     self._frameCount = 0
-    self._maxFrameCount = 750
-    self._skillFrameList = {[30] =  1,[60] =  2,[90] =  3,
-                            [120] = 1,[150] = 2,[180] = 3,
-                            [210] = 1,[240] = 2,[270] = 3,
-                            [300] = 1,[330] = 2,[360] = 3,
-                            [390] = 1,[420] = 2,[450] = 3,
-                            [480] = 1,[510] = 2,[540] = 3,
-                            [570] = 1,[600] = 2,[630] = 3,
-                            [660] = 1,[690] = 2,[720] = 3,
-    }
+    self._maxFrameCount = 60
 end
 
 function bt_ac_playSkill:doAction(blackBoard,contextManager)
     self._frameCount =  self._frameCount + 1
     if self._frameCount > self._maxFrameCount then
+        self._frameCount = 0
         return Enum_BT.Node_ResultType.Success
     else
         local frameInfo = self._skillFrameList[self._frameCount]
         if frameInfo then
-            BattleLog.error(self._frameCount)
+            if frameInfo.attackType == 1 then
+                EventManager:Dispatch_battle(EventType.Event_Battle_Attack_Hp,{})
+            end
         end
         return Enum_BT.Node_ResultType.Running
     end

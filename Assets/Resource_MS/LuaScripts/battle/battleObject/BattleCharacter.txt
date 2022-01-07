@@ -28,14 +28,15 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
 end
 
 function BattleCharacter:init()
-
+    local rlist = {6,1}
     local skill_5 = SkillData:new()
-    skill_5._skill_r = 3
+    skill_5._skill_r = rlist[math.random(1,2)]
     skill_5._skillType = Enum_Battle.SkillTag.Skill_5
     skill_5._skill_time_cd = 0
 
     local data = {
         _heroId =  self._heroData.heroId,
+        _hp = 1000,
         _campType = self._campType,
         _index_pos = self._index_pos,
         _position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(self._campType == Enum_Battle.Camp.CampSelf,self._index_pos)),
@@ -46,9 +47,14 @@ function BattleCharacter:init()
         _bigSkillReady = false,
         _isKeyDownBigSkill = false,
         _uid = self._uid,
+        _moveSpeed = 0.5,
         _skillData = {
            [Enum_Battle.SkillTag.Skill_5] = skill_5
-        }
+        },
+        _volume_r = 1,
+        _place_r = 1,
+        _dislocation_r = 1,
+        _detection_r = 2,
     }
 
     local agent = {

@@ -20,13 +20,13 @@ function AnimatorSystem:crossFade(animatorComponent,state,isReset,normalizedTran
         isReset = isReset or false
         normalizedTransitionDuration = normalizedTransitionDuration or 0.2
         if isReset then
-            if state == animatorComponent.status then
+            if state == animatorComponent.aniState then
                 animatorComponent.animator:Play(state,0,0)
             else
                 animatorComponent.animator:CrossFade(state,normalizedTransitionDuration )
             end
         else
-            if state == animatorComponent.status then
+            if state == animatorComponent.aniState then
                 return
             else
                 animatorComponent.animator:CrossFade(state,normalizedTransitionDuration )

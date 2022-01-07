@@ -50,6 +50,29 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
 
 end
 
+function BattleUtils:getSkillFrameList(heroId,skillTag)
+    --todo 根据 heroId 和 skillTag 判断技能等级 对应的技能tag
+    return {
+        [10] = {
+           frameType = 1,
+           attackType = 1,
+           value = 100,
+        },
+        [24] = {
+            frameType = 1,
+            attackType = 1,
+            value = 100,
+        },
+        [41] = {
+            frameType = 1,
+            attackType = 1,
+            value = 100,
+        }
+
+    }
+end
+
+
 function BattleUtils:getTestBattleData()
     local params = {
         isOnlyLogic = false,
@@ -61,38 +84,38 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        --["1"] = {
-                        --    heroId = "101",
+                        --[1] = {
+                        --    heroId = "hero101",
                         --},
-                        --["2"] = {
-                        --    heroId = "101",
+                        --[2] = {
+                        --    heroId = "hero101",
                         --},
-                        --["3"] = {
-                        --    heroId = "101",
+                        --[3] = {
+                        --    heroId = "hero101",
                         --},
                         [4] = {
                             heroId = "hero101",
                         },
-                        --["5"] = {
-                        --    heroId = "101",
+                        --[5] = {
+                        --    heroId = "hero101",
                         --}
                     },
                 },
                 team_enemy = {
                     blockId = "block_20_10",
                     teamMap = {
-                        [1] = {
-                            heroId = "hero102",
-                        },
-                        [2] = {
-                            heroId = "hero102",
-                        },
-                        [3] = {
-                            heroId = "hero102",
-                        },
-                        [4] = {
-                            heroId = "hero102",
-                        },
+                        --[1] = {
+                        --    heroId = "hero102",
+                        --},
+                        --[2] = {
+                        --    heroId = "hero102",
+                        --},
+                        --[3] = {
+                        --    heroId = "hero102",
+                        --},
+                        --[4] = {
+                        --    heroId = "hero102",
+                        --},
                         [5] = {
                             heroId = "hero102",
                         }

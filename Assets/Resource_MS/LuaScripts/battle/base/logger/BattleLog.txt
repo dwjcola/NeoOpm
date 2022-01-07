@@ -13,9 +13,9 @@ function BattleLog.log(...)
 end
 
 function BattleLog.error(...)
-    if not GameStatic_Battle.BattleLog then
-        return
-    end
+    --if not GameStatic_Battle.BattleLog then
+    --    return
+    --end
     Logger.Error(...)
 end
 

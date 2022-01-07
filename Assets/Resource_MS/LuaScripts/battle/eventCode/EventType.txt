@@ -22,6 +22,10 @@ local EventType = {
     Event_Battle_EnmityChange = "",
     Event_Battle_Render_SwitchAni = "",   -- 切换动画
     Event_Battle_Render_Move_Line = "",   -- 直线移动
+
+
+
+    Event_Battle_Attack_Hp = "",
 }
 
 --给所有的Event赋值

@@ -83,12 +83,10 @@ function LoginFormLUA:ConnectToServer(ip,port)
 
 	end
 end
-function LoginFormLUA:GetStatusStr(status)
-	return "Icon_ServerState"..status.."_Login"
-end
+
 function LoginFormLUA:ShowServerInfo(info)
 	self.CurrentServerInfo = info;
-	local status = self:GetStatusStr(info.status)
+	local status = LoginProxy:GetStatusStr(info.status)
 	self:SetSprite(self.serverStatus,status)
 	self.serverName.text = tostring(info.id).."  "..info.sname;
 end
@@ -155,19 +153,28 @@ end
 function LoginFormLUA:EnterServerBack()
 	self.ProcedureLogin:LoginGame();
 end
+function LoginFormLUA:ShowServerList()
+	self:OpenUI("ServerListUI",self.ServerInfo.AreaInfos)
+end
+function LoginFormLUA:SelectOneServer(data)
+	self:ShowServerInfo(data.Param1)
+end
 --ui组件添加事件
 function LoginFormLUA:AddUIEventListener( )
-	self:AddUIEvent("onclick", self.loginBtn.gameObject, self.Login);
+	self:AddUIEvent("onclick", self.loginBtn, self.Login);
+	self:AddUIEvent("onclick", self.serverBtn, self.ShowServerList);
 end
 --模块添加全局事件
 function LoginFormLUA:AddEventListener( )
 	self:AddEvent("Get_server_list_back", self.ServerListBack);
 	self:AddEvent("Connect_server_succ",self.ConnectSucc)
+	self:AddEvent("select_one_server", self.SelectOneServer);
 end
 --模块移除全局事件
 function LoginFormLUA:RemoveEventListener( )
 	self:RemoveEvent("Get_server_list_back", self.ServerListBack);
 	self:RemoveEvent("Connect_server_succ", self.ServerListBack);
+	self:RemoveEvent("select_one_server", self.SelectOneServer);
 end
 function LoginFormLUA:CloseMe()
 	self:CloseUI("LoginFormLUA")

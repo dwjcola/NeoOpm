@@ -41,4 +41,7 @@ end
 function LoginProxy:UpdataPlayerData(info)
 	PlayerData:UpdateInfo(info)
 end
+function LoginProxy:GetStatusStr(status)
+	return "Icon_ServerState"..status.."_Login"
+end
 return LoginProxy

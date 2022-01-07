@@ -202,7 +202,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7b5b4c33007afa8419b815d42aee0f2e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 987bdf0596c6f444b86efb16762130c7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -338,6 +338,7 @@ MonoBehaviour:
   - connectBtn
   - connect
   - login
+  - serverBtn
   valueList:
   - {fileID: 119724}
   - {fileID: 2381967926044799423}
@@ -346,6 +347,7 @@ MonoBehaviour:
   - {fileID: 5440573497857339418}
   - {fileID: 8298519980729684477}
   - {fileID: 5697032210332081831}
+  - {fileID: 3731510122882817712}
   strkeyList: []
   strvalueList: []
 --- !u!1 &258687177232746829
@@ -707,7 +709,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -965,7 +967,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7b5b4c33007afa8419b815d42aee0f2e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 987bdf0596c6f444b86efb16762130c7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

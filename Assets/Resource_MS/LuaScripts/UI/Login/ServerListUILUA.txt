@@ -1,0 +1,88 @@
+--服务器列表界面
+ServerListUILUA=LUAUIBase:new({
+	init = false,
+	tabsData = {}
+	});
+
+function ServerListUILUA:Open(list)
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init(list);
+end
+function ServerListUILUA:Init(list)
+	
+	local num = 10
+	local temp = 0
+	local name = "1-10"
+	local servers = {}
+	self.tabsData = {{name="推 荐",data={list[1]}}}
+	
+	for i, v in ipairs(list) do
+		if i > temp then
+			name = (temp+1).."-"..(temp+10)
+			servers = {}
+			table.insert(self.tabsData,{name=name,data=servers})
+			temp = temp + num
+		end
+		table.insert(servers,v)
+	end
+	self.tabroot:InitListLua(self,self.tabsData,"UpdateItem");
+end
+
+function ServerListUILUA:UpdateItem(item,data,index)
+	item.name1.text = data.name
+	item.name2.text = data.name
+	if index == #self.tabsData-1 then--全部初始化完成再做监听
+		self:AddTabEvent(self.tabs,self.TabClick)
+		self.tabs:SelectTab(0)
+	end
+end
+function ServerListUILUA:TabClick(index)
+	local data = self.tabsData[index+1]
+	self:ShowServers(data.data)
+end
+
+function ServerListUILUA:ShowServers(list)
+	if not self.init then
+		self.serverroot:InitListLua(self,list,"UpdateServerItem");
+	else
+		self.serverroot:UpdateData(self,list);
+	end
+	
+end
+function ServerListUILUA:UpdateServerItem(item,data,index)
+	local status = LoginProxy:GetStatusStr(data.status)
+	self:SetSprite(item.status,status)
+	item.name.text = tostring(data.id).."  "..data.sname;
+	self:AddUIEvent("onclick", item.trans.gameObject, function ()
+		self:OnCloseMe();
+		self:SendEvent("select_one_server",data)
+	end);
+end
+--ui组件添加事件
+function ServerListUILUA:AddUIEventListener( )
+	
+	self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+end
+--模块添加全局事件
+function ServerListUILUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function ServerListUILUA:RemoveEventListener( )
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function ServerListUILUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("ServerListUI")
+		end
+	end
+end
+function ServerListUILUA:OnDestroy()
+	self:RemoveEventListener()
+	ServerListUILUA = nil;
+end
+return ServerListUILUA

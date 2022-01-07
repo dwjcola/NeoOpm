@@ -51,12 +51,14 @@ namespace NeoOPM
             temp["ip"] = "10.1.10.50";
             temp["port"] = 9039;
             list.Add(temp);
+            temp = new JsonData();
             temp["status"] = 2;
             temp["id"] = 10002;
             temp["sname"] = "猛龙过江";
             temp["ip"] = "10.1.10.50";
             temp["port"] = 9039;
             list.Add(temp);
+            temp = new JsonData();
             temp["status"] = 3;
             temp["id"] = 10003;
             temp["sname"] = "龙争虎斗";

@@ -73,7 +73,7 @@ namespace NeoOPM
 
         public void SelectTab(int index)
         {
-            //Debug.LogError(index+"-------"+m_Toggles.Count);
+            Debug.LogError(index+"-------"+m_Toggles.Count);
             if (index < m_Toggles.Count && index >= 0)
             {
                 m_Toggles[index].isOn = true;

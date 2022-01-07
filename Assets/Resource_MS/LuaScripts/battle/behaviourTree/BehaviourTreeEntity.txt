@@ -29,7 +29,7 @@ function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
     self._rootNode = CreateUtils:createTree(self._blackboard._heroId,{},{})
 
     if self._rootNode == nil then
-        Logger.Error("行为树 初始化失败")
+        BattleLog.error("行为树 初始化失败")
     end
     --self:logTree(self._rootNode," ")
     return self._rootNode
@@ -37,7 +37,7 @@ end
 ---@param rootNode NodeBase
 function BehaviourTreeEntity:logTree(rootNode,strHead)
     if rootNode and rootNode.getEntityId and rootNode.getNodeType then
-        Logger.Error("\n" .. strHead  ,rootNode:getEntityId(),"  ",rootNode:getNodeType())
+        BattleLog.error("\n" .. strHead  ,rootNode:getEntityId(),"  ",rootNode:getNodeType())
         if rootNode._list_nodeChild and #rootNode._list_nodeChild > 0 then
             for i, v in ipairs(rootNode._list_nodeChild) do
                 self:logTree(v,strHead ..  "   ")

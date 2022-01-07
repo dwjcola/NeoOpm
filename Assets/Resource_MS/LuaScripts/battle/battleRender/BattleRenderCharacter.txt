@@ -54,6 +54,10 @@ function BattleRenderCharacter:setAnimationComponent(aniState,ani_speed)
     end
 end
 
-
+function BattleRenderCharacter:setPosition(newPos)
+    if newPos then
+        self._go_model.transform.position = newPos
+    end
+end
 
 return BattleRenderCharacter

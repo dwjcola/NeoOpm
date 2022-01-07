@@ -59,7 +59,7 @@ end
 function PVE_Config_Battle_Manager:_updateBattle(dt)
     local actime = self._battleTime + dt
     self._loop = 0
-    -- Logger.filter("PVEBattle","_updateBattle",dt,actime)
+    -- BattleLog.filter("PVEBattle","_updateBattle",dt,actime)
     while actime >= self._interval and self._loop < self._maxLoop do
         actime = actime - self._interval
         self._loop = self._loop + 1
@@ -91,7 +91,7 @@ end
 
 function PVE_Config_Battle_Manager:_updateRender(dt)
     local interpolation = self._battleTime / self._interval
-    --Logger.filter("BattleManager.updateBattle",1000*dt,interpolation)
+    --BattleLog.filter("BattleManager.updateBattle",1000*dt,interpolation)
     self:updateRender(dt * 1000, interpolation)
 end
 

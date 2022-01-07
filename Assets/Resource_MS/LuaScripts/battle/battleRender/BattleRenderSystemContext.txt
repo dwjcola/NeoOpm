@@ -8,6 +8,7 @@ local BattleRenderSystemContext = SimpleClassUtil:class()
 
 function BattleRenderSystemContext:initialize()
     self._animatorSystem = AnimatorSystem:new()
+    self._moveSystem = MoveSystem:new()
     --self._effectSystem = EffectSystem:new()
     --self._audioSystem = AudioSystem:new()
 end
@@ -23,6 +24,9 @@ end
 function BattleRenderSystemContext:addEntity(entity)
     if  self._animatorSystem then
         self._animatorSystem:addEntity(entity)
+    end
+    if  self._moveSystem then
+        self._moveSystem:addEntity(entity)
     end
 end
 

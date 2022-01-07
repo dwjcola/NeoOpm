@@ -13,7 +13,7 @@ end
 
 function BehaviourAnalysis:AnalysisTree(treeData,blackboard,agent)
     if treeData._rootNodeId == nil then
-        Logger.Error("数据无效！！！")
+        BattleLog.error("数据无效！！！")
         return nil
     end
     local rootNode = self:AnalysisNode(treeData._rootNodeId,treeData,blackboard,agent)
@@ -27,7 +27,7 @@ function BehaviourAnalysis:AnalysisNode(nodeId,treeData,blackboard,agent)
             local node = self:AnalysisNode_ByValue(nodeValue)
 
             if node:getNodeType() == Enum_BT.Node_Type.Sub_Tree then
-                Logger.Error(" 等待开发 ！！！！")
+                BattleLog.error(" 等待开发 ！！！！")
             end
 
             if not self:isLeafNode(node:getNodeType()) then
@@ -40,10 +40,10 @@ function BehaviourAnalysis:AnalysisNode(nodeId,treeData,blackboard,agent)
             end
             return node
         else
-            Logger.Error("找不到树节点 nodeId == ",nodeId)
+            BattleLog.error("找不到树节点 nodeId == ",nodeId)
         end
     else
-        Logger.Error("找不到树 _nodeList  == nil ")
+        BattleLog.error("找不到树 _nodeList  == nil ")
     end
 end
 ---@return NodeBase
@@ -70,7 +70,7 @@ end
 function BehaviourAnalysis:isLeafNode(type)
     --local node = btApplyMap:getClass(nodeValue._identificationName)
     --if node == nil then
-    --    Logger.Error("节点实例化失败 ！！！  nodeValue == ",nodeValue)
+    --    BattleLog.error("节点实例化失败 ！！！  nodeValue == ",nodeValue)
     --    return nil
     --end
 
@@ -116,10 +116,10 @@ function BehaviourAnalysis:getNode(nodeValue)
         elseif nodeValue._type == Enum_BT.Node_Type.Sub_Tree then
             return NodeSubTree:new()
         else
-            Logger.Error("未处理类型！！！！  ： " , tostring(nodeValue._type))
+            BattleLog.error("未处理类型！！！！  ： " , tostring(nodeValue._type))
         end
     else
-        Logger.Error("数据不合法 ！！！！  ： " , tostring(nodeValue._type))
+        BattleLog.error("数据不合法 ！！！！  ： " , tostring(nodeValue._type))
     end
 end
 

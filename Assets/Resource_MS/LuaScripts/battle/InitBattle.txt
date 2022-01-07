@@ -5,7 +5,8 @@
 ---
 
 
-
+require_path("GameStatic_Battle","battle/GameStatic_Battle")
+require_path("BattleLog","battle/base/logger/BattleLog")
 require_path("Init_base","battle/base/Init_base")
 require_path("Init_event","battle/eventCode/Init_event")
 require_path("Init_timer","battle/timerScheduler/Init_timer")
@@ -43,6 +44,7 @@ BattleRenderSystemContext = require_path("BattleRenderSystemContext","battle/bat
 
 ISystem =  require_path("ISystem","battle/battleRender/system/ISystem")
 AnimatorSystem =  require_path("AnimatorSystem","battle/battleRender/system/AnimatorSystem")
+MoveSystem =  require_path("MoveSystem","battle/battleRender/system/MoveSystem")
 
 require_path("Enum_Battle","battle/Enum_Battle")
 

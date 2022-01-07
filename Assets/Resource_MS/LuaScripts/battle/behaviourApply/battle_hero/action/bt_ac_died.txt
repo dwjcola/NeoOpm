@@ -7,7 +7,7 @@
 local bt_ac_died = SimpleClassUtil:class(IAction)
 
 function bt_ac_died:doAction()
-    --Logger.error( "bt_ac_died ")
+    --BattleLog.error( "bt_ac_died ")
     return Enum_BT.Node_ResultType.Success
 end
 

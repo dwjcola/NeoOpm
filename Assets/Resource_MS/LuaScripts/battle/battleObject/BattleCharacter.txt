@@ -20,7 +20,7 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
     self._heroId = heroData.heroId
 
     self._uid = uid
-    --Logger.Error( self._heroId)
+    --BattleLog.error( self._heroId)
     self:init()
 
 
@@ -30,7 +30,7 @@ end
 function BattleCharacter:init()
 
     local skill_5 = SkillData:new()
-    skill_5._skill_r = 1
+    skill_5._skill_r = 3
     skill_5._skillType = Enum_Battle.SkillTag.Skill_5
     skill_5._skill_time_cd = 0
 

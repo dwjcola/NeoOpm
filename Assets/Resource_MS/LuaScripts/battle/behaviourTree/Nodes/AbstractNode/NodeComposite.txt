@@ -29,7 +29,7 @@ end
 ---@return NodeBase
 function NodeComposite:getChildesByIndex(index)
     if index == nil then
-        Logger.Error("index == nil")
+        BattleLog.error("index == nil")
     end
     index = index or 1
     return self._list_nodeChild[index]

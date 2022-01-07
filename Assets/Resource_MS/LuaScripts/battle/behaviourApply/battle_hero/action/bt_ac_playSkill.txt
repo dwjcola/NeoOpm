@@ -30,7 +30,7 @@ function bt_ac_playSkill:doAction(blackBoard,contextManager)
     else
         local frameInfo = self._skillFrameList[self._frameCount]
         if frameInfo then
-           Logger.error(self._frameCount)
+            BattleLog.error(self._frameCount)
         end
         return Enum_BT.Node_ResultType.Running
     end

@@ -29,7 +29,7 @@ end
 
 ---结束战斗
 function BattleProxy:EndBattle()
-    Logger.error(" ****** BattleProxy:EndBattle ****** ")
+    BattleLog.error(" ****** BattleProxy:EndBattle ****** ")
     self._data = nil
 
 end

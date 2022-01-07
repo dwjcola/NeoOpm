@@ -17,7 +17,7 @@ function ISystem:getEventHandleMap()
     --return {
     --    [EventType.Event_Battle_Render_SwitchAni] = "switchAniHandle",
     --}
-    Logger.error("overwrite me ！！！")
+    BattleLog.error("overwrite me ！！！")
     return {}
 end
 
@@ -25,7 +25,7 @@ end
 function ISystem:addEntity(Entity)
     if Entity then
         if self._entityMap[Entity:getUid()] then
-            Logger.error("重复添加 Entity :  ",Entity:getUid())
+            BattleLog.error("重复添加 Entity :  ",Entity:getUid())
             return
         end
         self._entityMap[Entity:getUid()] = Entity
@@ -35,7 +35,7 @@ end
 function ISystem:removeEntity(Entity)
     if Entity then
         if self._entityMap[Entity:getUid()] == nil then
-            Logger.error("Entity 已经从删除 :  ",Entity:getUid())
+            BattleLog.error("Entity 已经从删除 :  ",Entity:getUid())
             return
         end
         self._entityMap[Entity:getUid()] = nil

@@ -19,11 +19,11 @@ function IAction:doAction(blackBoard,contextManager)
 end
 
 function IAction:log_enter(...)
-    --Logger.warning(" ########  enter:  ",...)
+    --BattleLog.warning(" ########  enter:  ",...)
 end
 
 function IAction:log(...)
-    Logger.warning(" ########  result:  ",...)
+    BattleLog.warning(" ########  result:  ",...)
 end
 
 return IAction

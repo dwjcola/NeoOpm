@@ -50,7 +50,7 @@ function AnimatorSystem:switchAniHandle(data)
     local entity = self:getEntityByUid(uid)
     if entity then
         local animationComponent = entity:getAnimationComponent()
-        --Logger.ErrorTable(animationComponent)
+        --BattleLog.errorTable(animationComponent)
         self:setSpeed(animationComponent,speed)
         self:crossFade(animationComponent,aniState,isReset)
         entity:setAnimationComponent(aniState,speed)

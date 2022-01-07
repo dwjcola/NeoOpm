@@ -35,7 +35,7 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
                     result = Enum_BT.Node_ResultType.Fail
                 end
             else
-                Logger.Error("SkillData 没有 普工技能数据 ！！！")
+                BattleLog.error("SkillData 没有 普工技能数据 ！！！")
                 result = Enum_BT.Node_ResultType.Fail
             end
         else

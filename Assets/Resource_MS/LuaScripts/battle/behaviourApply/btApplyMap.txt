@@ -47,7 +47,7 @@ function btApplyMap:getClass(className)
         local c =  require_path(className, self.classPath[className])
         return c:new()
     else
-        Logger.Error("btApplyMap 文件 没有配置  ",className ," 数据 ")
+        BattleLog.error("btApplyMap 文件 没有配置  ",className ," 数据 ")
     end
 end
 

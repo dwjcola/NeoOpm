@@ -34,18 +34,18 @@ function ProcessNodeBase:onLeave()
 end
 
 function ProcessNodeBase:onStart()
-    Logger.error("onStart ## overwrite me !!")
+    BattleLog.error("onStart ## overwrite me !!")
 end
 
 function ProcessNodeBase:onUpdate()
-    Logger.error("onUpdate ## overwrite me !!")
+    BattleLog.error("onUpdate ## overwrite me !!")
 end
 function ProcessNodeBase:onEnd()
-    Logger.error("onEnd ## overwrite me !!")
+    BattleLog.error("onEnd ## overwrite me !!")
 end
 
 function ProcessNodeBase:onExit()
-    Logger.error("onExit ## overwrite me !!")
+    BattleLog.error("onExit ## overwrite me !!")
 end
 
 return ProcessNodeBase

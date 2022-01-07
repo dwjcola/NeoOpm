@@ -18,11 +18,11 @@ function bt_con_cd:doCondition(blackBoard,battleManager)
             local time = skillData._skill_time_play + skillData._skill_time_cd
             return battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
         else
-            Logger.log(" 技能数据 没有播放时间戳  ",tostring(self._skillTag))
+            BattleLog.log(" 技能数据 没有播放时间戳  ",tostring(self._skillTag))
             return Enum_BT.Node_ResultType.Success
         end
     else
-        Logger.error("黑板没有 技能数据 ",tostring(self._skillTag))
+        BattleLog.error("黑板没有 技能数据 ",tostring(self._skillTag))
         return Enum_BT.Node_ResultType.Fail
     end
 end

@@ -8,7 +8,7 @@ local CreateUtils = {}
 function CreateUtils:isLeafNode(type)
     --local node = btApplyMap:getClass(nodeValue._identificationName)
     --if node == nil then
-    --    Logger.Error("节点实例化失败 ！！！  nodeValue == ",nodeValue)
+    --    BattleLog.error("节点实例化失败 ！！！  nodeValue == ",nodeValue)
     --    return nil
     --end
     return type == Enum_BT.Node_Type.Action or type == Enum_BT.Node_Type.Condition
@@ -56,7 +56,7 @@ function CreateUtils:getNodeByType(type,entityId)
     elseif type == Enum_BT.Node_Type.Sub_Tree then
         node = NodeSubTree:new()
     else
-        Logger.Error("未处理类型！！！！  ： " , tostring(type))
+        BattleLog.error("未处理类型！！！！  ： " , tostring(type))
     end
     node:setEntityId(entityId)
     return node
@@ -93,7 +93,7 @@ function CreateUtils:test()
              --condition_1:initData({ _compareType = Enum_BT.CompareType.BT_BOOL, _key = "_alive", _compareTargetValue = false, })
              --node_1:setICondition(condition_1)
     root:addNode(node_1)
-    Logger.Error(root._list_nodeChild)
+    BattleLog.error(root._list_nodeChild)
             ---@type NodeDecoratorRepeat
             local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
             --node_2:setRepeatCount(-1)
@@ -102,7 +102,7 @@ function CreateUtils:test()
             --    nodeAction:setIAction(ac_2_1_3_2_1)
             --node_2:addNode(nodeAction)
     root:addNode(node_2)
-    Logger.Error(root._list_nodeChild)
+    BattleLog.error(root._list_nodeChild)
     return root
 end
 

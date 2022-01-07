@@ -31,11 +31,11 @@ function ICondition:onExit()
 end
 
 function ICondition:log_enter(...)
-    --Logger.warning(" ########  enter:  ",...)
+    --BattleLog.warning(" ########  enter:  ",...)
 end
 
 function ICondition:log(...)
-    Logger.warning(" ########  result:  ",...)
+    BattleLog.warning(" ########  result:  ",...)
 end
 
 return ICondition

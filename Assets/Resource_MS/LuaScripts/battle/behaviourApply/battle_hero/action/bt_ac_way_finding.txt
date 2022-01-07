@@ -34,7 +34,7 @@ function bt_ac_way_finding:doAction(blackBoard,agent)
                     result = Enum_BT.Node_ResultType.Success
                 else
                     local moveSpeed = blackBoard._moveSpeed or 1
-                    local moveVec = Vector3.Normalize(target - self_pos) * moveSpeed
+                    local moveVec = Vector3.Normalize(target - self_pos) * moveSpeed * 1
                     local newPos = self_pos + moveVec
                     --- @type PVE_Config_Battle_Manager
                     local battleManager = agent._battleManager
@@ -44,7 +44,7 @@ function bt_ac_way_finding:doAction(blackBoard,agent)
                     result = Enum_BT.Node_ResultType.Running
                 end
             else
-                Logger.Error("SkillData 没有 普工技能数据 ！！！")
+                BattleLog.error("SkillData 没有 普工技能数据 ！！！")
                 result = Enum_BT.Node_ResultType.Fail
             end
         else

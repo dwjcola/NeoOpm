@@ -26,7 +26,7 @@ function BattleLoaderManager:loadAssetAsync(assetName,assetType,cb)
     elseif assetType == Enum_Battle.BattleAssetType.Effect then
 
     else
-        Logger.error("未处理资源类型 ：" ,tostring(assetType))
+        BattleLog.error("未处理资源类型 ：" ,tostring(assetType))
     end
 
 
@@ -55,7 +55,7 @@ function BattleLoaderManager:put(assetName,assetType,asset)
     if self._list_asset[assetType][assetName]  then
         table.insert(self._list_asset[assetType][assetName],asset)
     else
-       Logger.error("资源  没有 对应得池子 请查看 资源来源 assetType ==  ",assetType,"    assetName ==  ",assetName)
+        BattleLog.error("资源  没有 对应得池子 请查看 资源来源 assetType ==  ",assetType,"    assetName ==  ",assetName)
     end
 end
 

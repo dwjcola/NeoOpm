@@ -39,7 +39,7 @@ function BattleMainNode:onStart()
    if battleTeam  and battleTeam._loadingFinish then
       self:toStartBattle(false)
    else
-      Logger.error("等待加载完成")
+      BattleLog.error("等待加载完成")
    end
 
 end

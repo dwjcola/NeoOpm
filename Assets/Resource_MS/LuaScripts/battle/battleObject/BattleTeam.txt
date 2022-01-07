@@ -114,7 +114,7 @@ function BattleTeam:tryLoadRoot()
 end
 
 function BattleTeam:tryLoadLeftRole()
-    Logger.Error(" to do 修改为正式得 ")
+    BattleLog.error(" to do 修改为正式得 ")
     for i, v in pairs(self._teamData_self.teamMap) do
         local pos = i
         local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)
@@ -132,7 +132,7 @@ function BattleTeam:tryLoadLeftRole()
 end
 
 function BattleTeam:tryLoadRightRole()
-    Logger.Error(" to do 修改为正式得 ")
+    BattleLog.error(" to do 修改为正式得 ")
     for i, v in pairs(self._teamData_enemy.teamMap) do
         local pos = i
         local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)
@@ -150,11 +150,11 @@ end
 
 function BattleTeam:tryLoadFinish()
     --if next(self._dic_loadMap) == nil then
-    --    Logger.Error(" ****** loadFinishFunc ***** ")
+    --    BattleLog.error(" ****** loadFinishFunc ***** ")
     --end
     if self._loadCount <= 0 then
         self._loadingFinish = true
-        Logger.Error(" ****** loadFinishSuccess ***** ")
+        BattleLog.error(" ****** loadFinishSuccess ***** ")
     end
 end
 

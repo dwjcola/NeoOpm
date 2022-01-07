@@ -11,7 +11,7 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param battleManager PVE_Config_Battle_Manager
 function bt_ac_controlled:doCondition(blackBoard,battleManager)
-    Logger.error("被控制了 啥也不能干了 ！！ 发呆中")
+    BattleLog.error("被控制了 啥也不能干了 ！！ 发呆中")
     return Enum_BT.Node_ResultType.Success
 end
 

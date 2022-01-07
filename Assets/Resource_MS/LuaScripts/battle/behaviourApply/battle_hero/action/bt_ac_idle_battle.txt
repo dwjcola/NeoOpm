@@ -7,7 +7,7 @@
 local bt_ac_idle_battle = SimpleClassUtil:class(IAction)
 
 function bt_ac_idle_battle:doAction()
-    Logger.error( "bt_ac_idle_battle ")
+    BattleLog.error( "bt_ac_idle_battle ")
     return Enum_BT.Node_ResultType.Success
 end
 

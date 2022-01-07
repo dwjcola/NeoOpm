@@ -17,8 +17,8 @@ function BattleUtils:posMapToVec3(map)
     if map and map[1] and map[2] and map[3] then
         return Vector3(map[1],map[2],map[3])
     else
-        Logger.error("map 数据 不合法 ")
-        Logger.ErrorTable(map)
+        BattleLog.error("map 数据 不合法 ")
+        BattleLog.errorTable(map)
         return Vector3.zero
     end
 end
@@ -29,7 +29,7 @@ function BattleUtils:getPositionByIndex(isLeft,index)
     if index and  map[index] then
         return map[index]
     else
-        Logger.error("数据 错误 ",isLeft,"  ",index)
+        BattleLog.error("数据 错误 ",isLeft,"  ",index)
     end
 
 end
@@ -39,7 +39,7 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --if heroInfo then
     --    return heroInfo.path
     --else
-    --    Logger.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
+    --    BattleLog.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
     --    return ""
     --end
     if heroId == "hero101" then

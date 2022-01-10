@@ -333,23 +333,46 @@ function CreateUtils:createOrdinarySkillTree()
 end
 
 function CreateUtils:createFindWayTree()
-    ---@type NodeSequence
-    local node_2_3_3_2 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000035")
-          ---@type NodeAction
-          local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_1")
-                ---@type bt_ac_switchAnima
-                local ac_2_3_3_2_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
-                ac_2_3_3_2_1_1:initData({aniName = Enum_Battle.AniState.run,isReset = false,speed = 1})
-          node_2_3_3_2_1:setIAction(ac_2_3_3_2_1_1)
-    node_2_3_3_2:addNode(node_2_3_3_2_1)
-          ---@type NodeAction
-          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_2")
-                ---@type bt_ac_way_finding
-                local action_2_3_3_2_2_1 = btApplyMap:getClass("bt_ac_way_finding")
-                action_2_3_3_2_2_1:initData({ })
-          node_2_3_3_2_2:setIAction(action_2_3_3_2_2_1)
-    node_2_3_3_2:addNode(node_2_3_3_2_2)
-    return node_2_3_3_2
+    ---@type NodeParallelAll
+    local node = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000035")
+         ---@type NodeAction
+          local node_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_1")
+               ---@type bt_ac_switchAnima
+               local bt_ac_switchAnima = btApplyMap:getClass("bt_ac_find_target")
+          node_1:setIAction(bt_ac_switchAnima)
+    node:addNode(node_1)
+           --- @type NodeIfJudge
+          local node_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000035_2")
+                ---@type NodeCondition
+                local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000035_3")
+                      ---@type bt_con_compare_base
+                      local con_2_1_1 = btApplyMap:getClass("bt_con_compare_base")
+                            con_2_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_find_target_pos", _compareTargetValue = nil, })
+                node_2_1:setICondition(con_2_1_1)
+          node_2:addNode(node_2_1)
+                ---@type NodeAction
+                local node_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_4")
+                      local ac_2_2_1 = btApplyMap:getClass("bt_ac_idle_battle")
+                node_2_2:setIAction(ac_2_2_1)
+         node_2:addNode(node_2_2)
+                local node_2_3 =  self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000035_5")
+                     ---@type NodeAction
+                     local node_2_3_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_6")
+                           ---@type bt_ac_switchAnima
+                           local ac_2_3_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
+                           ac_2_3_1_1:initData({aniName = Enum_Battle.AniState.run,isReset = false,speed = 1})
+                     node_2_3_1:setIAction(ac_2_3_1_1)
+                node_2_3:addNode(node_2_3_1)
+                      ---@type NodeAction
+                      local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_7")
+                            ---@type bt_ac_way_finding
+                            local action_2_3_2_1 = btApplyMap:getClass("bt_ac_way_finding")
+                            action_2_3_2_1:initData({ })
+                       node_2_3_2:setIAction(action_2_3_2_1)
+                node_2_3:addNode(node_2_3_2)
+         node_2:addNode(node_2_3)
+    node:addNode(node_2)
+    return node
 end
 
 function CreateUtils:createGeneralAttackTree()

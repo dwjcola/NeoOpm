@@ -39,9 +39,12 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._dislocation_r = 1
     -- 检测半径
     self._detection_r = 2
+    -- 是否是近战
+    self._isCloseIn = false
 
     --self._isUnPutSkill = false
-
+    -- 寻路合法得目标
+    self._find_target_pos = nil
     -- 小技能进行中
     self._smallSkillIng = false
     -- 其他技能释放中 不能被大招打算

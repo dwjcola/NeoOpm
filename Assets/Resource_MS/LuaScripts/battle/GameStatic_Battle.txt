@@ -5,4 +5,4 @@
 ---
 GameStatic_Battle = {}
 
-GameStatic_Battle.BattleLog = true
+GameStatic_Battle.BattleLog = false

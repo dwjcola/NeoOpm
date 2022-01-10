@@ -8,7 +8,7 @@ local bt_ac_way_finding = SimpleClassUtil:class(IAction)
 
 
 function bt_ac_way_finding:initialize()
-
+    IAction.initialize(self)
 end
 
 function bt_ac_way_finding:initData(data)
@@ -20,34 +20,29 @@ function bt_ac_way_finding:doAction(blackBoard,agent)
     if blackBoard._enmityIndex == 0 then
         result = Enum_BT.Node_ResultType.Fail
     else
-        --- @type BattleEntityContext
-        local _entityContext = agent._entityContext
-        --- @type BattleCharacter
-        local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
-        if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
-            local self_pos = blackBoard._position
-            local target =  _enemyEntity:getData()._position
-            local dis = Vector3.Distance(self_pos,target)
-            local skillData = blackBoard._skillData[Enum_Battle.SkillTag.Skill_5]
-            if skillData then
-                if dis <= skillData._skill_r then
-                    result = Enum_BT.Node_ResultType.Success
-                else
-                    local moveSpeed = blackBoard._moveSpeed or 1
-                    local moveVec = Vector3.Normalize(target - self_pos) * moveSpeed * 1
-                    local newPos = self_pos + moveVec
-                    --- @type PVE_Config_Battle_Manager
-                    local battleManager = agent._battleManager
-                    local data = {uid = blackBoard._uid,newPos = newPos,time = battleManager._interval}
-                    EventManager:Dispatch_battle(EventType.Event_Battle_Render_Move_Line,data)
-                    blackBoard._position = newPos
-                    result = Enum_BT.Node_ResultType.Running
-                end
+        local place_target = blackBoard._find_target_pos
+        --if blackBoard._uid == 4 then
+        --    Logger.error(place_target)
+        --end
+        local self_pos = blackBoard._position
+        local moveSpeed = blackBoard._moveSpeed
+        local skillData = blackBoard._skillData[Enum_Battle.SkillTag.Skill_5]
+        if skillData then
+            local dis = Vector3.Distance(self_pos,place_target)
+            local moveVec = Vector3.Normalize(place_target - self_pos) * moveSpeed
+            if dis <= 0.01 then
+                result = Enum_BT.Node_ResultType.Success
             else
-                BattleLog.error("SkillData 没有 普工技能数据 ！！！")
-                result = Enum_BT.Node_ResultType.Fail
+                local newPos = self_pos + moveVec
+                --- @type PVE_Config_Battle_Manager
+                local battleManager = agent._battleManager
+                local data = {uid = blackBoard._uid,newPos = newPos,time = battleManager._interval}
+                EventManager:Dispatch_battle(EventType.Event_Battle_Render_Move_Line,data)
+                blackBoard._position = newPos
+                result = Enum_BT.Node_ResultType.Running
             end
         else
+            BattleLog.error("SkillData 没有 普工技能数据 ！！！")
             result = Enum_BT.Node_ResultType.Fail
         end
     end

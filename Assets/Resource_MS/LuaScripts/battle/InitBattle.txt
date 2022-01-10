@@ -19,7 +19,7 @@ BattleLoaderManager = require_path("BattleLoaderManager","battle/manager/BattleL
 
 
 BattleUtils = require_path("BattleUtils","battle/utils/BattleUtils")
-
+BattleMathUtils = require_path("BattleMathUtils","battle/utils/BattleMathUtils")
 require_path("BattleUtils","battle/behaviourTree/Init_Bt")
 
 

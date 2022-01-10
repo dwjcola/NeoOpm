@@ -87,15 +87,15 @@ function BattleUtils:getTestBattleData()
                         --[1] = {
                         --    heroId = "hero101",
                         --},
-                        --[2] = {
-                        --    heroId = "hero101",
-                        --},
+                        [2] = {
+                            heroId = "hero101",
+                        },
                         --[3] = {
                         --    heroId = "hero101",
                         --},
-                        [4] = {
-                            heroId = "hero101",
-                        },
+                        --[4] = {
+                        --    heroId = "hero101",
+                        --},
                         --[5] = {
                         --    heroId = "hero101",
                         --}

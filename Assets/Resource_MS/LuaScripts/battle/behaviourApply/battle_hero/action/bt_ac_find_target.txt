@@ -38,7 +38,7 @@ function bt_ac_find_target:doAction(blackBoard,agent)
                     local attack_r = skillData._skill_r + _volume_r
                     place_target = target - (normalVec * attack_r)
                 end
-                local isHandleSuss ,tmp_pos = self:handleTarget_place_r(place_target,nil,_entityContext,blackBoard._campType,blackBoard._uid)
+                local isHandleSuss ,tmp_pos = BattleUtils:handleTarget_place_r(place_target,nil,_entityContext,blackBoard._campType,blackBoard._uid)
                 if isHandleSuss then
                     place_target = tmp_pos
                     blackBoard._find_target_pos = place_target
@@ -59,44 +59,6 @@ function bt_ac_find_target:doAction(blackBoard,agent)
     return result
 end
 
----@param oriVec Vector3
----@param tmpVec Vector3
----@param entityContext BattleEntityContext
-function bt_ac_find_target:handleTarget_place_r(oriVec,tmpVec,entityContext,camp,uid)
-    --Logger.error(uid,"    ",oriVec,tmpVec)
-    if tmpVec and oriVec.x == tmpVec.x and oriVec.y == tmpVec.y  then
-        return false,tmpVec
-    end
-    if tmpVec == nil then
-        tmpVec = oriVec
-    end
-    local self_entityList = entityContext:getEntityListByCamp(camp)
-    local enemy_entityList = entityContext:getEnemyEntityList(camp)
-    for i, entity in pairs(self_entityList) do
-        if entity:getData()._uid ~= uid then
-            local entity_pos = entity:getData()._position
-            local place_r = entity:getData()._place_r
-            local dis = Vector3.Distance(tmpVec,entity_pos)
-            --Logger.error(dis)
-            if dis < place_r then
-                local tmpDic = tmpVec - entity_pos
-                local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,-1)
-                return self:handleTarget_place_r(oriVec,entity_pos + tmp,entityContext,camp,uid)
-            end
-        end
-    end
-    --for i, entity in pairs(enemy_entityList) do
-    --    local entity_pos = entity:getData()._position
-    --    local place_r = entity:getData()._place_r
-    --    local dis = Vector3.Distance(tmpVec,entity_pos)
-    --    if dis < place_r then
-    --        local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpVec,1)
-    --
-    --        return self:handleTarget_place_r(oriVec,tmp,entityContext,camp,uid)
-    --    end
-    --end
-    return true,tmpVec
-end
 
 
 return bt_ac_find_target

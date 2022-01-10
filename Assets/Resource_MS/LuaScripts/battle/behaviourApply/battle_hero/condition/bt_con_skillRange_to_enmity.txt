@@ -19,51 +19,56 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
     if blackBoard._enmityIndex == 0 then
         result = Enum_BT.Node_ResultType.Fail
     else
-        ----- @type BattleEntityContext
-        --local _entityContext = agent._entityContext
-        ----- @type BattleCharacter
-        --local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
-        --if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
-        --    local self_pos = blackBoard._position
-        --    local target =  _enemyEntity:getData()._position
-        --    local dis = Vector3.Distance(self_pos,target)
-        --    local skillData = blackBoard._skillData[Enum_Battle.SkillTag.Skill_5]
-        --
-        --    if skillData then
-        --        local attack_r = skillData._skill_r + (blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0)
-        --        if dis <= attack_r then
-        --            result = Enum_BT.Node_ResultType.Success
-        --        else
-        --            result = Enum_BT.Node_ResultType.Fail
-        --        end
-        --    else
-        --        BattleLog.error("SkillData 没有 普工技能数据 ！！！")
-        --        result = Enum_BT.Node_ResultType.Fail
-        --    end
-        --else
-        --    result = Enum_BT.Node_ResultType.Fail
-        --end
-
-
         --- @type BattleEntityContext
         local _entityContext = agent._entityContext
         --- @type BattleCharacter
         local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
         if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
-            if blackBoard._find_target_pos then
-                local self_pos = blackBoard._position
-                local dis = Vector3.Distance(self_pos,blackBoard._find_target_pos)
-                if dis < 0.01 then
-                    result =  Enum_BT.Node_ResultType.Success
+            local self_pos = blackBoard._position
+            local target =  _enemyEntity:getData()._position
+            local dis = Vector3.Distance(self_pos,target)
+            local skillData = blackBoard._skillData[Enum_Battle.SkillTag.Skill_5]
+
+            if skillData then
+                local attack_r = skillData._skill_r + (blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0)
+                if dis <= attack_r then
+                    local isHandleSuss = BattleUtils:checkoutPosForPlace_r(self_pos,_entityContext,blackBoard._campType,blackBoard._uid)
+                    if isHandleSuss then
+                        result = Enum_BT.Node_ResultType.Success
+                    else
+                        result = Enum_BT.Node_ResultType.Fail
+                    end
                 else
-                    result =  Enum_BT.Node_ResultType.Fail
+                    result = Enum_BT.Node_ResultType.Fail
                 end
             else
-                result =  Enum_BT.Node_ResultType.Fail
+                BattleLog.error("SkillData 没有 普工技能数据 ！！！")
+                result = Enum_BT.Node_ResultType.Fail
             end
         else
             result = Enum_BT.Node_ResultType.Fail
         end
+
+        --
+        ----- @type BattleEntityContext
+        --local _entityContext = agent._entityContext
+        ----- @type BattleCharacter
+        --local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
+        --if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
+        --    if blackBoard._find_target_pos then
+        --        local self_pos = blackBoard._position
+        --        local dis = Vector3.Distance(self_pos,blackBoard._find_target_pos)
+        --        if dis < 0.01 then
+        --            result =  Enum_BT.Node_ResultType.Success
+        --        else
+        --            result =  Enum_BT.Node_ResultType.Fail
+        --        end
+        --    else
+        --        result =  Enum_BT.Node_ResultType.Fail
+        --    end
+        --else
+        --    result = Enum_BT.Node_ResultType.Fail
+        --end
     end
     return result
 end

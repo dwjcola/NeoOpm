@@ -41,6 +41,10 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Battle/General/animation
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 30752ba11fab5be4eaf65d018b70a3ba
+    m_Address: Assets/Resource_MS/Battle/General/jienuosi
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
   m_SchemaSet:

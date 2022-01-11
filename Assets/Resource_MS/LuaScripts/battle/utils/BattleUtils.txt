@@ -43,9 +43,9 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    return ""
     --end
     if heroId == "hero101" then
-        return "Assets/Resource_MS/Battle/General/prefab/bibidong_3.prefab"
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
     else
-        return "Assets/Resource_MS/Battle/General/prefab/xulizhi_2.prefab"
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
     end
 
 end

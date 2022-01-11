@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using GameFramework;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class TableDic
     {

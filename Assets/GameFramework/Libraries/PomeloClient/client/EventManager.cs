@@ -7,15 +7,10 @@ namespace Pomelo.DotNetClient
 {
     public class EventManager : IDisposable
     {
-        //private Dictionary<uint, Action<JsonObject>> callBackMap;
         private Dictionary<uint, List<IReceiveTransfer> > eventMap;
-
         private Dictionary<uint, IReceiveTransfer> callBackMap;
- 
-
         public EventManager()
         {
-            //this.callBackMap = new Dictionary<uint, Action<JsonObject>>();
             this.callBackMap = new Dictionary<uint, IReceiveTransfer>();
             this.eventMap = new Dictionary<uint, List<IReceiveTransfer>>();
         }
@@ -30,20 +25,12 @@ namespace Pomelo.DotNetClient
         }
         public void InvokeCallBack(uint id, Message msg)
         {
-            if (!callBackMap.ContainsKey(id)) return;
-            callBackMap[id].doHandle(msg.body, msg.offset, (byte)msg.type);
+            IReceiveTransfer transfer;
+            if (callBackMap.TryGetValue(id,out transfer))
+            {
+                transfer.doHandle(msg.body, msg.offset, (byte)msg.type);
+            }
         }
-        /// <summary>
-        /// Invoke the callback when the server return messge .
-        /// </summary>
-        /// <param name='pomeloMessage'>
-        /// Pomelo message.
-        /// </param>
-        //public void InvokeCallBack(uint id, JsonObject data)
-        //{
-        //    if (!callBackMap.ContainsKey(id)) return;
-        //    callBackMap[id].Invoke(data);
-        //}
 
         //Adds the event to eventMap by name.
         public void AddOnEvent(uint id, Action<JsonData> callback)
@@ -143,10 +130,12 @@ namespace Pomelo.DotNetClient
         ///
         public void InvokeOnEvent(uint id, Message msg)
         {
-            if (!this.eventMap.ContainsKey(id)) return;
-
-            var list = eventMap[id];
-            foreach (var action in list) action.doHandle(msg.body, msg.offset, (byte)msg.type);
+            List<IReceiveTransfer> list;
+            if (eventMap.TryGetValue(id,out list))
+            {
+                foreach (var action in list) 
+                    action.doHandle(msg.body, msg.offset, (byte)msg.type);
+            }
         }
 
         // Dispose() calls Dispose(true)

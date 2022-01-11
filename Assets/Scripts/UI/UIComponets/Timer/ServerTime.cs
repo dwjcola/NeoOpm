@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using UnityEngine;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class ServerTime : MonoBehaviour
 {
@@ -40,12 +40,12 @@ namespace ProHA
         ServerT = serverTime;
     }
 
-    public static void InitServerOpenTime(long time)
+    /*public static void InitServerOpenTime(long time)
     {
         ServerOpenTime = time;
         ServerOpenDays = DaysFromServerOpen();
         LC.SendEvent("UPDATE_SERVER_OPEN_TIME");
-    }
+    }*/
     void Start()
     {
         InvokeRepeating("TickHandle", 0, 1);
@@ -110,7 +110,7 @@ namespace ProHA
     private void SendCrossDay()
     {
         OnCrossDay?.Invoke(GetNowTime);
-        ServerOpenDays = DaysFromServerOpen();//跨天时重新计算开服天数
+        //ServerOpenDays = DaysFromServerOpen();//跨天时重新计算开服天数
         LC.SendEvent("CROSS_DAY");
     }
     void OnDestroy()
@@ -442,7 +442,7 @@ namespace ProHA
         return b;
     }
 
-    public static int DaysFromServerOpen()
+    /*public static int DaysFromServerOpen()
     {//开服天数
         return CountDays(GetStandardTime(ServerOpenTime), GetNowTime);
     }
@@ -454,7 +454,7 @@ namespace ProHA
         DateTime endT = new DateTime(curTimeT.Year, curTimeT.Month, curTimeT.Day, 18, 0, 0);
         TimeSpan span = endT - startT;
         return span.Days + 1;
-    }
+    }*/
     
 }
 

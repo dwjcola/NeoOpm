@@ -10,7 +10,7 @@ using LitJson;
 using System;
 using System.Collections.Generic;
 
-namespace ProHA
+namespace NeoOPM
 {
     /// <summary>
     /// LitJSON 函数集辅助器。

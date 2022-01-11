@@ -10,7 +10,7 @@ using GameFramework.Localization;
 using UnityEngine;
 using UnityGameFramework.Runtime;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class ChangeLanguageDebuggerWindow : IDebuggerWindow
     {

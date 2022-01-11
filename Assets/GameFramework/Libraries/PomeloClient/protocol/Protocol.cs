@@ -4,6 +4,7 @@ using LitJson;
 using System.Text;
 using pb = global::Google.Protobuf;
 using System.IO;
+using UnityEngine;
 
 namespace Pomelo.DotNetClient
 {
@@ -53,19 +54,34 @@ namespace Pomelo.DotNetClient
             return (int)value;
         }
 
-        static public int ReadInt64BE(byte[] buffer, int offset)
+        static public ulong ReadInt64BE(byte[] buffer, int offset)
         {
-            uint value =
-                (uint)(buffer[offset++] << 56) |
-                (uint)(buffer[offset++] << 48) |
-                (uint)(buffer[offset++] << 40) |
-                (uint)(buffer[offset++] << 32) |
-                (uint)(buffer[offset++]   << 24) |
-                (uint)(buffer[offset++] << 16) |
-                (uint)(buffer[offset++] << 8) |
-                (uint)(buffer[offset++]);
+            ulong a = buffer[offset++];
+            a = a << 56;
+            a = buffer[offset++];
+            a = a << 48;
+            a = buffer[offset++];
+            a = a << 40;
+            a = buffer[offset++];
+            a = a << 32;
+            a = buffer[offset++];
+            a = a << 24;
+            a = buffer[offset++];
+            a = a << 16;
+            a = buffer[offset++];
+            a = a << 8;
+            a = buffer[offset++];
+            ulong value =
+                (ulong)(buffer[offset++] << 56) |
+                (ulong)(buffer[offset++] << 48) |
+                (ulong)(buffer[offset++] << 40) |
+                (ulong)(buffer[offset++] << 32) |
+                (ulong)(buffer[offset++]   << 24) |
+                (ulong)(buffer[offset++] << 16) |
+                (ulong)(buffer[offset++] << 8) |
+                (ulong)(buffer[offset++]);
 
-            return (int)value;
+            return (ulong)value;
         }
 
         static public ushort ReadUShortBE(byte[] buffer, int offset)
@@ -115,9 +131,9 @@ namespace Pomelo.DotNetClient
         private MsgProtocol messageProtocol;
         private ProtocolState state;
         private Transporter transporter;
-        private HandShakeService handshake;
         private HeartBeatService heartBeatService = null;
         private PomeloClient pc;
+        private const int HEARTBEAT_INTERVAL = 10;
 
         public PomeloClient getPomeloClient()
         {
@@ -130,23 +146,17 @@ namespace Pomelo.DotNetClient
             this.transporter = new Transporter(socket, this.processMessage);
             this.transporter.onDisconnect = onDisconnect;
 
-            this.handshake = new HandShakeService(this);
-            this.state = ProtocolState.start;
+            //this.state = ProtocolState.start;
+            heartBeatService = new HeartBeatService(HEARTBEAT_INTERVAL, this);
+            heartBeatService.start();
+            this.state = ProtocolState.working;
         }
 
-        internal void start(JsonData user, Action<JsonData> callback)
+        internal void start()
         {
             this.transporter.start();
-            this.handshake.request(user, callback);
-
-            this.state = ProtocolState.handshaking;
         }
-
-        //Send notify, do not need id
-
-
-
-        internal void send(MessageType type, uint id, uint serviceId, JsonData msg)
+        /*internal void send(MessageType type, uint id, uint serviceId, JsonData msg)
         {
 
             if (this.state != ProtocolState.working) return;
@@ -162,179 +172,57 @@ namespace Pomelo.DotNetClient
             byte[] body = MsgProtocol.encode( msg);
 
             send(type, id,serviceId, body);
-        }
+        }*/
 
-        internal void send(MessageType type, uint reqId, uint serviceId, byte[] body)
+        internal void send( uint reqId, uint serviceId, byte[] body)
         {
             if (this.state == ProtocolState.closed) return;
 
-            byte[] head = PackageProtocol.encode(type, reqId, serviceId, body);
+            byte[] head = PackageProtocol.encode( reqId, serviceId, body);
 
             transporter.send(head, body);
         }
-        internal void send(MessageType type, uint id, uint serviceId)
+        internal void send(uint id, uint serviceId)
         {
             if (this.state == ProtocolState.closed) return;
 
-            byte[] head = PackageProtocol.encode(type, id, serviceId, null);
+            byte[] head = PackageProtocol.encode( id, serviceId, null);
 
             transporter.send(head);
         }
-        //Send request, user request id 
-        //internal void send(string route, uint id, JsonData msg)
-        //{
-        //    if (this.state != ProtocolState.working) return;
-
-        //    byte[] body = messageProtocol.encode(route, id, msg);
-
-        //    send(PackageType.PKG_DATA, body);
-        //}
-
-
-        internal void send(PackageType type)
+        internal void sendHeartbeat()
         {
             if (this.state == ProtocolState.closed) return;
-            transporter.send(PackageProtocol.encode(type));
+            transporter.send(PackageProtocol.encodeHeartbeat());
         }
-
-        //Send system message, these message do not use messageProtocol
-        //internal void send(PackageType type, JsonObject msg)
-        //{
-        //    //This method only used to send system package
-        //    if (type == PackageType.PKG_DATA) return;
-
-        //    byte[] body = Encoding.UTF8.GetBytes(msg.ToString());
-
-        //    send(type, body);
-        //}
-
-        //Send message use the transporter
-        internal void send(PackageType type, byte[] body)
-        {
-            if (this.state == ProtocolState.closed) return;
-
-            byte[] head = PackageProtocol.encode(type, body);
-
-            transporter.send(head, body);
-        }
-
-        //Invoke by Transporter, process the message
-
-        //to do  not in main thread
-        //static public bool IsDataPackage(PackageType type)
-        //{
-        //    return type == PackageType.PKG_DATA_NOTIFY || type == PackageType.PKG_DATA_PUSH 
-        //        || type == PackageType.PKG_DATA_REQ || type == PackageType.PKG_DATA_RESPONSE;
-        //} 
         internal void processMessage(byte[] bytes)
         {
             Package pkg = PackageProtocol.decode(bytes);
-
-            //Ignore all the message except handshading at handshake stage
-            if (pkg.type == PackageType.PKG_HANDSHAKE && this.state == ProtocolState.handshaking)
-            {
-
-                //Ignore all the message except handshading
-                //JsonObject data = (JsonObject)SimpleJson.SimpleJson.DeserializeObject(Encoding.UTF8.GetString(pkg.body));
-
-                JsonData data = MsgProtocol.decode(pkg.body, 0);
-                bool flag = processHandshakeData(data);
-                if (flag == false)
-                {
-                    pc.ReconnectCallBack?.Invoke(PomeloClient.CLIENT_EVENT_DISCONNECT);
-                    return;
-                }
-                this.state = ProtocolState.working;
-            }
-            else if (pkg.type == PackageType.PKG_HEARTBEAT && this.state == ProtocolState.working)
+            if (pkg.type == PackageType.PKG_HEARTBEAT && this.state == ProtocolState.working)
             {
                 this.heartBeatService.resetTimeout();
-                if (!BitConverter.IsLittleEndian) {
-                    Array.Reverse(pkg.body);
-                }
-                   
+                Array.Reverse(pkg.body);
                 ulong server_timestamp_ms = BitConverter.ToUInt64(pkg.body, 0);
                 pc.ServerTimeResetCB?.Invoke((long)server_timestamp_ms);
-
-                
             }
             else if (pkg.type == PackageType.PKG_DATA&& this.state == ProtocolState.working)
-            {
+            {     
                 this.heartBeatService.resetTimeout();
-                //ת�߳�
                 pc.AddMsg(PackageProtocol.decode(pkg));
             }
-            else if (pkg.type == PackageType.PKG_KICK)
+            /*else if (pkg.type == PackageType.PKG_KICK)
             {
                 this.getPomeloClient().disconnect();
-                this.close();
-                pc.ReconnectCallBack?.Invoke(PomeloClient.CLIENT_EVENT_DISCONNECT);
-            }
+                this.close(); 
+                //pc.ReconnectCallBack?.Invoke(PomeloClient.CLIENT_EVENT_DISCONNECT);
+            }*/
         }
 
-        private bool processHandshakeData(JsonData msg)
-        {
-            //Handshake error
-            //if (!msg.ContainsKey("code") || !msg.ContainsKey("sys") || Convert.ToInt32(msg["code"]) != 200)
-            //{
-            //    throw new Exception("Handshake error! Please check your handshake config.");
-            //}
-
-            //Set compress data
-            //JsonObject sys = (JsonObject)msg["sys"];
-
-            //JsonObject dict = new JsonObject();
-            //if (sys.ContainsKey("dict")) dict = (JsonObject)sys["dict"];
-
-            //JsonObject protos = new JsonObject();
-            //JsonObject serverProtos = new JsonObject();
-            //JsonObject clientProtos = new JsonObject();
-
-            //if (sys.ContainsKey("protos"))
-            //{
-            //    protos = (JsonObject)sys["protos"];
-            //    serverProtos = (JsonObject)protos["server"];
-            //    clientProtos = (JsonObject)protos["client"];
-            //}
-
-            //messageProtocol = new MessageProtocol(dict, serverProtos, clientProtos);
-
-            //Init heartbeat service
-            if (!msg.Keys.Contains("code") || (int)(msg["code"]) != 200)
-            {
-                string code = "";
-                if (msg.Keys.Contains("code"))
-                {
-                    code = msg["code"].ToString();
-                }
-                handshake.invokeCallback(null);
-                return false;
-            }
-            int interval = 10;
-            if (msg.Keys.Contains("heartbeat")) interval = (int)(msg["heartbeat"]);
-
-            heartBeatService = new HeartBeatService(interval, this);
-
-            if (interval > 0)
-            {
-                heartBeatService.start();
-            }
-
-            //send ack and change protocol state
-            handshake.ack();
-            this.state = ProtocolState.working;
-
-            //Invoke handshake callback
-            JsonData user = new JsonData();
-            if (msg.Keys.Contains("user")) user = (JsonData)msg["user"];
-            handshake.invokeCallback(user);
-            return true;
-        }
 
         //The socket disconnect
         private void onDisconnect()
         {
-            pc.StartReconnect(this);
+            //pc.StartReconnect(this);
         }
 
         internal void close()

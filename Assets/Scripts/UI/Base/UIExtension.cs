@@ -18,7 +18,7 @@ using Object = UnityEngine.Object;
 using OpenUIFormSuccessEventArgs = UnityGameFramework.Runtime.OpenUIFormSuccessEventArgs;
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
     public static class UIExtension
     {

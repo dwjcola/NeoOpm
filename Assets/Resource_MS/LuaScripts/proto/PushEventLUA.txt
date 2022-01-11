@@ -1,295 +1,34 @@
 --===== @Head start============================================================
---[[和c#端使用方式保持一致，复杂逻辑尽量写到自己的脚本中，从这里发消息或者不使用这里的监听
-        例如:
-    self.OnChat = PomeloCLUA:PBOnEvent(0, "ChatDatas", self.ChatBackFunc, self);
-    涉及到返回数据的解析，故不能直接使用自己脚本中的function做remove
-        移除使用：
-        PomeloCLUA:RemovePBEvent(0, self.OnChat);
-        niltable 是无意义的luatable 纯为凑参数 
-]]
+--将代码写在Start和end之间，否则回被生成工具覆盖掉
 --===== @Head end==============================================================
 PushEventLUA={ serviceId={
-OnChat=0;
-OnPlayerViewChg=1;
-OnWsObjUpdate=2;
-OnTroopStateChg=3;
-OnBattleStart=4;
-OnQueueFinish=5;
-OnRecruitInfoChange=6;
-OnRecruitFinish=7;
-OnMoneyChange=8;
-OnTradeLevelChange=9;
-OnArrivalatTradePort=10;
-OnCombatEffectChange=11;
-OnBuildingInfoChange=12;
-OnTechInfoChange=13;
-OnHeroUpdate=14;
-OnSoldierUpdate=15;
-OnItemUpdate=16;
-OnApplyFriend=17;
-OnUnionUpdate=18;
-OnUnionLose=19;
-OnInviteJoinUnion=20;
-OnUnionJobUpdate=21;
-OnUnionTitleUpdate=22;
-OnGroupCreate=23;
-OnTransferGateInvalid=24;
-taskInfoUpdate=25;
-OnWsCastleUpdate=26;
-OnNewMail=27;
-OnAddCommodity=28;
-OnViewBuildingsInfo=29;
-OnWsPath=30;
-OnHeroLevelInfoChange=31;
-OnBuildReachVolumeLimit=32;
-OnBattleAttrIncFromBuildChange=33;
-OnBarriersProgressChange=34;
-OnExpeditionBattleEnd=35;
-OnPhaseBattleResult=36;
-OnVerifyKeyFrameRet=37;
-OnReqFrameDataOnlyRet=38;
-OnBoardcastFrames=39;
-OnActiveSkillsChange=40;
-OnTurretBagChange=41;
-OnBuildingSceneChange=42;
-OnKillMonsterLevelChange=43;
+OnEvent1=500;
 
 };}
 function PushEventLUA:InitOn()
 
-        self.OnChat=PomeloCLUA:PBOnEvent(self.serviceId.OnChat,"SingleChatInfo",function(niltable,arg0)
-            --===== OnChat start============================================================
-		    --===== OnChat end==============================================================
-        end);
-        self.OnPlayerViewChg=PomeloCLUA:PBOnEvent(self.serviceId.OnPlayerViewChg,"WsObjList",function(niltable,arg0)
-            --===== OnPlayerViewChg start============================================================
-		    --===== OnPlayerViewChg end==============================================================
-        end);
-        self.OnWsObjUpdate=PomeloCLUA:PBOnEvent(self.serviceId.OnWsObjUpdate,"WsObjInfo",function(niltable,arg0)
-            --===== OnWsObjUpdate start============================================================
-		    --===== OnWsObjUpdate end==============================================================
-        end);
-        self.OnTroopStateChg=PomeloCLUA:PBOnEvent(self.serviceId.OnTroopStateChg,"WsTroopBasicInfo",function(niltable,arg0)
-            --===== OnTroopStateChg start============================================================
-            PlayerSceneData:OnTroopStateChg(arg0)
-		    --===== OnTroopStateChg end==============================================================
-        end);
-        self.OnBattleStart=PomeloCLUA:PBOnEvent(self.serviceId.OnBattleStart,"BattleDataClient",function(niltable,arg0)
-            --===== OnBattleStart start============================================================
-		    --===== OnBattleStart end==============================================================
-        end);
-        self.OnQueueFinish=PomeloCLUA:PBOnEvent(self.serviceId.OnQueueFinish,"QueueInfo",function(niltable,arg0)
-            --===== OnQueueFinish start============================================================
-            CS.LC.SendEvent("OnQueueFinish",arg0)
-		    --===== OnQueueFinish end==============================================================
-        end);
-        self.OnRecruitInfoChange=PomeloCLUA:PBOnEvent(self.serviceId.OnRecruitInfoChange,"RecruitInfo",function(niltable,arg0)
-            --===== OnRecruitInfoChange start============================================================
-            CS.LC.SendEvent("OnRecruitInfoChange",arg0)
-		    --===== OnRecruitInfoChange end==============================================================
-        end);
-        self.OnRecruitFinish=PomeloCLUA:PBOnEvent(self.serviceId.OnRecruitFinish,"RecruitRes",function(niltable,arg0)
-            --===== OnRecruitFinish start============================================================
-            CS.LC.SendEvent("OnRecruitFinish",arg0)
-		    --===== OnRecruitFinish end==============================================================
-        end);
-        self.OnMoneyChange=PomeloCLUA:PBOnEvent(self.serviceId.OnMoneyChange,"ResourceValue",function(niltable,arg0)
-            --===== OnMoneyChange start============================================================
-            PlayerData:UpdateAssets(arg0);
-		    --===== OnMoneyChange end==============================================================
-        end);
-        self.OnTradeLevelChange=PomeloCLUA:PBOnEvent(self.serviceId.OnTradeLevelChange,"SimpleMsg",function(niltable,arg0)
-            --===== OnTradeLevelChange start============================================================
-            PlayerData:UpdateTradeLv(arg0.Param);
-            --===== OnTradeLevelChange end==============================================================
-        end);
-        self.OnArrivalatTradePort=PomeloCLUA:PBOnEvent(self.serviceId.OnArrivalatTradePort,"SimpleMsg",function(niltable,arg0)
-            --===== OnArrivalatTradePort start============================================================
-            PlayerData:UpdateNearPort(arg0.Param)
-		--===== OnArrivalatTradePort end==============================================================
-        end);
-        self.OnCombatEffectChange=PomeloCLUA:PBOnEvent(self.serviceId.OnCombatEffectChange,"PlayerCombatEffectInfo",function(niltable,arg0)
-            --===== OnCombatEffectChange start============================================================
-            local oldTotalPower=PlayerData:TotalPower()
-            local oldPower=PlayerData.CombatPower
-            for _, v in pairs(arg0.Ce) do
-                if(v~=nil and v.Val~=nil and v.Val~=0)then
-                    PlayerData.CombatPower[v.Ty]=v.Val;
+        self.OnEvent1=PomeloCLUA:PBOnEvent(self.serviceId.OnEvent1,"MessageTest",function(niltable,arg0)
+            --===== OnEvent1 start============================================================
+                CS.LC.Error(arg0.value_value_1);
+                CS.LC.Error(arg0.value_value_2);
+                CS.LC.Error(arg0.value_value_3);
+                CS.LC.Error(arg0.value_value_4);
+                for i, v in ipairs(arg0.sm) do
+                        CS.LC.Error(v.value_test1);
+                        CS.LC.Error(v.value_test2);
+                        for _, vv in ipairs(v.sm) do
+                                CS.LC.Error(vv.sb2_value1);
+                                CS.LC.Error(vv.sb2_value2);
+                        end
+                        
+                        CS.LC.Error(v.sm2.value_test1);
+                        CS.LC.Error(v.sm2.value_test2);
+                        for _, vvv in ipairs(v.sm2.sm) do
+                                CS.LC.Error(vvv.sb2_value1);
+                                CS.LC.Error(vvv.sb2_value2);
+                        end
                 end
-            end
-            --CS.UIReminder.Show("战力修改为:".. PlayerData:TotalPower());
-            local curPower=PlayerData:TotalPower();
-            if(curPower<=oldTotalPower)then
-                CS.LC.SendEvent("OnCombatEffectChange",oldTotalPower)
-            elseif(MainFormLUA~=nil)then
-                CS.UIReminder.ShowPowerUp(tostring(PlayerData:TotalPower()-oldTotalPower),MainFormLUA.powerPosition or MainFormLUA.powerLab.transform.position,function()
-                    CS.LC.SendEvent("OnCombatEffectChange",oldTotalPower)
-                end);
-            end
-            --CS.LC.SendEvent("OnCombatEffectChange",oldTotalPower);
-		--===== OnCombatEffectChange end==============================================================
-        end);
-        self.OnBuildingInfoChange=PomeloCLUA:PBOnEvent(self.serviceId.OnBuildingInfoChange,"BuildingInfo",function(niltable,arg0)
-            --===== OnBuildingInfoChange start============================================================
-            print("OnBuildingInfoChange msg")
-            CS.LC.SendEvent("OnBuildingInfoChange",arg0)
-		    --===== OnBuildingInfoChange end==============================================================
-        end);
-        self.OnTechInfoChange=PomeloCLUA:PBOnEvent(self.serviceId.OnTechInfoChange,"TechnologyInfo",function(niltable,arg0)
-            --===== OnTechInfoChange start============================================================
-            print("OnTechInfoChange",arg0)
-            CS.LC.SendEvent("OnTechInfoChange",arg0)
-		    --===== OnTechInfoChange end==============================================================
-        end);
-        self.OnHeroUpdate=PomeloCLUA:PBOnEvent(self.serviceId.OnHeroUpdate,"PlayerHeroInfo",function(niltable,arg0)
-            --===== OnHeroUpdate start============================================================
-            TroopProxy:UpdataHeroInfo(arg0)
-		    --===== OnHeroUpdate end==============================================================
-        end);
-        self.OnSoldierUpdate=PomeloCLUA:PBOnEvent(self.serviceId.OnSoldierUpdate,"PlayerSoldierInfo",function(niltable,arg0)
-            --===== OnSoldierUpdate start============================================================
-            TroopProxy:UpdataSoldierInfo(arg0)
-            HospitalProxy:UpdateWoundedSoldier(arg0)
-		    --===== OnSoldierUpdate end==============================================================
-        end);
-        self.OnItemUpdate=PomeloCLUA:PBOnEvent(self.serviceId.OnItemUpdate,"ItemInfo",function(niltable,arg0)
-            --===== OnItemUpdate start============================================================
-            PlayerData.BagInfoData:UpdateServerItems(arg0.Item)
-		--===== OnItemUpdate end==============================================================
-        end);
-        self.OnApplyFriend=PomeloCLUA:PBOnEvent(self.serviceId.OnApplyFriend,"Friend",function(niltable,arg0)
-            --===== OnApplyFriend start============================================================
-            FriendProxy:OnApplyFriend(arg0)
-		    --===== OnApplyFriend end==============================================================
-        end);
-        self.OnUnionUpdate=PomeloCLUA:PBOnEvent(self.serviceId.OnUnionUpdate,"UnionInfo",function(niltable,arg0)
-            --===== OnUnionUpdate start============================================================
-            UnionProxy:UpdateInfo(arg0)
-            --===== OnUnionUpdate end==============================================================
-        end);
-        self.OnUnionLose=PomeloCLUA:BuiltInOn(self.serviceId.OnUnionLose,">i4",false,function(niltable,arg0)
-            --===== OnUnionLose start============================================================
-            UnionProxy:UpdateInfo(nil)
-            --===== OnUnionLose end==============================================================
-        end);
-        self.OnInviteJoinUnion=PomeloCLUA:PBOnEvent(self.serviceId.OnInviteJoinUnion,"UnionInfo",function(niltable,arg0)
-            --===== OnInviteJoinUnion start============================================================
-		CS.LC.SendEvent("Union_Invite_message",arg0)
-            --===== OnInviteJoinUnion end==============================================================
-        end);
-        self.OnUnionJobUpdate=PomeloCLUA:BuiltInOn(self.serviceId.OnUnionJobUpdate,">i4",false,function(niltable,arg0)
-            --===== OnUnionJobUpdate start============================================================
-            PlayerData:UpdateUnionJob(arg0)
-            --===== OnUnionJobUpdate end==============================================================
-        end);
-        self.OnUnionTitleUpdate=PomeloCLUA:BuiltInOn(self.serviceId.OnUnionTitleUpdate,">i4",false,function(niltable,arg0)
-            --===== OnUnionTitleUpdate start============================================================
-            PlayerData:UpdateUnionTitle(arg0)
-            --===== OnUnionTitleUpdate end==============================================================
-        end);
-        self.OnGroupCreate=PomeloCLUA:PBOnEvent(self.serviceId.OnGroupCreate,"SingleChannelData",function(niltable,arg0)
-            --===== OnGroupCreate start============================================================
-		--===== OnGroupCreate end==============================================================
-        end);
-        self.OnTransferGateInvalid=PomeloCLUA:PBOnEvent(self.serviceId.OnTransferGateInvalid,"WsObjId",function(niltable,arg0)
-            --===== OnTransferGateInvalid start============================================================
-		--===== OnTransferGateInvalid end==============================================================
-        end);
-        self.taskInfoUpdate=PomeloCLUA:PBOnEvent(self.serviceId.taskInfoUpdate,"SingleTaskInfo",function(niltable,arg0)
-            --===== taskInfoUpdate start============================================================
-            CS.LC.SendEvent("OnUpdateTaskInfo",arg0)
-		--===== taskInfoUpdate end==============================================================
-        end);
-        self.OnWsCastleUpdate=PomeloCLUA:PBOnEvent(self.serviceId.OnWsCastleUpdate,"WsObjInfo",function(niltable,arg0)
-            --===== OnWsCastleUpdate start============================================================
-            PlayerSceneData:OnCastleStateChg(arg0);
-		--===== OnWsCastleUpdate end==============================================================
-        end);
-        self.OnNewMail=PomeloCLUA:PBOnEvent(self.serviceId.OnNewMail,"NotifyNewMail",function(niltable,arg0)
-            --===== OnNewMail start============================================================
-		    MailProxy:NotifyNewMail(arg0);
-            --===== OnNewMail end==============================================================
-        end);
-        self.OnAddCommodity=PomeloCLUA:PBOnEvent(self.serviceId.OnAddCommodity,"CommodityList",function(niltable,arg0)
-            --===== OnAddCommodity start============================================================
-            TradeProxy:SetData(arg0.List)
-		--===== OnAddCommodity end==============================================================
-        end);
-        self.OnViewBuildingsInfo=PomeloCLUA:PBOnEvent(self.serviceId.OnViewBuildingsInfo,"WsBuildingsInfo",function(niltable,arg0)
-            --===== OnViewBuildingsInfo start============================================================
-		--===== OnViewBuildingsInfo end==============================================================
-        end);
-        self.OnWsPath=PomeloCLUA:PBOnEvent(self.serviceId.OnWsPath,"WsPath",function(niltable,arg0)
-            --===== OnWsPath start============================================================
-		--===== OnWsPath end==============================================================
-        end);
-        self.OnHeroLevelInfoChange=PomeloCLUA:PBOnEvent(self.serviceId.OnHeroLevelInfoChange,"PlayerHeroesLevel",function(niltable,arg0)
-            --===== OnHeroLevelInfoChange start============================================================
-            TroopProxy:HeroLvStarChange(arg0)
-            --===== OnHeroLevelInfoChange end==============================================================
-        end);
-        self.OnBuildReachVolumeLimit=PomeloCLUA:BuiltInOn(self.serviceId.OnBuildReachVolumeLimit,">i4",false,function(niltable,arg0)
-            --===== OnBuildReachVolumeLimit start============================================================
-            print("OnBuildReachVolumeLimit",arg0.Param)
-            BuildingIconProxy:SetFarmProduceFull(arg0.Param)
-		--===== OnBuildReachVolumeLimit end==============================================================
-        end);
-        self.OnBattleAttrIncFromBuildChange=PomeloCLUA:PBOnEvent(self.serviceId.OnBattleAttrIncFromBuildChange,"PlayerAttrsInc",function(niltable,arg0)
-            --===== OnBattleAttrIncFromBuildChange start============================================================
-            BuildingProxy:UpdateBattleAttrs(arg0)
-		--===== OnBattleAttrIncFromBuildChange end==============================================================
-        end);
-        self.OnBarriersProgressChange=PomeloCLUA:PBOnEvent(self.serviceId.OnBarriersProgressChange,"PlayerAllBarriers",function(niltable,arg0)
-            --===== OnBarriersProgressChange start============================================================
-            ExpeditionProxy:UpdateExpeditionMap(arg0)
-            CS.LC.SendEvent("OnBarriersProgressChange")
-		--===== OnBarriersProgressChange end==============================================================
-        end);
-        self.OnExpeditionBattleEnd=PomeloCLUA:PBOnEvent(self.serviceId.OnExpeditionBattleEnd,"ExpeditionBattleEnd",function(niltable,arg0)
-            --===== OnExpeditionBattleEnd start============================================================
-            local musicId = 6
-            if arg0.Win>0 then
-                musicId = 5
-            end
-            CS.LC.PlayBGM(musicId)
-            ExpeditionProxy:OnExpeditionBattleEnd(arg0)
-		--===== OnExpeditionBattleEnd end==============================================================
-        end);
-        self.OnPhaseBattleResult=PomeloCLUA:PBOnEvent(self.serviceId.OnPhaseBattleResult,"PhaseBattleResult",function(niltable,arg0)
-            --===== OnPhaseBattleResult start============================================================
-		--===== OnPhaseBattleResult end==============================================================
-        end);
-        self.OnVerifyKeyFrameRet=PomeloCLUA:PBOnEvent(self.serviceId.OnVerifyKeyFrameRet,"ResponseBattleFrameData",function(niltable,arg0)
-            --===== OnVerifyKeyFrameRet start============================================================
-		--===== OnVerifyKeyFrameRet end==============================================================
-        end);
-        self.OnReqFrameDataOnlyRet=PomeloCLUA:PBOnEvent(self.serviceId.OnReqFrameDataOnlyRet,"QuickShot",function(niltable,arg0)
-            --===== OnReqFrameDataOnlyRet start============================================================
-		--===== OnReqFrameDataOnlyRet end==============================================================
-        end);
-        self.OnBoardcastFrames=PomeloCLUA:PBOnEvent(self.serviceId.OnBoardcastFrames,"BroadcastFrames",function(niltable,arg0)
-            --===== OnBoardcastFrames start============================================================
-		--===== OnBoardcastFrames end==============================================================
-        end);
-        self.OnActiveSkillsChange=PomeloCLUA:PBOnEvent(self.serviceId.OnActiveSkillsChange,"ConfigTroop",function(niltable,arg0)
-            --===== OnActiveSkillsChange start============================================================
-            MainGunProxy:UpdateInfo(arg0.ActiveSkills,true)
-		--===== OnActiveSkillsChange end==============================================================
-        end);
-        self.OnTurretBagChange=PomeloCLUA:PBOnEvent(self.serviceId.OnTurretBagChange,"bagBlockItemList",function(niltable,arg0)
-            --===== OnTurretBagChange start============================================================
-            TurretProxy:ChangeBagInfo(arg0)
-		--===== OnTurretBagChange end==============================================================
-        end);
-        self.OnBuildingSceneChange=PomeloCLUA:PBOnEvent(self.serviceId.OnBuildingSceneChange,"ChangeSceneRes",function(niltable,arg0)
-            --===== OnBuildingSceneChange start============================================================
-            TurretProxy:ChangeSceneRes(arg0)
-		--===== OnBuildingSceneChange end==============================================================
-        end);
-        self.OnKillMonsterLevelChange=PomeloCLUA:PBOnEvent(self.serviceId.OnKillMonsterLevelChange,"SimpleMsg",function(niltable,arg0)
-            --===== OnKillMonsterLevelChange start============================================================
-            PlayerData:UpdateKillMonsterLevel(arg0.Param);
-		--===== OnKillMonsterLevelChange end==============================================================
+		--===== OnEvent1 end==============================================================
         end);
 end
 return PushEventLUA;

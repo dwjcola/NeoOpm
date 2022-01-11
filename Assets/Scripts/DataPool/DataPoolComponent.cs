@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityGameFramework.Runtime;
 using XLua;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class DataPoolComponent : GameFrameworkComponent
     {

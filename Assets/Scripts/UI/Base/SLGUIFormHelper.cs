@@ -11,7 +11,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityGameFramework.Runtime;
 
-namespace ProHA
+namespace NeoOPM
 {
     /// <summary>
     /// 默认界面辅助器。

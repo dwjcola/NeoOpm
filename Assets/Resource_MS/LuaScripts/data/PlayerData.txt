@@ -5,17 +5,31 @@ Description:玩家数据
 --]]
 --player数据
 PlayerData=LUAUIBase:new({
-	RoleId = nil,
-	RoleName = "2222",
-	Level = nil
+	GameUid = 0,
+	Name = "",--玩家名称
+	Level = 0,--玩家等级
+	Exp = 0,--玩家经验值
+	Diamond = 0,--钻石
+	Gold = 0,--金币
+	Dust = 0,--粉尘
+	VipExp = 0,--vip经验
+	VipLevel = 0,--vip等级
+	SymCrystal = 0,--共鸣水晶币
+	DisCoin = 0,--遣散币
 	});
+---@param info LoginResp
 function PlayerData:UpdateInfo(info)
-	self.Level = info.Level or 0
-	self.RoleId = info.RoleId or 0
-	self.RoleName = info.RoleName or ""
+	local profile = info.Profile
+	
+	self.GameUid = info.GameUid or 0
+	self.Name = profile.Name or ""
+	self.Level = profile.Level or 0
+	self.Exp = profile.Exp or 0
+	self.Diamond = profile.Diamond or 0
+	self.Gold = profile.Gold or 0
+	self.Dust = profile.Dust or 0
+	self.VipExp = profile.VipExp or 0
+	self.VipLevel = profile.VipLevel or 0
+	self.SymCrystal = profile.SymCrystal or 0
+	self.DisCoin = profile.DisCoin or 0
 end
-
-function PlayerData:GetRoleID()
-	return self.RoleId
-end
-

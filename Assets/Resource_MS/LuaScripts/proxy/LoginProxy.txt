@@ -8,5 +8,40 @@ LoginProxy=LUAUIBase:new({
 function LoginProxy:Init()
 	
 end
+function LoginProxy:EnterServer(ServerInfo,cb,lua)
+	local requstMsg = {}
+	requstMsg.PfId = ServerInfo.AccId;
+	self:Warning("RPCLUA.wfGate_Handler.EnterServer")
+	RPCLUA.server_even.Login(requstMsg,function(l,rep)
+		self:UpdataPlayerData(rep)
+		if cb ~= nil then
+			cb(lua);
+		end
+	end,self)
+end
+---@class LoginResp
+---@field GameUid number
+---@field ServerTime number
+---@field VerLow boolean
+---@field Profile UserProfile
+---@class UserProfile
+---@field Name string
+---@field Level number
+---@field Exp number
+---@field Diamond number
+---@field Gold number
+---@field Dust number
+---@field VipExp number
+---@field VipLevel number
+---@field SymCrystal number
+---@field DisCoin number
 
+---@param info LoginResp
+--登录返回信息
+function LoginProxy:UpdataPlayerData(info)
+	PlayerData:UpdateInfo(info)
+end
+function LoginProxy:GetStatusStr(status)
+	return "Icon_ServerState"..status.."_Login"
+end
 return LoginProxy

@@ -1,0 +1,131 @@
+--[[
+    货币条 item，UI上挂载UserCoin.CS
+    不要在代码里直接改值，使用此脚本的function去设置
+]]
+UICoinItemLUA=LUAUIBase:new({
+	coinType,--和Coin表保持一致
+	num,
+	useSelfNum,
+	corou
+});
+
+function UICoinItemLUA:Open(para)
+	self.coinType=self.UserCoin.AssetID
+	self.useSelfNum=self.UserCoin.UseSelfNum
+	self:AddUIEventListener()
+	--self:InitUI()
+	if(self.useSelfNum)then
+		self:AddEventListener()
+		self:UpdateSelfNum(self:GetPlayerNum())
+	end
+end
+
+--[[function  UICoinItemLUA:InitUI()
+	self:UpdateSkipBTN()
+end]]
+
+function UICoinItemLUA:GetPlayerNum()
+
+	if(self.coinType==LUADefine.COIN.DIAMOND)then--钻石
+		return PlayerData.Diamond or 0
+	elseif(self.coinType==LUADefine.COIN.GOLD)then--金币
+		return PlayerData.Gold or 0
+	elseif(self.coinType==LUADefine.COIN.DUST)then--粉尘
+		return PlayerData.Dust or 0 
+	elseif(self.coinType==LUADefine.COIN.SYMCRYSTAL)then--共鸣水晶币
+		return PlayerData.SymCrystal or 0 
+	elseif(self.coinType==LUADefine.COIN.DISCOIN)then--遣散币
+		return PlayerData.DisCoin or 0
+	else
+		-- body
+	end
+end
+
+function UICoinItemLUA:UpdateSelfNum(num) --修改数值
+	self.num=num;
+	self:UpdateUINum();
+end
+
+function UICoinItemLUA:SetTypeNum(c_type,num) --设置类型、数值
+	-- body
+	self.coinType=c_type or self.coinType
+	self.num=num or self.num;
+	self:UpdateAssetPic()
+	self:UpdateUINum()
+end
+
+function  UICoinItemLUA:SetUsePlayerNum(isUse)
+	self.useSelfNum=isUse;
+	self:RemoveEventListener()
+	self:AddEventListener()
+end
+
+function UICoinItemLUA:OnAssetValueChanged()---如果使用玩家自身的资源，这个监听做更新
+	self:UpdateSelfNum(self:GetPlayerNum())
+end
+
+function UICoinItemLUA:AddEventListener()---添加的默认监听，更新货币条上的数量显示
+self:AddEvent(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
+end
+
+function UICoinItemLUA:AddUIEventListener()
+	self:AddUIEvent("onclick",self.skipBtn.gameObject,self.OnClickSkipBtn);
+end
+
+--[[function  UICoinItemLUA:UpdateSkipBTN()---依据Coin表按钮是否可以点击跳转
+local  coin = TCoin[self.coinType];
+	if(coin==nil)then
+		self:SetSkipBtn(false)
+		return false;
+	end
+	self:SetSkipBtn(coin.skip)
+end
+
+function UICoinItemLUA:SetSkipBtn(skip)---设置按钮是否允许点击跳转等
+self.skipBtn.enabled=skip;
+end]]
+
+function UICoinItemLUA:UpdateAssetPic()
+	--TODO  更改货币类型之后更新UI显示的图片
+	local  coin = TCoin[self.coinType];
+	if(coin==nil)then
+		self:SetSkipBtn(false)
+		return false;
+	end
+	self:SetSprite(self.sprite,coin.atlasPath,coin.sprite)
+end
+function UICoinItemLUA:UpdateUINum()
+	-- TODO 更新显示界面上的数值
+	self.numText.text=self:DisplayNum(self.num)
+end
+
+function  UICoinItemLUA:OnClickSkipBtn()
+	-- TODO 点击跳转
+	self:Error("OnClickSkipBtn")
+end
+
+function  UICoinItemLUA:DisplayNum(num)
+	if(self.coinType==CoinTypes.Gold)then
+		return formatnumberthousands(num);
+	end
+	-- ToDO 显示的方式
+	if(num>=100000000)then
+		return self.mathLua:GetPreciseDecimal(num/100000000,1).."亿";
+	elseif(num>=10000000)then
+		return self.mathLua:GetPreciseDecimal(num/10000,0).."万";
+	elseif(num>=10000)then
+		return self.mathLua:GetPreciseDecimal(num/10000,1,true).."万";
+	else
+		return formatnumberthousands(num)
+	end
+end
+
+
+function  UICoinItemLUA:RemoveEventListener()
+	self:RemoveEvent(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
+end
+function UICoinItemLUA:ondestroy()
+	self:RemoveEventListener();
+end
+
+return UICoinItemLUA;

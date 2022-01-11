@@ -22,12 +22,5 @@ namespace Pomelo.DotNetClient
             this.body = body;
             this.offset = offset;
         }
-        //public Message(MessageType type, uint id, string route, JsonObject data)
-        //{
-        //    this.type = type;
-        //    this.id = id;
-        //    this.route = route;
-        //    this.data = data;
-        //}
     }
 }

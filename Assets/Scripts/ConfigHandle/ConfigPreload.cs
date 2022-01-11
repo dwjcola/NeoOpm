@@ -6,7 +6,7 @@ using System.Text;
 using UnityEditor;
 using UnityEngine;
 using UnityGameFramework.Runtime;
-using ProHA;
+using NeoOPM;
 
 
 public enum ConfigVersonStatus { 
@@ -107,7 +107,7 @@ public class ConfigPreload :Singleton<ConfigPreload>
             CheckPersistentFileStatus();
         });
 #else
-        if (!ProHA.GameEntry.Config.IsUseLocalConfig)
+        if (!NeoOPM.GameEntry.Config.IsUseLocalConfig)
         {
             DownMd5AndVerson(() =>
             {

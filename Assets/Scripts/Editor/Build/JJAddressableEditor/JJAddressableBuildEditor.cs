@@ -9,7 +9,7 @@ using System.IO;
 using System.Text;
 using UnityEditor.AddressableAssets.Build.DataBuilders;
 using LitJson;
-using ProHA;
+using NeoOPM;
 
 public class JJAddressableBuildEditor : Editor
 {
@@ -80,7 +80,7 @@ public class JJAddressableBuildEditor : Editor
 
             data[PlatformConfig.kRemoteLoadPath] = settings.profileSettings.EvaluateString(settings.profileSettings.GetProfileId(pName), remoteLoadPath);
 
-            settings.profileSettings.SetValue(settings.profileSettings.GetProfileId(pName), AddressableAssetSettings.kRemoteLoadPath, $"{ProHA.PlatformConfig.RemoteBundleURL}");
+            settings.profileSettings.SetValue(settings.profileSettings.GetProfileId(pName), AddressableAssetSettings.kRemoteLoadPath, $"{NeoOPM.PlatformConfig.RemoteBundleURL}");
             settings.profileSettings.SetValue(settings.profileSettings.GetProfileId(pName), AddressableAssetSettings.kRemoteBuildPath, $"{RemoteRootPath}/Update-{System.DateTime.Now:yy.MM.dd.HH.mm.ss}");
         }
 

@@ -5,6 +5,7 @@ Description:存放一些固定定义的Const
 --]]
 LUADefine={};
 
+
 LUADefine.TEST="TEST"
 
 
@@ -17,3 +18,14 @@ Enum = {
         }
     }
 }
+
+--货币相关
+LUADefine.COIN={
+    DIAMOND = 201,--钻石
+    GOLD = 203,--金币
+    DUST = 205,--粉尘
+    SYMCRYSTAL = 207,--共鸣水晶币
+    DISCOIN = 208,--遣散币
+}
+LUADefine.ON_SERVER_UPDATE_COIN = "ON_SERVER_UPDATE_COIN"
+

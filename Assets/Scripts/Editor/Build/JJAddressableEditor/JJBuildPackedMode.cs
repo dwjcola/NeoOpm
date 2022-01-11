@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-using ProHA;
+using NeoOPM;
 using UnityEditor.AddressableAssets.Build.BuildPipelineTasks;
 using UnityEditor.AddressableAssets.Settings;
 using UnityEditor.AddressableAssets.Settings.GroupSchemas;
@@ -474,7 +474,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
             string[] dependencyHashes = null;
             if (aaContext.Settings.BuildRemoteCatalog)
             {
-                dependencyHashes = CreateRemoteCatalog(jsonText, aaContext.runtimeData.CatalogLocations, aaContext.Settings, builderInput, new ProHA.ProviderLoadRequestOptions() { IgnoreFailures = true });
+                dependencyHashes = CreateRemoteCatalog(jsonText, aaContext.runtimeData.CatalogLocations, aaContext.Settings, builderInput, new NeoOPM.ProviderLoadRequestOptions() { IgnoreFailures = true });
             }
 
             aaContext.runtimeData.CatalogLocations.Add(new ResourceLocationData(
@@ -895,7 +895,7 @@ namespace UnityEditor.AddressableAssets.Build.DataBuilders
             return assetsInputDef;
         }
 
-        static string[] CreateRemoteCatalog(string jsonText, List<ResourceLocationData> locations, AddressableAssetSettings aaSettings, AddressablesDataBuilderInput builderInput, ProHA.ProviderLoadRequestOptions catalogLoadOptions)
+        static string[] CreateRemoteCatalog(string jsonText, List<ResourceLocationData> locations, AddressableAssetSettings aaSettings, AddressablesDataBuilderInput builderInput, NeoOPM.ProviderLoadRequestOptions catalogLoadOptions)
         {
             string[] dependencyHashes = null;
 

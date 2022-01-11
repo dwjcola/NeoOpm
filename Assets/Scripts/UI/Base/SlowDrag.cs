@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 
-namespace ProHA
+namespace NeoOPM
 {
 
 public class SlowDrag : MonoBehaviour

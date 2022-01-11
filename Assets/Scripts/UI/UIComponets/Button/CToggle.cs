@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class CToggle : Toggle
     {

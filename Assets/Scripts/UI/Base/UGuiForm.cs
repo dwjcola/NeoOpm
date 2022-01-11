@@ -17,7 +17,7 @@ using UnityGameFramework.Runtime;
 using XLua;
 using Object = UnityEngine.Object;
 
-namespace ProHA
+namespace NeoOPM
 {
     public abstract class UGuiForm : UIFormLogic
     {

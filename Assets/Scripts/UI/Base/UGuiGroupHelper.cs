@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 
-namespace ProHA
+namespace NeoOPM
 {
     /// <summary>
     /// uGUI 界面组辅助器。

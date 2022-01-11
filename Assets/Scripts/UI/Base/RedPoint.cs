@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using XLua;
 using System.Linq;
 using UnityEngine.UI;
-namespace ProHA
+namespace NeoOPM
 {
 
 public class TriggerParam

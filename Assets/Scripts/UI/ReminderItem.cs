@@ -4,7 +4,7 @@ using TMPro;
 using DG.Tweening;
 using UnityEngine.UI;
 
-namespace ProHA
+namespace NeoOPM
 {
 
 public class ReminderItem : MonoBehaviour

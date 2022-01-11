@@ -6,7 +6,7 @@
 using XLua;
 using System;
 
-namespace ProHA
+namespace NeoOPM
 {
 
     public class LUAComponent : UIMonoItem

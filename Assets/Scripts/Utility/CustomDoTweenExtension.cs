@@ -10,7 +10,7 @@ using DG.Tweening.Core.Enums;
 
 
 
-namespace ProHA
+namespace NeoOPM
 {
     public static class CustomDoTweenExtension
     {

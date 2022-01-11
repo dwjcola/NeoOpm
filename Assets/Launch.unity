@@ -902,7 +902,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EnableLoadDictionaryUpdateEvent: 0
   m_EnableLoadDictionaryDependencyAssetEvent: 0
-  m_LocalizationHelperTypeName: ProHA.XmlLocalizationHelper
+  m_LocalizationHelperTypeName: NeoOPM.XmlLocalizationHelper
   m_CustomLocalizationHelper: {fileID: 0}
 --- !u!114 &349315700
 MonoBehaviour:
@@ -928,7 +928,7 @@ MonoBehaviour:
   m_InstanceRoot: {fileID: 1576232203}
   m_UIFormHelperTypeName: UnityGameFramework.Runtime.DefaultUIFormHelper
   m_CustomUIFormHelper: {fileID: 0}
-  m_UIGroupHelperTypeName: ProHA.UGuiGroupHelper
+  m_UIGroupHelperTypeName: NeoOPM.UGuiGroupHelper
   m_CustomUIGroupHelper: {fileID: 0}
   m_UIGroups:
   - m_Name: Default
@@ -1065,14 +1065,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AvailableProcedureTypeNames:
-  - ProHA.ProcedureBattle
-  - ProHA.ProcedureChangeScene
-  - ProHA.ProcedureCheckVersion
-  - ProHA.ProcedureCity
-  - ProHA.ProcedureLaunch
-  - ProHA.ProcedureLogin
-  - ProHA.ProcedurePreload
-  m_EntranceProcedureTypeName: ProHA.ProcedureLaunch
+  - NeoOPM.ProcedureBattle
+  - NeoOPM.ProcedureChangeScene
+  - NeoOPM.ProcedureCheckVersion
+  - NeoOPM.ProcedureCity
+  - NeoOPM.ProcedureLaunch
+  - NeoOPM.ProcedureLogin
+  - NeoOPM.ProcedurePreload
+  m_EntranceProcedureTypeName: NeoOPM.ProcedureCheckVersion
 --- !u!114 &349408970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1131,7 +1131,7 @@ MonoBehaviour:
   m_VersionHelperTypeName: UnityGameFramework.Runtime.DefaultVersionHelper
   m_LogHelperTypeName: UnityGameFramework.Runtime.DefaultLogHelper
   m_ZipHelperTypeName: UnityGameFramework.Runtime.DefaultZipHelper
-  m_JsonHelperTypeName: ProHA.LitJsonHelper
+  m_JsonHelperTypeName: NeoOPM.LitJsonHelper
   m_FrameRate: 60
   m_GameSpeed: 1
   m_RunInBackground: 1

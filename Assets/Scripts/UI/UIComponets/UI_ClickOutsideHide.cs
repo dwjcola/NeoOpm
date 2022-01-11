@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System;
-namespace ProHA
+namespace NeoOPM
 {
 
 public class UI_ClickOutsideHide : MonoBehaviour

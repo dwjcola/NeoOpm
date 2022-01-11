@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ProHA
+namespace NeoOPM
 {
     [RequireComponent(typeof(Image))]
     public class OutLineBtn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler

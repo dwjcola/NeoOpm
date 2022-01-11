@@ -2,7 +2,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace ProHA
+namespace NeoOPM
 {
    public class StaticDic : MonoBehaviour
    {

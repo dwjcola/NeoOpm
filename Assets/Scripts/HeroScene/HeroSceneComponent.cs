@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityGameFramework.Runtime;
 
 
-namespace ProHA
+namespace NeoOPM
 {
     public class HeroSceneComponent : GameFrameworkComponent
     {

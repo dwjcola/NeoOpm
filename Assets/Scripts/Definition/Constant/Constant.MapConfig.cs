@@ -1,6 +1,6 @@
 ﻿using DG.Tweening;
 
-namespace ProHA
+namespace NeoOPM
 {
     public static partial class Constant
     {

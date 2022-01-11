@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ProHA
+namespace NeoOPM
 {
     [RequireComponent(typeof(PolygonCollider2D))]
     public class PolygonImage : Image

@@ -3,7 +3,7 @@ using UnityEngine;
 using GameFramework.UI;
 using XLua;
 
-namespace ProHA
+namespace NeoOPM
 {
     public class LongClickDown : MonoBehaviour {
 

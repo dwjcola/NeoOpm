@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using XLua;
 
-namespace ProHA
+namespace NeoOPM
 {
    public class CrossGo : MonoBehaviour,
       IPointerClickHandler,

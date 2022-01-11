@@ -529,7 +529,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 32.800034, y: 16.5}
-  m_SizeDelta: {x: 128.3, y: 30}
+  m_SizeDelta: {x: 122, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4634374318391856605
 CanvasRenderer:
@@ -559,8 +559,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 97f4584a10913154b9bb6e3361b96cb9, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: a2281f28298dc1c4889b7987db100018, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -1700,6 +1700,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5920366763194835527}
   - component: {fileID: 3899867928078847415}
+  - component: {fileID: 6625303130110644130}
   m_Layer: 5
   m_Name: money1
   m_TagString: Untagged
@@ -1738,6 +1739,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1105720587624245210}
   m_CullTransparentMesh: 1
+--- !u!114 &6625303130110644130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1105720587624245210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c370d5e5206605548b5dcf6e7d33b42d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUIMonoItem: 0
+  keyList:
+  - UserCoin
+  - numText
+  valueList:
+  - {fileID: 6625303130110644130}
+  - {fileID: 297511292337123936}
+  strkeyList: []
+  strvalueList: []
+  LuaName: UICoinItemLUA
+  AssetID: 203
+  UseSelfNum: 1
 --- !u!1 &1169572511797877296
 GameObject:
   m_ObjectHideFlags: 0
@@ -1805,7 +1830,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e2f59e629eb81945aaccc8abfeef266, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8056190049e019642943e384dcf01c61, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2427,7 +2452,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e2f59e629eb81945aaccc8abfeef266, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8056190049e019642943e384dcf01c61, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2823,7 +2848,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 008b9cf9e8135b54cb218183cb8a235a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bf97d4cfc6b0f2442a5daf74d3911564, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4491,7 +4516,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e2f59e629eb81945aaccc8abfeef266, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8056190049e019642943e384dcf01c61, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4823,7 +4848,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 008b9cf9e8135b54cb218183cb8a235a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bf97d4cfc6b0f2442a5daf74d3911564, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5033,7 +5058,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 082c97caf30d6c1449cb19a7dc038025, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d4d79d25f941295409d332c68b8f9c57, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5114,7 +5139,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 32.800034, y: 16.5}
-  m_SizeDelta: {x: 128.3, y: 30}
+  m_SizeDelta: {x: 122, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8876463693721124243
 CanvasRenderer:
@@ -5144,7 +5169,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 97f4584a10913154b9bb6e3361b96cb9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a2281f28298dc1c4889b7987db100018, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5324,7 +5349,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 493fd1c841f252844a43aa2b0ce2392a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4261bb1553afcda4680dd196a7004ae9, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5543,6 +5568,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4081827860268753596}
   - component: {fileID: 9065597759089162159}
+  - component: {fileID: 1695699174158155928}
   m_Layer: 5
   m_Name: money2
   m_TagString: Untagged
@@ -5581,6 +5607,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6209020474224801417}
   m_CullTransparentMesh: 1
+--- !u!114 &1695699174158155928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6209020474224801417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c370d5e5206605548b5dcf6e7d33b42d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUIMonoItem: 0
+  keyList:
+  - UserCoin
+  - numText
+  valueList:
+  - {fileID: 1695699174158155928}
+  - {fileID: 3557838194027183928}
+  strkeyList: []
+  strvalueList: []
+  LuaName: UICoinItemLUA
+  AssetID: 201
+  UseSelfNum: 1
 --- !u!1 &6498478517935248525
 GameObject:
   m_ObjectHideFlags: 0
@@ -5591,6 +5641,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8953558222111767281}
   - component: {fileID: 8929911649718383961}
+  - component: {fileID: 4411582351620255508}
   m_Layer: 5
   m_Name: money3
   m_TagString: Untagged
@@ -5629,6 +5680,30 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6498478517935248525}
   m_CullTransparentMesh: 1
+--- !u!114 &4411582351620255508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6498478517935248525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c370d5e5206605548b5dcf6e7d33b42d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isUIMonoItem: 0
+  keyList:
+  - numText
+  - UserCoin
+  valueList:
+  - {fileID: 2024342651029819408}
+  - {fileID: 4411582351620255508}
+  strkeyList: []
+  strvalueList: []
+  LuaName: 
+  AssetID: 1
+  UseSelfNum: 0
 --- !u!1 &6543284191814052759
 GameObject:
   m_ObjectHideFlags: 0
@@ -5664,7 +5739,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 32.800034, y: 16.5}
-  m_SizeDelta: {x: 128.3, y: 30}
+  m_SizeDelta: {x: 122, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6355648753778088348
 CanvasRenderer:
@@ -5694,7 +5769,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 97f4584a10913154b9bb6e3361b96cb9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a2281f28298dc1c4889b7987db100018, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5769,7 +5844,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 008b9cf9e8135b54cb218183cb8a235a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bf97d4cfc6b0f2442a5daf74d3911564, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -6423,7 +6498,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 07355da48600ad74fbc8667c87e5064b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 10089110ed803d241bfb08971f4f3c7f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -10,7 +10,13 @@ function string.split(str,sep)
     local pattern = string.format("([^%s]+)", sep)  
     string.gsub(str,pattern, function(c) fields[#fields+1] = c end)  
     return fields  
-end 
+end
+-- 字符串连接 string.join(str1,str2,str3)->"str1str2str3"
+function string.concat(...)
+	local args = {...}
+	--local arg = table.pack(...)
+	return table.concat(args)
+end
 -- 字符串连接 string.join({"str1","str2","str3"},"-")->"str1-str2-str3"
 function string.join(join_table, joiner)
 	if #join_table == 0 then

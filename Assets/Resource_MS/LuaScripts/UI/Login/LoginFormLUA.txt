@@ -23,6 +23,7 @@ function LoginFormLUA:Init(param)
 	self:AddUIEvent("onclick", self.connectBtn.gameObject, self.ConnectLogin);
 end
 function LoginFormLUA:ConnectLogin()
+
 	if self.input.text == nil or self.input.text == "" then
 		self:Error("请输入账号")
 	else

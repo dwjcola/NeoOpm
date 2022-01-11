@@ -31,8 +31,9 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
 
             if skillData then
                 local attack_r = skillData._skill_r + (blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0)
-                if dis <= attack_r then
-                    local isHandleSuss = BattleUtils:checkoutPosForPlace_r(self_pos,_entityContext,blackBoard._campType,blackBoard._uid)
+                dis = dis - attack_r
+                if dis < BattleConstant.Dist_r then
+                    local isHandleSuss = BattleUtils:checkoutPosForPlace_r(self_pos,_entityContext,_enemyEntity,blackBoard._campType,blackBoard._uid)
                     if isHandleSuss then
                         result = Enum_BT.Node_ResultType.Success
                     else

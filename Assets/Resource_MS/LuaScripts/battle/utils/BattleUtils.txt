@@ -84,21 +84,21 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        --[1] = {
-                        --    heroId = "hero101",
-                        --},
+                        [1] = {
+                            heroId = "hero101",
+                        },
                         [2] = {
                             heroId = "hero101",
                         },
-                        --[3] = {
-                        --    heroId = "hero101",
-                        --},
+                        [3] = {
+                            heroId = "hero101",
+                        },
                         [4] = {
                             heroId = "hero101",
                         },
-                        --[5] = {
-                        --    heroId = "hero101",
-                        --}
+                        [5] = {
+                            heroId = "hero101",
+                        }
                     },
                 },
                 team_enemy = {
@@ -116,8 +116,24 @@ function BattleUtils:getTestBattleData()
                         --[4] = {
                         --    heroId = "hero102",
                         --},
+                        --[5] = {
+                        --    heroId = "hero102",
+                        --}
+
+                        [1] = {
+                            heroId = "hero101",
+                        },
+                        [2] = {
+                            heroId = "hero101",
+                        },
+                        [3] = {
+                            heroId = "hero101",
+                        },
+                        [4] = {
+                            heroId = "hero101",
+                        },
                         [5] = {
-                            heroId = "hero102",
+                            heroId = "hero101",
                         }
                     },
                 }
@@ -131,7 +147,11 @@ end
 ---@param oriVec Vector3
 ---@param tmpVec Vector3
 ---@param entityContext BattleEntityContext
-function BattleUtils:handleTarget_place_r(oriVec,tmpVec,entityContext,camp,uid)
+---@param targetEnemyEntity BattleCharacter
+function BattleUtils:handleTarget_place_r(oriVec,tmpVec,entityContext,targetEnemyEntity,camp,uid)
+    --do
+    --    return true,oriVec
+    --end
     --Logger.error(uid,"    ",oriVec,tmpVec)
     if tmpVec and oriVec.x == tmpVec.x and oriVec.y == tmpVec.y  then
         return false,tmpVec
@@ -146,32 +166,48 @@ function BattleUtils:handleTarget_place_r(oriVec,tmpVec,entityContext,camp,uid)
             local entity_pos = entity:getData()._position
             local place_r = entity:getData()._place_r
             local dis = Vector3.Distance(tmpVec,entity_pos)
-            --Logger.error(dis)
             if dis < place_r then
-                local tmpDic = tmpVec - entity_pos
+                local tmpDic = tmpVec - targetEnemyEntity:getData()._position
                 local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,-1)
-                return self:handleTarget_place_r(oriVec,entity_pos + tmp,entityContext,camp,uid)
+                return self:handleTarget_place_r(oriVec,targetEnemyEntity:getData()._position + tmp,entityContext,targetEnemyEntity,camp,uid)
             end
         end
     end
-    --for i, entity in pairs(enemy_entityList) do
-    --    local entity_pos = entity:getData()._position
-    --    local place_r = entity:getData()._place_r
-    --    local dis = Vector3.Distance(tmpVec,entity_pos)
-    --    if dis < place_r then
-    --        local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpVec,1)
-    --
-    --        return self:handleTarget_place_r(oriVec,tmp,entityContext,camp,uid)
-    --    end
-    --end
+    for i, entity in pairs(enemy_entityList) do
+        if entity:getData()._uid ~= targetEnemyEntity:getData()._uid then
+            local entity_pos = entity:getData()._position
+            local place_r = entity:getData()._place_r
+            local dis = Vector3.Distance(tmpVec,entity_pos)
+            if dis < place_r then
+                local tmpDic = tmpVec - targetEnemyEntity:getData()._position
+                local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,-1)
+                return self:handleTarget_place_r(oriVec,targetEnemyEntity:getData()._position + tmp,entityContext,targetEnemyEntity,camp,uid)
+            end
+        end
+    end
     return true,tmpVec
 end
 
-function BattleUtils:checkoutPosForPlace_r(oriVec,entityContext,camp,uid)
+function BattleUtils:checkoutPosForPlace_r(oriVec,entityContext,targetEnemyEntity,camp,uid)
+    --do
+    --    return true
+    --
+    --end
     local self_entityList = entityContext:getEntityListByCamp(camp)
-    --local enemy_entityList = entityContext:getEnemyEntityList(camp)
+    local enemy_entityList = entityContext:getEnemyEntityList(camp)
     for i, entity in pairs(self_entityList) do
         if entity:getData()._uid ~= uid then
+            local entity_pos = entity:getData()._position
+            local place_r = entity:getData()._place_r
+            local dis = Vector3.Distance(oriVec,entity_pos)
+            --Logger.error(dis)
+            if dis < place_r then
+                return false
+            end
+        end
+    end
+    for i, entity in pairs(enemy_entityList) do
+        if entity:getData()._uid ~= targetEnemyEntity:getData()._uid then
             local entity_pos = entity:getData()._position
             local place_r = entity:getData()._place_r
             local dis = Vector3.Distance(oriVec,entity_pos)

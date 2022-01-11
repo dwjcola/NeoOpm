@@ -316,12 +316,7 @@ function CreateUtils:createOrdinarySkillTree()
                               node_2_3_3_1:setIConditionS({condition_2_3_3_1_1}, Enum_BT.Condition_Relation.BT_AND)
                        node_2_3_3:addNode(node_2_3_3_1)
                        node_2_3_3:addNode(self:createFindWayTree())
-                              ---@type NodeAction
-                              local node_2_3_3_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000036")
-                                    ---@type bt_ac_idle_battle
-                                    local action_2_3_3_3_1 = btApplyMap:getClass("bt_ac_idle_battle")
-                              node_2_3_3_3:setIAction(action_2_3_3_3_1)
-                       node_2_3_3:addNode(node_2_3_3_3)
+                       node_2_3_3:addNode(self:getAwaitTree())
                 node_2_3:addNode(node_2_3_3)
                        local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000032")
                              local action_2_3_2 = btApplyMap:getClass("bt_ac_controlled")
@@ -350,11 +345,7 @@ function CreateUtils:createFindWayTree()
                             con_2_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_find_target_pos", _compareTargetValue = nil, })
                 node_2_1:setICondition(con_2_1_1)
           node_2:addNode(node_2_1)
-                ---@type NodeAction
-                local node_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_4")
-                      local ac_2_2_1 = btApplyMap:getClass("bt_ac_idle_battle")
-                node_2_2:setIAction(ac_2_2_1)
-         node_2:addNode(node_2_2)
+          node_2:addNode(self:getAwaitTree())
                 local node_2_3 =  self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000035_5")
                      ---@type NodeAction
                      local node_2_3_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000035_6")
@@ -370,7 +361,7 @@ function CreateUtils:createFindWayTree()
                             action_2_3_2_1:initData({ })
                        node_2_3_2:setIAction(action_2_3_2_1)
                 node_2_3:addNode(node_2_3_2)
-         node_2:addNode(node_2_3)
+          node_2:addNode(node_2_3)
     node:addNode(node_2)
     return node
 end
@@ -394,4 +385,19 @@ function CreateUtils:createGeneralAttackTree()
     node:addNode(node_2_3_3_2_2)
     return node
 end
+
+function CreateUtils:getAwaitTree()
+    ---@type NodeSequence
+    local node =  self:getNodeByType(Enum_BT.Node_Type.Sequence,"await_1")
+          ---@type NodeAction
+          local node_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"await_1_1")
+                ---@type bt_ac_switchAnima
+                local ac_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
+                ac_1_1:initData({aniName = Enum_Battle.AniState.idle,isReset = false,speed = 1})
+          node_1:setIAction(ac_1_1)
+    node:addNode(node_1)
+    return node
+
+end
+
 return CreateUtils

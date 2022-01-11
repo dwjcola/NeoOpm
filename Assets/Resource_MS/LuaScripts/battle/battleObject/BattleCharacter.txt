@@ -22,9 +22,6 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
     self._uid = uid
     --BattleLog.error( self._heroId)
 
-
-
-
     self:init()
 
 
@@ -33,9 +30,10 @@ end
 
 function BattleCharacter:init()
 
-    --local rlist = {6,1}
+    local rlist = {6,1}
     local skill_5 = SkillData:new()
-    skill_5._skill_r = 1 -- rlist[math.random(1,2)]
+    --skill_5._skill_r = rlist[math.random(1,2)]
+    skill_5._skill_r = 1
     skill_5._skillType = Enum_Battle.SkillTag.Skill_5
     skill_5._skill_time_cd = 0
 
@@ -52,12 +50,12 @@ function BattleCharacter:init()
         _bigSkillReady = false,
         _isKeyDownBigSkill = false,
         _uid = self._uid,
-        _moveSpeed = self._index_pos == 4 and  0.1 or 0.5,
+        _moveSpeed = self._index_pos == 4 and  0.1 or 0.3,
         _skillData = {
            [Enum_Battle.SkillTag.Skill_5] = skill_5
         },
         _volume_r = 0.5,
-        _place_r = 1,
+        _place_r = 0.6,
         _dislocation_r = 0.5,
         _detection_r = 1,
         _isCloseIn = true,

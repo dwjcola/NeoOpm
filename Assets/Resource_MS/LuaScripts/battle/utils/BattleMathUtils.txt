@@ -9,8 +9,8 @@ BattleMathUtils = {}
 function BattleMathUtils.AngleAxis_Y_V3(oriVec,angle)
    local x = oriVec.x
    local z = oriVec.z
-    local x1 = x *  math.acos(angle) + z * math.asin(angle)
-    local z1 = -x *  math.asin(angle) + z * math.acos(angle)
+    local x1 = x *  math.cos(angle) - z * math.sin(angle)
+    local z1 = x *  math.sin(angle) + z * math.cos(angle)
     return Vector3(x1,0,z1)
 end
 
@@ -18,8 +18,8 @@ end
 function BattleMathUtils.AngleAxis_Y_V2(oriVec,angle)
     local x = oriVec.x
     local y = oriVec.y
-    local x1 = x *  math.acos(angle) + y * math.asin(angle)
-    local y1 = -x *  math.asin(angle) + y * math.acos(angle)
+    local x1 = x *  math.cos(angle) - y * math.sin(angle)
+    local y1 = x *  math.sin(angle) + y * math.cos(angle)
     return Vector2(x1,y1)
 end
 return BattleMathUtils

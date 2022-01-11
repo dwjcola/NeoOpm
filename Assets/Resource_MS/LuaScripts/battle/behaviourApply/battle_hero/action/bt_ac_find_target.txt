@@ -38,7 +38,7 @@ function bt_ac_find_target:doAction(blackBoard,agent)
                     local attack_r = skillData._skill_r + _volume_r
                     place_target = target - (normalVec * attack_r)
                 end
-                local isHandleSuss ,tmp_pos = BattleUtils:handleTarget_place_r(place_target,nil,_entityContext,blackBoard._campType,blackBoard._uid)
+                local isHandleSuss ,tmp_pos = BattleUtils:handleTarget_place_r(place_target,nil,_entityContext,_enemyEntity,blackBoard._campType,blackBoard._uid)
                 if isHandleSuss then
                     place_target = tmp_pos
                     blackBoard._find_target_pos = place_target

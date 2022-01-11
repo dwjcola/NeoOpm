@@ -30,7 +30,8 @@ function bt_ac_way_finding:doAction(blackBoard,agent)
         if skillData then
             local dis = Vector3.Distance(self_pos,place_target)
             local moveVec = Vector3.Normalize(place_target - self_pos) * moveSpeed
-            if dis <= 0.01 then
+            --Logger.error("dis == ",dis)
+            if dis <= BattleConstant.Dist_r then
                 result = Enum_BT.Node_ResultType.Success
             else
                 local newPos = self_pos + moveVec

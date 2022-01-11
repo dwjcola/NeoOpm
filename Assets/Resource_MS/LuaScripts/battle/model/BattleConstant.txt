@@ -41,7 +41,10 @@ local BattleConstant = {
        }
     },
     --- 逻辑帧  ms
-    FrameTime = 33.334
+    FrameTime = 33.334,
+
+    --- 判断是否到达位置得 插值
+    Dist_r = 0.01,
 }
 
 

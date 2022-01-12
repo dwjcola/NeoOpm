@@ -235,7 +235,7 @@ function CreateUtils:createSmallSkillTree()
 
     --node:addNode(self:createSelectSmallSkillTree())
 
-    node:addNode(self:createOrdinarySkillTree())
+    node:addNode(self:createTreeExceptSmallSkill())
     return node
 end
 
@@ -277,59 +277,78 @@ function CreateUtils:createSelectSmallSkillTree()
     return node_1
 end
 
-function CreateUtils:createOrdinarySkillTree()
+function CreateUtils:createTreeExceptSmallSkill()
     ---@type NodeIfJudge 判断是不是 在放 小技能
     local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000025")
           ---@type NodeCondition
-          local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000026")
+          local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000025_1")
                 -----@type bt_con_compare_base
                 local condition_1_1 = btApplyMap:getClass("bt_con_compare_base")
                 condition_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_smallSkillIng", _compareTargetValue = false, })
           node_1:setICondition(condition_1_1)
     node:addNode(node_1)
-          ---@type NodeIfJudge 判断 能不能 释放普攻
-          local node_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000027")
-                ---@type NodeConditionGroup
-                local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000028")
-                       local condition_2_1_1 = btApplyMap:getClass("bt_con_baseControlled")
-                       ---@type bt_con_skillRange_to_enmity
-                       local condition_2_1_2 = btApplyMap:getClass("bt_con_skillRange_to_enmity")
-                       condition_2_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_5 })
-                local tmp_01 = {condition_2_1_1,condition_2_1_2}
-                node_2_1:setIConditionS(tmp_01,Enum_BT.Condition_Relation.BT_AND)
-          node_2:addNode(node_2_1)
-          node_2:addNode(self:createGeneralAttackTree())
-                ---@type NodeIfJudge 判断 是不是 被限制 行为了 （眩晕，击退，放逐）
-                local node_2_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000030")
-                      ---@type NodeConditionGroup
-                      local node_2_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000031")
-                            -----@type bt_con_astrict
-                            local condition_2_3_1_1 = btApplyMap:getClass("bt_con_baseControlled")
-                      node_2_3_1:setIConditionS({condition_2_3_1_1},Enum_BT.Condition_Relation.BT_AND)
-                node_2_3:addNode(node_2_3_1)
-                       ---@type NodeParallelAll
-                       local node_2_3_3 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000033")
-
-                       --node_2_3_3:addNode(node_2_3_3_1)
-                              ---@type NodeIfJudge 判断 有没有 寻路 目标
-                              local node_2_3_3_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000033_2")
-                                     ---@type NodeConditionGroup
-                                     local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000033_2_1")
-                                           ---@type bt_con_isHadEnemyTarget
-                                           local condition_2_3_3_1_1 = btApplyMap:getClass("bt_con_isHadEnemyTarget")
-                                     node_2_3_3_2_1:setIConditionS({condition_2_3_3_1_1}, Enum_BT.Condition_Relation.BT_AND)
-                              node_2_3_3_2:addNode(node_2_3_3_2_1)
-                              node_2_3_3_2:addNode(self:createFindWayTree())
-                              node_2_3_3_2:addNode(self:getAwaitTree())
-                       node_2_3_3:addNode(node_2_3_3_2)
-                node_2_3:addNode(node_2_3_3)
-                       local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000032")
-                             local action_2_3_2 = btApplyMap:getClass("bt_ac_controlled")
-                        node_2_3_2:setIAction(action_2_3_2)
-                node_2_3:addNode(node_2_3_2)
-          node_2:addNode(node_2_3)
+          ---@type NodeParallel
+          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000025_2")
+          node_2:addNode(self:createOptimizeTree())
+          node_2:addNode(self:createOrdinarySkillTree())
     node:addNode(node_2)
     return node
+end
+
+function CreateUtils:createOptimizeTree()
+    ---@type NodeParallelAll
+   local node = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000026")
+    ---@type NodeAction
+      local node_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000026_1")
+        ---@type bt_ac_check_change_place_r
+        local ac_1 = btApplyMap:getClass("bt_ac_check_change_place_r")
+      node_1:setIAction(ac_1)
+    node:addNode(node_1)
+    return node_1
+end
+
+function CreateUtils:createOrdinarySkillTree()
+    ---@type NodeIfJudge 判断 能不能 释放普攻
+    local node_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000027")
+          ---@type NodeConditionGroup
+          local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000028")
+                local condition_2_1_1 = btApplyMap:getClass("bt_con_baseControlled")
+                ---@type bt_con_skillRange_to_enmity
+                local condition_2_1_2 = btApplyMap:getClass("bt_con_skillRange_to_enmity")
+                condition_2_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_5 })
+          local tmp_01 = {condition_2_1_1,condition_2_1_2}
+          node_2_1:setIConditionS(tmp_01,Enum_BT.Condition_Relation.BT_AND)
+    node_2:addNode(node_2_1)
+    node_2:addNode(self:createGeneralAttackTree())
+    node_2:addNode(self:createTreeExceptSkillTree())
+    return node_2
+end
+
+function CreateUtils:createTreeExceptSkillTree()
+    ---@type NodeIfJudge 判断 是不是 被限制 行为了 （眩晕，击退，放逐）
+    local node_2_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000030")
+         ---@type NodeConditionGroup
+         local node_2_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000031")
+               -----@type bt_con_astrict
+               local condition_2_3_1_1 = btApplyMap:getClass("bt_con_baseControlled")
+         node_2_3_1:setIConditionS({condition_2_3_1_1},Enum_BT.Condition_Relation.BT_AND)
+    node_2_3:addNode(node_2_3_1)
+         ---@type NodeIfJudge 判断 有没有 寻路 目标
+         local node_2_3_3_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000033_2")
+               ---@type NodeConditionGroup
+               local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000033_2_1")
+                     ---@type bt_con_isHadEnemyTarget
+                     local condition_2_3_3_1_1 = btApplyMap:getClass("bt_con_isHadEnemyTarget")
+               node_2_3_3_2_1:setIConditionS({condition_2_3_3_1_1}, Enum_BT.Condition_Relation.BT_AND)
+         node_2_3_3_2:addNode(node_2_3_3_2_1)
+         node_2_3_3_2:addNode(self:createFindWayTree())
+         node_2_3_3_2:addNode(self:getAwaitTree())
+    node_2_3:addNode(node_2_3_3_2)
+         local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000032")
+               local action_2_3_2 = btApplyMap:getClass("bt_ac_controlled")
+         node_2_3_2:setIAction(action_2_3_2)
+    node_2_3:addNode(node_2_3_2)
+    return node_2_3
 end
 
 function CreateUtils:createFindWayTree()

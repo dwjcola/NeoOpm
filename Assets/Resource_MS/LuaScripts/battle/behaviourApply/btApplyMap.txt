@@ -23,8 +23,8 @@ btApplyMap.classPath = {
     ["bt_ac_refreshEnmityList"] = "battle/behaviourApply/battle_hero/action/bt_ac_refreshEnmityList",
     ["bt_ac_switchAnima"] = "battle/behaviourApply/battle_hero/action/bt_ac_switchAnima",
     ["bt_ac_find_target"] = "battle/behaviourApply/battle_hero/action/bt_ac_find_target",
-    ["bt_ac_turn"] = "battle/behaviourApply/battle_hero/action/bt_ac_turn",
-
+    ["bt_ac_turn"] = "battle/behaviourApply/battle_hero/action/bt_ac_turn", --
+    ["bt_ac_check_change_place_r"] = "battle/behaviourApply/battle_hero/action/bt_ac_check_change_place_r",
 
 
 

@@ -40,6 +40,8 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._volume_r = 1
     -- 占位半径
     self._place_r = 1
+    -- 占位半径
+    self._place_r_base = 1
     -- 错位半径
     self._dislocation_r = 1
     -- 检测半径

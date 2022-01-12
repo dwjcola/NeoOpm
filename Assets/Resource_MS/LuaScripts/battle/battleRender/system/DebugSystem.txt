@@ -21,8 +21,9 @@ function DebugSystem:gizmosCircleHandle(data)
     local place_r = data.place_r
     local dislocation_r = data.dislocation_r
     local detection_r = data.detection_r
+    local attack_r = data.attack_r
     if entity  then
-        entity:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r)
+        entity:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r,attack_r)
     end
 end
 

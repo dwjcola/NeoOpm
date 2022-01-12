@@ -307,16 +307,21 @@ function CreateUtils:createOrdinarySkillTree()
                             local condition_2_3_1_1 = btApplyMap:getClass("bt_con_baseControlled")
                       node_2_3_1:setIConditionS({condition_2_3_1_1},Enum_BT.Condition_Relation.BT_AND)
                 node_2_3:addNode(node_2_3_1)
-                       ---@type NodeIfJudge 判断 有没有 寻路 目标
-                       local node_2_3_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000033")
-                              ---@type NodeConditionGroup
-                              local node_2_3_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000034")
-                                    ---@type bt_con_isHadEnemyTarget
-                                    local condition_2_3_3_1_1 = btApplyMap:getClass("bt_con_isHadEnemyTarget")
-                              node_2_3_3_1:setIConditionS({condition_2_3_3_1_1}, Enum_BT.Condition_Relation.BT_AND)
-                       node_2_3_3:addNode(node_2_3_3_1)
-                       node_2_3_3:addNode(self:createFindWayTree())
-                       node_2_3_3:addNode(self:getAwaitTree())
+                       ---@type NodeParallelAll
+                       local node_2_3_3 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000033")
+
+                       --node_2_3_3:addNode(node_2_3_3_1)
+                              ---@type NodeIfJudge 判断 有没有 寻路 目标
+                              local node_2_3_3_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000033_2")
+                                     ---@type NodeConditionGroup
+                                     local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000033_2_1")
+                                           ---@type bt_con_isHadEnemyTarget
+                                           local condition_2_3_3_1_1 = btApplyMap:getClass("bt_con_isHadEnemyTarget")
+                                     node_2_3_3_2_1:setIConditionS({condition_2_3_3_1_1}, Enum_BT.Condition_Relation.BT_AND)
+                              node_2_3_3_2:addNode(node_2_3_3_2_1)
+                              node_2_3_3_2:addNode(self:createFindWayTree())
+                              node_2_3_3_2:addNode(self:getAwaitTree())
+                       node_2_3_3:addNode(node_2_3_3_2)
                 node_2_3:addNode(node_2_3_3)
                        local node_2_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000032")
                              local action_2_3_2 = btApplyMap:getClass("bt_ac_controlled")
@@ -369,6 +374,7 @@ end
 function CreateUtils:createGeneralAttackTree()
     ---@type NodeSequence
     local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000028")
+    node:addNode(self:getTurnTree())
            ---@type NodeAction
            local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_1")
                  ---@type bt_ac_switchAnima
@@ -398,6 +404,29 @@ function CreateUtils:getAwaitTree()
     node:addNode(node_1)
     return node
 
+end
+--- 转向树
+function CreateUtils:getTurnTree()
+    ---@type NodeDecoratorReturnSuccess
+    local node = self:getNodeByType(Enum_BT.Node_Type.Decorator_Return_Success)
+
+    ---@type NodeSequence
+    local node_2_3_3_1 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000033_1")
+          ---@type NodeCondition
+          local node_2_3_3_1_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000033_1_1")
+                ---@type bt_con_need_turn
+                local condition_2_3_3_1_1 = btApplyMap:getClass("bt_con_need_turn")
+          node_2_3_3_1_1:setICondition(condition_2_3_3_1_1)
+    node_2_3_3_1:addNode(node_2_3_3_1_1)
+          ---@type NodeAction
+          local node_2_3_3_1_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000033_1_2")
+                 ---@type bt_ac_turn
+                 local ac_2_3_3_1_2 = btApplyMap:getClass("bt_ac_turn")
+          node_2_3_3_1_2:setIAction(ac_2_3_3_1_2)
+    node_2_3_3_1:addNode(node_2_3_3_1_2)
+
+    node:addNode(node_2_3_3_1)
+    return node
 end
 
 return CreateUtils

@@ -37,12 +37,12 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Battle/General
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: c1b1566d0a0535549abd7f5b7c54afd7
-    m_Address: Assets/Resource_MS/Battle/General/animation
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 30752ba11fab5be4eaf65d018b70a3ba
     m_Address: Assets/Resource_MS/Battle/General/jienuosi
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: af93f11aaf4ec3d4a962240b4e6aa8a1
+    m_Address: Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

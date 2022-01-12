@@ -32,16 +32,33 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
             if skillData then
                 local attack_r = skillData._skill_r + (blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0)
                 dis = dis - attack_r
-                if dis < BattleConstant.Dist_r then
-                    local isHandleSuss = BattleUtils:checkoutPosForPlace_r(self_pos,_entityContext,_enemyEntity,blackBoard._campType,blackBoard._uid)
-                    if isHandleSuss then
-                        result = Enum_BT.Node_ResultType.Success
+                if blackBoard._find_target_pos then
+                    local disTarget = Vector3.Distance(blackBoard._position , blackBoard._find_target_pos)
+                    if disTarget < BattleConstant.Dist_r then
+                        if dis < BattleConstant.Dist_r then
+                            result = Enum_BT.Node_ResultType.Success
+                        else
+                            BattleLog.error(" 已到达目的地 但 技能范围判定失败 ！！！！ dis  == ",dis,"   disTarget == ",disTarget)
+                            result = Enum_BT.Node_ResultType.Fail
+                        end
                     else
                         result = Enum_BT.Node_ResultType.Fail
                     end
                 else
-                    result = Enum_BT.Node_ResultType.Fail
+                    if dis < BattleConstant.Dist_r then
+                        result = Enum_BT.Node_ResultType.Success
+                    else
+                        result = Enum_BT.Node_ResultType.Fail
+                    end
                 end
+                --if dis < BattleConstant.Dist_r then
+                --    result = Enum_BT.Node_ResultType.Success
+                --else
+                --    result = Enum_BT.Node_ResultType.Fail
+                --end
+                --if blackBoard._uid == 4 then
+                --    result = Enum_BT.Node_ResultType.Fail
+                --end
             else
                 BattleLog.error("SkillData 没有 普工技能数据 ！！！")
                 result = Enum_BT.Node_ResultType.Fail

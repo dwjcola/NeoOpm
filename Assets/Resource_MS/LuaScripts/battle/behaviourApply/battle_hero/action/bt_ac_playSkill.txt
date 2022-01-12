@@ -11,7 +11,7 @@ function bt_ac_playSkill:initData(data)
     self._heroId = data.heroId
     self._skillFrameList = BattleUtils:getSkillFrameList(data.heroId,data.skillTag)
     self._frameCount = 0
-    self._maxFrameCount = 60
+    self._maxFrameCount = 23
 end
 
 function bt_ac_playSkill:doAction(blackBoard,contextManager)

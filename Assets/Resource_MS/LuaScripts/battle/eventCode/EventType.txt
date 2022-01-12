@@ -22,8 +22,9 @@ local EventType = {
     Event_Battle_EnmityChange = "",
     Event_Battle_Render_SwitchAni = "",   -- 切换动画
     Event_Battle_Render_Move_Line = "",   -- 直线移动
+    Event_Battle_Render_Turn = "",        -- 转向
 
-
+    Event_Battle_Render_Debug_GizmosCircle = "",   -- GizmosCircle
 
     Event_Battle_Attack_Hp = "",
 }

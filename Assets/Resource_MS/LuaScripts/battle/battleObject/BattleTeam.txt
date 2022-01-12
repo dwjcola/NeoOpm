@@ -121,6 +121,7 @@ function BattleTeam:tryLoadLeftRole()
 
         BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
             self:removeLoadMap()
+            self:addComponent(model)
             self._map_left_role[pos] = {
                 model = model,
                 assetPath = path
@@ -138,6 +139,7 @@ function BattleTeam:tryLoadRightRole()
         local path = BattleUtils:getHeroAssetPathByHeroId(v.heroId)
         BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
             self:removeLoadMap()
+            self:addComponent(model)
             self._map_right_role[pos] = {
                 model = model,
                 assetPath = path
@@ -202,6 +204,15 @@ function BattleTeam:putAsset()
     end
     for i, v in pairs(self._map_right_role) do
         BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
+    end
+end
+
+function BattleTeam:addComponent(model)
+    if model then
+        if GameStatic_Battle.General_Grizmo then
+            --model.gameObject.GetOrAddComponent(typeof(CS.UnityEngine.GameObjectGizmosCircle))
+            CS.LC.GetOrAddComponent(model.gameObject, "GameObjectGizmosCircleLine")
+        end
     end
 end
 return BattleTeam

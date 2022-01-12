@@ -6,3 +6,5 @@
 GameStatic_Battle = {}
 
 GameStatic_Battle.BattleLog = false
+
+GameStatic_Battle.General_Grizmo = true

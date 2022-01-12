@@ -61,7 +61,7 @@ public static class XLuaRegister
         typeof (Vector3),
         typeof (Vector2),
         typeof (Color),
-        typeof (Color),
+        //typeof (Color),
         // typeof (StorylineActionEngine),
         typeof (Rect),
         typeof (Quaternion),
@@ -84,6 +84,7 @@ public static class XLuaRegister
         typeof(DG.Tweening.Sequence),
         typeof(SLG.WsObjInfo),
         typeof(LC),
+        typeof(GameObjectGizmosCircle),
     };
 
     [ReflectionUse]

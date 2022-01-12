@@ -19,7 +19,7 @@ using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using GameEntry = NeoOPM.GameEntry;
 using Object = UnityEngine.Object;
-
+using System.Reflection;
 
 public class LC
 {
@@ -609,6 +609,69 @@ public class LC
             PomeloCLUA=require('PomeloCLUA')
             PomeloCLUA:Init()
         end");
+    }
+
+    public static Type GetType(string typeName)
+    {
+        // 先在当前Assembly找,再在UnityEngine里找.
+        // 如果都找不到,再遍历所有Assembly
+        var type = Assembly.GetExecutingAssembly().GetType(typeName) ?? typeof(ParticleSystem).Assembly.GetType(typeName);
+        if (type != null) return type;
+        type = GetUnityType(typeName);
+        if (type != null) return type;
+        foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+        {
+            type = a.GetType(typeName);
+            if (type != null)
+                return type;
+        }
+        return null;
+    }
+
+    private static Type GetUnityType(string typeName)
+    {
+        string namespaceStr = "UnityEngine";
+        if (!typeName.Contains(namespaceStr))
+            typeName = namespaceStr + "." + typeName;
+        var assembly = Assembly.Load(namespaceStr);
+        if (assembly == null)
+            return null;
+        return assembly.GetType(typeName);
+
+    }
+
+    public static Component GetOrAddComponent(GameObject target, string className)
+    {
+        Component com = target.GetComponent(className);
+        if (com == null)
+        {
+            com = target.AddComponent(GetType(className));
+        }
+        return com;
+    }
+
+    public static Component GetOrAddComponent(GameObject target, string path, Type className)
+    {
+        Transform child = target.transform.Find(path);
+        if (child == null)
+        {
+            return null;
+        }
+        Component com = child.GetComponent(className);
+        if (com == null)
+        {
+            com = child.gameObject.AddComponent(className);
+        }
+        return com;
+    }
+    public static Component GetOrAddComponent(GameObject target, Type className)
+    {
+        Component com = target.GetComponent(className);
+        if (com == null)
+        {
+            com = target.AddComponent(className);
+        }
+        return com;
     }
 }
 

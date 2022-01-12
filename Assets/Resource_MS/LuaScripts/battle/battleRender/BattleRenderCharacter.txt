@@ -24,7 +24,14 @@ function BattleRenderCharacter:getUid()
 end
 
 function BattleRenderCharacter:init()
+    self:initDebugComponent()
     self:initAnimationComponent()
+end
+
+function BattleRenderCharacter:initDebugComponent()
+    if GameStatic_Battle.General_Grizmo then
+        self._gizmosCircle = self._go_model.transform:GetComponent("GameObjectGizmosCircleLine")
+    end
 end
 ---animation
 function BattleRenderCharacter:initAnimationComponent()
@@ -57,6 +64,18 @@ end
 function BattleRenderCharacter:setPosition(newPos)
     if newPos then
         self._go_model.transform.position = newPos
+    end
+end
+
+function BattleRenderCharacter:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r)
+    if GameStatic_Battle.General_Grizmo and self._gizmosCircle then
+        self._gizmosCircle:BeginDraw(volume_r,place_r,dislocation_r,detection_r)
+    end
+end
+
+function BattleRenderCharacter:setRotation(newVec)
+    if newVec and self._go_model and self._go_model.transform then
+        self._go_model.transform.localEulerAngles = newVec
     end
 end
 

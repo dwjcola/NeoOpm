@@ -23,6 +23,8 @@ btApplyMap.classPath = {
     ["bt_ac_refreshEnmityList"] = "battle/behaviourApply/battle_hero/action/bt_ac_refreshEnmityList",
     ["bt_ac_switchAnima"] = "battle/behaviourApply/battle_hero/action/bt_ac_switchAnima",
     ["bt_ac_find_target"] = "battle/behaviourApply/battle_hero/action/bt_ac_find_target",
+    ["bt_ac_turn"] = "battle/behaviourApply/battle_hero/action/bt_ac_turn",
+
 
 
 
@@ -40,6 +42,7 @@ btApplyMap.classPath = {
     ["bt_onBeAttack_isNotEnmity"] = "battle/behaviourApply/battle_hero/condition/bt_onBeAttack_isNotEnmity",
     ["bt_onReceive"] = "battle/behaviourApply/battle_hero/condition/bt_onReceive",
     ["bt_con_skillRange_to_enmity"] = "battle/behaviourApply/battle_hero/condition/bt_con_skillRange_to_enmity",
+    ["bt_con_need_turn"] = "battle/behaviourApply/battle_hero/condition/bt_con_need_turn",
 
 }
 

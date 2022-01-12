@@ -75,6 +75,9 @@ Enum_Battle.AniState = {
     death = "Death",
     win = "Victory",
 }
-
-
+--- 战斗朝向
+Enum_Battle.Orientation = {
+    Left = 1,       -- 朝左
+    Right = 2,      -- 朝右
+}
 

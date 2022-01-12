@@ -98,6 +98,10 @@ public class XluaManager : Singleton<XluaManager>
             }
             if (string.IsNullOrEmpty(tempStr))
             {
+                tempStr = GetLuaStringByName(className, "base");
+            }
+            if (string.IsNullOrEmpty(tempStr))
+            {
                 tmpPath = className;
                 string battlePath = TryLoadByBattle(tmpPath, out className);
                 tempStr = GetLuaStringByName(className, battlePath);

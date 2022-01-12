@@ -311,6 +311,7 @@ public class LUAComponentEditor:UIViewItemEditor
         GUILayout.Label("LUAClassName:");
         lUA.LuaName = EditorGUILayout.TextField(lUA.LuaName);
         GUILayout.EndHorizontal();
+        if (GUI.changed) EditorUtility.SetDirty(lUA);
     }
     public virtual void AddProperty()
     {

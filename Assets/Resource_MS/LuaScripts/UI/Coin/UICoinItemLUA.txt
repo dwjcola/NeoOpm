@@ -69,7 +69,7 @@ self:AddEvent(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
 end
 
 function UICoinItemLUA:AddUIEventListener()
-	self:AddUIEvent("onclick",self.skipBtn.gameObject,self.OnClickSkipBtn);
+	--self:AddUIEvent("onclick",self.skipBtn.gameObject,self.OnClickSkipBtn);
 end
 
 --[[function  UICoinItemLUA:UpdateSkipBTN()---依据Coin表按钮是否可以点击跳转
@@ -105,9 +105,9 @@ function  UICoinItemLUA:OnClickSkipBtn()
 end
 
 function  UICoinItemLUA:DisplayNum(num)
-	if(self.coinType==CoinTypes.Gold)then
+--[[	if(self.coinType==CoinTypes.Gold)then
 		return formatnumberthousands(num);
-	end
+	end]]
 	-- ToDO 显示的方式
 	if(num>=100000000)then
 		return self.mathLua:GetPreciseDecimal(num/100000000,1).."亿";

@@ -23,20 +23,26 @@ function bt_ac_check_change_place_r:doAction(blackBoard,agent)
     end
     local changeDelegate = function()
         if GameStatic_Battle.General_Grizmo then
-            local data = {uid = self._uid,volume_r = blackBoard._volume_r,place_r = blackBoard._place_r,dislocation_r = blackBoard._dislocation_r,
-                          detection_r = blackBoard._detection_r,attack_r = blackBoard._attack_r,place_r_base = blackBoard._place_r_base}
+            local data = {uid = blackBoard._uid,
+                          volume_r = blackBoard._volume_r,
+                          place_r = blackBoard._place_r,
+                          dislocation_r = blackBoard._dislocation_r,
+                          detection_r = blackBoard._detection_r,
+                          attack_r = blackBoard._skillData[Enum_Battle.SkillTag.Skill_5]._skill_r,
+                          place_r_base = blackBoard._place_r_base}
             EventManager:Dispatch_battle(EventType.Event_Battle_Render_Debug_GizmosCircle,data)
         end
     end
-    --if len == 0 then
-    --    blackBoard._place_r =  blackBoard._place_r_base
-    --elseif len == 1 then
-    --    blackBoard._place_r =  blackBoard._place_r_base * 0.66
-    --elseif len == 2 then
-    --    blackBoard._place_r =  blackBoard._place_r_base * 0.5
-    --else
-    --    blackBoard._place_r =  blackBoard._place_r_base * 0.33
-    --end
+    if len == 0 then
+        blackBoard._place_r =  blackBoard._place_r_base
+    elseif len == 1 then
+        blackBoard._place_r =  blackBoard._place_r_base * 0.66
+    elseif len == 2 then
+        blackBoard._place_r =  blackBoard._place_r_base * 0.5
+    else
+        blackBoard._place_r =  blackBoard._place_r_base * 0.33
+    end
+
     changeDelegate()
     return Enum_BT.Node_ResultType.Success
 end

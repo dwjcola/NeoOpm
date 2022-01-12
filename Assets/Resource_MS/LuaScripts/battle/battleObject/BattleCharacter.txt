@@ -79,8 +79,13 @@ end
 
 function BattleCharacter:debugSetting(volume_r,place_r,dislocation_r,detection_r,attack_r,place_r_base)
     if GameStatic_Battle.General_Grizmo then
-        local data = {uid = self._uid,volume_r = volume_r,place_r = place_r,dislocation_r = dislocation_r,
-                      detection_r = detection_r,attack_r =attack_r,place_r_base = place_r_base}
+        local data = {uid = self._uid,
+                      volume_r = volume_r,
+                      place_r = place_r,
+                      dislocation_r = dislocation_r,
+                      detection_r = detection_r,
+                      attack_r =attack_r,
+                      place_r_base = place_r_base}
         EventManager:Dispatch_battle(EventType.Event_Battle_Render_Debug_GizmosCircle,data)
     end
 

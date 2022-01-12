@@ -56,9 +56,7 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
                 --else
                 --    result = Enum_BT.Node_ResultType.Fail
                 --end
-                --if blackBoard._uid == 4 then
-                --    result = Enum_BT.Node_ResultType.Fail
-                --end
+
             else
                 BattleLog.error("SkillData 没有 普工技能数据 ！！！")
                 result = Enum_BT.Node_ResultType.Fail
@@ -66,27 +64,6 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
         else
             result = Enum_BT.Node_ResultType.Fail
         end
-
-        --
-        ----- @type BattleEntityContext
-        --local _entityContext = agent._entityContext
-        ----- @type BattleCharacter
-        --local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
-        --if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
-        --    if blackBoard._find_target_pos then
-        --        local self_pos = blackBoard._position
-        --        local dis = Vector3.Distance(self_pos,blackBoard._find_target_pos)
-        --        if dis < 0.01 then
-        --            result =  Enum_BT.Node_ResultType.Success
-        --        else
-        --            result =  Enum_BT.Node_ResultType.Fail
-        --        end
-        --    else
-        --        result =  Enum_BT.Node_ResultType.Fail
-        --    end
-        --else
-        --    result = Enum_BT.Node_ResultType.Fail
-        --end
     end
     return result
 end

@@ -67,9 +67,9 @@ function BattleRenderCharacter:setPosition(newPos)
     end
 end
 
-function BattleRenderCharacter:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r,attack_r)
+function BattleRenderCharacter:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r,attack_r,place_r_base)
     if GameStatic_Battle.General_Grizmo and self._gizmosCircle then
-        self._gizmosCircle:BeginDraw(volume_r,place_r,dislocation_r,detection_r,attack_r)
+        self._gizmosCircle:BeginDraw(volume_r,place_r,dislocation_r,detection_r,attack_r,place_r_base)
     end
 end
 

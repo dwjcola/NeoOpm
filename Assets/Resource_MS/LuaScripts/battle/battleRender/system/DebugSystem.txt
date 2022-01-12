@@ -17,13 +17,14 @@ end
 
 function DebugSystem:gizmosCircleHandle(data)
     local entity = self:getEntityByUid(data.uid)
-    local volume_r = data.volume_r
-    local place_r = data.place_r
-    local dislocation_r = data.dislocation_r
-    local detection_r = data.detection_r
-    local attack_r = data.attack_r
+    local volume_r = data.volume_r or 0
+    local place_r = data.place_r or 0
+    local dislocation_r = data.dislocation_r or 0
+    local detection_r = data.detection_r or 0
+    local attack_r = data.attack_r or 0
+    local place_r_base = data.place_r_base or 0
     if entity  then
-        entity:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r,attack_r)
+        entity:setGizmosCircle(volume_r,place_r,dislocation_r,detection_r,attack_r,place_r_base)
     end
 end
 

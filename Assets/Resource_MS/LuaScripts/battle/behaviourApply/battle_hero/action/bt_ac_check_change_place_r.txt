@@ -16,7 +16,7 @@ function bt_ac_check_change_place_r:doAction(blackBoard,agent)
         if entity:getData()._uid ~= blackBoard._uid then
             local entity_pos = entity:getData()._position
             local dis = Vector3.Distance(blackBoard._position,entity_pos)
-            if dis < check_r then
+            if dis < (check_r + entity:getData()._detection_r)  then
                 len = len + 1
             end
         end

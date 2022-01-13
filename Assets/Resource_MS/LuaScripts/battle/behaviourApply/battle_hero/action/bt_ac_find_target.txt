@@ -32,12 +32,23 @@ function bt_ac_find_target:doAction(blackBoard,agent)
                 local self_pos = blackBoard._position
                 local place_target = blackBoard._find_target_pos
                 local target =  _enemyEntity:getData()._position
-                local normalVec = Vector3.Normalize(target - self_pos)
                 local _volume_r = blackBoard._isCloseIn and  _enemyEntity:getData()._volume_r or 0
                 local attack_r = skillData._skill_r + _volume_r
+                --if place_target == nil or Vector3.Distance(place_target,target) > attack_r then
+                --    local normalVec = Vector3.Normalize(target - self_pos)
+                --    place_target = target - (normalVec * attack_r)
+                --end
+                local normalVec = Vector3.Normalize(target - self_pos)
                 place_target = target - (normalVec * attack_r)
-
+                --if blackBoard._uid == 4 then
+                --    Logger.error("place_target == ",place_target)
+                --end
                 local isHandleSuss ,tmp_pos = BattleUtils:handleTarget_place_r(place_target,nil,_entityContext,_enemyEntity,blackBoard,1)
+
+                --if blackBoard._uid == 4 then
+                --    Logger.error("isHandleSuss == ",isHandleSuss,"  tmp_pos == ",tmp_pos," place_r == ",blackBoard._place_r)
+                --end
+
                 if isHandleSuss then
                     place_target = tmp_pos
                     --local dic = Vector3.Distance(place_target,blackBoard._position)

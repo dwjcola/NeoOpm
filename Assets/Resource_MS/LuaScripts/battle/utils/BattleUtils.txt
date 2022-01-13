@@ -124,18 +124,18 @@ function BattleUtils:getTestBattleData()
                         --    heroId = "hero102",
                         --}
 
-                        --[1] = {
-                        --    heroId = "hero101",
-                        --},
-                        --[2] = {
-                        --    heroId = "hero101",
-                        --},
-                        --[3] = {
-                        --    heroId = "hero101",
-                        --},
-                        --[4] = {
-                        --    heroId = "hero101",
-                        --},
+                        [1] = {
+                            heroId = "hero101",
+                        },
+                        [2] = {
+                            heroId = "hero101",
+                        },
+                        [3] = {
+                            heroId = "hero101",
+                        },
+                        [4] = {
+                            heroId = "hero101",
+                        },
                         [5] = {
                             heroId = "hero101",
                         }
@@ -158,6 +158,9 @@ function BattleUtils:handleTarget_place_r(oriVec,tmpVec,entityContext,targetEnem
     --    return true,oriVec
     --end
     --Logger.error(uid,"    ",oriVec,tmpVec)
+    --if blackBoard._uid == 4 then
+    --    Logger.error(" angle 111111111 == ",angle)
+    --end
     if tmpVec and oriVec.x == tmpVec.x and oriVec.y == tmpVec.y  then
         return false,tmpVec
     end
@@ -192,6 +195,9 @@ function BattleUtils:handleTarget_place_r(oriVec,tmpVec,entityContext,targetEnem
             end
         end
     end
+    --if blackBoard._uid == 4 then
+    --    Logger.error("angle 2222222 == ",angle)
+    --end
     return true,tmpVec
 end
 ---@param blackBoard BlackBoard_BattleBase

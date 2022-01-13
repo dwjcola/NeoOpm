@@ -42,7 +42,7 @@ public class GameObjectGizmosCircleLine : MonoBehaviour
             transform.DrawGizmoCircleLine(place_r, Color.yellow);
             transform.DrawGizmoCircleLine(dislocation_r, Color.green);
             transform.DrawGizmoCircleLine(detection_r, Color.blue);
-            transform.DrawGizmoCircleLine(place_r_base, Color.clear);
+            transform.DrawGizmoCircleLine(place_r_base, Color.gray);
         }
     }
 }

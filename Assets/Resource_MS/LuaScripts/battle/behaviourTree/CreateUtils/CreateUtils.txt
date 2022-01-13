@@ -304,6 +304,11 @@ function CreateUtils:createOptimizeTree()
         local ac_1 = btApplyMap:getClass("bt_ac_check_change_place_r")
       node_1:setIAction(ac_1)
     node:addNode(node_1)
+      -----@type NodeSequence
+      -- local node_2 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000026_2")
+      --   ---@type bt_ac_check_change_place_r
+      --    local
+
     return node_1
 end
 

@@ -31,7 +31,7 @@ end
 function BattleCharacter:init()
     local volume_r = 0.5
     local place_r = 0.6
-    local dislocation_r = 0
+    local dislocation_r = 0.9
     local detection_r = 0.8
 
     local rlist = {6,1}
@@ -54,7 +54,7 @@ function BattleCharacter:init()
         _bigSkillReady = false,
         _isKeyDownBigSkill = false,
         _uid = self._uid,
-        _moveSpeed = self._index_pos == 4 and  0.1 or 0.3,
+        _moveSpeed = 0.05,
         _skillData = {
            [Enum_Battle.SkillTag.Skill_5] = skill_5
         },

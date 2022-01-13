@@ -85,13 +85,6 @@ function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
 end
 
 function CreateUtils:createTree(heroId,sceneData,data)
-
-    if heroId == "hero102" then
-        local node_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"*********")
-        local action_3 = btApplyMap:getClass("bt_ac_died")
-        node_3:setIAction(action_3)
-        return  node_3
-    end
     ---@type NodeIfJudge
     local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
     -------------------------------------------------------------------------------
@@ -304,12 +297,33 @@ function CreateUtils:createOptimizeTree()
         local ac_1 = btApplyMap:getClass("bt_ac_check_change_place_r")
       node_1:setIAction(ac_1)
     node:addNode(node_1)
-      -----@type NodeSequence
-      -- local node_2 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000026_2")
-      --   ---@type bt_ac_check_change_place_r
-      --    local
+      ---@type NodeIfJudge
+       local node_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000026_2")
+         ---@type NodeConditionGroup
+         local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000026_2_1")
+            local con_2_1_1 = btApplyMap:getClass("bt_con_compare_base")
+                  con_2_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_find_target_pos", _compareTargetValue = nil, })
+            local con_2_1_2 = btApplyMap:getClass("bt_con_baseControlled")
+            local con_2_1_3 = btApplyMap:getClass("bt_con_isDislocation")
 
-    return node_1
+         local tmp_01 = {con_2_1_1,con_2_1_2,con_2_1_3}
+         node_2_1:setIConditionS(tmp_01, Enum_BT.Condition_Relation.BT_AND)
+       node_2:addNode(node_2_1)
+         ---@type NodeParallelAll
+         local node_2_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000026_2_2")
+               ---@type NodeAction
+               local node_2_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000026_2_2")
+               local ac_2_2_1 = btApplyMap:getClass("bt_ac_malposed_findTarget")
+               node_2_2_1:setIAction(ac_2_2_1)
+         node_2_2:addNode(node_2_2_1)
+                ---@type NodeAction
+                local node_2_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000026_2_2")
+                local ac_2_2_2 = btApplyMap:getClass("bt_ac_malposed_findWay")
+                node_2_2_2:setIAction(ac_2_2_2)
+         node_2_2:addNode(node_2_2_2)
+       node_2:addNode(node_2_2)
+    node:addNode(node_2)
+    return node
 end
 
 function CreateUtils:createOrdinarySkillTree()
@@ -400,14 +414,21 @@ function CreateUtils:createGeneralAttackTree()
     local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000028")
     node:addNode(self:getTurnTree())
            ---@type NodeAction
-           local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_1")
+           local node_2_3_3_2_0 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_1")
+                ---@type bt_ac_setValue
+                local ac_2_3_3_2_1_1 = btApplyMap:getClass("bt_ac_setValue")
+                 ac_2_3_3_2_1_1:initData({key = "_find_target_pos",value = nil})
+           node_2_3_3_2_0:setIAction(ac_2_3_3_2_1_1)
+    node:addNode(node_2_3_3_2_0)
+           ---@type NodeAction
+           local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_2")
                  ---@type bt_ac_switchAnima
                  local ac_2_3_3_2_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
                  ac_2_3_3_2_1_1:initData({aniName = Enum_Battle.AniState.baseSkill,isReset = true,speed = 1})
            node_2_3_3_2_1:setIAction(ac_2_3_3_2_1_1)
     node:addNode(node_2_3_3_2_1)
           ---@type NodeAction
-          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_2")
+          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_3")
                  ---@type bt_ac_playSkill
                  local action_2_3_3_2_2_1 = btApplyMap:getClass("bt_ac_playSkill")
                  action_2_3_3_2_2_1:initData({ })

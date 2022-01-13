@@ -49,7 +49,7 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     if heroId == "hero101" then
         return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
     else
-        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi2.prefab"
     end
 
 end
@@ -88,21 +88,21 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        [1] = {
-                            heroId = "hero101",
-                        },
+                        --[1] = {
+                        --    heroId = "hero101",
+                        --},
                         [2] = {
                             heroId = "hero101",
                         },
-                        [3] = {
-                            heroId = "hero101",
-                        },
+                        --[3] = {
+                        --    heroId = "hero101",
+                        --},
                         [4] = {
                             heroId = "hero101",
                         },
-                        [5] = {
-                            heroId = "hero101",
-                        }
+                        --[5] = {
+                        --    heroId = "hero101",
+                        --}
                     },
                 },
                 team_enemy = {
@@ -117,28 +117,12 @@ function BattleUtils:getTestBattleData()
                         --[3] = {
                         --    heroId = "hero102",
                         --},
-                        --[4] = {
-                        --    heroId = "hero102",
-                        --},
+                        [4] = {
+                            heroId = "hero102",
+                        },
                         --[5] = {
                         --    heroId = "hero102",
                         --}
-
-                        [1] = {
-                            heroId = "hero101",
-                        },
-                        [2] = {
-                            heroId = "hero101",
-                        },
-                        [3] = {
-                            heroId = "hero101",
-                        },
-                        [4] = {
-                            heroId = "hero101",
-                        },
-                        [5] = {
-                            heroId = "hero101",
-                        }
                     },
                 }
             }

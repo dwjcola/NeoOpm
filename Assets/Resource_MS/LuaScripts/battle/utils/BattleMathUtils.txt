@@ -7,9 +7,13 @@ BattleMathUtils = {}
 
 --- 向量 围绕 Y 轴 旋转 一定角度
 function BattleMathUtils.AngleAxis_Y_V3(oriVec,angle)
-    local radian = math.rad(angle)
-   local x = oriVec.x
-   local z = oriVec.z
+    local tmpAngle = angle
+    local x = oriVec.x
+    local z = oriVec.z
+    --if z < 0 then
+    --    tmpAngle = - tmpAngle
+    --end
+    local radian = math.rad(tmpAngle)
     local x1 = x *  math.cos(radian) - z * math.sin(radian)
     local z1 = x *  math.sin(radian) + z * math.cos(radian)
     return Vector3(x1,0,z1)
@@ -17,9 +21,12 @@ end
 
 --- 向量 围绕 Y 轴 旋转 一定角度
 function BattleMathUtils.AngleAxis_Y_V2(oriVec,angle)
-    local radian = math.rad(angle)
     local x = oriVec.x
     local y = oriVec.y
+    --if y < 0 then
+    --    angle = - angle
+    --end
+    local radian = math.rad(angle)
     local x1 = x *  math.cos(radian) - y * math.sin(radian)
     local y1 = x *  math.sin(radian) + y * math.cos(radian)
     return Vector2(x1,y1)

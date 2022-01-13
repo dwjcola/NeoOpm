@@ -52,6 +52,12 @@ function BlackBoard_BattleBase:initialize(contextManager)
     --self._isUnPutSkill = false
     -- 寻路合法得目标
     self._find_target_pos = nil
+    -- 错位目标
+    self._pos_dislocation = nil
+    -- 错位得队友
+    ---@type BattleCharacter
+    self._dislocation_friend_entity = nil
+
     -- 小技能进行中
     self._smallSkillIng = false
     -- 其他技能释放中 不能被大招打算

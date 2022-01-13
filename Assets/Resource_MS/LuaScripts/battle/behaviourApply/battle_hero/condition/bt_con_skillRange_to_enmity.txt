@@ -38,7 +38,7 @@ function bt_con_skillRange_to_enmity:doCondition(blackBoard, agent)
                         if dis < BattleConstant.Dist_r then
                             result = Enum_BT.Node_ResultType.Success
                         else
-                            BattleLog.error(" 已到达目的地 但 技能范围判定失败 ！！！！ dis  == ",dis,"   disTarget == ",disTarget)
+                            BattleLog.error(" 已到达目的地 但 技能范围判定失败 ！！！！ uid ==  ",blackBoard._uid,"  dis  == ",dis,"   disTarget == ",disTarget)
                             result = Enum_BT.Node_ResultType.Fail
                         end
                     else

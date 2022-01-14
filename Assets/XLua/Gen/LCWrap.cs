@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 49, 2, 1);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 50, 2, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIEvent", _m_AddUIEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIDataEvent", _m_AddUIDataEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddTabSelectEvent", _m_AddTabSelectEvent_xlua_st_);
@@ -48,6 +48,7 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetUITable", _m_GetUITable_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CreateItem", _m_CreateItem_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CreatePrefab", _m_CreatePrefab_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "CreateGame", _m_CreateGame_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddCSEvent", _m_AddCSEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "RemoveCSEvent", _m_RemoveCSEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Subscribe", _m_Subscribe_xlua_st_);
@@ -590,6 +591,32 @@ namespace XLua.CSObjectWrap
                     UnityEngine.Transform _parent = (UnityEngine.Transform)translator.GetObject(L, 2, typeof(UnityEngine.Transform));
                     
                         var gen_ret = LC.CreatePrefab( _prefab, _parent );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_CreateGame_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    
+                        var gen_ret = LC.CreateGame(  );
                         translator.Push(L, gen_ret);
                     
                     

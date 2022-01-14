@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.Transform);
-			Utils.BeginObjectRegister(type, L, translator, 0, 74, 19, 13);
+			Utils.BeginObjectRegister(type, L, translator, 0, 75, 19, 13);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetParent", _m_SetParent);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetPositionAndRotation", _m_SetPositionAndRotation);
@@ -64,6 +64,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "AddLocalScaleZ", _m_AddLocalScaleZ);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "LookAt2D", _m_LookAt2D);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DrawGizmoDisk", _m_DrawGizmoDisk);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DrawGizmoCircleLine", _m_DrawGizmoCircleLine);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DOMove", _m_DOMove);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DOMoveX", _m_DOMoveX);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "DOMoveY", _m_DOMoveY);
@@ -1595,6 +1596,51 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_DrawGizmoCircleLine(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.Transform gen_to_be_invoked = (UnityEngine.Transform)translator.FastGetCSObj(L, 1);
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 4&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& translator.Assignable<UnityEngine.Color>(L, 3)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 4)) 
+                {
+                    float _radius = (float)LuaAPI.lua_tonumber(L, 2);
+                    UnityEngine.Color _color;translator.Get(L, 3, out _color);
+                    float _m_Theta = (float)LuaAPI.lua_tonumber(L, 4);
+                    
+                    gen_to_be_invoked.DrawGizmoCircleLine( _radius, _color, _m_Theta );
+                    
+                    
+                    
+                    return 0;
+                }
+                if(gen_param_count == 3&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 2)&& translator.Assignable<UnityEngine.Color>(L, 3)) 
+                {
+                    float _radius = (float)LuaAPI.lua_tonumber(L, 2);
+                    UnityEngine.Color _color;translator.Get(L, 3, out _color);
+                    
+                    gen_to_be_invoked.DrawGizmoCircleLine( _radius, _color );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to UnityEngine.Transform.DrawGizmoCircleLine!");
             
         }
         

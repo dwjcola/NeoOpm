@@ -254,7 +254,12 @@ public class LC
         obj.SetActive(true);
         return obj;
     }
-
+    public static GameObject CreateGame()
+    {
+        GameObject obj = new GameObject();
+        obj.SetActive(true);
+        return obj;
+    }
     public static void AddCSEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
     {
         EventHandler<GameEventArgs> handler = (send, e) =>

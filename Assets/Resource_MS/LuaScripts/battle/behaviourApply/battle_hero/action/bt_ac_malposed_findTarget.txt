@@ -36,7 +36,8 @@ function bt_ac_malposed_findTarget:doAction(blackBoard,agent)
                 else
                     angle = (self_pos_z > enemy_pos_z) and 1 or -1
                 end
-                local isOk , tmp = self:handleTarget_dislocation_r(blackBoard,_enemyEntity,blackBoard._dislocation_friend_entity,angle)
+                local sign = blackBoard._position.x <=  _enemyEntity:getData()._position.x and -1 or 1
+                local isOk , tmp = self:handleTarget_dislocation_r(blackBoard,_enemyEntity,blackBoard._dislocation_friend_entity,angle,_entityContext,sign)
                 if isOk and tmp then
                     blackBoard._pos_dislocation = tmp
                     result = Enum_BT.Node_ResultType.Success
@@ -56,20 +57,47 @@ function bt_ac_malposed_findTarget:doAction(blackBoard,agent)
     return result
 end
 
-function bt_ac_malposed_findTarget:handleTarget_dislocation_r(blackBoard,targetEntity,friendEntity,angle)
-    if angle == 180 or angle == -180 then
+function bt_ac_malposed_findTarget:handleTarget_dislocation_r(blackBoard,targetEntity,friendEntity,angle,entityContext,sign)
+    if angle == 360 or angle == -360 then
         return false,nil
     end
     local pos = blackBoard._position
     local dic = pos - targetEntity:getData()._position
-    local tmpDic = BattleMathUtils.AngleAxis_Y_V3(dic, -angle)
+    local tmpDic = BattleMathUtils.AngleAxis_Y_V3(dic, angle * sign)
     local resultPos = targetEntity:getData()._position + tmpDic
     local friend_entity_pos = friendEntity:getData()._position
     local dis = Vector3.Distance(resultPos,friend_entity_pos)
     if dis < (blackBoard._dislocation_r + friendEntity:getData()._dislocation_r)  then
         local nextAng = angle > 0 and (angle + 1) or (angle - 1)
-        return self:handleTarget_dislocation_r(blackBoard,targetEntity,friendEntity,nextAng)
+        return self:handleTarget_dislocation_r(blackBoard,targetEntity,friendEntity,nextAng,entityContext,sign)
+
     else
+        local self_entityList = entityContext:getEntityListByCamp(blackBoard._campType)
+        for i, entity in pairs(self_entityList) do
+            if entity:getData()._uid ~= blackBoard._uid then
+                local entity_pos = entity:getData()._position
+                local place_r = entity:getData()._place_r + blackBoard._place_r
+                local dis_place_self = Vector3.Distance(resultPos,entity_pos)
+                if dis_place_self < place_r then
+                    local nextAng = angle > 0 and (angle + 1) or (angle - 1)
+                    return self:handleTarget_dislocation_r(blackBoard,targetEntity,friendEntity,nextAng,entityContext,sign)
+                end
+            end
+        end
+        local enemy_entityList = entityContext:getEnemyEntityList(blackBoard._campType)
+        for i, entity in pairs(enemy_entityList) do
+            --if entity:getData()._uid ~= targetEntity:getData()._uid then
+            --
+            --end
+            local entity_pos = entity:getData()._position
+            local place_r = entity:getData()._place_r + blackBoard._place_r
+            local dis_place_enemy = Vector3.Distance(resultPos,entity_pos)
+            if dis_place_enemy < place_r then
+                local nextAng = angle > 0 and (angle + 1) or (angle - 1)
+                return self:handleTarget_dislocation_r(blackBoard,targetEntity,friendEntity,nextAng,entityContext,sign)
+            end
+        end
+
         return true,resultPos
     end
 end

@@ -43,18 +43,15 @@ function bt_ac_find_target:doAction(blackBoard,agent)
                 --if blackBoard._uid == 4 then
                 --    Logger.error("place_target == ",place_target)
                 --end
-                local isHandleSuss ,tmp_pos = BattleUtils:handleTarget_place_r(place_target,nil,_entityContext,_enemyEntity,blackBoard,1)
+                local isHandleSuss ,tmp_pos = BattleUtils:handleTarget_place_r(place_target,_entityContext,_enemyEntity,blackBoard,0)
 
-                --if blackBoard._uid == 4 then
-                --    Logger.error("isHandleSuss == ",isHandleSuss,"  tmp_pos == ",tmp_pos," place_r == ",blackBoard._place_r)
+                --if blackBoard._uid == 5 then
+                --    Logger.error("isHandleSuss == ",isHandleSuss," place_r == ",blackBoard._place_r,
+                --            "   place_target ==",place_target,"  target == ",target,"  tmp_pos == ",tmp_pos)
                 --end
 
                 if isHandleSuss then
                     place_target = tmp_pos
-                    --local dic = Vector3.Distance(place_target,blackBoard._position)
-                    --if dic < BattleConstant.Dist_r then
-                    --    place_target = _enemyEntity:getData()._position
-                    --end
                     blackBoard._find_target_pos = place_target
                 else
                     blackBoard._find_target_pos = nil

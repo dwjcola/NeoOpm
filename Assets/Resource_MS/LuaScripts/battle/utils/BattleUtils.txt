@@ -88,41 +88,41 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        --[1] = {
-                        --    heroId = "hero101",
-                        --},
+                        [1] = {
+                            heroId = "hero101",
+                        },
                         [2] = {
                             heroId = "hero101",
                         },
-                        --[3] = {
-                        --    heroId = "hero101",
-                        --},
+                        [3] = {
+                            heroId = "hero101",
+                        },
                         [4] = {
                             heroId = "hero101",
                         },
-                        --[5] = {
-                        --    heroId = "hero101",
-                        --}
+                        [5] = {
+                            heroId = "hero101",
+                        }
                     },
                 },
                 team_enemy = {
                     blockId = "block_20_10",
                     teamMap = {
-                        --[1] = {
-                        --    heroId = "hero102",
-                        --},
-                        --[2] = {
-                        --    heroId = "hero102",
-                        --},
-                        --[3] = {
-                        --    heroId = "hero102",
-                        --},
+                        [1] = {
+                            heroId = "hero102",
+                        },
+                        [2] = {
+                            heroId = "hero102",
+                        },
+                        [3] = {
+                            heroId = "hero102",
+                        },
                         [4] = {
                             heroId = "hero102",
                         },
-                        --[5] = {
-                        --    heroId = "hero102",
-                        --}
+                        [5] = {
+                            heroId = "hero102",
+                        }
                     },
                 }
             }
@@ -137,52 +137,59 @@ end
 ---@param entityContext BattleEntityContext
 ---@param targetEnemyEntity BattleCharacter
 ---@param blackBoard BlackBoard_BattleBase
-function BattleUtils:handleTarget_place_r(oriVec,tmpVec,entityContext,targetEnemyEntity,blackBoard,angle)
-    --do
-    --    return true,oriVec
+function BattleUtils:handleTarget_place_r(oriVec,entityContext,targetEnemyEntity,blackBoard,angle)
+    --if blackBoard._uid == 5 then
+    --    Logger.error("angle == ",angle)
     --end
-    --Logger.error(uid,"    ",oriVec,tmpVec)
-    --if blackBoard._uid == 4 then
-    --    Logger.error(" angle 111111111 == ",angle)
-    --end
-    if tmpVec and oriVec.x == tmpVec.x and oriVec.y == tmpVec.y  then
-        return false,tmpVec
+    if angle == 360 or angle == -360 then
+        return false, nil
     end
-    if tmpVec == nil then
-        tmpVec = oriVec
+    local result = oriVec
+    if angle ~= 0 then
+        local tmpDic = oriVec - targetEnemyEntity:getData()._position
+        local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,angle)
+        result = targetEnemyEntity:getData()._position + tmp
     end
+    local isOk = true
     local self_entityList = entityContext:getEntityListByCamp(blackBoard._campType)
-    local enemy_entityList = entityContext:getEnemyEntityList(blackBoard._campType)
     for i, entity in pairs(self_entityList) do
         if entity:getData()._uid ~= blackBoard._uid then
             local entity_pos = entity:getData()._position
             local place_r = entity:getData()._place_r + blackBoard._place_r
-            local dis = Vector3.Distance(tmpVec,entity_pos)
+            local dis = Vector3.Distance(result,entity_pos)
             if dis < place_r then
-                local tmpDic = oriVec - targetEnemyEntity:getData()._position
-                local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,angle)
-                 angle = (angle > 0) and (-angle) or (-angle + 1)
-                return self:handleTarget_place_r(oriVec,targetEnemyEntity:getData()._position + tmp,entityContext,targetEnemyEntity,blackBoard,angle)
+                --if blackBoard._uid == 5 then
+                --    BattleLog.error(" +++++++++ angle == ",angle,"  dis == ",dis,"  result == ",result,"  place_r == ",place_r," entity_pos = ",entity_pos)
+                --end
+                isOk = false
+                break
             end
         end
     end
-    for i, entity in pairs(enemy_entityList) do
-        if entity:getData()._uid ~= targetEnemyEntity:getData()._uid then
-            local entity_pos = entity:getData()._position
-            local place_r = entity:getData()._place_r + blackBoard._place_r
-            local dis = Vector3.Distance(tmpVec,entity_pos)
-            if dis < place_r then
-                local tmpDic = oriVec - targetEnemyEntity:getData()._position
-                local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,angle)
-                angle = (angle > 0) and (-angle) or (-angle + 1)
-                return self:handleTarget_place_r(oriVec,targetEnemyEntity:getData()._position + tmp,entityContext,targetEnemyEntity,blackBoard,angle)
+    if isOk then
+        local enemy_entityList = entityContext:getEnemyEntityList(blackBoard._campType)
+        for i, entity in pairs(enemy_entityList) do
+            if entity:getData()._uid ~= targetEnemyEntity:getData()._uid then
+                local entity_pos = entity:getData()._position
+                local place_r = entity:getData()._place_r + blackBoard._place_r
+                local dis = Vector3.Distance(result,entity_pos)
+                if dis < place_r then
+                    isOk = false
+                    --if blackBoard._uid == 5 then
+                    --    BattleLog.error(" ********** angle == ",angle,"  dis == ",dis,"  result == ",result,"  place_r == ",place_r ," entity_pos = ",entity_pos)
+                    --end
+                    break
+                end
             end
         end
     end
-    --if blackBoard._uid == 4 then
-    --    Logger.error("angle 2222222 == ",angle)
-    --end
-    return true,tmpVec
+    if isOk == false then
+
+        local nextAngle =  (angle > 0) and (-angle) or (-angle + 1)
+        return self:handleTarget_place_r(oriVec,entityContext,targetEnemyEntity,blackBoard,nextAngle)
+    end
+
+    return true,result
 end
 ---@param blackBoard BlackBoard_BattleBase
 function BattleUtils:checkoutPosForPlace_r(oriVec,entityContext,targetEnemyEntity,blackBoard)

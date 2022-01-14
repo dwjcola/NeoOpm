@@ -34,7 +34,12 @@ function bt_con_isDislocation:doCondition(blackBoard,agent)
                 end
             end
         end
-        if len == 1 and friendEntity:getData()._enmityIndex == blackBoard._enmityIndex then
+
+        local isSmallTarget = friendEntity and  friendEntity:getData()._enmityIndex == blackBoard._enmityIndex or false
+        --if blackBoard._uid == 9 then
+        --    Logger.error(" len == ",len," isSmallTarget  == ",isSmallTarget)
+        --end
+        if len == 1 and isSmallTarget then
             local self_pos_z = blackBoard._position.z
             local friend_pos_z = friendEntity:getData()._position.z
             --- @type BattleCharacter

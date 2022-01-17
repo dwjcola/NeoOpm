@@ -1,0 +1,129 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: battle
+  serializedVersion: 2
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 0
+      compressionQuality: 0
+      maxTextureSize: 0
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 1
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: e0cd2f68e1feb8447b2e976102b29085, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f41ac5e04f27c09438719a7bf1c9ec6b, type: 3}
+  - {fileID: 21300000, guid: e41f52515ad896e4cbb12f6c3c36ad73, type: 3}
+  - {fileID: 21300000, guid: f781e9b1272e7d4478cc8c2153bc2a93, type: 3}
+  - {fileID: 21300000, guid: aac3fec1efa77414392e02df741c8a61, type: 3}
+  - {fileID: 21300000, guid: 09a3fe922e2a4524781975a1e28eea90, type: 3}
+  - {fileID: 21300000, guid: fa6ad8e2af4f23540b1b84478de1910b, type: 3}
+  - {fileID: 21300000, guid: e2c2f4f22b56b494dbc8c78393ca4a7d, type: 3}
+  - {fileID: 21300000, guid: 77ec47f2674ba0e478442cf29194c26e, type: 3}
+  - {fileID: 21300000, guid: 1a1fe953dd9f7c6438ad94b658eb2540, type: 3}
+  - {fileID: 21300000, guid: e390c0c37eadd9a41895bb1b8d132c53, type: 3}
+  - {fileID: 21300000, guid: 15457ef310424fb47ae705569bda50f1, type: 3}
+  - {fileID: 21300000, guid: e04fa49413a6c5540b2be2e8d8353057, type: 3}
+  - {fileID: 21300000, guid: 2dee48947a53fc84c8ef3642b80eb756, type: 3}
+  - {fileID: 21300000, guid: deadf6c47c0bc134abb6f780aab2d14a, type: 3}
+  - {fileID: 21300000, guid: 889d0415792ffe944847039c63bed7f0, type: 3}
+  - {fileID: 21300000, guid: 0de634a56ab6b81438b096f9067d611b, type: 3}
+  - {fileID: 21300000, guid: 9f9150d66c3edff418fc2d96ce5946c0, type: 3}
+  - {fileID: 21300000, guid: e4f5e3f7dcc409d4cb0baaa2ba39ecf4, type: 3}
+  - {fileID: 21300000, guid: f60e8d088264b5942b2cde08185bc1de, type: 3}
+  - {fileID: 21300000, guid: dde58f68761029b40b34a655a4f74353, type: 3}
+  - {fileID: 21300000, guid: c1471069f4eb5db42943e80aa0d1ac76, type: 3}
+  - {fileID: 21300000, guid: 934667a9c53053c42a0daf21a9a327b5, type: 3}
+  - {fileID: 21300000, guid: a6db649af0451c44aa5cc77a34f94b45, type: 3}
+  - {fileID: 21300000, guid: bd0fd3aa30b9341479edd47181f0c57b, type: 3}
+  - {fileID: 21300000, guid: 977247ba6fe6c0d498ffa2762e21c859, type: 3}
+  - {fileID: 21300000, guid: d8d115abf8fa36f43b20c5fda6b87009, type: 3}
+  - {fileID: 21300000, guid: 343829abadd6e6e4b988def09ec3f21a, type: 3}
+  - {fileID: 21300000, guid: 730b6eabb22efd243af222fd95e30f3f, type: 3}
+  - {fileID: 21300000, guid: faffc84c3129ac344b638fd4618015b0, type: 3}
+  - {fileID: 21300000, guid: dc79fb7cf5ab95c489d7d7c1ccae7b7f, type: 3}
+  - {fileID: 21300000, guid: 5be7ca8c38f10e64bb8d4050032af2c2, type: 3}
+  - {fileID: 21300000, guid: ae39adbce7e841140894fadb5787ed84, type: 3}
+  - {fileID: 21300000, guid: 97ec020df595b9a44a070636ff40de3f, type: 3}
+  - {fileID: 21300000, guid: 7099b46d126cb844589e6697cc1fc004, type: 3}
+  - {fileID: 21300000, guid: d0778dadf9a00554ab359aea14c0e369, type: 3}
+  - {fileID: 21300000, guid: abcc479fc4fa7d94ab1bd475391877d6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Panel_BPBg_Battle
+  - Temp_Temp3_Battle
+  - img_Buff1C_Battle.png
+  - Temp_Temp1_Battle
+  - Btn_AutoBtnBg_Battle
+  - Panel_BuffInfoBg_Battle
+  - img_Buff1A_Battle.png
+  - Btn_StartBattleBtnImg_Battle
+  - Btn_PauseBtnBg_Battle
+  - img_Buff2B_Battle.png
+  - img_Buff3B_Battle.png
+  - img_Buff4A_Battle.png
+  - Temp_Temp7_Battle
+  - img_Buff2A_Battle.png
+  - img_Buff5A_Battle.png
+  - Panel_LevelInfoBg_Battle
+  - Temp_Temp4_Battle
+  - img_Buff5C_Battle.png
+  - img_Buff3A_Battle.png
+  - Temp_Temp6_Battle
+  - Panel_TimeBg_Battle
+  - img_Buff3C_Battle.png
+  - img_Buff4C_Battle.png
+  - img_Buff5B_Battle.png
+  - Btn_SpdBtnBg_Battle
+  - Btn_StartBattleBtnBg_Battle
+  - Btn_PauseBtnImg_Battle
+  - img_Buff2C_Battle.png
+  - Btn_StartBattleBtnImg2_Battle
+  - img_Buff1B_Battle.png
+  - Temp_Temp8_Battle
+  - img_Buff4B_Battle.png
+  - Img_BuffInfo_Battle.png
+  - Btn_StartBattleBtnImg3_Battle
+  - Temp_Temp2_Battle
+  - Temp_Temp5_Battle
+  m_RenderDataMap: {}
+  m_Tag: battle
+  m_IsVariant: 0
+  m_IsPlaceholder: 0

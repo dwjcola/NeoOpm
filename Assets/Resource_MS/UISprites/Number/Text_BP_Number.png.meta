@@ -1,7 +1,40 @@
 fileFormatVersion: 2
-guid: bf006a37ec02c774c96841e9976f83aa
+guid: 486a7bc07ddd95f4387ba1b176ac93ac
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 9145363662983411289
+    second: Text_BP_Number_0
+  - first:
+      213: 6389568798304899182
+    second: Text_BP_Number_1
+  - first:
+      213: -1074296895276164504
+    second: Text_BP_Number_2
+  - first:
+      213: -1330979072551116977
+    second: Text_BP_Number_3
+  - first:
+      213: 7253360529323887703
+    second: Text_BP_Number_4
+  - first:
+      213: 4743517099569320439
+    second: Text_BP_Number_5
+  - first:
+      213: -1540804235713737351
+    second: Text_BP_Number_6
+  - first:
+      213: -3339973089883191218
+    second: Text_BP_Number_7
+  - first:
+      213: 5908126449380007939
+    second: Text_BP_Number_8
+  - first:
+      213: -5314325500208789097
+    second: Text_BP_Number_9
+  - first:
+      213: -1947055700046695512
+    second: Text_BP_Number_10
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -41,7 +74,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -91,7 +124,7 @@ TextureImporter:
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 65
+    textureFormat: 48
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -99,9 +132,252 @@ TextureImporter:
     overridden: 1
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Text_BP_Number_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 0
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95634e91ccbdaee70800000000000000
+      internalID: 9145363662983411289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_1
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 0
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e6012eaf7fe4ca850800000000000000
+      internalID: 6389568798304899182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_2
+      rect:
+        serializedVersion: 2
+        x: 54
+        y: 0
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86a52c56aa45711f0800000000000000
+      internalID: -1074296895276164504
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_3
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 0
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4f9c19d599678de0800000000000000
+      internalID: -1330979072551116977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_4
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 0
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 75c8032b8fc19a460800000000000000
+      internalID: 7253360529323887703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_5
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 0
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f112d97bab54d140800000000000000
+      internalID: 4743517099569320439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_6
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 0
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97d8ddd06b6fd9ae0800000000000000
+      internalID: -1540804235713737351
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_7
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 0
+        width: 26
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e480622bb2806a1d0800000000000000
+      internalID: -3339973089883191218
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_8
+      rect:
+        serializedVersion: 2
+        x: 250
+        y: 0
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 300a26ff3b1edf150800000000000000
+      internalID: 5908126449380007939
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_9
+      rect:
+        serializedVersion: 2
+        x: 282
+        y: 0
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 79941433d19bf36b0800000000000000
+      internalID: -5314325500208789097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Text_BP_Number_10
+      rect:
+        serializedVersion: 2
+        x: 315
+        y: 0
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8a331d0282baaf4e0800000000000000
+      internalID: -1947055700046695512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []

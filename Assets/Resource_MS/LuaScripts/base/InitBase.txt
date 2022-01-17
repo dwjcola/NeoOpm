@@ -7,6 +7,7 @@ GameStatic = require("GameStatic")
 class = require("MiddleClass")
 SimpleClassUtil = require("SimpleClassUtil")
 
+require("Enum")
 require("CSImport")
 
 require("Logger")

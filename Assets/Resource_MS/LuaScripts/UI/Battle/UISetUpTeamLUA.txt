@@ -13,6 +13,8 @@ function UISetUpTeamLUA:Init(param)
 	self._data = param.data
 	---@type SetUpTeamNode
 	self._node = param.node
+
+	self:initComponent()
 end
 
 --ui组件添加事件
@@ -55,7 +57,32 @@ function UISetUpTeamLUA:OnCloseClick()
 	--EventManager:Dispatch(EventType.Event_CloseSetUpView)
 	self:OnCloseMe()
 	BattleProxy:ExitBattle()
-
 end
 
+function UISetUpTeamLUA:initComponent()
+    self._clazz_left = self:getTopClazz(Enum.SetUpTeamEnum.TeamPos.left,self.btn_relation_l, self.img_relation_t_l,
+			self.img_relation_l_l,self.img_relation_c_l,self.img_relation_r_l,self.img_relation_b_l)
+	self._clazz_left = self:getTopClazz(Enum.SetUpTeamEnum.TeamPos.right,self.btn_relation_r, self.img_relation_t_r,
+			self.img_relation_l_r,self.img_relation_c_r,self.img_relation_r_r,self.img_relation_b_r)
+
+	self._list_heroList:InitListLua(self, {} ,"")
+end
+
+function UISetUpTeamLUA:getTopClazz(type,btn_relation,img_t,img_l,img_c,img_r,img_b)
+	local tmp = {}
+	tmp._type = type
+	tmp._btn_relation = btn_relation
+	tmp._img_t = img_t
+	tmp._img_l = img_l
+	tmp._img_c = img_c
+	tmp._img_r = img_r
+	tmp._img_b = img_b
+	self:AddUIEvent("onclick", tmp._btn_relation.gameObject, function()
+		self:onClickRelation(tmp._type)
+	end)
+end
+
+function UISetUpTeamLUA:onClickRelation(type)
+   Logger.error("onClickRelation :: type = ",type)
+end
 return UISetUpTeamLUA

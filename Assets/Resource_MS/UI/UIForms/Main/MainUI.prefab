@@ -1760,7 +1760,7 @@ MonoBehaviour:
   - {fileID: 297511292337123936}
   strkeyList: []
   strvalueList: []
-  LuaName: UICoinItemLUA
+  LuaName: UICoinItem
   AssetID: 203
   UseSelfNum: 1
 --- !u!1 &1169572511797877296
@@ -5628,7 +5628,7 @@ MonoBehaviour:
   - {fileID: 3557838194027183928}
   strkeyList: []
   strvalueList: []
-  LuaName: UICoinItemLUA
+  LuaName: UICoinItem
   AssetID: 201
   UseSelfNum: 1
 --- !u!1 &6498478517935248525
@@ -5701,7 +5701,7 @@ MonoBehaviour:
   - {fileID: 4411582351620255508}
   strkeyList: []
   strvalueList: []
-  LuaName: 
+  LuaName: UICoinItem
   AssetID: 1
   UseSelfNum: 0
 --- !u!1 &6543284191814052759

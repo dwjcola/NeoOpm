@@ -16,9 +16,6 @@ TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowM
 ['UtilsLUA']={Id='UtilsLUA',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='logic/requireLoad',LuaName='UtilsLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['PomeloCLUA']={Id='PomeloCLUA',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='proto',LuaName='PomeloCLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['HotfixMain']={Id='HotfixMain',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='hotfix',LuaName='HotfixMain',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
-['TblManager']={Id='TblManager',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='base',LuaName='TblManager',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
-['TestForm1']={Id='TestForm1',AssetName='Test/TestForm1',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Test',LuaName='TestForm1LUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
-['TestForm3']={Id='TestForm3',AssetName='Test/TestForm3',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Test',LuaName='TestForm3LUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['LoginForm']={Id='LoginForm',AssetName='Login/LoginForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='LoginFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 ['BuildForm']={Id='BuildForm',AssetName='City/BuildForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/City',LuaName='BuildFormLUA',Mask=true,ShowHead=false,ShowRes=true,UITween=0,},
 ['ServerListForm']={Id='ServerListForm',AssetName='Login/ServerListForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='ServerListFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
@@ -166,6 +163,7 @@ TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowM
 ['UISetUpTeam']={Id='UISetUpTeam',AssetName='Battle/UISetUpTeam',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Battle',LuaName='UISetUpTeamLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 ['UIBattleMain']={Id='UIBattleMain',AssetName='Battle/UIBattleMain',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Battle',LuaName='UIBattleMainLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 ['ServerListUI']={Id='ServerListUI',AssetName='Login/ServerListUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='ServerListUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
+['UICoinItem']={Id='UICoinItem',AssetName="",UIGroupName="",AllowMultiInstance=true,PauseCoveredUIForm=false,LuaPath='UI/Coin',LuaName='UICoinItemLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 
 });
 return TPanel;

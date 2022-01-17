@@ -112,6 +112,7 @@ namespace NeoOPM
             string tLuaName = panel.Get<string>("LuaName");
             string tLuaPath = panel.Get<string>("LuaPath");
             bool tMask = panel.Get<bool>("Mask");
+            int tween = panel.Get<int>("UITween");
             
             string assetName = AssetUtility.GetUIFormAsset(tAssetName);
             if (!tAllowMultiInstance)
@@ -139,6 +140,8 @@ namespace NeoOPM
                 form = (UIForm) ne.UIForm;
                 UGuiForm ctrl = (UGuiForm) form.Logic;
                 ctrl.UIKey = uiKey;
+                ctrl.UIMask = tMask;
+                ctrl.UITween = tween;
                 if (!string.IsNullOrEmpty(tLuaName) && XluaManager.instance.HasLua(tLuaName, tLuaPath))
                 {
                     ctrl.InitLua(tLuaName,tLuaPath);

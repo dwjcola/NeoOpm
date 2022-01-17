@@ -11,7 +11,7 @@ end
 function LoginProxy:EnterServer(ServerInfo,cb,lua)
 	local requstMsg = {}
 	requstMsg.PfId = ServerInfo.AccId;
-	self:Warning("RPCLUA.wfGate_Handler.EnterServer")
+	self:Warning("RPCLUA.server_even.Login")
 	RPCLUA.server_even.Login(requstMsg,function(l,rep)
 		self:UpdataPlayerData(rep)
 		if cb ~= nil then

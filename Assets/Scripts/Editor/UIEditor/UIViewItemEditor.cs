@@ -82,7 +82,7 @@ public class UIViewItemEditor : Editor
             List<string> lines = new List<string>(File.ReadAllLines(panelTxt));
             string l = "['" + id + "']={";
             l += string.Format(
-                "Id='{0}',AssetName='{1}',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='{2}',LuaName='{3}',Mask=false,ShowHead=false,ShowRes=false,UITween=false,",
+                "Id='{0}',AssetName='{1}',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='{2}',LuaName='{3}',Mask=false,ShowHead=false,ShowRes=false,UITween=0,",
                 id,AssetName,luapath,clacclua
             );
             l += "},";
@@ -311,6 +311,7 @@ public class LUAComponentEditor:UIViewItemEditor
         GUILayout.Label("LUAClassName:");
         lUA.LuaName = EditorGUILayout.TextField(lUA.LuaName);
         GUILayout.EndHorizontal();
+        if (GUI.changed) EditorUtility.SetDirty(lUA);
     }
     public virtual void AddProperty()
     {

@@ -17,6 +17,10 @@ function BattleUtils:getRotateVec(isTurnLeft)
     return isTurnLeft and Vector3(0,-90,0) or Vector3(0,90,0)
 end
 
+function BattleUtils:getLocalZ(isTurnLeft)
+    return isTurnLeft and -1 or 1
+end
+
 function BattleUtils:posMapToVec3(map)
     if map and map[1] and map[2] and map[3] then
         return Vector3(map[1],map[2],map[3])
@@ -89,18 +93,23 @@ function BattleUtils:getTestBattleData()
                 team_self = {
                     teamMap = {
                         [1] = {
+                            heroUid = "hero101_0000001",
                             heroId = "hero101",
                         },
                         [2] = {
+                            heroUid = "hero101_0000002",
                             heroId = "hero101",
                         },
                         [3] = {
+                            heroUid = "hero101_0000003",
                             heroId = "hero101",
                         },
                         [4] = {
+                            heroUid = "hero101_0000004",
                             heroId = "hero101",
                         },
                         [5] = {
+                            heroUid = "hero101_0000005",
                             heroId = "hero101",
                         }
                     },
@@ -109,18 +118,23 @@ function BattleUtils:getTestBattleData()
                     blockId = "block_20_10",
                     teamMap = {
                         [1] = {
+                            heroUid = "hero102_0000001",
                             heroId = "hero102",
                         },
                         [2] = {
+                            heroUid = "hero102_0000002",
                             heroId = "hero102",
                         },
                         [3] = {
+                            heroUid = "hero102_0000003",
                             heroId = "hero102",
                         },
                         [4] = {
+                            heroUid = "hero102_0000004",
                             heroId = "hero102",
                         },
                         [5] = {
+                            heroUid = "hero102_0000005",
                             heroId = "hero102",
                         }
                     },

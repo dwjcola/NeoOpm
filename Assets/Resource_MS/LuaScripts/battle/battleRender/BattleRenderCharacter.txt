@@ -79,4 +79,10 @@ function BattleRenderCharacter:setRotation(newVec)
     end
 end
 
+function BattleRenderCharacter:setScaleZ(z)
+    if z and self._go_model and self._go_model.transform then
+        self._go_model.transform.SetLocalScaleZ(z);
+    end
+end
+
 return BattleRenderCharacter

@@ -26,12 +26,18 @@ function SetUpTeamNode:onStart()
 
 
     ---@type BattleTeam
-    local battleTeam = BattleTeam:new()
+    local battleTeam = BattleTeam:new(self._battleTimes)
     battleTeam:setLoadData(self._data)
     battleTeam:tryLoad()
+
     _tree._blackBoard._teamList[self._battleTimes] = battleTeam
 
-    SetUpTeamProxy:OpenSetUpTeamView(Enum_Battle.BattleTeamType.MainTeam,self._data,self)
+    SetUpTeamProxy:OpenSetUpTeamView({
+        battleTimes = self._battleTimes,
+        teamType = Enum_Battle.BattleTeamType.MainTeam,
+        data = self._data,
+        battleTeam = battleTeam,
+    })
 
 end
 

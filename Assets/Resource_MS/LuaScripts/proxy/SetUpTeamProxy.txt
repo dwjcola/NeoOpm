@@ -9,8 +9,8 @@ function SetUpTeamProxy:Init()
 
 end
 ---@param type Enum_Battle.BattleType
-function SetUpTeamProxy:OpenSetUpTeamView(type,data,node)
-    LC.OpenUI("UISetUpTeam",{ openType = type,data = data ,node = node})
+function SetUpTeamProxy:OpenSetUpTeamView(param)
+    LC.OpenUI("UISetUpTeam",param)
 end
 
 

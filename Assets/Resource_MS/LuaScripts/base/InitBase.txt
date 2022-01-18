@@ -18,6 +18,7 @@ require("LUAUIBase")
 LUAUIBase:init()
 
 require("LUADefine")
+
 --网络
 PomeloCLUA = require("PomeloCLUA")
 PomeloCLUA:Init()

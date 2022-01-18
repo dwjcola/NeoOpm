@@ -353,7 +353,11 @@ public static class UnityExtension
         Gizmos.DrawSphere(Vector3.zero, radius);
         Gizmos.matrix = oldMatrix;
     }
-
+    public static void SetActiveVirtual(this GameObject go, bool bVisible)
+    {
+        if (bVisible != go.activeSelf)
+            go.SetActive(bVisible);
+    }
     public static void DrawGizmoCircleLine(this Transform t, float radius, Color color, float m_Theta = 0.01f)
     {
         if (radius <= 0) return;

@@ -3,6 +3,7 @@ Author: DWJ
 Date: 2021-11-18
 Description:所有UI的base类
 --]]
+---@class LUAUIBase
 LUAUIBase={
 };
 function LUAUIBase:new (o)
@@ -201,9 +202,6 @@ function LUAUIBase:SetSingleSpriteByFolderPath(image,folderPath,name,native)
   end
   CS.LC.SetSingleSpriteByFolderPath(image,folderPath,name,n)
 end
-
-
-
 
 function LUAUIBase:SetImageSprite(image,atls,name,native)
   local n = native

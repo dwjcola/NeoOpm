@@ -27,6 +27,8 @@ local EventType = {
     Event_Battle_Render_Debug_GizmosCircle = "",   -- GizmosCircle
 
     Event_Battle_Attack_Hp = "",
+
+    Event_Battle_TeamLoadFinish = "", -- TeamModelLoadEnd
 }
 
 --给所有的Event赋值

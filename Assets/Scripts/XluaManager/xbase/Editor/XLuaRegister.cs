@@ -6,6 +6,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 #undef UNITY_EDITOR
+using lufeigame;
 using Spine.Unity;
 using System;
 using System.Collections;
@@ -179,6 +180,9 @@ public static class XLuaRegister
         typeof (UnityEngine.Events.UnityAction<Vector2>),
         typeof ( Action<LuaTable, SkeletonAnimation> ),
         typeof (Func<LuaTable, float, float,LuaTable>),
+        typeof (ScrollViewLuaItem.CallbackVoid),
+        typeof (ScrollViewLuaItem.CallbackVoidOneParam),
+
     };
     //HOTFIX_ENABLE
 

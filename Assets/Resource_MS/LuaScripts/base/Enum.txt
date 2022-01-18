@@ -7,12 +7,20 @@
 Enum = {
     --- 布阵
     SetUpTeamEnum = {
-        TeamType = {
-            MainType = 1,
-        },
         TeamPos = {
             left = 1,
             right = 2,
         }
+    },
+
+    HeroQuality = {
+        green = 1,
+        blue = 2,
+        purple = 3,
+        orange = 4,
+        red = 5,
+        silver = 6,
+        colourful = 7,
     }
 }
+

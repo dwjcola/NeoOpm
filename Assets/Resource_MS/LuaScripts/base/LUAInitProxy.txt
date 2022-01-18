@@ -15,4 +15,9 @@ SetUpTeamProxy:Init()
 BattleProxy = require("BattleProxy")
 BattleProxy:Init()
 
+
+---@type HeroProxy
+HeroProxy = require("HeroProxy")
+HeroProxy:Init()
+
 require("PlayerData")

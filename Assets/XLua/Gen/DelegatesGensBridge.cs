@@ -1150,6 +1150,51 @@ namespace XLua
 #endif
 		}
         
+		public void __Gen_Delegate_Imp49(lufeigame.ScrollViewLuaItem p0, int p1)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                LuaAPI.xlua_pushinteger(L, p1);
+                
+                PCall(L, 2, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
+		public void __Gen_Delegate_Imp50(lufeigame.ScrollViewLuaItem p0)
+		{
+#if THREAD_SAFE || HOTFIX_ENABLE
+            lock (luaEnv.luaEnvLock)
+            {
+#endif
+                RealStatePtr L = luaEnv.rawL;
+                int errFunc = LuaAPI.pcall_prepare(L, errorFuncRef, luaReference);
+                ObjectTranslator translator = luaEnv.translator;
+                translator.Push(L, p0);
+                
+                PCall(L, 1, 0, errFunc);
+                
+                
+                
+                LuaAPI.lua_settop(L, errFunc - 1);
+                
+#if THREAD_SAFE || HOTFIX_ENABLE
+            }
+#endif
+		}
+        
         
 		static DelegateBridge()
 		{
@@ -1407,6 +1452,16 @@ namespace XLua
 		    if (type == typeof(System.Func<XLua.LuaTable, float, float, XLua.LuaTable>))
 			{
 			    return new System.Func<XLua.LuaTable, float, float, XLua.LuaTable>(__Gen_Delegate_Imp48);
+			}
+		
+		    if (type == typeof(lufeigame.ScrollViewLuaItem.CallbackVoid))
+			{
+			    return new lufeigame.ScrollViewLuaItem.CallbackVoid(__Gen_Delegate_Imp49);
+			}
+		
+		    if (type == typeof(lufeigame.ScrollViewLuaItem.CallbackVoidOneParam))
+			{
+			    return new lufeigame.ScrollViewLuaItem.CallbackVoidOneParam(__Gen_Delegate_Imp50);
 			}
 		
 		    return null;

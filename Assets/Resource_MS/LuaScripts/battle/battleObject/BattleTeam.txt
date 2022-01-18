@@ -5,9 +5,12 @@
 ---@class BattleTeam:SimpleClassUtil
 local BattleTeam = SimpleClassUtil:class()
 
-function BattleTeam:initialize()
+function BattleTeam:initialize(battleTimes)
+
+    self._battleTimes = battleTimes
 
     self._data = {  }
+
     self._sceneAssetPath = ""
     self._rootAssetPath = ""
     self._teamData_self = {  }
@@ -156,7 +159,7 @@ function BattleTeam:tryLoadFinish()
     --end
     if self._loadCount <= 0 then
         self._loadingFinish = true
-        BattleLog.error(" ****** loadFinishSuccess ***** ")
+        EventManager:Dispatch_battle(EventType.Event_Battle_TeamLoadFinish,self._battleTimes)
     end
 end
 
@@ -178,8 +181,10 @@ function BattleTeam:setInitPos(isSelf,pos,modelGo)
     modelGo.transform:SetParent(parent)
     --modelGo.transform.localPosition = Vector3.zero
     modelGo.transform.position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,pos))
-    modelGo.transform.localEulerAngles = Vector3(0,isSelf and 90 or -90,0)
-
+    modelGo.transform.localEulerAngles = Vector3(0, 90 ,0)
+    --modelGo.transform.scale = Vector3(0,isSelf and 90 or -90,0)
+    local z = BattleUtils:getLocalZ(not isSelf)
+    modelGo.transform:SetLocalScaleZ(z);
 end
 
 function BattleTeam:reset()

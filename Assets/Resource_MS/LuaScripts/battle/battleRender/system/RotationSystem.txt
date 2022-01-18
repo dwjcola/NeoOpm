@@ -19,8 +19,8 @@ function RotationSystem:moveTurnHandle(data)
     local entity = self:getEntityByUid(data.uid)
     local orientation = data.orientation
     if entity and orientation  then
-        local vecRotate =  BattleUtils:getRotateVec(orientation == Enum_Battle.Orientation.Left )
-        entity:setRotation(vecRotate)
+        local z =  BattleUtils:getLocalZ(orientation == Enum_Battle.Orientation.Left )
+        entity:setScaleZ(z)
     end
 end
 

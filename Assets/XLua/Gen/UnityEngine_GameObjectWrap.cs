@@ -21,7 +21,7 @@ namespace XLua.CSObjectWrap
         {
 			ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
 			System.Type type = typeof(UnityEngine.GameObject);
-			Utils.BeginObjectRegister(type, L, translator, 0, 16, 9, 3);
+			Utils.BeginObjectRegister(type, L, translator, 0, 17, 9, 3);
 			
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetComponent", _m_GetComponent);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetComponentInChildren", _m_GetComponentInChildren);
@@ -39,6 +39,7 @@ namespace XLua.CSObjectWrap
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "GetOrAddComponent", _m_GetOrAddComponent);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "InScene", _m_InScene);
 			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetLayerRecursively", _m_SetLayerRecursively);
+			Utils.RegisterFunc(L, Utils.METHOD_IDX, "SetActiveVirtual", _m_SetActiveVirtual);
 			
 			
 			Utils.RegisterFunc(L, Utils.GETTER_IDX, "transform", _g_get_transform);
@@ -915,6 +916,34 @@ namespace XLua.CSObjectWrap
                     int _layer = LuaAPI.xlua_tointeger(L, 2);
                     
                     gen_to_be_invoked.SetLayerRecursively( _layer );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_SetActiveVirtual(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+                UnityEngine.GameObject gen_to_be_invoked = (UnityEngine.GameObject)translator.FastGetCSObj(L, 1);
+            
+            
+                
+                {
+                    bool _bVisible = LuaAPI.lua_toboolean(L, 2);
+                    
+                    gen_to_be_invoked.SetActiveVirtual( _bVisible );
                     
                     
                     

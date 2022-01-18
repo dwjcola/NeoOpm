@@ -45,6 +45,18 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 5d66acfc78670bf48aa8e393a2442bc0
+    m_Address: Assets/Resource_MS/UISprites/Common
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: a4c86ebd277e3ab4aa60890585d87a76
+    m_Address: Assets/Resource_MS/UISprites
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 73dc9961b5a8c7c41909d90b9046be68
+    m_Address: Assets/Resource_MS/UISprites/Common/Img_HeroImg_ReLink.png
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 8dacf0d66c0b3e04ba3250a35e19f83c, type: 2}
   m_SchemaSet:

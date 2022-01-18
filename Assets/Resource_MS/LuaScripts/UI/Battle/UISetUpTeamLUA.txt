@@ -1,19 +1,33 @@
 --界面
+---@class UISetUpTeamLUA:LUAUIBase
 UISetUpTeamLUA=LUAUIBase:new({
-	
+	  _items = {}
 	});
 
 function UISetUpTeamLUA:Open(param)
 	self:AddUIEventListener()
 	self:AddEventListener()
-	self:Init(param);
-end
-function UISetUpTeamLUA:Init(param)
-    self._teamYpe = param.openType
-	self._data = param.data
-	---@type SetUpTeamNode
-	self._node = param.node
 
+	self:Init(param);
+
+	self:initList()
+end
+
+function UISetUpTeamLUA:Init(param)
+	self._battleTimes = param.battleTimes
+    self._teamYpe = param.teamType
+	self._teamData = param.data
+	---@type BattleTeam
+	self._battleTeam = param.battleTeam
+
+	self._gridList = {}
+
+	self._modelList = {}
+
+	-----@type SetUpTeamNode
+	--self._node = param.node
+	self._allHeroList = HeroProxy:getAllHeroListByCombat()
+    self:tryInitTeamModels()
 	self:initComponent()
 end
 
@@ -25,10 +39,12 @@ end
 --模块添加全局事件
 function UISetUpTeamLUA:AddEventListener( )
 	-- self:AddEvent("EventStringKey", self.EventHandle);
+	self._event_Obj =  EventManager:AddListener(EventType.Event_Battle_TeamLoadFinish,self.onTeamLoadFinish,self)
 end
 --模块移除全局事件
 function UISetUpTeamLUA:RemoveEventListener( )
 	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+	EventManager:RemoveListener(EventType.Event_Battle_TeamLoadFinish,self._event_Obj)
 end
 
 function UISetUpTeamLUA:OnCloseMe()
@@ -65,7 +81,13 @@ function UISetUpTeamLUA:initComponent()
 	self._clazz_left = self:getTopClazz(Enum.SetUpTeamEnum.TeamPos.right,self.btn_relation_r, self.img_relation_t_r,
 			self.img_relation_l_r,self.img_relation_c_r,self.img_relation_r_r,self.img_relation_b_r)
 
-	self._list_heroList:InitListLua(self, {} ,"")
+	---注册回调事件
+	self.item_hero:RegisterInitFunction(function (item)
+		self:initItem(item)
+	end)
+	self.item_hero:RegisterUpdataFunction(function (item,index)
+		self:updateData(item,index)
+	end)
 end
 
 function UISetUpTeamLUA:getTopClazz(type,btn_relation,img_t,img_l,img_c,img_r,img_b)
@@ -85,4 +107,43 @@ end
 function UISetUpTeamLUA:onClickRelation(type)
    Logger.error("onClickRelation :: type = ",type)
 end
+
+---初始化 item组件
+function UISetUpTeamLUA:initItem(item)
+	--logError(item:GetHashCode())
+	---通过c#对象唯一标识 建立与lua item对象之间的关系
+	self._items[tostring(item:GetHashCode())] = UIHeroItemLUA:new(item.transform)
+
+end
+---更新某个item 数据
+function UISetUpTeamLUA:updateData(item,index)
+	local index_l = index + 1
+	self._items[tostring(item:GetHashCode())]:setData(index_l,self._allHeroList[index_l])
+end
+
+function UISetUpTeamLUA:initList()
+	---用lua数组来保存一对一的c#item对象和lua item对象的关联
+	self._items={}
+	---初始化列表
+    local count = self._allHeroList and #self._allHeroList or 0
+	self.listView_heroList:SetCount(count)
+	self.listView_heroList:ReLoad()
+end
+
+function UISetUpTeamLUA:onTeamLoadFinish(battleTimes)
+	if battleTimes and battleTimes == self._battleTimes then
+		self:tryInitTeamModels()
+	end
+end
+
+function UISetUpTeamLUA:tryInitTeamModels()
+	if self._battleTeam and self._battleTeam._loadingFinish then
+
+	end
+end
+
+function UISetUpTeamLUA:initGridList()
+
+end
+
 return UISetUpTeamLUA

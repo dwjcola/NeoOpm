@@ -5,3 +5,5 @@
 ---
 require("UIUtils")
 UIHeroItemLUA = require("UIHeroItemLUA")
+UISetUpTeamGridItem = require("UISetUpTeamGridItem")
+UISetUpDragItem = require("UISetUpDragItem")

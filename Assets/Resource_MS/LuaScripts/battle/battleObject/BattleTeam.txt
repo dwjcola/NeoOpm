@@ -111,8 +111,8 @@ function BattleTeam:tryLoadRoot()
         self:initRootList(root)
         self:tryLoadFinish()
 
-        self:tryLoadLeftRole()
-        self:tryLoadRightRole()
+        --self:tryLoadLeftRole()
+        --self:tryLoadRightRole()
     end)
 end
 

@@ -47,3 +47,18 @@ function UIUtils:getHeroBg(quality)
     end
     return sp
 end
+---@param  prefab GameObject
+---@param  prefab GameObject
+---@return GameObject
+function UIUtils:createItem(prefab,parent)
+    if prefab then
+        local childGo = GameObject.Instantiate(prefab)
+        if parent then
+            childGo.transform:SetParent(parent.transform)
+        end
+        return childGo
+    else
+        Logger.error(" prefab  不能为空 ！！")
+    end
+
+end

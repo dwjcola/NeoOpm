@@ -16,5 +16,6 @@ NeoOPM    =   CS.NeoOPM
 -----@type CS.UnityEngine.Vector4
 --Vector4 = CS.UnityEngine.Vector4
 
+GameObject 		    = CS.UnityEngine.GameObject
 
 

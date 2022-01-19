@@ -7,28 +7,34 @@ UISetUpTeamLUA=LUAUIBase:new({
 function UISetUpTeamLUA:Open(param)
 	self:AddUIEventListener()
 	self:AddEventListener()
-
 	self:Init(param);
-
-	self:initList()
 end
 
 function UISetUpTeamLUA:Init(param)
+    self:initParams(param)
+	self:initComponent()
+	self:initGridList()
+	self:tryInitTeamModels()
+	self:initList()
+end
+
+function UISetUpTeamLUA:initParams(param)
 	self._battleTimes = param.battleTimes
-    self._teamYpe = param.teamType
+	self._teamYpe = param.teamType
 	self._teamData = param.data
+
+    --Logger.ErrorTable(self._teamData)
+
+	self._teamData_self = param.data.team_self
+	self._teamData_enemy = param.data.team_enemy
+
 	---@type BattleTeam
 	self._battleTeam = param.battleTeam
-
 	self._gridList = {}
-
 	self._modelList = {}
-
+	self._allHeroList = HeroProxy:getAllHeroListByCombat()
 	-----@type SetUpTeamNode
 	--self._node = param.node
-	self._allHeroList = HeroProxy:getAllHeroListByCombat()
-    self:tryInitTeamModels()
-	self:initComponent()
 end
 
 --ui组件添加事件
@@ -137,13 +143,25 @@ function UISetUpTeamLUA:onTeamLoadFinish(battleTimes)
 end
 
 function UISetUpTeamLUA:tryInitTeamModels()
-	if self._battleTeam and self._battleTeam._loadingFinish then
-
+	--if self._battleTeam and self._battleTeam._loadingFinish then end
+	self._modelList[Enum.SetUpTeamEnum.TeamPos.left] = {}
+	for index, data in pairs(self._teamData_self.teamMap) do
+		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
+        self._modelList[Enum.SetUpTeamEnum.TeamPos.left][index] = UISetUpDragItem:new(obj.transform,index)
 	end
+	self._modelList[Enum.SetUpTeamEnum.TeamPos.right] = {}
+	for index, data in pairs(self._teamData_enemy.teamMap) do
+		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
+		self._modelList[Enum.SetUpTeamEnum.TeamPos.right][index] = UISetUpDragItem:new(obj.transform,index)
+	end
+
 end
 
 function UISetUpTeamLUA:initGridList()
-
+	for index, pos in pairs(BattleConstant.HeroInitPos_Main.left) do
+		local obj = UIUtils:createItem(self.go_gridItem,self.go_gridRoot)
+		self._gridList[index] = UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.left,obj)
+	end
 end
 
 return UISetUpTeamLUA

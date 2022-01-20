@@ -4,16 +4,40 @@
 --- DateTime: 2022/1/19 11:06
 ---@class UISetUpTeamGridItem
 local UISetUpTeamGridItem = SimpleClassUtil:class()
-
-function UISetUpTeamGridItem:initialize(index,pos,type)
+---@param battleTeam BattleTeam
+function UISetUpTeamGridItem:initialize(index,pos,type,battleTeam,isNull)
     self._type = type
     self._index = index
-    self._pos = pos
-    self._isNull = true
+    self._pos = Vector3(pos[1],pos[2],pos[3])
+    self._isNull = isNull
+
+    --- @type BattleTeam
+    self._battleTeam = battleTeam
+    self:traLoad()
 end
 
-function UISetUpTeamGridItem:put()
+function UISetUpTeamGridItem:traLoad()
+    local path = "Assets/Resource_MS/Prefabs/Scenes/setUpGridItem.prefab"
+    BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Effect,function(effGo)
+        self._go_root = effGo
+        self._go_root.transform:SetParent(self._type ==Enum.SetUpTeamEnum.TeamPos.left
+                and self._battleTeam._go_left.transform or self._battleTeam._go_right.transform )
+        self._go_root.transform.localScale = Vector3.one
+        self._go_root.transform.localPosition = self._pos
 
+        self._go_light = self._go_root.transform:Find("lightFrame").gameObject
+        self._go_dark = self._go_root.transform:Find("darkFrame").gameObject
+
+        self:setBottomFrameActive()
+    end)
 end
 
+function UISetUpTeamGridItem:setBottomFrameActive()
+    if self._go_light then
+        self._go_light:SetActiveVirtual(self._isNull)
+    end
+    if self._go_dark then
+        self._go_dark:SetActiveVirtual(not self._isNull)
+    end
+end
 return UISetUpTeamGridItem

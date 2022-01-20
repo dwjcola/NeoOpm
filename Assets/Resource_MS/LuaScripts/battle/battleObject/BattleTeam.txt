@@ -39,10 +39,15 @@ function BattleTeam:initialize(battleTimes)
 
     self._loadCount = {}
 
+    self._sceneCamera = nil
+
+    self._roleCamera = nil
 
     self._positionCount = 5
 
     self._loadingFinish = false
+
+
 end
 
 function BattleTeam:initLoadMap()
@@ -57,12 +62,12 @@ function BattleTeam:initLoadMap()
     --    self:addLoadMap(path..i.."enemy")
     --end
     self._loadCount = 2
-    for i, v in pairs(self._teamData_self.teamMap) do
-        self._loadCount = self._loadCount + 1
-    end
-    for i, v in pairs(self._teamData_enemy.teamMap) do
-        self._loadCount = self._loadCount + 1
-    end
+    --for i, v in pairs(self._teamData_self.teamMap) do
+    --    self._loadCount = self._loadCount + 1
+    --end
+    --for i, v in pairs(self._teamData_enemy.teamMap) do
+    --    self._loadCount = self._loadCount + 1
+    --end
 end
 
 function BattleTeam:addLoadMap(key)
@@ -82,6 +87,8 @@ function BattleTeam:setLoadData(data)
 
     self._rootAssetPath = data.rootPath or "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab"
 
+
+
     self._teamData_self = data.team_self
 
     self._teamData_enemy = data.team_enemy
@@ -99,6 +106,7 @@ function BattleTeam:tryLoadScene()
     BattleLoaderManager:pop(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,function(scene)
        self:removeLoadMap(self._sceneAssetPath)
        self._go_scene = scene
+        self._sceneCamera = scene.transform:Find("scene_camera"):GetComponent('Camera')
        self:tryLoadFinish()
     end)
 end
@@ -108,6 +116,7 @@ function BattleTeam:tryLoadRoot()
     BattleLoaderManager:pop(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,function(root)
         self:removeLoadMap(self._rootAssetPath)
         self._go_root = root
+        self._roleCamera = root.transform:Find("role_camera"):GetComponent('Camera')
         self:initRootList(root)
         self:tryLoadFinish()
 
@@ -129,7 +138,7 @@ function BattleTeam:tryLoadLeftRole()
                 model = model,
                 assetPath = path
             }
-            self:setInitPos(true,pos,model)
+            BattleUtils:setInitPos(true,pos,model, self._go_left.transform )
             self:tryLoadFinish()
         end)
     end
@@ -148,7 +157,7 @@ function BattleTeam:tryLoadRightRole()
                 assetPath = path
             }
             self:tryLoadFinish()
-            self:setInitPos(false,pos,model)
+            BattleUtils:setInitPos(false,pos,model,self._go_right.transform)
         end)
     end
 end
@@ -172,19 +181,6 @@ function BattleTeam:initRootList(root)
     for i = 1, self._positionCount do
         self._list_right_roots[i] =  self._go_right.transform:Find(tostring(i)).gameObject
     end
-end
-
-function BattleTeam:setInitPos(isSelf,pos,modelGo)
-    --local parentList = isSelf and self._list_left_roots or self._list_right_roots
-    --local parent = parentList[tonumber(pos)].transform
-    local parent = isSelf and self._go_left.transform or self._go_right.transform
-    modelGo.transform:SetParent(parent)
-    --modelGo.transform.localPosition = Vector3.zero
-    modelGo.transform.position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,pos))
-    modelGo.transform.localEulerAngles = Vector3(0, 90 ,0)
-    --modelGo.transform.scale = Vector3(0,isSelf and 90 or -90,0)
-    local z = BattleUtils:getLocalZ(not isSelf)
-    modelGo.transform:SetLocalScaleZ(z);
 end
 
 function BattleTeam:reset()

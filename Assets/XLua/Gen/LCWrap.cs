@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 50, 2, 1);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 52, 2, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIEvent", _m_AddUIEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIDataEvent", _m_AddUIDataEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddTabSelectEvent", _m_AddTabSelectEvent_xlua_st_);
@@ -41,6 +41,8 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CloseUI", _m_CloseUI_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetTable", _m_GetTable_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CallLuaFunc", _m_CallLuaFunc_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "GetUICamera", _m_GetUICamera_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "WorldPosToScreenLocalPos", _m_WorldPosToScreenLocalPos_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ChangeStateTo", _m_ChangeStateTo_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ShowOrHideUIGroup", _m_ShowOrHideUIGroup_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "OpenUI", _m_OpenUI_xlua_st_);
@@ -378,6 +380,97 @@ namespace XLua.CSObjectWrap
             } catch(System.Exception gen_e) {
                 return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
             }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetUICamera_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    
+                        var gen_ret = LC.GetUICamera(  );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_WorldPosToScreenLocalPos_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+			    int gen_param_count = LuaAPI.lua_gettop(L);
+            
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.Camera>(L, 1)&& translator.Assignable<UnityEngine.Camera>(L, 2)&& translator.Assignable<UnityEngine.RectTransform>(L, 3)&& translator.Assignable<UnityEngine.Vector3>(L, 4)) 
+                {
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 1, typeof(UnityEngine.Camera));
+                    UnityEngine.Camera _uiCamera = (UnityEngine.Camera)translator.GetObject(L, 2, typeof(UnityEngine.Camera));
+                    UnityEngine.RectTransform _rectangle = (UnityEngine.RectTransform)translator.GetObject(L, 3, typeof(UnityEngine.RectTransform));
+                    UnityEngine.Vector3 _target;translator.Get(L, 4, out _target);
+                    
+                        var gen_ret = LC.WorldPosToScreenLocalPos( _camera, _uiCamera, _rectangle, _target );
+                        translator.PushUnityEngineVector2(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 4&& translator.Assignable<UnityEngine.Camera>(L, 1)&& translator.Assignable<UnityEngine.Camera>(L, 2)&& translator.Assignable<UnityEngine.RectTransform>(L, 3)&& translator.Assignable<UnityEngine.Transform>(L, 4)) 
+                {
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 1, typeof(UnityEngine.Camera));
+                    UnityEngine.Camera _uiCamera = (UnityEngine.Camera)translator.GetObject(L, 2, typeof(UnityEngine.Camera));
+                    UnityEngine.RectTransform _rectangle = (UnityEngine.RectTransform)translator.GetObject(L, 3, typeof(UnityEngine.RectTransform));
+                    UnityEngine.Transform _targetTR = (UnityEngine.Transform)translator.GetObject(L, 4, typeof(UnityEngine.Transform));
+                    
+                        var gen_ret = LC.WorldPosToScreenLocalPos( _camera, _uiCamera, _rectangle, _targetTR );
+                        translator.PushUnityEngineVector2(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                if(gen_param_count == 7&& translator.Assignable<UnityEngine.Camera>(L, 1)&& translator.Assignable<UnityEngine.Camera>(L, 2)&& translator.Assignable<UnityEngine.RectTransform>(L, 3)&& translator.Assignable<UnityEngine.Transform>(L, 4)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 5)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 6)&& LuaTypes.LUA_TNUMBER == LuaAPI.lua_type(L, 7)) 
+                {
+                    UnityEngine.Camera _camera = (UnityEngine.Camera)translator.GetObject(L, 1, typeof(UnityEngine.Camera));
+                    UnityEngine.Camera _uiCamera = (UnityEngine.Camera)translator.GetObject(L, 2, typeof(UnityEngine.Camera));
+                    UnityEngine.RectTransform _rectangle = (UnityEngine.RectTransform)translator.GetObject(L, 3, typeof(UnityEngine.RectTransform));
+                    UnityEngine.Transform _targetTR = (UnityEngine.Transform)translator.GetObject(L, 4, typeof(UnityEngine.Transform));
+                    float _offsetX = (float)LuaAPI.lua_tonumber(L, 5);
+                    float _offsetY = (float)LuaAPI.lua_tonumber(L, 6);
+                    float _offsetZ = (float)LuaAPI.lua_tonumber(L, 7);
+                    
+                        var gen_ret = LC.WorldPosToScreenLocalPos( _camera, _uiCamera, _rectangle, _targetTR, _offsetX, _offsetY, _offsetZ );
+                        translator.PushUnityEngineVector2(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+            return LuaAPI.luaL_error(L, "invalid arguments to LC.WorldPosToScreenLocalPos!");
             
         }
         

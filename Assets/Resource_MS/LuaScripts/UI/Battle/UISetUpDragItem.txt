@@ -5,15 +5,82 @@
 ---@class UISetUpDragItem
 local UISetUpDragItem = SimpleClassUtil:class()
 
-function UISetUpDragItem:initialize(transform)
+function UISetUpDragItem:initialize(transform,index,battleTeam)
     self._transform = transform
+    self._index = index
+    ---@type BattleTeam
+    self._battleTeam = battleTeam
     self:initComponent(transform)
 end
 
-function UISetUpDragItem:initComponent()
+function UISetUpDragItem:initComponent(transform)
+    self._rect_root = transform:GetComponent("RectTransform")
+    self._img_icon = transform:Find("m_img_top/m_img_icon"):GetComponent("Image")
+    self._txt_level = transform:Find("m_img_top/m_txt_level"):GetComponent("Text")
+end
+
+function UISetUpDragItem:setData(data,type,rectPos)
+    self._type = type
+    self._isSelf = type == Enum.SetUpTeamEnum.TeamPos.left
+    self._data = data
+
+    -- todo 获取敌人数据 或者 此数据直接 传进来
+    self._heroData = self._isSelf and HeroProxy:getHeroDataByUid(self._data.heroUid) or {}
+    --Logger.ErrorTable(data)
+    self:traLoad()
+    self:initPosition(rectPos)
+    self:setBaseData()
+    self:setActive(true)
+end
+
+function UISetUpDragItem:setActive(isActive)
+    self._isActive = isActive
+    self._transform.gameObject:SetActiveVirtual(isActive)
+end
+
+function UISetUpDragItem:traLoad()
+    local path = BattleUtils:getHeroAssetPathByHeroId( self._data.heroId)
+    BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
+        -- todo 不应该在这里加 按理说应该移动到战斗内加
+        BattleUtils:addComponentForModel(model)
+        BattleUtils:setInitPos(self._isSelf,self._index,model,
+                self._isSelf and self._battleTeam._go_left.transform or self._battleTeam._go_right.transform)
+    end)
+end
+
+function UISetUpDragItem:initPosition(rectPos)
+    rectPos.y = rectPos.y - 50
+    self._rect_root.anchoredPosition = rectPos
+    self._transform:SetLocalPositionZ(0)
+end
+
+function UISetUpDragItem:setBaseData()
+    self._txt_level.text = self._heroData.level or 0
+end
+--------------------------------------------
+----------------以下内容会抽象出基类
+------------------------------------------
+function UISetUpDragItem:setDragEvent()
+    local transform = self:getEventTarget()
+    self._mediator:getView():setBeginDrag(transform.gameObject, function(obj,eventData)
+        self:onBeginDrag(obj,eventData)
+    end)
+    self._mediator:getView():setDraging(transform.gameObject,function (obj,eventData)
+        self:onDrag(obj,eventData)
+    end)
+
+    self._mediator:getView():setEndDrag(transform.gameObject,function (obj,eventData)
+        self:onEndDrag(obj,eventData)
+    end)
+
+    self._mediator:getView():setClick(transform.gameObject,function (obj)
+        self:onClick(obj)
+    end)
 
 end
 
-function UISetUpDragItem:setData()
-
+function UISetUpDragItem:getEventTarget()
+    return self._transform
 end
+
+return UISetUpDragItem

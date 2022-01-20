@@ -35,6 +35,7 @@ function UISetUpTeamLUA:initParams(param)
 	self._allHeroList = HeroProxy:getAllHeroListByCombat()
 	-----@type SetUpTeamNode
 	--self._node = param.node
+	self._list_modelInitUIPos = {}
 end
 
 --ui组件添加事件
@@ -82,10 +83,15 @@ function UISetUpTeamLUA:OnCloseClick()
 end
 
 function UISetUpTeamLUA:initComponent()
+
+	self._rect_gridRoot = self.go_gridRoot.transform:GetComponent("RectTransform")
+	self._rect_modelRoot = self.go_modelRoot.transform:GetComponent("RectTransform")
+
     self._clazz_left = self:getTopClazz(Enum.SetUpTeamEnum.TeamPos.left,self.btn_relation_l, self.img_relation_t_l,
 			self.img_relation_l_l,self.img_relation_c_l,self.img_relation_r_l,self.img_relation_b_l)
 	self._clazz_left = self:getTopClazz(Enum.SetUpTeamEnum.TeamPos.right,self.btn_relation_r, self.img_relation_t_r,
 			self.img_relation_l_r,self.img_relation_c_r,self.img_relation_r_r,self.img_relation_b_r)
+
 
 	---注册回调事件
 	self.item_hero:RegisterInitFunction(function (item)
@@ -143,25 +149,64 @@ function UISetUpTeamLUA:onTeamLoadFinish(battleTimes)
 end
 
 function UISetUpTeamLUA:tryInitTeamModels()
-	--if self._battleTeam and self._battleTeam._loadingFinish then end
+	if not (self._battleTeam and self._battleTeam._loadingFinish) then return end
+
+	self:initModelUIPos()
+
 	self._modelList[Enum.SetUpTeamEnum.TeamPos.left] = {}
 	for index, data in pairs(self._teamData_self.teamMap) do
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-        self._modelList[Enum.SetUpTeamEnum.TeamPos.left][index] = UISetUpDragItem:new(obj.transform,index)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam)
+		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.left,index))
+        self._modelList[Enum.SetUpTeamEnum.TeamPos.left][index] = dragItem
 	end
 	self._modelList[Enum.SetUpTeamEnum.TeamPos.right] = {}
 	for index, data in pairs(self._teamData_enemy.teamMap) do
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		self._modelList[Enum.SetUpTeamEnum.TeamPos.right][index] = UISetUpDragItem:new(obj.transform,index)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam)
+		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.right,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index))
+		self._modelList[Enum.SetUpTeamEnum.TeamPos.right][index] = dragItem
 	end
 
 end
 
 function UISetUpTeamLUA:initGridList()
+	self._gridList[Enum.SetUpTeamEnum.TeamPos.left] = {}
 	for index, pos in pairs(BattleConstant.HeroInitPos_Main.left) do
-		local obj = UIUtils:createItem(self.go_gridItem,self.go_gridRoot)
-		self._gridList[index] = UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.left,obj)
+		self._gridList[Enum.SetUpTeamEnum.TeamPos.left][index] =
+		UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.left, self._battleTeam,self._teamData_self.teamMap[index] == nil)
 	end
+
+	self._gridList[Enum.SetUpTeamEnum.TeamPos.right] = {}
+	for index, pos in pairs(BattleConstant.HeroInitPos_Main.right) do
+		self._gridList[Enum.SetUpTeamEnum.TeamPos.right][index] =
+		UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.right, self._battleTeam,self._teamData_enemy.teamMap[index] == nil)
+	end
+
 end
+
+function UISetUpTeamLUA:initModelUIPos()
+	local uiCamera = LC.GetUICamera()
+	self._list_modelInitUIPos = {}
+	self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.left] = {}
+	for index, pos in pairs(BattleConstant.HeroInitPos_Main.left) do
+        local vecPos = BattleUtils:posMapToVec3(pos)
+		local uiPos = LC.WorldPosToScreenLocalPos(self._battleTeam._roleCamera,uiCamera,self._rect_modelRoot,vecPos)
+		self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.left][index] = uiPos
+	end
+
+	self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.right] = {}
+	for index, pos in pairs(BattleConstant.HeroInitPos_Main.right) do
+		local vecPos = BattleUtils:posMapToVec3(pos)
+		local uiPos = LC.WorldPosToScreenLocalPos(self._battleTeam._roleCamera,uiCamera,self._rect_modelRoot,vecPos)
+		self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.right][index] = uiPos
+	end
+
+end
+
+function UISetUpTeamLUA:getModelUIInitPos(type,index)
+	return self._list_modelInitUIPos[type][index]
+end
+
 
 return UISetUpTeamLUA

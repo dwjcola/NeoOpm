@@ -80,6 +80,8 @@ namespace UnityGameFramework.Runtime
         [SerializeField]
         private UIGroup[] m_UIGroups = null;
 
+        public Camera m_uiCamera;
+
         /// <summary>
         /// 获取界面组数量。
         /// </summary>
@@ -186,6 +188,8 @@ namespace UnityGameFramework.Runtime
             {
                 m_UIManager.CloseUIFormComplete += OnCloseUIFormComplete;
             }
+
+            m_uiCamera = this.transform.Find("UICamera").GetComponent<Camera>();
         }
 
         private void Start()

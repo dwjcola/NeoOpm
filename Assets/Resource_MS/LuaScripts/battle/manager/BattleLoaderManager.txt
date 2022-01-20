@@ -24,7 +24,11 @@ function BattleLoaderManager:loadAssetAsync(assetName,assetType,cb)
             end
         end)
     elseif assetType == Enum_Battle.BattleAssetType.Effect then
-
+        LC.LoadAsset(assetName,function(sceneObject)
+            if cb then
+                cb(sceneObject)
+            end
+        end)
     else
         BattleLog.error("未处理资源类型 ：" ,tostring(assetType))
     end

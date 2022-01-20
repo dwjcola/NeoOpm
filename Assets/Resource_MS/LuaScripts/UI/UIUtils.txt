@@ -55,6 +55,7 @@ function UIUtils:createItem(prefab,parent)
         local childGo = GameObject.Instantiate(prefab)
         if parent then
             childGo.transform:SetParent(parent.transform)
+            childGo.transform.localScale = Vector3.one
         end
         return childGo
     else
@@ -62,3 +63,8 @@ function UIUtils:createItem(prefab,parent)
     end
 
 end
+---@param eventType LUAUIBase.UIEventType
+function UIUtils:AddUIEvent(eventType,gameObject,callBack,luaTable)
+    CS.LC.AddUIEvent(luaTable,eventType,gameObject,callBack)
+end
+

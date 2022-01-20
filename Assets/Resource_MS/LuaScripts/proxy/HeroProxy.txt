@@ -12,6 +12,18 @@ end
 function HeroProxy:getAllHeroList()
 
 end
+
+function HeroProxy:getHeroDataByUid(heroUid)
+   -- todo 此处是临时的
+    local array_allHero = self:getAllHeroListByCombat()
+    for i, v in pairs(array_allHero) do
+        if v and v.heroUid == heroUid then
+            return v
+        end
+    end
+    return nil
+end
+
 --- 返回根据战力 （从大到小） 排序过的 所有武将
 function HeroProxy:getAllHeroListByCombat()
    return {

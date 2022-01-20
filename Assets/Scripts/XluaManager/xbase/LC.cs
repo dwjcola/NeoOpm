@@ -62,6 +62,15 @@ public class LC
             case "onExit":
                 EventTriggerListener.Get(go).onExit = (g) => { callBack(luaClass, g); };
                 break;
+            case "OnDragBegin":
+                EventTriggerListener.Get(go).OnDragBegin = (g) => { callBack(luaClass, g); };
+                break;
+            case "OnDragFuc":
+                EventTriggerListener.Get(go).OnDragFuc = (g) => { callBack(luaClass, g); };
+                break;
+            case "OnDragEnd":
+                EventTriggerListener.Get(go).OnDragEnd = (g) => { callBack(luaClass, g); };
+                break;
             default:
                 break;
         }
@@ -189,8 +198,43 @@ public class LC
         t.Get(funcName, out func);
         func(t);
     }
+    public static Camera GetUICamera()
+    {
+        return GameEntry.UI.m_uiCamera;
+    }
+    public static Vector2 WorldPosToScreenLocalPos(UnityEngine.Camera camera, UnityEngine.Camera uiCamera, RectTransform rectangle, Vector3 target)
+    {
+        Vector3 tarPos = target;
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera, tarPos);
+
+        Vector2 imgPos = Vector2.zero;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectangle, screenPos, uiCamera, out imgPos);
+      
+        return new Vector2(imgPos.x, imgPos.y);
+    }
 
 
+    public static Vector2 WorldPosToScreenLocalPos(UnityEngine.Camera camera, UnityEngine.Camera uiCamera, RectTransform rectangle, Transform targetTR)
+    {
+        
+        Vector3 tarPos = targetTR.position;
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera, tarPos);
+
+        Vector2 imgPos = Vector2.zero;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectangle, screenPos, uiCamera, out imgPos);
+
+        return new Vector2(imgPos.x, imgPos.y);
+    }
+    public static Vector2 WorldPosToScreenLocalPos(UnityEngine.Camera camera, UnityEngine.Camera uiCamera, RectTransform rectangle, Transform targetTR, float offsetX, float offsetY, float offsetZ)
+    {
+        Vector3 tarPos = targetTR.position + new Vector3(offsetX, offsetY, offsetZ);
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(camera, tarPos);
+
+        Vector2 imgPos = Vector2.zero;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(rectangle, screenPos, uiCamera, out imgPos);
+
+        return new Vector2(imgPos.x, imgPos.y);
+    }
     public static void ChangeStateTo(Type procedureType)
     {
         IProcedureManager pm = GameFrameworkEntry.GetModule<IProcedureManager>(); ;
@@ -221,7 +265,7 @@ public class LC
     {
         return GameEntry.UI.ShowPartUIForm(key, parent, para);
     }
-
+ 
     public static LuaTable GetUITable(string uiKey)
     {
         LuaTable ui = null;

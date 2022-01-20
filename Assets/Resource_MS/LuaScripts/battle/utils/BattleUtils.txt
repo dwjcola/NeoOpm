@@ -92,10 +92,10 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        [1] = {
-                            heroUid = "hero101_0000001",
-                            heroId = "hero101",
-                        },
+                        --[1] = {
+                        --    heroUid = "hero101_0000001",
+                        --    heroId = "hero101",
+                        --},
                         [2] = {
                             heroUid = "hero101_0000002",
                             heroId = "hero101",
@@ -104,10 +104,10 @@ function BattleUtils:getTestBattleData()
                             heroUid = "hero101_0000003",
                             heroId = "hero101",
                         },
-                        [4] = {
-                            heroUid = "hero101_0000004",
-                            heroId = "hero101",
-                        },
+                        --[4] = {
+                        --    heroUid = "hero101_0000004",
+                        --    heroId = "hero101",
+                        --},
                         [5] = {
                             heroUid = "hero101_0000005",
                             heroId = "hero101",
@@ -121,10 +121,10 @@ function BattleUtils:getTestBattleData()
                             heroUid = "hero102_0000001",
                             heroId = "hero102",
                         },
-                        [2] = {
-                            heroUid = "hero102_0000002",
-                            heroId = "hero102",
-                        },
+                        --[2] = {
+                        --    heroUid = "hero102_0000002",
+                        --    heroId = "hero102",
+                        --},
                         [3] = {
                             heroUid = "hero102_0000003",
                             heroId = "hero102",
@@ -133,10 +133,10 @@ function BattleUtils:getTestBattleData()
                             heroUid = "hero102_0000004",
                             heroId = "hero102",
                         },
-                        [5] = {
-                            heroUid = "hero102_0000005",
-                            heroId = "hero102",
-                        }
+                        --[5] = {
+                        --    heroUid = "hero102_0000005",
+                        --    heroId = "hero102",
+                        --}
                     },
                 }
             }
@@ -237,5 +237,25 @@ function BattleUtils:checkoutPosForPlace_r(oriVec,entityContext,targetEnemyEntit
     end
     return true
 end
+
+function BattleUtils:addComponentForModel(model)
+    if model then
+        if GameStatic_Battle.General_Grizmo then
+            --model.gameObject.GetOrAddComponent(typeof(CS.UnityEngine.GameObjectGizmosCircle))
+            CS.LC.GetOrAddComponent(model.gameObject, "GameObjectGizmosCircleLine")
+        end
+    end
+end
+---@param parent transform
+function BattleUtils:setInitPos(isSelf,idx_pos,modelGo,parent)
+    modelGo.transform:SetParent(parent)
+    modelGo.transform.position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,idx_pos))
+    modelGo.transform.localEulerAngles = Vector3(0, 90 ,0)
+    --modelGo.transform.scale = Vector3(0,isSelf and 90 or -90,0)
+    local z = BattleUtils:getLocalZ(not isSelf)
+    modelGo.transform:SetLocalScaleZ(z);
+end
+
+
 
 return BattleUtils

@@ -48,6 +48,18 @@ end
 function LUAUIBase:GetUILogicByKey(uiKey)
   return CS.LC.GetUILogicByKey(uiKey);
 end
+---@alias LUAUIBase.UIEventType
+LUAUIBase.UIEventType = {
+  OnClick = "onclick",
+  onDown = "onDown",
+  onDoubleClick = "onDoubleClick",
+  onUp = "onUp",
+  onPress = "onPress",
+  onExit = "onExit",
+  OnDragBegin = "OnDragBegin",
+  OnDragIng = "OnDragFuc",
+  OnDragEnd = "OnDragEnd",
+}
  --添加UI事件
 function LUAUIBase:AddUIEvent(eventType,gameObject,callBack)
   CS.LC.AddUIEvent(self,eventType,gameObject,callBack);

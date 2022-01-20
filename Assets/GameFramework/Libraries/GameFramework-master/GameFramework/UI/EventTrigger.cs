@@ -8,6 +8,7 @@ namespace GameFramework.UI
     public class EventTriggerListener : UnityEngine.EventSystems.EventTrigger
     {
         public delegate void VoidDelegate(GameObject go);
+        public delegate void PointerEventDataDelegate(GameObject go, PointerEventData value);
         public VoidDelegate onClick
         
         ;
@@ -23,6 +24,13 @@ namespace GameFramework.UI
         public VoidDelegate OnDragFuc;
         public VoidDelegate OnDragEnd;
 
+        public PointerEventDataDelegate onDragOPM;
+        public PointerEventDataDelegate onBeginDragOPM;
+        public PointerEventDataDelegate onEndDragOPM;
+
+
+        private bool m_Interactable = true;
+
         private bool m_isPointDown = false;
         private float m_CurrDownTime = 0f;
         private int m_ClickCount = 0;
@@ -33,6 +41,7 @@ namespace GameFramework.UI
 
         private ScrollRect _scrollrect;
 
+        public bool Interactable { get => m_Interactable; set => m_Interactable = value; }
         private void Start()
         {
             ScrollRect scrollrect = GetComponentInParent<ScrollRect>();
@@ -65,6 +74,7 @@ namespace GameFramework.UI
             {
                 _scrollrect.OnDrag(eventData);
             }
+
             OnDragFuc?.Invoke(gameObject);
         }
         public override void OnEndDrag(PointerEventData eventData)
@@ -76,6 +86,21 @@ namespace GameFramework.UI
             }
             OnDragEnd?.Invoke(gameObject);
         }
+
+
+        public void OnDragOPM(PointerEventData eventData)
+        {
+            if (m_Interactable && onDragOPM != null) onDragOPM(gameObject, eventData);
+        }
+        public void OnBeginDragOPM(PointerEventData eventData)
+        {
+            if (m_Interactable && onBeginDragOPM != null) onBeginDragOPM(gameObject, eventData);
+        }
+        public void OnEndDragOPM(PointerEventData eventData)
+        {
+            if (m_Interactable && onEndDragOPM != null) onEndDragOPM(gameObject, eventData);
+        }
+
         public override void OnInitializePotentialDrag(PointerEventData eventData)
         {
             if (_scrollrect != null)
@@ -93,6 +118,8 @@ namespace GameFramework.UI
 
         private const float PRESS_TIME = 0.5f;
         private const float DOUBLE_CLICK_TIME = 0.2f;
+
+      
 
         private void Update()
         {
@@ -177,5 +204,40 @@ namespace GameFramework.UI
         {
             if (onUpdateSelect != null) onUpdateSelect(gameObject);
         }
+        public void UnregisterAllEvents()
+        {
+            onClick = null;
+            onDown = null;
+            onEnter = null;
+            onExit = null;
+            onUp = null;
+            onSelect = null;
+            onUpdateSelect = null;
+            onPress = null;
+            onDoubleClick = null;
+            OnDragBegin = null;
+            OnDragFuc = null;
+            OnDragEnd = null;
+
+            if (_scrollrect)
+            {
+
+                if (_scrollrect.onValueChanged != null)
+                {
+                    _scrollrect.onValueChanged.RemoveAllListeners();
+                }
+            }
+            _scrollrect = null;
+        }
+        public void UnloadFunction()
+        {
+            UnregisterAllEvents();
+        }
+
+        private void OnDestroy()
+        {
+            UnloadFunction();
+        }
+
     }
 }

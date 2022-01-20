@@ -24,8 +24,8 @@ namespace GameFramework.UI
         public VoidDelegate OnDragFuc;
         public VoidDelegate OnDragEnd;
 
-        public PointerEventDataDelegate onDragOPM;
         public PointerEventDataDelegate onBeginDragOPM;
+        public PointerEventDataDelegate onDragOPM;
         public PointerEventDataDelegate onEndDragOPM;
 
 
@@ -64,6 +64,8 @@ namespace GameFramework.UI
             {
                 _scrollrect.OnBeginDrag(eventData);
             }
+
+            OnBeginDragOPM(eventData);
             OnDragBegin?.Invoke(gameObject);
         }
         private bool m_isDragging = false;
@@ -74,7 +76,7 @@ namespace GameFramework.UI
             {
                 _scrollrect.OnDrag(eventData);
             }
-
+            OnDragOPM(eventData);
             OnDragFuc?.Invoke(gameObject);
         }
         public override void OnEndDrag(PointerEventData eventData)
@@ -84,6 +86,7 @@ namespace GameFramework.UI
             {
                 _scrollrect.OnEndDrag(eventData);
             }
+            OnEndDragOPM(eventData);
             OnDragEnd?.Invoke(gameObject);
         }
 

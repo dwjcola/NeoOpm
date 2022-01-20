@@ -20,6 +20,7 @@ using UnityGameFramework.Runtime;
 using GameEntry = NeoOPM.GameEntry;
 using Object = UnityEngine.Object;
 using System.Reflection;
+using UnityEngine.EventSystems;
 
 public class LC
 {
@@ -76,6 +77,25 @@ public class LC
         }
 
     }
+    public static void AddUIEvent_PointData(LuaTable luaClass, string key, GameObject go, Action<LuaTable, GameObject, PointerEventData> callBack)
+    {
+        switch (key)
+        {
+            case "onBeginDragOPM":
+                EventTriggerListener.Get(go).onBeginDragOPM = (g,eventData) => { callBack(luaClass, g, eventData); };
+                break;
+            case "onDragOPM":
+                EventTriggerListener.Get(go).onDragOPM = (g, eventData) => { callBack(luaClass, g, eventData); };
+                break;
+            case "onEndDragOPM":
+                EventTriggerListener.Get(go).onEndDragOPM = (g, eventData) => { callBack(luaClass, g, eventData); };
+                break;
+            default:
+                break;
+        }
+
+    }
+
     public static void AddUIDataEvent(LuaTable luaClass, string key, GameObject go, Action<LuaTable, GameObject, LuaTable> callBack, LuaTable data)
     {
         switch (key)

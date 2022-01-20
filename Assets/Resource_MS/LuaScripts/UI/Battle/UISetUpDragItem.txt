@@ -11,6 +11,7 @@ function UISetUpDragItem:initialize(transform,index,battleTeam)
     ---@type BattleTeam
     self._battleTeam = battleTeam
     self:initComponent(transform)
+    self:setDragEvent()
 end
 
 function UISetUpDragItem:initComponent(transform)
@@ -62,20 +63,20 @@ end
 ------------------------------------------
 function UISetUpDragItem:setDragEvent()
     local transform = self:getEventTarget()
-    self._mediator:getView():setBeginDrag(transform.gameObject, function(obj,eventData)
+    UIUtils:AddUIEvent_PointData(LUAUIBase.UIEventType.OnDragBeginOMP,transform.gameObject, function(obj,eventData)
         self:onBeginDrag(obj,eventData)
-    end)
-    self._mediator:getView():setDraging(transform.gameObject,function (obj,eventData)
+    end,self)
+    UIUtils:AddUIEvent_PointData(LUAUIBase.UIEventType.OnDragIngOMP,transform.gameObject,function (obj,eventData)
         self:onDrag(obj,eventData)
-    end)
+    end,self)
 
-    self._mediator:getView():setEndDrag(transform.gameObject,function (obj,eventData)
+    UIUtils:AddUIEvent_PointData(LUAUIBase.UIEventType.onEndDragOPM,transform.gameObject,function (obj,eventData)
         self:onEndDrag(obj,eventData)
-    end)
+    end,self)
 
-    self._mediator:getView():setClick(transform.gameObject,function (obj)
+    UIUtils:AddUIEvent(LUAUIBase.UIEventType.OnClick,transform.gameObject,function (obj)
         self:onClick(obj)
-    end)
+    end,self)
 
 end
 
@@ -83,4 +84,19 @@ function UISetUpDragItem:getEventTarget()
     return self._transform
 end
 
+function UISetUpDragItem:onBeginDrag(obj,eventData)
+   Logger.Error("***********  : onBeginDrag")
+end
+
+function UISetUpDragItem:onDrag(obj,eventData)
+    Logger.Error("***********  : onDrag")
+end
+
+function UISetUpDragItem:onEndDrag(obj,eventData)
+    Logger.Error("***********  : onEndDrag")
+end
+
+function UISetUpDragItem:onClick(obj)
+    Logger.Error("***********  : onClick")
+end
 return UISetUpDragItem

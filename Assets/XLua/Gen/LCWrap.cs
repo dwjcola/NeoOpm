@@ -31,8 +31,9 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 52, 2, 1);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 53, 2, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIEvent", _m_AddUIEvent_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIEvent_PointData", _m_AddUIEvent_PointData_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIDataEvent", _m_AddUIDataEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddTabSelectEvent", _m_AddTabSelectEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "Log", _m_Log_xlua_st_);
@@ -142,6 +143,35 @@ namespace XLua.CSObjectWrap
                     System.Action<XLua.LuaTable, UnityEngine.GameObject> _callBack = translator.GetDelegate<System.Action<XLua.LuaTable, UnityEngine.GameObject>>(L, 4);
                     
                     LC.AddUIEvent( _luaClass, _key, _go, _callBack );
+                    
+                    
+                    
+                    return 0;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_AddUIEvent_PointData_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    XLua.LuaTable _luaClass = (XLua.LuaTable)translator.GetObject(L, 1, typeof(XLua.LuaTable));
+                    string _key = LuaAPI.lua_tostring(L, 2);
+                    UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 3, typeof(UnityEngine.GameObject));
+                    System.Action<XLua.LuaTable, UnityEngine.GameObject, UnityEngine.EventSystems.PointerEventData> _callBack = translator.GetDelegate<System.Action<XLua.LuaTable, UnityEngine.GameObject, UnityEngine.EventSystems.PointerEventData>>(L, 4);
+                    
+                    LC.AddUIEvent_PointData( _luaClass, _key, _go, _callBack );
                     
                     
                     

@@ -68,3 +68,8 @@ function UIUtils:AddUIEvent(eventType,gameObject,callBack,luaTable)
     CS.LC.AddUIEvent(luaTable,eventType,gameObject,callBack)
 end
 
+---@param eventType LUAUIBase.UIEventType
+function UIUtils:AddUIEvent_PointData(eventType,gameObject,callBack,luaTable)
+    CS.LC.AddUIEvent_PointData(luaTable,eventType,gameObject,callBack)
+end
+

@@ -59,6 +59,10 @@ LUAUIBase.UIEventType = {
   OnDragBegin = "OnDragBegin",
   OnDragIng = "OnDragFuc",
   OnDragEnd = "OnDragEnd",
+
+  OnDragBeginOMP = "onBeginDragOPM",   -- 回调带 eventData
+  OnDragIngOMP = "onDragOPM",
+  onEndDragOPM = "onEndDragOPM",
 }
  --添加UI事件
 function LUAUIBase:AddUIEvent(eventType,gameObject,callBack)

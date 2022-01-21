@@ -103,12 +103,14 @@
 		<type fullname="SLG.WsObjInfo" preserve="all"/>
 		<type fullname="LC" preserve="all"/>
 		<type fullname="GameObjectGizmosCircle" preserve="all"/>
+		<type fullname="DoTweenTools" preserve="all"/>
 		<type fullname="GameObjectGizmosCircle" preserve="all"/>
 		<type fullname="Coroutine_Runner" preserve="all"/>
 		<type fullname="NeoOPM.UIExtension" preserve="all"/>
 		<type fullname="NeoOPM.MessageExtension" preserve="all"/>
 		<type fullname="SLG.WsObjInfo" preserve="all"/>
 		<type fullname="LC" preserve="all"/>
+		<type fullname="DoTweenTools" preserve="all"/>
 		
 	</assembly>
 

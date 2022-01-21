@@ -83,7 +83,7 @@ Material:
     - _Metallic: 0
     - _Mode: 3
     - _OcclusionStrength: 1
-    - _Outline: 0.00081
+    - _Outline: 0.00009
     - _Parallax: 0.02
     - _Power: 5
     - _Saturation1: 1

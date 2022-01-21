@@ -4,13 +4,14 @@
 --- DateTime: 2022/1/18 11:29
 ---
 ---具体item lua 对象 与 ScrollViewBaseItem 一一对应
----@class UIHeroItemLUA
-local UIHeroItemLUA = SimpleClassUtil:class()
+---@class UIHeroItemLUA:UIDragMoveBaseItem
+local UIHeroItemLUA = SimpleClassUtil:class(UIDragMoveBaseItem)
 
 function UIHeroItemLUA:initialize(transform)
+    UIDragMoveBaseItem.initialize(self,transform)
     self._transform = transform
     self._index = -1
-
+    self._isUpTeam = false
     self:initComponent(transform)
 end
 
@@ -29,18 +30,18 @@ function UIHeroItemLUA:initComponent(transform)
     self._img_star =  transform:Find("m_img_star"):GetComponent("Image")
     self._go_level =  transform:Find("m_img_level").gameObject
     self._tmptxt_level =  transform:Find("m_img_level/m_tmptxt_level"):GetComponent("TMPro.TextMeshProUGUI")
+    self._go_upTeam = transform:Find("m_img_up_team").gameObject
 end
 
-function UIHeroItemLUA:setData(index,data)
+function UIHeroItemLUA:setData(index,data,stateParams)
     self._index = index
-    
     self._data = data
-    
+    self._stateParams = stateParams
     self:setBaseData(data)
-
+    self:setStatusData(stateParams)
     --Logger.ErrorTable(data)
 end
-
+------------------------------------------------------------
 function UIHeroItemLUA:setBaseData(data)
    self:setIcon(data.heroId)
    self:setBg(data.quality)
@@ -65,8 +66,66 @@ function UIHeroItemLUA:setLevel(level)
     self._tmptxt_level.text = level
 end
 
+-----------------------------------------------
+
+function UIHeroItemLUA:setStatusData(stateParams)
+   self:setUpTeam(stateParams.isUpTeam)
+end
+
+function UIHeroItemLUA:setUpTeam(isUpTeam)
+  self._stateParams.isUpTeam = isUpTeam
+    self._go_upTeam:SetActiveVirtual(isUpTeam)
+end
+
+---------------------------------------------------
 function UIHeroItemLUA:onBtSelf()
 
+end
+-----------------------------------------------------
+---
+function UIHeroItemLUA:setDelegate(star, ing, endDrag, click)
+    self._startDrag = star
+    self._ingDrag = ing
+    self._endDrag = endDrag
+    self._click = click
+end
+
+function UIHeroItemLUA:isCanDrag()
+    return not self._stateParams.isUpTeam
+end
+
+function UIHeroItemLUA:clickEvent()
+    Logger.error("clickEvent *** 点击事件  ")
+    if self._click then
+        self._click()
+    end
+end
+
+function UIHeroItemLUA:beginEvent(eventData)
+    --self._mediator:setStartDrag(self._hero:getId())
+    if self._startDrag then
+        self._startDrag(self._data)
+    end
+end
+
+function UIHeroItemLUA:ingEvent(eventData,vec,isSlant)
+    if isSlant then
+        --self._mediator:setDragPosition(vec,self._hero:getId())
+        if self._ingDrag then
+            self._ingDrag()
+        end
+    end
+end
+
+function UIHeroItemLUA:endEvent(eventData)
+    --self._mediator:setEndDrag(self._hero:getId())
+    if self._endDrag then
+        self._endDrag()
+    end
+end
+
+function UIHeroItemLUA:slantDragAngle()
+    return 85
 end
 
 return UIHeroItemLUA

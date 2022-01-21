@@ -65,20 +65,7 @@ function HeroProxy:getAllHeroListByCombat()
            -- 右上角角标 不知道啥含义 姑且叫 稀有度
            rarity = 2,
            -- 战斗力
-           combat = 99998,
-       },
-       {
-           heroUid = "hero101_0000003",
-           heroId = "hero101",
-           level = 117,
-           star = 5,
-           quality = 2,
-           -- 职业
-           occupation = 4,
-           -- 右上角角标 不知道啥含义 姑且叫 稀有度
-           rarity = 2,
-           -- 战斗力
-           combat = 99997,
+           combat = 999999999999,
        },
        {
            heroUid = "hero101_0000004",
@@ -234,7 +221,20 @@ function HeroProxy:getAllHeroListByCombat()
            -- 右上角角标 不知道啥含义 姑且叫 稀有度
            rarity = 2,
            -- 战斗力
-           combat = 99985,
+           combat = 999850000,
+       },
+       {
+           heroUid = "hero101_0000016",
+           heroId = "hero101",
+           level = 117,
+           star = 5,
+           quality = 2,
+           -- 职业
+           occupation = 4,
+           -- 右上角角标 不知道啥含义 姑且叫 稀有度
+           rarity = 2,
+           -- 战斗力
+           combat = 1000000000,
        },
 
    }

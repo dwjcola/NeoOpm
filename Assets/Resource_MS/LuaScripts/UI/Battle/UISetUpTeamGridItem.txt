@@ -10,7 +10,7 @@ function UISetUpTeamGridItem:initialize(index,pos,type,battleTeam,isNull)
     self._index = index
     self._pos = Vector3_CS(pos[1],pos[2],pos[3])
     self._isNull = isNull
-
+    self._heroUid = nil
     --- @type BattleTeam
     self._battleTeam = battleTeam
     self:traLoad()
@@ -41,13 +41,15 @@ function UISetUpTeamGridItem:setBottomFrameActive()
     end
 end
 
-function UISetUpTeamGridItem:put()
+function UISetUpTeamGridItem:put(heroUid)
+    self._heroUid = heroUid
     self._isNull = false
     self:setBottomFrameActive()
 end
 
 
 function UISetUpTeamGridItem:pop()
+    self._heroUid = nil
     self._isNull = true
     self:setBottomFrameActive()
 end

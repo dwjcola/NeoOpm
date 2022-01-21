@@ -313,7 +313,6 @@ GameObject:
   - component: {fileID: 968036850479198203}
   - component: {fileID: 45246528495463782}
   - component: {fileID: 76106770454132879}
-  - component: {fileID: 3201899740923238919}
   m_Layer: 5
   m_Name: UIHeroItem
   m_TagString: Untagged
@@ -401,23 +400,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rect: {fileID: 0}
   dataIndex: 0
---- !u!114 &3201899740923238919
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3535027367633772084}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e1fd7c873c4612b6c49de6b7b6a7fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ClickSoundId: 8
-  m_ButtonType: 0
-  m_DisabledMat: {fileID: 0}
-  m_DisabledSp: {fileID: 0}
-  SpriteGreyMat: {fileID: 0}
 --- !u!1 &4040367670874070576
 GameObject:
   m_ObjectHideFlags: 0

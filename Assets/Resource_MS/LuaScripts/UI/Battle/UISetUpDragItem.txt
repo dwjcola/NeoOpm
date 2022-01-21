@@ -82,7 +82,7 @@ end
 
 function UISetUpDragItem:update()
     if  self._trans_model and Vector3_CS.Distance(self._trans_model.position,self._pos_target) > 0.01 then
-        self._trans_model.position = Vector3_CS.Lerp( self._trans_model.position,self._pos_target,TimerScheduler.deltaTime * 8);
+        self._trans_model.position = Vector3_CS.Lerp( self._trans_model.position,self._pos_target,TimerScheduler.deltaTime * 6);
         -- todo 换算 头顶UI 位置
         self:updateTopPos()
     end
@@ -115,11 +115,16 @@ end
 function UISetUpDragItem:ingEvent(eventData,vec,isSlant)
     if isSlant then
         --self._mediator:setDragPosition(vec,self._hero:getId())
-        local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
-        local ray = self._battleTeam._roleCamera:ScreenPointToRay(v)
-        local point = LC.GetRayRaycastHitInfo(ray)
-        self._pos_target = point
+        self:refreshTarget()
     end
+end
+
+function UISetUpDragItem:refreshTarget()
+
+    local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
+    local ray = self._battleTeam._roleCamera:ScreenPointToRay(v)
+    local point = LC.GetRayRaycastHitInfo(ray)
+    self._pos_target = point
 end
 
 function UISetUpDragItem:endEvent(eventData)

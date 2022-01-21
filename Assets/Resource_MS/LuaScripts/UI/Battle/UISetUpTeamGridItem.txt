@@ -8,7 +8,7 @@ local UISetUpTeamGridItem = SimpleClassUtil:class()
 function UISetUpTeamGridItem:initialize(index,pos,type,battleTeam,isNull)
     self._type = type
     self._index = index
-    self._pos = Vector3(pos[1],pos[2],pos[3])
+    self._pos = Vector3_CS(pos[1],pos[2],pos[3])
     self._isNull = isNull
 
     --- @type BattleTeam
@@ -22,7 +22,7 @@ function UISetUpTeamGridItem:traLoad()
         self._go_root = effGo
         self._go_root.transform:SetParent(self._type ==Enum.SetUpTeamEnum.TeamPos.left
                 and self._battleTeam._go_left.transform or self._battleTeam._go_right.transform )
-        self._go_root.transform.localScale = Vector3.one
+        self._go_root.transform.localScale = Vector3_CS.one
         self._go_root.transform.localPosition = self._pos
 
         self._go_light = self._go_root.transform:Find("lightFrame").gameObject
@@ -40,4 +40,16 @@ function UISetUpTeamGridItem:setBottomFrameActive()
         self._go_dark:SetActiveVirtual(not self._isNull)
     end
 end
+
+function UISetUpTeamGridItem:put()
+    self._isNull = false
+    self:setBottomFrameActive()
+end
+
+
+function UISetUpTeamGridItem:pop()
+    self._isNull = true
+    self:setBottomFrameActive()
+end
+
 return UISetUpTeamGridItem

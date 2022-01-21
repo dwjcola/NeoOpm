@@ -10,9 +10,9 @@ LC    =   CS.LC
 ---@type NeoOPM
 NeoOPM    =   CS.NeoOPM
 -----@type CS.UnityEngine.Vector2
---Vector2 = CS.UnityEngine.Vector2
+Vector2_CS = CS.UnityEngine.Vector2
 -----@type CS.UnityEngine.Vector3
---Vector3 = CS.UnityEngine.Vector3
+Vector3_CS = CS.UnityEngine.Vector3
 -----@type CS.UnityEngine.Vector4
 --Vector4 = CS.UnityEngine.Vector4
 

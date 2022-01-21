@@ -169,6 +169,9 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(LC), LCWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(DoTweenTools), DoTweenToolsWrap.__Register);
+        
+        
         
         }
         

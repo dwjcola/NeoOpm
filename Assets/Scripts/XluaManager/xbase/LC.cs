@@ -43,6 +43,7 @@ public class LC
     /// <param name="callBack"></param>
     public static void AddUIEvent(LuaTable luaClass, string key, GameObject go, Action<LuaTable, GameObject> callBack)
     {
+        
         switch (key)
         {
             case "onclick":
@@ -77,18 +78,18 @@ public class LC
         }
 
     }
-    public static void AddUIEvent_PointData(LuaTable luaClass, string key, GameObject go, Action<LuaTable, GameObject, PointerEventData> callBack)
+    public static void AddUIEvent_PointData(string key, GameObject go, Action<GameObject, PointerEventData> callBack)
     {
         switch (key)
         {
             case "onBeginDragOPM":
-                EventTriggerListener.Get(go).onBeginDragOPM = (g,eventData) => { callBack(luaClass, g, eventData); };
+                EventTriggerListener.Get(go).onBeginDragOPM = (g,eventData) => { callBack(g, eventData); };
                 break;
             case "onDragOPM":
-                EventTriggerListener.Get(go).onDragOPM = (g, eventData) => { callBack(luaClass, g, eventData); };
+                EventTriggerListener.Get(go).onDragOPM = (g, eventData) => { callBack( g, eventData); };
                 break;
             case "onEndDragOPM":
-                EventTriggerListener.Get(go).onEndDragOPM = (g, eventData) => { callBack(luaClass, g, eventData); };
+                EventTriggerListener.Get(go).onEndDragOPM = (g, eventData) => { callBack( g, eventData); };
                 break;
             default:
                 break;
@@ -218,9 +219,27 @@ public class LC
         t.Get(funcName, out func);
         func(t);
     }
+    public static Vector3 GetRayRaycastHitInfo(Ray ray)
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, LayerMask.GetMask("3DPlane")))
+        {
+            return hit.point;
+        }
+        return Vector3.zero;
+    }
     public static Camera GetUICamera()
     {
         return GameEntry.UI.m_uiCamera;
+    }
+    public static Vector3 ScreenPointToWorldPointInRectangle(GameObject target, UnityEngine.EventSystems.PointerEventData eventData)
+    {
+        Vector3 pos;
+        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(target.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out pos))
+        {
+            return pos;
+        }
+        return pos;
     }
     public static Vector2 WorldPosToScreenLocalPos(UnityEngine.Camera camera, UnityEngine.Camera uiCamera, RectTransform rectangle, Vector3 target)
     {

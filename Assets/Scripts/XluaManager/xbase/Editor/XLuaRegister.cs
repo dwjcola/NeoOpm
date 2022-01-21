@@ -86,6 +86,7 @@ public static class XLuaRegister
         typeof(SLG.WsObjInfo),
         typeof(LC),
         typeof(GameObjectGizmosCircle),
+        typeof(DoTweenTools),
     };
 
     [ReflectionUse]

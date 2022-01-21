@@ -16,6 +16,7 @@ function UISetUpTeamLUA:Init(param)
 	self:initGridList()
 	self:tryInitTeamModels()
 	self:initList()
+	self:startUpdate()
 end
 
 function UISetUpTeamLUA:initParams(param)
@@ -35,7 +36,7 @@ function UISetUpTeamLUA:initParams(param)
 	self._allHeroList = HeroProxy:getAllHeroListByCombat()
 	-----@type SetUpTeamNode
 	--self._node = param.node
-	self._list_modelInitUIPos = {}
+
 end
 
 --ui组件添加事件
@@ -66,6 +67,29 @@ end
 function UISetUpTeamLUA:OnDestroy()
 	self:RemoveEventListener()
 	UISetUpTeamLUA = nil;
+end
+
+function UISetUpTeamLUA:startUpdate()
+	self._scheduleUpdate = TimerScheduler:schedulePerFrame(function()
+		self:update()
+	end)
+end
+
+function UISetUpTeamLUA:stopSchedule()
+	if self._scheduleUpdate then
+		TimerScheduler:removeSchedule(self._scheduleUpdate)
+		self._scheduleUpdate = nil
+	end
+end
+
+function UISetUpTeamLUA:update()
+	if self._modelList and self._modelList[Enum.SetUpTeamEnum.TeamPos.left] then
+		for i, item in pairs(self._modelList[Enum.SetUpTeamEnum.TeamPos.left]) do
+			if item and item.update then
+				item:update()
+			end
+		end
+	end
 end
 
 function UISetUpTeamLUA:OnBattleClick()
@@ -142,33 +166,6 @@ function UISetUpTeamLUA:initList()
 	self.listView_heroList:ReLoad()
 end
 
-function UISetUpTeamLUA:onTeamLoadFinish(battleTimes)
-	if battleTimes and battleTimes == self._battleTimes then
-		self:tryInitTeamModels()
-	end
-end
-
-function UISetUpTeamLUA:tryInitTeamModels()
-	if not (self._battleTeam and self._battleTeam._loadingFinish) then return end
-
-	self:initModelUIPos()
-
-	self._modelList[Enum.SetUpTeamEnum.TeamPos.left] = {}
-	for index, data in pairs(self._teamData_self.teamMap) do
-		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam)
-		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.left,index))
-        self._modelList[Enum.SetUpTeamEnum.TeamPos.left][index] = dragItem
-	end
-	self._modelList[Enum.SetUpTeamEnum.TeamPos.right] = {}
-	for index, data in pairs(self._teamData_enemy.teamMap) do
-		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam)
-		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.right,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index))
-		self._modelList[Enum.SetUpTeamEnum.TeamPos.right][index] = dragItem
-	end
-
-end
 
 function UISetUpTeamLUA:initGridList()
 	self._gridList[Enum.SetUpTeamEnum.TeamPos.left] = {}
@@ -185,28 +182,78 @@ function UISetUpTeamLUA:initGridList()
 
 end
 
-function UISetUpTeamLUA:initModelUIPos()
-	local uiCamera = LC.GetUICamera()
-	self._list_modelInitUIPos = {}
-	self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.left] = {}
-	for index, pos in pairs(BattleConstant.HeroInitPos_Main.left) do
-        local vecPos = BattleUtils:posMapToVec3(pos)
-		local uiPos = LC.WorldPosToScreenLocalPos(self._battleTeam._roleCamera,uiCamera,self._rect_modelRoot,vecPos)
-		self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.left][index] = uiPos
+function UISetUpTeamLUA:onTeamLoadFinish(battleTimes)
+	if battleTimes and battleTimes == self._battleTimes then
+		self:tryInitTeamModels()
 	end
-
-	self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.right] = {}
-	for index, pos in pairs(BattleConstant.HeroInitPos_Main.right) do
-		local vecPos = BattleUtils:posMapToVec3(pos)
-		local uiPos = LC.WorldPosToScreenLocalPos(self._battleTeam._roleCamera,uiCamera,self._rect_modelRoot,vecPos)
-		self._list_modelInitUIPos[Enum.SetUpTeamEnum.TeamPos.right][index] = uiPos
-	end
-
 end
 
-function UISetUpTeamLUA:getModelUIInitPos(type,index)
-	return self._list_modelInitUIPos[type][index]
+function UISetUpTeamLUA:tryInitTeamModels()
+	if not (self._battleTeam and self._battleTeam._loadingFinish) then return end
+
+	self._modelList[Enum.SetUpTeamEnum.TeamPos.right] = {}
+	for index, data in pairs(self._teamData_enemy.teamMap) do
+		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+			self:onTeamModelDragEnd(node,pos,index)
+		end)
+		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.right) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
+		dragItem:setIsBelongScroll(false)
+		table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.right],dragItem)
+	end
+	self._modelList[Enum.SetUpTeamEnum.TeamPos.left] = {}
+	for index, data in pairs(self._teamData_self.teamMap) do
+		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+			self:onTeamModelDragEnd(node,pos,index)
+		end)
+		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) --,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.left,index)
+		dragItem:setIsBelongScroll(false)
+		--self._modelList[Enum.SetUpTeamEnum.TeamPos.left][index] = dragItem
+		table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.left],dragItem)
+
+	end
+end
+---@param node UISetUpDragItem
+function UISetUpTeamLUA:onTeamModelDragEnd(node,pos,dragIndex)
+	local tmpIndex = dragIndex
+	for gridIndex, gridNode in pairs(self._gridList[Enum.SetUpTeamEnum.TeamPos.left]) do
+		local dic = Vector3_CS.Distance(pos,gridNode._pos)
+
+		if dic < 2 then
+			tmpIndex = gridIndex
+           break
+		end
+	end
+	---@type UISetUpTeamGridItem
+	local targetGrid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex]
+	if tmpIndex ~= dragIndex then
+		---@type UISetUpTeamGridItem
+		local changeGrid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][dragIndex]
+		if not targetGrid._isNull then
+			---@type UISetUpDragItem
+			local changeNode = self:getDragItemByIndex(tmpIndex)
+			if changeNode == nil then
+				Logger.Error("检查 逻辑 此处不应该为空  tmpIndex == ",tmpIndex)
+			else
+				changeNode:toTarget(changeGrid._pos,dragIndex)
+			end
+		else
+			changeGrid:pop()
+		end
+	end
+	node:toTarget(targetGrid._pos,tmpIndex)
+	targetGrid:put()
 end
 
+function UISetUpTeamLUA:getDragItemByIndex(index)
+	local selfModelList = self._modelList[Enum.SetUpTeamEnum.TeamPos.left]
+	for i, v in pairs(selfModelList) do
+		if v and v._index == index then
+            return v
+		end
+	end
+	return nil
+end
 
 return UISetUpTeamLUA

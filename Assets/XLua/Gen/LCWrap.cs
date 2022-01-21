@@ -31,7 +31,7 @@ namespace XLua.CSObjectWrap
 			Utils.EndObjectRegister(type, L, translator, null, null,
 			    null, null, null);
 
-		    Utils.BeginClassRegister(type, L, __CreateInstance, 53, 2, 1);
+		    Utils.BeginClassRegister(type, L, __CreateInstance, 55, 2, 1);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIEvent", _m_AddUIEvent_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIEvent_PointData", _m_AddUIEvent_PointData_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "AddUIDataEvent", _m_AddUIDataEvent_xlua_st_);
@@ -42,7 +42,9 @@ namespace XLua.CSObjectWrap
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CloseUI", _m_CloseUI_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetTable", _m_GetTable_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "CallLuaFunc", _m_CallLuaFunc_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "GetRayRaycastHitInfo", _m_GetRayRaycastHitInfo_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetUICamera", _m_GetUICamera_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "ScreenPointToWorldPointInRectangle", _m_ScreenPointToWorldPointInRectangle_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "WorldPosToScreenLocalPos", _m_WorldPosToScreenLocalPos_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ChangeStateTo", _m_ChangeStateTo_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "ShowOrHideUIGroup", _m_ShowOrHideUIGroup_xlua_st_);
@@ -166,12 +168,11 @@ namespace XLua.CSObjectWrap
             
                 
                 {
-                    XLua.LuaTable _luaClass = (XLua.LuaTable)translator.GetObject(L, 1, typeof(XLua.LuaTable));
-                    string _key = LuaAPI.lua_tostring(L, 2);
-                    UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 3, typeof(UnityEngine.GameObject));
-                    System.Action<XLua.LuaTable, UnityEngine.GameObject, UnityEngine.EventSystems.PointerEventData> _callBack = translator.GetDelegate<System.Action<XLua.LuaTable, UnityEngine.GameObject, UnityEngine.EventSystems.PointerEventData>>(L, 4);
+                    string _key = LuaAPI.lua_tostring(L, 1);
+                    UnityEngine.GameObject _go = (UnityEngine.GameObject)translator.GetObject(L, 2, typeof(UnityEngine.GameObject));
+                    System.Action<UnityEngine.GameObject, UnityEngine.EventSystems.PointerEventData> _callBack = translator.GetDelegate<System.Action<UnityEngine.GameObject, UnityEngine.EventSystems.PointerEventData>>(L, 3);
                     
-                    LC.AddUIEvent_PointData( _luaClass, _key, _go, _callBack );
+                    LC.AddUIEvent_PointData( _key, _go, _callBack );
                     
                     
                     
@@ -414,6 +415,33 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_GetRayRaycastHitInfo_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.Ray _ray;translator.Get(L, 1, out _ray);
+                    
+                        var gen_ret = LC.GetRayRaycastHitInfo( _ray );
+                        translator.PushUnityEngineVector3(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_GetUICamera_xlua_st_(RealStatePtr L)
         {
 		    try {
@@ -427,6 +455,34 @@ namespace XLua.CSObjectWrap
                     
                         var gen_ret = LC.GetUICamera(  );
                         translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_ScreenPointToWorldPointInRectangle_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    UnityEngine.GameObject _target = (UnityEngine.GameObject)translator.GetObject(L, 1, typeof(UnityEngine.GameObject));
+                    UnityEngine.EventSystems.PointerEventData _eventData = (UnityEngine.EventSystems.PointerEventData)translator.GetObject(L, 2, typeof(UnityEngine.EventSystems.PointerEventData));
+                    
+                        var gen_ret = LC.ScreenPointToWorldPointInRectangle( _target, _eventData );
+                        translator.PushUnityEngineVector3(L, gen_ret);
                     
                     
                     

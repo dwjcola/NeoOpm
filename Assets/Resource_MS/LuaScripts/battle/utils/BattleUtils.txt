@@ -92,10 +92,10 @@ function BattleUtils:getTestBattleData()
                 battleType = Enum_Battle.BattleType.PVE_C,
                 team_self = {
                     teamMap = {
-                        --[1] = {
-                        --    heroUid = "hero101_0000001",
-                        --    heroId = "hero101",
-                        --},
+                        [1] = {
+                            heroUid = "hero101_0000001",
+                            heroId = "hero101",
+                        },
                         [2] = {
                             heroUid = "hero101_0000002",
                             heroId = "hero101",
@@ -104,10 +104,10 @@ function BattleUtils:getTestBattleData()
                             heroUid = "hero101_0000003",
                             heroId = "hero101",
                         },
-                        --[4] = {
-                        --    heroUid = "hero101_0000004",
-                        --    heroId = "hero101",
-                        --},
+                        [4] = {
+                            heroUid = "hero101_0000004",
+                            heroId = "hero101",
+                        },
                         [5] = {
                             heroUid = "hero101_0000005",
                             heroId = "hero101",

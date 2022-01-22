@@ -20,6 +20,7 @@ function UISetUpDragItem:initialize(transform,index,battleTeam,rect_modelRoot,en
     self._uiCamera = LC.GetUICamera()
     self:initComponent(transform)
     self:setDragEvent()
+
     --self:startUpdate()
 end
 
@@ -42,7 +43,7 @@ function UISetUpDragItem:setData(data,type)
     self:traLoad()
     --self:initPosition(rectPos)
     self:setBaseData()
-
+    self:setSelfSiblingIndex()
 end
 
 function UISetUpDragItem:setActive(isActive)
@@ -80,6 +81,7 @@ end
 function UISetUpDragItem:toTarget(vec,index)
     self._index = index
     self._pos_target = vec
+    self:setSelfSiblingIndex()
 end
 
 function UISetUpDragItem:initPosition(rectPos)
@@ -172,6 +174,11 @@ function UISetUpDragItem:getInitPos(isSelf,index)
     else
         return BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,index))
     end
+end
+
+function UISetUpDragItem:setSelfSiblingIndex()
+    local siblingIndex = self._isSelf and self._index or 0
+    self._transform:SetSiblingIndex(siblingIndex)
 end
 
 return UISetUpDragItem

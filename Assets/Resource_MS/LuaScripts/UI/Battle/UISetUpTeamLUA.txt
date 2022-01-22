@@ -424,4 +424,5 @@ function UISetUpTeamLUA:addDragItem(item)
 
 end
 
+
 return UISetUpTeamLUA

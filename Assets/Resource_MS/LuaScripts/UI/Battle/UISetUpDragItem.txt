@@ -29,7 +29,7 @@ function UISetUpDragItem:initComponent(transform)
     self._txt_level = transform:Find("m_img_top/m_txt_level"):GetComponent("Text")
 end
 
-function UISetUpDragItem:setData(data,type,rectPos)
+function UISetUpDragItem:setData(data,type)
     self._type = type
     self._isSelf = type == Enum.SetUpTeamEnum.TeamPos.left
     self._data = data
@@ -37,10 +37,12 @@ function UISetUpDragItem:setData(data,type,rectPos)
     -- todo 获取敌人数据 或者 此数据直接 传进来
     self._heroData = self._isSelf and HeroProxy:getHeroDataByUid(self._data.heroUid) or {}
     --Logger.ErrorTable(data)
+
+    self:setActive(true)
     self:traLoad()
     --self:initPosition(rectPos)
     self:setBaseData()
-    self:setActive(true)
+
 end
 
 function UISetUpDragItem:setActive(isActive)
@@ -51,16 +53,27 @@ end
 function UISetUpDragItem:traLoad()
     local path = BattleUtils:getHeroAssetPathByHeroId( self._data.heroId)
     BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
-        -- todo 不应该在这里加 按理说应该移动到战斗内加
-        BattleUtils:addComponentForModel(model)
-        BattleUtils:setInitPos(self._isSelf,self._index,model,
-                self._isSelf and self._battleTeam._go_left.transform or self._battleTeam._go_right.transform)
-        self._go_model = model.gameObject
-        self._trans_model = model.gameObject.transform
-        self._pos_model_init = model.gameObject.transform.position
-        self._pos_target = model.gameObject.transform.position
 
-        self:updateTopPos()
+        if self._isActive then
+            -- todo 不应该在这里加 按理说应该移动到战斗内加
+            model.gameObject:SetActiveVirtual(true)
+            BattleUtils:addComponentForModel(model)
+
+            local pos = self:getInitPos(self._isSelf,self._index)
+            BattleUtils:setInitPos(self._isSelf,self._index,model,
+                    self._isSelf and self._battleTeam._go_left.transform or self._battleTeam._go_right.transform,pos)
+            self._go_model = model.gameObject
+
+            self._trans_model = model.gameObject.transform
+            self._pos_model_init = model.gameObject.transform.position
+            self._pos_target = model.gameObject.transform.position
+            self:updateTopPos()
+        else
+            --- 如果加载延迟很高 可能 还没加载出来就已经 松手了 这个时候需要 把模型 处理一哈
+            self:putModel(model,path,Enum_Battle.BattleAssetType.Model)
+        end
+
+
     end)
 end
 
@@ -120,7 +133,6 @@ function UISetUpDragItem:ingEvent(eventData,vec,isSlant)
 end
 
 function UISetUpDragItem:refreshTarget()
-
     local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
     local ray = self._battleTeam._roleCamera:ScreenPointToRay(v)
     local point = LC.GetRayRaycastHitInfo(ray)
@@ -140,6 +152,26 @@ end
 
 function UISetUpDragItem:slantDragAngle()
     return 90
+end
+---------------------------------------------------------
+function UISetUpDragItem:resetAsDrag()
+    self:setActive(false)
+    self._index = 0
+    self:putModel(self._go_model,BattleUtils:getHeroAssetPathByHeroId( self._data.heroId),Enum_Battle.BattleAssetType.Model)
+end
+
+function UISetUpDragItem:putModel(model,path,type)
+    BattleLoaderManager:put(path,type,model)
+end
+
+function UISetUpDragItem:getInitPos(isSelf,index)
+    if index == 0 then
+        local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
+        local ray = self._battleTeam._roleCamera:ScreenPointToRay(v)
+        return LC.GetRayRaycastHitInfo(ray)
+    else
+        return BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,index))
+    end
 end
 
 return UISetUpDragItem

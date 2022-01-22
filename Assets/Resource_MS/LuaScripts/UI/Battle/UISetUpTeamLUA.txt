@@ -36,7 +36,8 @@ function UISetUpTeamLUA:initParams(param)
 	self._gridList = {}
 	self._modelList = {}
 	self._allHeroList = HeroProxy:getAllHeroListByCombat()
-
+	---用lua数组来保存一对一的c#item对象和lua item对象的关联
+	self._items={}
 	-----@type SetUpTeamNode
 	--self._node = param.node
 	self._map_upTeamHeroUid = {}
@@ -179,8 +180,6 @@ function UISetUpTeamLUA:updateData(item,index)
 end
 
 function UISetUpTeamLUA:initList()
-	---用lua数组来保存一对一的c#item对象和lua item对象的关联
-	self._items={}
 	---初始化列表
     local count = self._allHeroList and #self._allHeroList or 0
 	self.listView_heroList:SetCount(count)
@@ -256,8 +255,8 @@ end
 function UISetUpTeamLUA:onTeamModelDragEnd(node,pos,dragIndex)
 	local tmpIndex = dragIndex
 	for gridIndex, gridNode in pairs(self._gridList[Enum.SetUpTeamEnum.TeamPos.left]) do
-		local dic = Vector3_CS.Distance(pos,gridNode._pos)
-		if dic < 2 then
+		--local dic = Vector3_CS.Distance(pos,gridNode._pos)
+		if  self:isCanExchange(gridNode._pos,pos) then
 			tmpIndex = gridIndex
            break
 		end
@@ -270,7 +269,7 @@ function UISetUpTeamLUA:onTeamModelDragEnd(node,pos,dragIndex)
 		---@type UISetUpTeamGridItem
 		if not targetGrid._isNull then
 			---@type UISetUpDragItem
-			local targetNode = self:getDragItemByIndex(tmpIndex)
+			local targetNode ,targetIndex = self:getDragItemByIndex(tmpIndex)
 			if targetNode == nil then
 				Logger.Error("检查 逻辑 此处不应该为空  tmpIndex == ",tmpIndex)
 			else
@@ -292,7 +291,7 @@ function UISetUpTeamLUA:getDragItemByIndex(index)
 	local selfModelList = self._modelList[Enum.SetUpTeamEnum.TeamPos.left]
 	for i, v in pairs(selfModelList) do
 		if v and v._index == index then
-            return v
+            return v ,i
 		end
 	end
 	return nil
@@ -328,6 +327,8 @@ function UISetUpTeamLUA:startDrag(data)
 		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
 		dragItem:setIsBelongScroll(false)
 		self._dragHeroItem = dragItem
+	else
+		self._dragHeroItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left)
 	end
 end
 
@@ -341,12 +342,19 @@ function UISetUpTeamLUA:endDrag()
    self:onTeamModelDragEnd_fromZero(self._dragHeroItem,self._dragHeroItem._pos_target,0)
 end
 
+function UISetUpTeamLUA:isCanExchange(gridPos,itemPos)
+	local xIsOk = math.abs(itemPos.x - gridPos.x) <= 0.6
+	local zIsOk = math.abs(itemPos.z - gridPos.z) <= 4
+	return xIsOk and zIsOk
+end
+
 ---@param node UISetUpDragItem
 function UISetUpTeamLUA:onTeamModelDragEnd_fromZero(node,pos,dragIndex)
 	local tmpIndex = dragIndex
 	for gridIndex, gridNode in pairs(self._gridList[Enum.SetUpTeamEnum.TeamPos.left]) do
-		local dic = Vector3_CS.Distance(pos,gridNode._pos)
-		if dic < 2 then
+		--local dic = Vector3_CS.Distance(pos,gridNode._pos)
+
+		if self:isCanExchange(gridNode._pos,pos) then
 			tmpIndex = gridIndex
 			break
 		end
@@ -354,37 +362,42 @@ function UISetUpTeamLUA:onTeamModelDragEnd_fromZero(node,pos,dragIndex)
 
 	if tmpIndex == 0 then
 		-- 重置 拖拽得item
+		node:resetAsDrag()
 	else
-		-- 下阵选中得
-		local targetNode = self:getDragItemByIndex(tmpIndex)
-
-		-- 上阵拖拽得
-		-- 把下阵得设置为拖拽得
-
-		-- 刷新武将列表
-	end
-	---@type UISetUpTeamGridItem
-	local targetGrid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex]
-
-	if tmpIndex ~= dragIndex  then
 		---@type UISetUpTeamGridItem
-		if not targetGrid._isNull then
-			---@type UISetUpDragItem
-			local targetNode = self:getDragItemByIndex(tmpIndex)
+		local targetGrid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex]
+		if targetGrid and targetGrid._isNull == false then
+			local targetNode,targetIndex = self:getDragItemByIndex(tmpIndex)
 			if targetNode == nil then
 				Logger.Error("检查 逻辑 此处不应该为空  tmpIndex == ",tmpIndex)
 			else
-				self:changeUpHeroMap(targetGrid._heroUid,dragIndex)
-				targetNode:toTarget(fromGrid._pos,dragIndex)
-				fromGrid:put(targetGrid._heroUid)
+				-- 下阵选中得
+				self:changeUpHeroMap(targetGrid._heroUid,nil)
+				targetNode:resetAsDrag()
+				self._dragHeroItem = targetNode
+				self:removeDragItem(targetIndex)
 			end
-		else
-			fromGrid:pop()
 		end
+		node:toTarget(targetGrid._pos,tmpIndex)
+		targetGrid:put(node._data.heroUid)
+		self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
+        self:addDragItem(node)
+
+		self:sortHeroList()
+        self:initList()
+
+		-- 刷新武将列表
 	end
-	node:toTarget(targetGrid._pos,tmpIndex)
-	targetGrid:put(node._data.heroUid)
-	self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
+end
+
+function UISetUpTeamLUA:removeDragItem(targetIndex)
+	table.remove(self._modelList[Enum.SetUpTeamEnum.TeamPos.left],targetIndex)
+end
+
+function UISetUpTeamLUA:addDragItem(item)
+	if item then
+		table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.left],item)
+	end
 
 end
 

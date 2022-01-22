@@ -57,6 +57,9 @@ end
 
 function BattleLoaderManager:put(assetName,assetType,asset)
     if self._list_asset[assetType][assetName]  then
+        if asset and asset.gameObject then
+            asset.gameObject:SetActiveVirtual(false)
+        end
         table.insert(self._list_asset[assetType][assetName],asset)
     else
         BattleLog.error("资源  没有 对应得池子 请查看 资源来源 assetType ==  ",assetType,"    assetName ==  ",assetName)

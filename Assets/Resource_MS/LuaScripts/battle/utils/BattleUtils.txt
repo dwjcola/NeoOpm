@@ -247,9 +247,10 @@ function BattleUtils:addComponentForModel(model)
     end
 end
 ---@param parent transform
-function BattleUtils:setInitPos(isSelf,idx_pos,modelGo,parent)
+function BattleUtils:setInitPos(isSelf,idx_pos,modelGo,parent,pos)
     modelGo.transform:SetParent(parent)
-    modelGo.transform.position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,idx_pos))
+    modelGo.transform.position = pos
+    --modelGo.transform.position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,idx_pos))
     modelGo.transform.localEulerAngles = Vector3(0, 90 ,0)
     --modelGo.transform.scale = Vector3(0,isSelf and 90 or -90,0)
     local z = BattleUtils:getLocalZ(not isSelf)

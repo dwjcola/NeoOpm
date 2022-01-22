@@ -112,7 +112,7 @@ function UIHeroItemLUA:ingEvent(eventData,vec,isSlant)
     if isSlant then
         --self._mediator:setDragPosition(vec,self._hero:getId())
         if self._ingDrag then
-            self._ingDrag()
+            self._ingDrag(self._data)
         end
     end
 end

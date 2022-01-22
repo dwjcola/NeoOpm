@@ -43,6 +43,10 @@ function UISetUpTeamLUA:initParams(param)
 	self._map_upTeamHeroUid = {}
 
 	self._dragHeroItem = nil
+
+
+	--
+	self._isSetDragData = false
 end
 
 function UISetUpTeamLUA:initUpHeroMap()
@@ -166,7 +170,7 @@ function UISetUpTeamLUA:initItem(item)
     local heroItem = UIHeroItemLUA:new(item.transform)
 	heroItem:setIsBelongScroll(true,self.scroll_h)
 	heroItem:setDelegate(function(data) self:startDrag(data) end,
-			function() self:ingDrag() end,
+			function(data) self:ingDrag(data) end,
 			function() self:endDrag() end,
 			nil)
 	self._items[tostring(item:GetHashCode())] = heroItem
@@ -319,6 +323,21 @@ function UISetUpTeamLUA:sortHeroList()
 end
 
 function UISetUpTeamLUA:startDrag(data)
+	self._isSetDragData = false
+	--if self._dragHeroItem == nil then
+	--	local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
+	--	local dragItem = UISetUpDragItem:new(obj.transform,0,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+	--		self:onTeamModelDragEnd(node,pos,index)
+	--	end)
+	--	dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
+	--	dragItem:setIsBelongScroll(false)
+	--	self._dragHeroItem = dragItem
+	--else
+	--	self._dragHeroItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left)
+	--end
+end
+
+function UISetUpTeamLUA:ingDrag(data)
 	if self._dragHeroItem == nil then
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
 		local dragItem = UISetUpDragItem:new(obj.transform,0,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
@@ -327,19 +346,23 @@ function UISetUpTeamLUA:startDrag(data)
 		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
 		dragItem:setIsBelongScroll(false)
 		self._dragHeroItem = dragItem
+		self._isSetDragData = true
 	else
-		self._dragHeroItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left)
-	end
-end
-
-function UISetUpTeamLUA:ingDrag()
-	if self._dragHeroItem then
+		if self._isSetDragData == false then
+			self._dragHeroItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left)
+			self._isSetDragData = true
+		end
 		self._dragHeroItem:refreshTarget()
 	end
+
+	--if self._dragHeroItem then
+	--	self._dragHeroItem:refreshTarget()
+	--end
 end
 
 function UISetUpTeamLUA:endDrag()
    self:onTeamModelDragEnd_fromZero(self._dragHeroItem,self._dragHeroItem._pos_target,0)
+	self._isSetDragData = false
 end
 
 function UISetUpTeamLUA:isCanExchange(gridPos,itemPos)

@@ -36,6 +36,7 @@ end
 ---@param battleTeam BattleTeam
 function BattleRenderEntityContext:initCharacters(battleTeam)
     local data = self._battleData
+
     for i, v in pairs(data.team_self.teamMap) do
         local character = BattleRenderCharacter:new({
             go_model = battleTeam._map_left_role[i].model,

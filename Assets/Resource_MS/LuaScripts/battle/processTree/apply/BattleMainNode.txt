@@ -35,6 +35,8 @@ function BattleMainNode:init()
 end
 
 function BattleMainNode:onStart()
+   -- todo 重新获取布阵信息 battleData
+
    local battleTeam = self:getBattleTeam()
    if battleTeam  and battleTeam._loadingFinish then
       self:toStartBattle(false)

@@ -83,21 +83,26 @@ function UIHeroItemLUA:onBtSelf()
 end
 -----------------------------------------------------
 ---
-function UIHeroItemLUA:setDelegate(star, ing, endDrag, click)
+function UIHeroItemLUA:setDelegate(star, ing, endDrag, click,onPress)
     self._startDrag = star
     self._ingDrag = ing
     self._endDrag = endDrag
     self._click = click
+    self._onPress = onPress
 end
 
 function UIHeroItemLUA:isCanDrag()
     return not self._stateParams.isUpTeam
 end
 
+function UIHeroItemLUA:onClick(obj)
+    self:clickEvent()
+end
+
+
 function UIHeroItemLUA:clickEvent()
-    Logger.error("clickEvent *** 点击事件  ")
     if self._click then
-        self._click()
+        self._click(self._data,self._stateParams.isUpTeam)
     end
 end
 
@@ -117,15 +122,15 @@ function UIHeroItemLUA:ingEvent(eventData,vec,isSlant)
     end
 end
 
-function UIHeroItemLUA:endEvent(eventData)
+function UIHeroItemLUA:endEvent(eventData,isSlant)
     --self._mediator:setEndDrag(self._hero:getId())
     if self._endDrag then
-        self._endDrag()
+        self._endDrag(isSlant)
     end
 end
 
 function UIHeroItemLUA:slantDragAngle()
-    return 85
+    return 80
 end
 
 return UIHeroItemLUA

@@ -84,7 +84,7 @@ function UIDragMoveBaseItem:ingEvent(eventData,vec,isSlant)
     logError("overwrite me ：ingEvent")
 end
 
-function UIDragMoveBaseItem:endEvent(eventData)
+function UIDragMoveBaseItem:endEvent(eventData,isSlant)
     logError("overwrite me ：endEvent")
 end
 
@@ -139,7 +139,7 @@ end
 function UIDragMoveBaseItem:onEndDrag(obj,eventData)
     if self:isCanDrag() then
         self:setIsDragIng(false)
-        self:endEvent(eventData)
+        self:endEvent(eventData,self:getIsSlant())
         --if self._endDrag then
         --    self._endDrag(self,eventData)
         --end
@@ -148,6 +148,7 @@ function UIDragMoveBaseItem:onEndDrag(obj,eventData)
         self:getScroll().enabled = true
         self:getScroll():OnEndDrag(eventData)
     end
+    self:setIsSlant(false )
 end
 
 function UIDragMoveBaseItem:isCanDrag()

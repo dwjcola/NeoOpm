@@ -35,12 +35,15 @@ function UISetUpTeamLUA:initParams(param)
 	self._battleTeam = param.battleTeam
 	self._gridList = {}
 	self._modelList = {}
+	self._modelList_hide = {}
 	self._allHeroList = HeroProxy:getAllHeroListByCombat()
 	---用lua数组来保存一对一的c#item对象和lua item对象的关联
 	self._items={}
-	-----@type SetUpTeamNode
-	--self._node = param.node
+	---@type SetUpTeamNode
+	self._node = param.node
+
 	self._map_upTeamHeroUid = {}
+
 
 	self._dragHeroItem = nil
 
@@ -115,7 +118,22 @@ function UISetUpTeamLUA:OnBattleClick()
 	-- todo 保存战斗阵型
 	--EventManager:Dispatch(EventType.Event_GoBattle)
 	--self:OnCloseMe()
+	self._battleTeam:setRoleMap(self:handleRoleMap())
 	self._node:onLeave()
+end
+
+function UISetUpTeamLUA:handleRoleMap()
+	local roleMap = {}
+	for type, modelList in pairs(self._modelList) do
+		roleMap[type] = {}
+		for _, dragItem in pairs(modelList) do
+			roleMap[type][dragItem._index] = {
+				model = dragItem._go_model,
+				assetPath = dragItem._path
+			}
+		end
+	end
+	return roleMap
 end
 
 function UISetUpTeamLUA:OnCloseClick()
@@ -171,8 +189,8 @@ function UISetUpTeamLUA:initItem(item)
 	heroItem:setIsBelongScroll(true,self.scroll_h)
 	heroItem:setDelegate(function(data) self:startDrag(data) end,
 			function(data) self:ingDrag(data) end,
-			function() self:endDrag() end,
-			nil)
+			function(isSlant) self:endDrag(isSlant) end,
+			function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end)
 	self._items[tostring(item:GetHashCode())] = heroItem
 
 end
@@ -273,7 +291,7 @@ function UISetUpTeamLUA:onTeamModelDragEnd(node,pos,dragIndex)
 		---@type UISetUpTeamGridItem
 		if not targetGrid._isNull then
 			---@type UISetUpDragItem
-			local targetNode ,targetIndex = self:getDragItemByIndex(tmpIndex)
+			local targetNode ,listIndex = self:getDragItemByIndex(tmpIndex)
 			if targetNode == nil then
 				Logger.Error("检查 逻辑 此处不应该为空  tmpIndex == ",tmpIndex)
 			else
@@ -288,7 +306,7 @@ function UISetUpTeamLUA:onTeamModelDragEnd(node,pos,dragIndex)
 	node:toTarget(targetGrid._pos,tmpIndex)
 	targetGrid:put(node._data.heroUid)
 	self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
-
+	self:log()
 end
 
 function UISetUpTeamLUA:getDragItemByIndex(index)
@@ -301,6 +319,15 @@ function UISetUpTeamLUA:getDragItemByIndex(index)
 	return nil
 end
 
+function UISetUpTeamLUA:getDragItemByUID(uid)
+	local selfModelList = self._modelList[Enum.SetUpTeamEnum.TeamPos.left]
+	for i, v in pairs(selfModelList) do
+		if v and  v._data and v._data.heroUid == uid then
+			return v , i
+		end
+	end
+	return nil
+end
 function UISetUpTeamLUA:isUpTeam(uid)
     local index = self._map_upTeamHeroUid[uid]
 	return index ~= nil
@@ -335,6 +362,10 @@ function UISetUpTeamLUA:startDrag(data)
 	--else
 	--	self._dragHeroItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left)
 	--end
+
+	if self._dragHeroItem == nil then
+		self._dragHeroItem = self:popHideItem()
+	end
 end
 
 function UISetUpTeamLUA:ingDrag(data)
@@ -360,8 +391,10 @@ function UISetUpTeamLUA:ingDrag(data)
 	--end
 end
 
-function UISetUpTeamLUA:endDrag()
-   self:onTeamModelDragEnd_fromZero(self._dragHeroItem,self._dragHeroItem._pos_target,0)
+function UISetUpTeamLUA:endDrag(isSlant)
+	if isSlant then
+		self:onTeamModelDragEnd_fromZero(self._dragHeroItem,self._dragHeroItem._pos_target,0)
+	end
 	self._isSetDragData = false
 end
 
@@ -390,7 +423,7 @@ function UISetUpTeamLUA:onTeamModelDragEnd_fromZero(node,pos,dragIndex)
 		---@type UISetUpTeamGridItem
 		local targetGrid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex]
 		if targetGrid and targetGrid._isNull == false then
-			local targetNode,targetIndex = self:getDragItemByIndex(tmpIndex)
+			local targetNode,listIndex = self:getDragItemByIndex(tmpIndex)
 			if targetNode == nil then
 				Logger.Error("检查 逻辑 此处不应该为空  tmpIndex == ",tmpIndex)
 			else
@@ -398,19 +431,39 @@ function UISetUpTeamLUA:onTeamModelDragEnd_fromZero(node,pos,dragIndex)
 				self:changeUpHeroMap(targetGrid._heroUid,nil)
 				targetNode:resetAsDrag()
 				self._dragHeroItem = targetNode
-				self:removeDragItem(targetIndex)
+				self:removeDragItem(listIndex)
 			end
-		end
-		node:toTarget(targetGrid._pos,tmpIndex)
-		targetGrid:put(node._data.heroUid)
-		self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
-        self:addDragItem(node)
 
-		self:sortHeroList()
-        self:initList()
+
+			node:toTarget(targetGrid._pos,tmpIndex)
+			targetGrid:put(node._data.heroUid)
+			self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
+			self:addDragItem(node)
+			self:sortHeroList()
+			self:initList()
+		else
+			node:toTarget(targetGrid._pos,tmpIndex)
+			targetGrid:put(node._data.heroUid)
+			self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
+			self:addDragItem(node)
+
+			self:sortHeroList()
+			self:initList()
+
+
+			self._dragHeroItem = nil
+		end
+		--node:toTarget(targetGrid._pos,tmpIndex)
+		--targetGrid:put(node._data.heroUid)
+		--self:changeUpHeroMap(targetGrid._heroUid,tmpIndex)
+        --self:addDragItem(node)
+		--
+		--self:sortHeroList()
+        --self:initList()
 
 		-- 刷新武将列表
 	end
+	self:log()
 end
 
 function UISetUpTeamLUA:removeDragItem(targetIndex)
@@ -422,6 +475,91 @@ function UISetUpTeamLUA:addDragItem(item)
 		table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.left],item)
 	end
 
+end
+
+function UISetUpTeamLUA:onClickBottomHero(data,isUpTeam)
+	if isUpTeam then
+		---@type UISetUpDragItem
+		local node,listIndex = self:getDragItemByUID(data.heroUid)
+		-- 下阵
+		if node then
+			---@type UISetUpTeamGridItem
+			local grid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][node._index]
+
+			self:changeUpHeroMap(grid._heroUid,nil)
+			self:putHideItem(node)
+			self:removeDragItem(listIndex)
+			grid:pop()
+
+			self:sortHeroList()
+			self:initList()
+			self:log()
+		else
+			Logger.Error(" 找不到对应的 上阵对象 查看逻辑 ")
+			Logger.ErrorTable(data)
+		end
+	else
+		-- 上阵
+		local isCanUp ,upIndex = self:getCanUpHero()
+		if isCanUp then
+			---@type UISetUpDragItem
+			local node = self:popHideItem()
+			if node == nil then
+				local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
+				node = UISetUpDragItem:new(obj.transform,upIndex,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+					self:onTeamModelDragEnd(node,pos,index)
+				end)
+				node:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
+				node:setIsBelongScroll(false)
+				table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.left],node)
+			else
+				node:setIndex(upIndex)
+				node:setData(data,Enum.SetUpTeamEnum.TeamPos.left)
+			end
+			---@type UISetUpTeamGridItem
+			local grid = self._gridList[Enum.SetUpTeamEnum.TeamPos.left][node._index]
+			grid:put(data.heroUid)
+			self:changeUpHeroMap(grid._heroUid,upIndex)
+			self:addDragItem(node)
+
+			self:sortHeroList()
+			self:initList()
+		else
+			Logger.error("阵容已满")
+		end
+	end
+
+end
+
+function UISetUpTeamLUA:getCanUpHero()
+	local gridList = self._gridList[Enum.SetUpTeamEnum.TeamPos.left]
+	for posIndex, grid in ipairs(gridList) do
+		if grid and grid._isNull then
+			return true , posIndex
+		end
+	end
+	return false
+end
+
+function UISetUpTeamLUA:log()
+	--Logger.ErrorTable(self._modelList[Enum.SetUpTeamEnum.TeamPos.left])
+	----Logger.ErrorTable(self._gridList[Enum.SetUpTeamEnum.TeamPos.left])
+	--Logger.ErrorTable(self._map_upTeamHeroUid)
+end
+
+function UISetUpTeamLUA:putHideItem(modelNode)
+	modelNode:resetPutHideList()
+	table.insert(self._modelList_hide,modelNode)
+end
+
+function UISetUpTeamLUA:popHideItem()
+	if #self._modelList_hide > 0 then
+		local len = #self._modelList_hide
+		local node = table.remove(self._modelList_hide,len)
+		return node
+	else
+		return nil
+	end
 end
 
 

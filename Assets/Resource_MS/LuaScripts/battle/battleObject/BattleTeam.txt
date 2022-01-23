@@ -216,4 +216,10 @@ function BattleTeam:addComponent(model)
         end
     end
 end
+
+function BattleTeam:setRoleMap(roleMap)
+    self._map_left_role = roleMap[Enum.SetUpTeamEnum.TeamPos.left]
+    self._map_right_role = roleMap[Enum.SetUpTeamEnum.TeamPos.right]
+end
+
 return BattleTeam

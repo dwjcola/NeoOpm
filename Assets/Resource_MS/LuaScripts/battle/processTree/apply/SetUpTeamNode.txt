@@ -37,6 +37,7 @@ function SetUpTeamNode:onStart()
         teamType = Enum_Battle.BattleTeamType.MainTeam,
         data = self._data,
         battleTeam = battleTeam,
+        node = self,
     })
 
 end

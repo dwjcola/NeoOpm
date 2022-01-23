@@ -52,8 +52,9 @@ function UISetUpDragItem:setActive(isActive)
 end
 
 function UISetUpDragItem:traLoad()
-    local path = BattleUtils:getHeroAssetPathByHeroId( self._data.heroId)
-    BattleLoaderManager:pop(path,Enum_Battle.BattleAssetType.Model,function(model)
+    self._path = BattleUtils:getHeroAssetPathByHeroId( self._data.heroId)
+
+    BattleLoaderManager:pop(self._path,Enum_Battle.BattleAssetType.Model,function(model)
 
         if self._isActive then
             -- todo 不应该在这里加 按理说应该移动到战斗内加
@@ -78,11 +79,17 @@ function UISetUpDragItem:traLoad()
     end)
 end
 
+function UISetUpDragItem:setIndex(index)
+    self._index = index
+    self:setSelfSiblingIndex()
+end
+
 function UISetUpDragItem:toTarget(vec,index)
     self._index = index
     self._pos_target = vec
     self:setSelfSiblingIndex()
 end
+
 
 function UISetUpDragItem:initPosition(rectPos)
     rectPos.y = rectPos.y - 50
@@ -161,7 +168,11 @@ function UISetUpDragItem:resetAsDrag()
     self._index = 0
     self:putModel(self._go_model,BattleUtils:getHeroAssetPathByHeroId( self._data.heroId),Enum_Battle.BattleAssetType.Model)
 end
-
+function UISetUpDragItem:resetPutHideList()
+    self:setActive(false)
+    self._index = 0
+    self:putModel(self._go_model,BattleUtils:getHeroAssetPathByHeroId( self._data.heroId),Enum_Battle.BattleAssetType.Model)
+end
 function UISetUpDragItem:putModel(model,path,type)
     BattleLoaderManager:put(path,type,model)
 end

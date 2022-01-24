@@ -106,6 +106,7 @@ function BattleTeam:tryLoadScene()
     BattleLoaderManager:pop(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,function(scene)
        self:removeLoadMap(self._sceneAssetPath)
        self._go_scene = scene
+        self._go_scene.gameObject:SetActiveVirtual(true)
         self._sceneCamera = scene.transform:Find("scene_camera"):GetComponent('Camera')
        self:tryLoadFinish()
     end)
@@ -116,6 +117,7 @@ function BattleTeam:tryLoadRoot()
     BattleLoaderManager:pop(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,function(root)
         self:removeLoadMap(self._rootAssetPath)
         self._go_root = root
+        self._go_root.gameObject:SetActiveVirtual(true)
         self._roleCamera = root.transform:Find("role_camera"):GetComponent('Camera')
         self:initRootList(root)
         self:tryLoadFinish()
@@ -200,12 +202,12 @@ end
 function BattleTeam:putAsset()
     BattleLoaderManager:put(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,self._go_scene)
     BattleLoaderManager:put(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,self._go_root)
-    for i, v in pairs(self._map_left_role) do
-        BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
-    end
-    for i, v in pairs(self._map_right_role) do
-        BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
-    end
+    --for i, v in pairs(self._map_left_role) do
+    --    BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
+    --end
+    --for i, v in pairs(self._map_right_role) do
+    --    BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
+    --end
 end
 
 function BattleTeam:addComponent(model)

@@ -191,5 +191,35 @@ namespace lufeigame
         {
             this.isEnableFrameInit = isEnableFrameInit;
         }
+        /// <summary>
+        /// 重新注册 lua 回调
+        /// </summary>
+        /// <param name="initFunc"></param>
+        /// <param name="updateFunc"></param>
+        public void RefreshLuaFunction(ScrollViewLuaItem.CallbackVoidOneParam initFunc, ScrollViewLuaItem.CallbackVoid updateFunc)
+        {
+            if (items.Count > 0)
+            {
+                var tor = items.GetEnumerator();
+                while (tor.MoveNext())
+                {
+                    ScrollViewLuaItem scrollViewLuaItem = tor.Current as ScrollViewLuaItem;
+                    scrollViewLuaItem.RegisterInitFunction(initFunc);
+                    scrollViewLuaItem.RegisterUpdataFunction(updateFunc);
+                }
+               
+            }
+
+            if (recoveryItems.Count > 0)
+            {
+                var tor = recoveryItems.GetEnumerator();
+                while (tor.MoveNext())
+                {
+                    ScrollViewLuaItem scrollViewLuaItem = tor.Current as ScrollViewLuaItem;
+                    scrollViewLuaItem.RegisterInitFunction(initFunc);
+                    scrollViewLuaItem.RegisterUpdataFunction(updateFunc);
+                }
+            }
+        }
     }
 }

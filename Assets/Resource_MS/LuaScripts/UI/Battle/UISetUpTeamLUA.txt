@@ -1,7 +1,6 @@
 --界面
 ---@class UISetUpTeamLUA:LUAUIBase
 UISetUpTeamLUA=LUAUIBase:new({
-	  _items = {}
 	});
 
 function UISetUpTeamLUA:Open(param)
@@ -37,8 +36,9 @@ function UISetUpTeamLUA:initParams(param)
 	self._modelList = {}
 	self._modelList_hide = {}
 	self._allHeroList = HeroProxy:getAllHeroListByCombat()
+
 	---用lua数组来保存一对一的c#item对象和lua item对象的关联
-	self._items={}
+	self._items = {}
 	---@type SetUpTeamNode
 	self._node = param.node
 
@@ -85,6 +85,44 @@ function UISetUpTeamLUA:OnCloseMe()
 end
 function UISetUpTeamLUA:OnDestroy()
 	self:RemoveEventListener()
+	self:stopSchedule()
+	for i, v in pairs(self._gridList) do
+		for _, grid in pairs(v) do
+			if grid and grid.OnDestroy then
+				grid:OnDestroy()
+			end
+		end
+	end
+	self._gridList = {}
+	for i, v in pairs(self._modelList) do
+		for _, node in pairs(v) do
+					if node and node.OnDestroy then
+						node:OnDestroy()
+			end
+		end
+	end
+	for i, v in pairs(self._modelList_hide) do
+		if v and v.OnDestroy then
+			v:OnDestroy()
+		end
+	end
+
+	self._modelList = {}
+	self._allHeroList = {}
+	-- todo 这里按理说 不应该由我手动调用
+	--self.listView_heroList:RecoveryItems()
+	--self._items = {}
+
+	self._map_upTeamHeroUid = {}
+
+
+	if self._dragHeroItem and self._dragHeroItem.OnDestroy then
+		self._dragHeroItem:OnDestroy()
+	end
+	self._dragHeroItem = nil
+
+	self._isSetDragData = false
+
 	UISetUpTeamLUA = nil;
 end
 
@@ -139,7 +177,11 @@ end
 function UISetUpTeamLUA:OnCloseClick()
 	-- todo 关闭
 	--EventManager:Dispatch(EventType.Event_CloseSetUpView)
+
+	self._battleTeam:destroy()
+
 	self:OnCloseMe()
+
 	BattleProxy:ExitBattle()
 end
 
@@ -183,7 +225,7 @@ end
 
 ---初始化 item组件
 function UISetUpTeamLUA:initItem(item)
-	--logError(item:GetHashCode())
+	Logger.error(item:GetHashCode())
 	---通过c#对象唯一标识 建立与lua item对象之间的关系
     local heroItem = UIHeroItemLUA:new(item.transform)
 	heroItem:setIsBelongScroll(true,self.scroll_h)
@@ -204,6 +246,9 @@ end
 function UISetUpTeamLUA:initList()
 	---初始化列表
     local count = self._allHeroList and #self._allHeroList or 0
+
+	--self.listView_heroList:RefreshLuaFunction(function (item) self:initItem(item) end,function (item,index) self:updateData(item,index) end)
+
 	self.listView_heroList:SetCount(count)
 	self.listView_heroList:ReLoad()
 end
@@ -251,9 +296,10 @@ function UISetUpTeamLUA:tryInitTeamModels()
 	self._modelList[Enum.SetUpTeamEnum.TeamPos.right] = {}
 	for index, data in pairs(self._teamData_enemy.teamMap) do
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot)
+		dragItem:setDelegate(nil,nil,function(node,pos,index)
 			self:onTeamModelDragEnd(node,pos,index)
-		end)
+		end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
 		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.right) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
 		dragItem:setIsBelongScroll(false)
 		table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.right],dragItem)
@@ -263,9 +309,10 @@ function UISetUpTeamLUA:tryInitTeamModels()
 	self._modelList[Enum.SetUpTeamEnum.TeamPos.left] = {}
 	for index, data in pairs(self._teamData_self.teamMap) do
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot)
+		dragItem:setDelegate(nil,nil,function(node,pos,index)
 			self:onTeamModelDragEnd(node,pos,index)
-		end)
+		end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
 		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) --,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.left,index)
 		dragItem:setIsBelongScroll(false)
 		--self._modelList[Enum.SetUpTeamEnum.TeamPos.left][index] = dragItem
@@ -371,9 +418,10 @@ end
 function UISetUpTeamLUA:ingDrag(data)
 	if self._dragHeroItem == nil then
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,0,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+		local dragItem = UISetUpDragItem:new(obj.transform,0,self._battleTeam,self._rect_modelRoot)
+		dragItem:setDelegate(nil,nil,function(node,pos,index)
 			self:onTeamModelDragEnd(node,pos,index)
-		end)
+		end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
 		dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
 		dragItem:setIsBelongScroll(false)
 		self._dragHeroItem = dragItem
@@ -506,9 +554,10 @@ function UISetUpTeamLUA:onClickBottomHero(data,isUpTeam)
 			local node = self:popHideItem()
 			if node == nil then
 				local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-				node = UISetUpDragItem:new(obj.transform,upIndex,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
-					self:onTeamModelDragEnd(node,pos,index)
-				end)
+				node = UISetUpDragItem:new(obj.transform,upIndex,self._battleTeam,self._rect_modelRoot)
+				node:setDelegate(nil,nil,function(nodeItem,pos,index)
+					self:onTeamModelDragEnd(nodeItem,pos,index)
+				end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
 				node:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
 				node:setIsBelongScroll(false)
 				table.insert(self._modelList[Enum.SetUpTeamEnum.TeamPos.left],node)
@@ -546,7 +595,7 @@ function UISetUpTeamLUA:log()
 	----Logger.ErrorTable(self._gridList[Enum.SetUpTeamEnum.TeamPos.left])
 	--Logger.ErrorTable(self._map_upTeamHeroUid)
 end
-
+---@param modelNode UISetUpDragItem
 function UISetUpTeamLUA:putHideItem(modelNode)
 	modelNode:resetPutHideList()
 	table.insert(self._modelList_hide,modelNode)

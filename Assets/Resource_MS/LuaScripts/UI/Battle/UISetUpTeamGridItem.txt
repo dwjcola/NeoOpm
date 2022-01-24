@@ -47,11 +47,17 @@ function UISetUpTeamGridItem:put(heroUid)
     self:setBottomFrameActive()
 end
 
-
 function UISetUpTeamGridItem:pop()
     self._heroUid = nil
     self._isNull = true
     self:setBottomFrameActive()
+end
+
+function UISetUpTeamGridItem:OnDestroy()
+  -- todo 停止上述加载操作
+    if self._go_root then
+        CS.UnityEngine.GameObject.Destroy(self._go_root)
+    end
 end
 
 return UISetUpTeamGridItem

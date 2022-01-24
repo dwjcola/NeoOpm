@@ -14,7 +14,7 @@ function UISetUpDragItem:initialize(transform,index,battleTeam,rect_modelRoot,en
 
     self._pos_model_init = Vector3_CS.zero
 
-    self._endDelegate = endDelegate
+    --self._endDelegate = endDelegate
     self._pos_target = Vector3_CS.zero
     self._rect_modelRoot = rect_modelRoot
     self._uiCamera = LC.GetUICamera()
@@ -79,6 +79,14 @@ function UISetUpDragItem:traLoad()
     end)
 end
 
+function UISetUpDragItem:setDelegate(star, ing, endDrag, click,onPress)
+    self._startDrag = star
+    self._ingDrag = ing
+    self._endDelegate = endDrag
+    self._click = click
+    self._onPress = onPress
+end
+
 function UISetUpDragItem:setIndex(index)
     self._index = index
     self:setSelfSiblingIndex()
@@ -127,7 +135,9 @@ function UISetUpDragItem:isCanDrag()
 end
 
 function UISetUpDragItem:clickEvent()
-    Logger.error("clickEvent *** 点击事件  ")
+    if  self._click then
+        self._click(self._data,true)
+    end
 end
 
 function UISetUpDragItem:beginEvent(eventData)
@@ -166,12 +176,12 @@ end
 function UISetUpDragItem:resetAsDrag()
     self:setActive(false)
     self._index = 0
-    self:putModel(self._go_model,BattleUtils:getHeroAssetPathByHeroId( self._data.heroId),Enum_Battle.BattleAssetType.Model)
+    self:putModel(self._go_model,self._path,Enum_Battle.BattleAssetType.Model)
 end
 function UISetUpDragItem:resetPutHideList()
     self:setActive(false)
     self._index = 0
-    self:putModel(self._go_model,BattleUtils:getHeroAssetPathByHeroId( self._data.heroId),Enum_Battle.BattleAssetType.Model)
+    self:putModel(self._go_model,self._path,Enum_Battle.BattleAssetType.Model)
 end
 function UISetUpDragItem:putModel(model,path,type)
     BattleLoaderManager:put(path,type,model)
@@ -190,6 +200,12 @@ end
 function UISetUpDragItem:setSelfSiblingIndex()
     local siblingIndex = self._isSelf and self._index or 0
     self._transform:SetSiblingIndex(siblingIndex)
+end
+
+function UISetUpDragItem:OnDestroy()
+    self:putModel(self._go_model,self._path,Enum_Battle.BattleAssetType.Model)
+    -- todo 后面会改为缓存
+    CS.UnityEngine.GameObject.Destroy(self._transform.gameObject)
 end
 
 return UISetUpDragItem

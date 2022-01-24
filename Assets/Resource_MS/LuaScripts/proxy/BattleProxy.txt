@@ -6,7 +6,7 @@
 local BattleProxy = {}
 
 function BattleProxy:Init()
-
+    self._battleTeamMap = {}
 end
 
 function BattleProxy:GetData()
@@ -38,6 +38,21 @@ function BattleProxy:ExitBattle()
     self._processTree:exit()
 
     self:onClear()
+end
+
+function BattleProxy:OpenBattleMainView(param)
+    LC.OpenUI("UIBattleMain",param)
+end
+
+function BattleProxy:setBattleTeamMap(battleTimes,team_self,team_enemy)
+   self._battleTeamMap[battleTimes] = {
+       team_self = team_self,
+       team_enemy = team_enemy
+   }
+end
+
+function BattleProxy:getBattleTeamMap(battleTimes)
+    return self._battleTeamMap[battleTimes]
 end
 
 function BattleProxy:onClear()

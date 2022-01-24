@@ -156,8 +156,20 @@ function UISetUpTeamLUA:OnBattleClick()
 	-- todo 保存战斗阵型
 	--EventManager:Dispatch(EventType.Event_GoBattle)
 	--self:OnCloseMe()
+	BattleProxy:setBattleTeamMap(self._battleTimes,{teamMap = self:getSelfTeamData() },self._teamData_enemy)
 	self._battleTeam:setRoleMap(self:handleRoleMap())
 	self._node:onLeave()
+	self:stopSchedule()
+end
+
+function UISetUpTeamLUA:getSelfTeamData()
+   local tmp = {}
+	for pos, gridItem in pairs(self._gridList[Enum.SetUpTeamEnum.TeamPos.left]) do
+		if gridItem and gridItem._isNull == false then
+			tmp[pos] = HeroProxy:getHeroDataByUid(gridItem._heroUid)
+		end
+	end
+	return tmp
 end
 
 function UISetUpTeamLUA:handleRoleMap()
@@ -225,7 +237,6 @@ end
 
 ---初始化 item组件
 function UISetUpTeamLUA:initItem(item)
-	Logger.error(item:GetHashCode())
 	---通过c#对象唯一标识 建立与lua item对象之间的关系
     local heroItem = UIHeroItemLUA:new(item.transform)
 	heroItem:setIsBelongScroll(true,self.scroll_h)

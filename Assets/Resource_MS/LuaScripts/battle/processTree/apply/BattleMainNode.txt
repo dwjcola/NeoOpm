@@ -36,9 +36,12 @@ end
 
 function BattleMainNode:onStart()
    -- todo 重新获取布阵信息 battleData
-
+   ---@type BattleTeam
    local battleTeam = self:getBattleTeam()
    if battleTeam  and battleTeam._loadingFinish then
+      BattleProxy:OpenBattleMainView()
+      self._data.team_self = BattleProxy:getBattleTeamMap(self._battleTimes).team_self
+
       self:toStartBattle(false)
    else
       BattleLog.error("等待加载完成")
@@ -90,10 +93,6 @@ function BattleMainNode:update(dt)
       self._battleManager:update(dt)
    end
 end
-
-
-
-
 
 function BattleMainNode:setTimeScale(timeScale)
    self._scheduler:setTimeScale(timeScale)

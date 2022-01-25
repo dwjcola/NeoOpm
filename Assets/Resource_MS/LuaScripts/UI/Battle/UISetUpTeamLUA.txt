@@ -156,10 +156,21 @@ function UISetUpTeamLUA:OnBattleClick()
 	-- todo 保存战斗阵型
 	--EventManager:Dispatch(EventType.Event_GoBattle)
 	--self:OnCloseMe()
+
+
 	BattleProxy:setBattleTeamMap(self._battleTimes,{teamMap = self:getSelfTeamData() },self._teamData_enemy)
 	self._battleTeam:setRoleMap(self:handleRoleMap())
 	self._node:onLeave()
 	self:stopSchedule()
+
+	for i, v in pairs(self._gridList) do
+		for _, grid in pairs(v) do
+			if grid and grid.OnDestroy then
+				grid:OnDestroy()
+			end
+		end
+	end
+	self._gridList = {}
 end
 
 function UISetUpTeamLUA:getSelfTeamData()

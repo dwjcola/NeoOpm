@@ -12,7 +12,7 @@ function BattleRenderContext:initialize()
    ---@type BattleRenderEntityContext
    self._entity_context = BattleRenderEntityContext:new()
 end
-
+---@param battleManager PVE_Config_Battle_Manager
 function BattleRenderContext:init(blackBoard,battleData,battleManager)
 
    self._entity_context:init(blackBoard,battleData,battleManager)

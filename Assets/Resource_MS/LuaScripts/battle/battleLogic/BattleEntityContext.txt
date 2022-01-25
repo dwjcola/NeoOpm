@@ -7,7 +7,7 @@ local BattleEntityContext = SimpleClassUtil:class()
 function BattleEntityContext:initialize()
 
 end
-
+---@param battleManager PVE_Config_Battle_Manager
 function BattleEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self._baseBlackBoard = baseBlackBoard
@@ -16,31 +16,18 @@ function BattleEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self._battleData = battleData
 
-    self._list_camp = {
-        [Enum_Battle.Camp.CampSelf] = {},
-        [Enum_Battle.Camp.CampEnemy] = {},
-    }
+    self._list_camp = battleManager._list_logicCharacter
 
     self:initCharacters()
-
-
 end
 
 
 
 function BattleEntityContext:initCharacters()
-
-    local data = self._battleData
-
-    for i, v in pairs(data.team_self.teamMap) do
-        local index = i
-        local character = BattleCharacter:new(Enum_Battle.Camp.CampSelf,index,self._battleManager,self,v,i)
-        self._list_camp[Enum_Battle.Camp.CampSelf][index] = character
-    end
-
-    for i, v in pairs(data.team_enemy.teamMap) do
-        local index = i
-        self._list_camp[Enum_Battle.Camp.CampEnemy][index] =  BattleCharacter:new(Enum_Battle.Camp.CampEnemy,index,self._battleManager,self,v,index + 5)
+    for i, characterList in pairs(self._list_camp) do
+        for pos, character in pairs(characterList) do
+            character:init(self)
+        end
     end
 
 end

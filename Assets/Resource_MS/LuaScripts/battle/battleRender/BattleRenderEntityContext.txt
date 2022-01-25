@@ -19,12 +19,9 @@ function BattleRenderEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self._uid = 20
 
-    self._list_camp = {
-        [Enum_Battle.Camp.CampSelf] = {},
-        [Enum_Battle.Camp.CampEnemy] = {},
-    }
+    self._list_camp = battleManager._list_renderCharacter
 
-     self:initCharacters(self._battleManager._battleTeam)
+     --self:initCharacters(self._battleManager._battleTeam)
 end
 
 function BattleRenderEntityContext:getUid()

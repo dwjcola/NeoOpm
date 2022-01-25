@@ -4,8 +4,8 @@
 --- DateTime: 2021/12/29 11:39
 ---@class BattleCharacter:SimpleClassUtil
 local BattleCharacter = SimpleClassUtil:class()
-
-function BattleCharacter:initialize(campType,index,battleManager,entityContext,heroData,uid)
+---@param battleManager PVE_Config_Battle_Manager
+function BattleCharacter:initialize(campType,index,battleManager,heroData,uid)
 
     self._campType = campType
 
@@ -13,36 +13,26 @@ function BattleCharacter:initialize(campType,index,battleManager,entityContext,h
 
     self._battleManager = battleManager
 
-    self._entityContext = entityContext
+    --self._entityContext = battleManager._world_logic._battleLogicContext._entityContext
 
     self._heroData = heroData
 
     self._heroId = heroData.heroId
 
+    self._heroUid = heroData.heroUid
+
     self._uid = uid
     --BattleLog.error( self._heroId)
 
-    self:init()
 
-
-    --self:test(Vector3(-50,0,50),0)
 end
 
-function BattleCharacter:test(vecTest,angle)
-    if angle == 360 then
-        return
-    else
-        local vec = vecTest
-        if angle ~= 0 then
-            vec = BattleMathUtils.AngleAxis_Y_V3(vecTest,angle)
-        end
-        local go = LC.CreateGame()
-        go.transform.position = vec
-        self:test(vecTest,angle + 1)
-    end
+function BattleCharacter:init(entityContext)
+    self._entityContext = entityContext
+    self:initTree()
 end
 
-function BattleCharacter:init()
+function BattleCharacter:initTree()
     local volume_r = 0.5
     local place_r = 0.6
     local dislocation_r = 0.9

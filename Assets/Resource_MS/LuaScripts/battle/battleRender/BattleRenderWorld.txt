@@ -9,7 +9,7 @@ local BattleRenderWorld = SimpleClassUtil:class()
 function BattleRenderWorld:initialize()
    self._contextManager = BattleRenderContext:new()
 end
-
+---@param battleManager PVE_Config_Battle_Manager
 function BattleRenderWorld:init(blackBoard,battleData,battleManager)
    self._contextManager:init(blackBoard,battleData,battleManager)
 end

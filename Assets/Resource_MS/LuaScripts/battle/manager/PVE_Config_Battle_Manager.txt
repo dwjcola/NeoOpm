@@ -26,11 +26,18 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     ---@type BattleTeam
     self._battleTeam = battleTeam
 
+    self._entityId = 0
+
+
+    self._list_logicCharacter = {}
+
+    self._list_renderCharacter = {}
 end
 
 
 
 function PVE_Config_Battle_Manager:start()
+    self:initEntity()
     self:formalInit()
     self._ready = true
 end
@@ -46,6 +53,45 @@ function PVE_Config_Battle_Manager:formalInit()
     self._world_logic = BattleLogicWorld:new()
     self._world_logic:init(self._blackBoard,self._battleData,self)
 end
+
+function PVE_Config_Battle_Manager:initEntity()
+    local data = self._battleData
+
+    local func = function(teamMap,type)
+        for i, v in pairs(teamMap) do
+            local index = i
+            self._entityId = self._entityId + 1
+
+            if self._list_logicCharacter[type] == nil then
+                self._list_logicCharacter[type] = {}
+            end
+            self._list_logicCharacter[type][index] = BattleCharacter:new(type,index,self,v, self._entityId )
+            if not self._isOnlyLogic then
+
+                if self._list_renderCharacter[type] == nil then
+                    self._list_renderCharacter[type] = {}
+                end
+                local  _map_left_role = type == Enum_Battle.Camp.CampSelf and self._battleTeam._map_left_role or self._battleTeam._map_right_role
+                local renderCharacter = BattleRenderCharacter:new({
+                    go_model = _map_left_role[i].model,
+                    index = i,
+                    heroId = v.heroId,
+                    campType = type,
+                    uid =  self._entityId ,
+                })
+                self._list_renderCharacter[type][index] =  renderCharacter
+            end
+        end
+
+    end
+
+    func(data.team_self.teamMap,Enum_Battle.Camp.CampSelf)
+
+    func(data.team_enemy.teamMap,Enum_Battle.Camp.CampEnemy)
+
+end
+
+
 
 function PVE_Config_Battle_Manager:update(dt)
     if self._ready then

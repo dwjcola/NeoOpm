@@ -35,7 +35,9 @@ function BattleMainNode:init()
 end
 
 function BattleMainNode:onStart()
-   -- todo 重新获取布阵信息 battleData
+   -- todo 请求战斗数据
+   BattleProxy:sendMsg_getBattleData()
+
    ---@type BattleTeam
    local battleTeam = self:getBattleTeam()
    if battleTeam  and battleTeam._loadingFinish then

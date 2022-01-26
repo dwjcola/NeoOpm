@@ -60,6 +60,16 @@ function BattleProxy:onClear()
     self._processTree = nil
 end
 
+function BattleProxy:sendMsg_getBattleData(userData)
+    local requstMsg = {
+
+    }
+    RPCLUA.server_even.getBattleData(requstMsg,function(l,rep)
+        local _userData = userData
+        EventManager:Dispatch(EventType.Event_GetBattleData,rep,_userData)
+    end,self)
+end
+
 function BattleProxy:onDestroy()
 
 end

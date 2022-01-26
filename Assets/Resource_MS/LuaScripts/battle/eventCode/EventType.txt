@@ -10,8 +10,10 @@ local EventType = {
 
 
     Event_CloseSetUpView = "",
-    Event_GoBattle = "",
 
+    Event_GoBattle = "",     --
+
+    Event_GetBattleData = "", -- 获取战斗数据
 
     Event_BigSkillCanRelease = "",
     Event_BigSkillCannotRelease = "",

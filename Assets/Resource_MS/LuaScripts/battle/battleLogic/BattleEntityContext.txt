@@ -26,6 +26,7 @@ end
 function BattleEntityContext:initCharacters()
     for i, characterList in pairs(self._list_camp) do
         for pos, character in pairs(characterList) do
+            ---@type BattleCharacter
             character:init(self)
         end
     end

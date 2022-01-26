@@ -113,9 +113,26 @@ function BattleUtils:getTestBattleData()
                             heroId = "hero101",
                         }
                     },
+                    playerData = {
+                        -- 各种养成数据
+                        handbook = {},
+                        equip = {},
+
+                        heroList = {
+                            hero101_0000005 = {
+                                heroId = "hero101",
+                                star = 6,
+                                level = 180,
+                                quality = 8,
+                            }
+                        }
+                    },
+                    -- 本场战斗生效得 buff 一般跟玩法有关
+                    tmpBuffList = {}
                 },
                 team_enemy = {
                     blockId = "block_20_10",
+                    isNpc = false,
                     teamMap = {
                         [1] = {
                             heroUid = "hero102_0000001",
@@ -138,6 +155,22 @@ function BattleUtils:getTestBattleData()
                         --    heroId = "hero102",
                         --}
                     },
+                    playerData = {
+                        -- 各种养成数据
+                        handbook = {},
+                        equip = {},
+
+                        heroList = {
+                            hero102_0000001 = {
+                                heroId = "hero102",
+                                star = 5,
+                                level = 380,
+                                quality = 5,
+                            }
+                        }
+                    },
+                    -- 本场战斗生效得 buff 一般跟玩法有关
+                    tmpBuffList = {}
                 }
             }
         }

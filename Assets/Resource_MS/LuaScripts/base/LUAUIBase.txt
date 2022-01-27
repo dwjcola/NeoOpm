@@ -85,7 +85,7 @@ function LUAUIBase:RemovePointEvent()
         self.unregisterPointEventGO = nil
     end
 end
-function LUAUIBase:RemoveUIDataEvent()
+function LUAUIBase:RemoveUIEvent()
     self:RemoveOnValueEvent()
     self:RemovePointEvent()
 end

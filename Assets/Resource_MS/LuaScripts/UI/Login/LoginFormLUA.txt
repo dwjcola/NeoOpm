@@ -104,18 +104,15 @@ end
 function LoginFormLUA:SelectOneServer(data)
 	self:ShowServerInfo(data.Param1)
 end
-function LoginFormLUA:ttt()
+--[[function LoginFormLUA:ttt()
 	LoginProxy:Test()
---[[	collectgarbage("collect")
-	print(collectgarbage("count"))]]
-end
-function LoginFormLUA:cb(value)
-	self:Error(value)
-end
+]]--[[	collectgarbage("collect")
+	print(collectgarbage("count"))]]--[[
+end]]
+
 --ui组件添加事件
 function LoginFormLUA:AddUIEventListener( )
-	self:AddValueChangedEvent(self.slider, self.cb);
-	self:AddUIEvent("onclick", self.tt, self.ttt);
+	--self:AddUIEvent("onclick", self.tt, self.ttt);
 	self:AddUIEvent("onclick", self.loginBtn, self.Login);
 	self:AddUIEvent("onclick", self.serverBtn, self.ShowServerList);
 end
@@ -135,7 +132,7 @@ function LoginFormLUA:CloseMe()
 	self:CloseUI("LoginFormLUA")
 end
 function LoginFormLUA:OnDestroy()
-	self:RemoveUIDataEvent()
+	self:RemoveUIEvent()
 	self:RemoveEventListener()
 	LoginFormLUA = nil;
 end

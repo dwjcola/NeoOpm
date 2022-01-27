@@ -23,7 +23,6 @@ namespace NeoOPM
     {
         public const int DepthFactor = 100;
         private const float FadeTime = 0.1f;
-
         private static Font s_MainFont = null;
         private Canvas m_CachedCanvas = null;
         private CanvasGroup m_CanvasGroup = null;
@@ -77,12 +76,6 @@ namespace NeoOPM
             }
         }
 
-        public UIForm[] GetChildForm()
-        {
-            UIForm[] childer = m_CachedCanvas.GetComponentsInChildren<UIForm>();
-            
-            return childer;
-        }
         public void Close()
         {
             Close(false);
@@ -102,11 +95,6 @@ namespace NeoOPM
             }
         }
 
-        public void PlayUISound(int uiSoundId)
-        {
-            //GameEntry.Sound.PlayUISound(uiSoundId);
-        }
-
         public static void SetMainFont(Font mainFont)
         {
             if (mainFont == null)
@@ -120,18 +108,15 @@ namespace NeoOPM
             GameObject go = new GameObject();
             go.AddComponent<Text>().font = mainFont;
             Destroy(go);
-        }//[SerializeField]
+        }
         [HideInInspector]
         public List<string> keyList = new List<string>();
-        //[SerializeField]
         [HideInInspector]
         public List<Object> valueList = new List<Object>();
 
-
-        //[SerializeField]
         [HideInInspector]
         public List<string> strkeyList = new List<string>();
-        //[SerializeField]
+
         [HideInInspector]
         public List<string> strvalueList = new List<string>();
         /// <summary>
@@ -165,21 +150,23 @@ namespace NeoOPM
         }
         public void InitLua(string luaClassName,string luapath)
         {
-            var luaEnv = XluaManager.instance.LuaEnv;
-            if (XluaManager.instance.DoLuaString(luaClassName, luapath))
+            if (m_LuaClass == null)
             {
+                var luaEnv = XluaManager.instance.LuaEnv;
+                luaEnv.DoString($"require ('{UIKey}') ;");
                 m_LuaClass = luaEnv.Global.Get<LuaTable>(luaClassName);
-
-                OnInit(m_LuaClass, luaClassName);
-                m_LuaClass.Get("OnEnable", out luaOnEnable);
-                m_LuaClass.Get("Open", out luaOpen);
-                m_LuaClass.Get("Update", out luaUpdate);
-                m_LuaClass.Get("OnDisable", out luaOnDisable);
-                m_LuaClass.Get("OnDestroy", out luaOnDestroy);
-                m_LuaClass.Get("ShowTween", out luaShowTween);
-                m_LuaClass.Get("CloseTween", out luaCloseTween);
-                m_LuaClass.Get("DestroyAllMonoItemLua", out DestroyAllMonoItemLua);
             }
+            Debug.LogError(m_LuaClass);
+            OnInit(m_LuaClass, luaClassName);
+            luaOnEnable = m_LuaClass.GetInPath<Action<LuaTable>>("OnEnable");
+            luaOpen = m_LuaClass.GetInPath<Action<LuaTable,object>>("Open");
+            luaUpdate = m_LuaClass.GetInPath<Action<LuaTable>>("Update");
+            luaOnDisable = m_LuaClass.GetInPath<Action<LuaTable>>("OnDisable");
+            luaOnDestroy = m_LuaClass.GetInPath<Action<LuaTable>>("OnDestroy");
+            luaShowTween = m_LuaClass.GetInPath<Action<LuaTable>>("ShowTween");
+            luaCloseTween = m_LuaClass.GetInPath<Action<LuaTable,Action>>("CloseTween");
+            DestroyAllMonoItemLua = m_LuaClass.GetInPath<Action<LuaTable>>("DestroyAllMonoItemLua");
+
 
             if (UIKey!=null)
             {
@@ -193,57 +180,21 @@ namespace NeoOPM
 
         public void LuaOpen(object param)
         {
-            if (luaOpen != null)
-            {
-                luaOpen(LuaClass, param);
-            }
+            luaOpen?.Invoke(LuaClass, param);
         }
-        /// <summary>
-        /// 获取指定key的物体引用
-        /// </summary>
-        /// <param name="key"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public T GetValueByKey<T>(string key) where T : Object
-        {
-            if (keyList == null || valueList == null)
-            {
-                return null;
-            }
-            for (int i = 0; i < keyList.Count; i++)
-            {
-                if (keyList[i] == key && i < valueList.Count)
-                {
-                    if (valueList[i] is T)
-                        return valueList[i] as T;
-                }
-            }
-            return null;
-        }
+
         private void OnEnable ( )
         {
-            if ( m_LuaClass != null )
-            {
-                if ( luaOnEnable != null )
-                {
-                    luaOnEnable ( m_LuaClass );
-                }
-            }
+            luaOnEnable?.Invoke(LuaClass);
         }
         
         private void OnDisable ( )
         {
-            if ( m_LuaClass != null )
-            {
-                if ( luaOnDisable != null )
-                {
-                    luaOnDisable ( m_LuaClass );
-                }
-            }
+            luaOnDisable?.Invoke(LuaClass);
         }
         private int Interval = 30;
         private int TimeCount = 1;
-        private void Update ( )
+        private void LateUpdate ( )
         {
             if ( m_LuaClass != null )
             {
@@ -266,7 +217,6 @@ namespace NeoOPM
             m_CachedCanvas.overrideSorting = true;
             OriginalDepth = m_CachedCanvas.sortingOrder;
             m_CanvasGroup = gameObject.GetOrAddComponent<CanvasGroup>();
-
             gameObject.GetOrAddComponent<GraphicRaycaster>();
         }
 
@@ -279,15 +229,25 @@ namespace NeoOPM
                 if (luaOnDestroy != null)
                 {
                     luaOnDestroy(LuaClass);
+                    ClearLuaFunc();
                     LuaClass.Dispose();
                     m_LuaClass = null;
-                
                 }
             }
-            
             DisposeUiMonoItems();
         }
 
+        private void ClearLuaFunc()
+        {
+            luaOnEnable = null;
+            luaOpen = null;
+            luaUpdate = null;
+            luaOnDisable = null;
+            luaOnDestroy = null;
+            luaShowTween = null;
+            luaCloseTween = null;
+            DestroyAllMonoItemLua = null;
+        }
         protected override void OnOpen(object userData)
         {
             base.OnOpen(userData);

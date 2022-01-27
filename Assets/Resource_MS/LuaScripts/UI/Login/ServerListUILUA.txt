@@ -82,7 +82,9 @@ function ServerListUILUA:OnCloseMe()
 	end
 end
 function ServerListUILUA:OnDestroy()
+	self:RemoveUIDataEvent()
 	self:RemoveEventListener()
+	package.loaded['ServerListUI']=nil
 	ServerListUILUA = nil;
 end
 return ServerListUILUA

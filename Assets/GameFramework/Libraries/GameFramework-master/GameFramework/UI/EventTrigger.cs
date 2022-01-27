@@ -8,9 +8,7 @@ namespace GameFramework.UI
     public class EventTriggerListener : UnityEngine.EventSystems.EventTrigger
     {
         public delegate void VoidDelegate(GameObject go);
-        public VoidDelegate onClick
-        
-        ;
+        public VoidDelegate onClick;
         public VoidDelegate onDown;
         public VoidDelegate onEnter;
         public VoidDelegate onExit;

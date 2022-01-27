@@ -1,4 +1,4 @@
----@class TPanelLine
+---@class TPanel
 ---@field Id string
 ---@field AssetName string
 ---@field UIGroupName string
@@ -11,13 +11,13 @@
 ---@field ShowRes boolean
 ---@field UITween number
 
----@type TPanelLine[]
+---@type TPanel[]
 TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='logic/requireLoad',LuaName='mathLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['UtilsLUA']={Id='UtilsLUA',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='logic/requireLoad',LuaName='UtilsLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['PomeloCLUA']={Id='PomeloCLUA',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='proto',LuaName='PomeloCLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['HotfixMain']={Id='HotfixMain',AssetName="",UIGroupName="",AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='hotfix',LuaName='HotfixMain',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['LoginForm']={Id='LoginForm',AssetName='Login/LoginForm',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='LoginFormLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
-['MainUI']={Id='MainUI',AssetName='Main/MainUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Main',LuaName='MainUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
+['MainUI']={Id='MainUI',AssetName='Main/MainUI',UIGroupName='Main',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Main',LuaName='MainUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 ['ServerListUI']={Id='ServerListUI',AssetName='Login/ServerListUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='ServerListUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,}, 
 ['UICoinItem']={Id='UICoinItem',AssetName="",UIGroupName="",AllowMultiInstance=true,PauseCoveredUIForm=false,LuaPath='UI/Coin',LuaName='UICoinItemLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 });

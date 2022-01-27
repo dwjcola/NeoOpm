@@ -38,6 +38,7 @@ function LoginFormLUA:ConnectLogin()
 	end
 end
 function LoginFormLUA:Login()
+
 	if self.CurrentServerInfo ~= nil then
 		self:ConnectToServer(self.CurrentServerInfo.ip,self.CurrentServerInfo.port);
 	end
@@ -93,63 +94,6 @@ function LoginFormLUA:ShowServerInfo(info)
 end
 function LoginFormLUA:ConnectSucc( )
 	LoginProxy:EnterServer(self.ServerInfo,self.EnterServerBack,self);
---[[	local msg = {
-		value_value_1 = "1111",
-		value_value_2 = 2,
-		value_value_3 = 3,
-		value_value_4 = MsgEnum.TestEnum.TEST4,
-		sm={
-			{
-				value_test1 = 11,
-				value_test2 = 22,
-				{
-					sb2_value1 = 33,
-					sb2_value2 = 44
-				}
-			},
-			{
-				value_test1 = 55,
-				value_test2 = 66,
-				{
-					sb2_value1 = 77,
-					sb2_value2 = 88
-				}
-			}
-		},
-		sm2={
-			{
-				value_test1 = 88,
-				value_test2 = 99,
-				{
-					sb2_value1 = 67,
-					sb2_value2 = 34
-				}
-			}
-		}
-	}
-	RPCLUA.test_Handle.Test1(msg,callback,function (obj,ReturnMsg)
-		if(ReturnMsg~=nil) then
-			CS.LC.Error(arg0.value_value_1);
-			CS.LC.Error(arg0.value_value_2);
-			CS.LC.Error(arg0.value_value_3);
-			CS.LC.Error(arg0.value_value_4);
-			for i, v in ipairs(arg0.sm) do
-				CS.LC.Error(v.value_test1);
-				CS.LC.Error(v.value_test2);
-				for _, vv in ipairs(v.sm) do
-					CS.LC.Error(vv.sb2_value1);
-					CS.LC.Error(vv.sb2_value2);
-				end
-
-				CS.LC.Error(v.sm2.value_test1);
-				CS.LC.Error(v.sm2.value_test2);
-				for _, vvv in ipairs(v.sm2.sm) do
-					CS.LC.Error(vvv.sb2_value1);
-					CS.LC.Error(vvv.sb2_value2);
-				end
-			end
-		end
-	end ,self)]]
 end
 function LoginFormLUA:EnterServerBack()
 	self.ProcedureLogin:LoginGame();
@@ -160,8 +104,18 @@ end
 function LoginFormLUA:SelectOneServer(data)
 	self:ShowServerInfo(data.Param1)
 end
+function LoginFormLUA:ttt()
+	LoginProxy:Test()
+--[[	collectgarbage("collect")
+	print(collectgarbage("count"))]]
+end
+function LoginFormLUA:cb(value)
+	self:Error(value)
+end
 --ui组件添加事件
 function LoginFormLUA:AddUIEventListener( )
+	self:AddValueChangedEvent(self.slider, self.cb);
+	self:AddUIEvent("onclick", self.tt, self.ttt);
 	self:AddUIEvent("onclick", self.loginBtn, self.Login);
 	self:AddUIEvent("onclick", self.serverBtn, self.ShowServerList);
 end
@@ -181,6 +135,7 @@ function LoginFormLUA:CloseMe()
 	self:CloseUI("LoginFormLUA")
 end
 function LoginFormLUA:OnDestroy()
+	self:RemoveUIDataEvent()
 	self:RemoveEventListener()
 	LoginFormLUA = nil;
 end

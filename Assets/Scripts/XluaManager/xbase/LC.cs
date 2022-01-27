@@ -67,6 +67,16 @@ public class LC
         }
 
     }
+    public static void RemoveUIEvent(GameObject go)
+    {
+        EventTriggerListener.Get(go).onClick = null;
+        EventTriggerListener.Get(go).onDown = null;
+        EventTriggerListener.Get(go).onDoubleClick = null;
+        EventTriggerListener.Get(go).onUp = null;
+        EventTriggerListener.Get(go).onPress  = null;
+        EventTriggerListener.Get(go).onExit  = null;
+
+    }
     public static void AddUIDataEvent(LuaTable luaClass, string key, GameObject go, Action<LuaTable, GameObject, LuaTable> callBack, LuaTable data)
     {
         switch (key)
@@ -503,64 +513,6 @@ public class LC
         action?.Invoke(lua, go);
     }
 
-    public static void AddButtonEvent(Button btn, Action<LuaTable, object> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            btn.onClick.RemoveAllListeners();
-        }
-        btn.onClick.AddListener(() => { action?.Invoke(lua, btn); });
-    }
-    public static void AddInputEvent(InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onValueChanged.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddInputEvent(TMPro.TMP_InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onValueChanged.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddInputEditEvent(TMPro.TMP_InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onEndEdit.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddDropDownEvent(TMPro.TMP_Dropdown dropdown, Action<LuaTable, int> action, LuaTable lua, bool isOverride = true)
-    {
-        List<int> a = new List<int>();
-        a.Clear();
-        if (isOverride)
-        {
-            dropdown.onValueChanged.RemoveAllListeners();
-        }
-        dropdown.onValueChanged.AddListener((int value) => { action?.Invoke(lua, value); });
-    }
-    public static void AddSliderEvent(Slider slider, Action<LuaTable, float> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            slider.onValueChanged.RemoveAllListeners();
-        }
-        slider.onValueChanged.AddListener((float value) => { action?.Invoke(lua, value); });
-    }
-    public static void AddToggleEvent(Toggle toggle, Action<LuaTable, bool> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            toggle.onValueChanged.RemoveAllListeners();
-        }
-        toggle.onValueChanged.AddListener((value) => { action?.Invoke(lua, value); });
-    }
     public static async void LoadText(string TextPath, Action<string> action)
     {
         IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();

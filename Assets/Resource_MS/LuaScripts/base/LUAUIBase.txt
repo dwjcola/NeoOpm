@@ -49,32 +49,52 @@ function LUAUIBase:GetUILogicByKey(uiKey)
 end
  --添加UI事件
 function LUAUIBase:AddUIEvent(eventType,gameObject,callBack)
+    self.unregisterPointEventGO = self.unregisterPointEventGO or {}
+    table.insert(self.unregisterPointEventGO,gameObject)
   CS.LC.AddUIEvent(self,eventType,gameObject,callBack);
 end
-function LUAUIBase:AddSliderValueChanged(input,callBack)
-  CS.LC.AddSliderEvent(input,callBack,self);
+--所有具有onValueChanged事件的组件统一接口，注意要用ui的self调用才会在关闭时统一清理
+--如：slider、dropDown、Input、toggle、等
+function LUAUIBase:AddValueChangedEvent(target,callBack)
+    local let = self
+    target.onValueChanged:AddListener(
+            function (value)
+                callBack(let,value)
+            end)
+    -- 将闭包添加到一个table中用于后面调用
+    let.unregisterOnValueChanged = let.unregisterOnValueChanged or {}
+    table.insert(let.unregisterOnValueChanged,
+                 function()
+                             target.onValueChanged:RemoveAllListeners()
+                             target.onValueChanged:Invoke()--多执行一次为了清除c#缓存
+                         end)
 end
-function LUAUIBase:AddToggleEventChanged(toggle,callBack)
-  CS.LC.AddToggleEvent(toggle,callBack,self);
+function LUAUIBase:RemoveOnValueEvent()
+    if self.unregisterOnValueChanged ~= nil then
+        for _, v in ipairs(self.unregisterOnValueChanged) do
+            v();
+        end
+        self.unregisterOnValueChanged = nil
+    end
 end
-function LUAUIBase:AddDropDownValueChanged(input,callBack)
-  CS.LC.AddDropDownEvent(input,callBack,self);
+function LUAUIBase:RemovePointEvent()
+    if self.unregisterPointEventGO ~= nil then
+        for _, v in ipairs(self.unregisterPointEventGO) do
+            CS.LC.RemoveUIEvent(v)
+        end
+        self.unregisterPointEventGO = nil
+    end
 end
-function LUAUIBase:AddButtonEvent(btn,callBack)
-  CS.LC.AddButtonEvent(btn,callBack,self);
+function LUAUIBase:RemoveUIDataEvent()
+    self:RemoveOnValueEvent()
+    self:RemovePointEvent()
 end
 -- --添加UI事件
 function LUAUIBase:AddUIDataEvent(eventType,gameObject,callBack,data)
+    self.unregisterPointEventGO = self.unregisterPointEventGO or {}
+    table.insert(self.unregisterPointEventGO,gameObject)
    CS.LC.AddUIDataEvent(self,eventType,gameObject,callBack,data);
 end
----添加input内容变化监听，input是InputField或者TMP_InputField都可以，LC做了重载
-function LUAUIBase:AddInputValueChanged(input,callBack)
-  CS.LC.AddInputEvent(input,callBack,self);
-end
-function LUAUIBase:AddInputEndEdit(input,callBack)
-  CS.LC.AddInputEditEvent(input,callBack,self);
-end
-
 function LUAUIBase:SetImageNormal(image)
   image.material = nil;
 end

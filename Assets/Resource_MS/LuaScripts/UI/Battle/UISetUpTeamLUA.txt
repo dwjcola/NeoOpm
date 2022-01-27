@@ -13,10 +13,14 @@ function UISetUpTeamLUA:Init(param)
     self:initParams(param)
 	self:initUpHeroMap()
 	self:sortHeroList()
+
+	self:loadScene()
+
 	self:initComponent()
-	self:initGridList()
-	self:tryInitTeamModels()
 	self:initList()
+
+
+
 	self:startUpdate()
 end
 
@@ -30,8 +34,8 @@ function UISetUpTeamLUA:initParams(param)
 	self._teamData_self = param.data.team_self
 	self._teamData_enemy = param.data.team_enemy
 
-	---@type BattleTeam
-	self._battleTeam = param.battleTeam
+	-----@type BattleTeam
+	--self._battleTeam = param.battleTeam
 	self._gridList = {}
 	self._modelList = {}
 	self._modelList_hide = {}
@@ -50,6 +54,11 @@ function UISetUpTeamLUA:initParams(param)
 
 	--
 	self._isSetDragData = false
+
+	-- todo 读表
+	self._sceneAssetPath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab"
+
+	self._rootAssetPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab"
 end
 
 function UISetUpTeamLUA:initUpHeroMap()
@@ -83,9 +92,8 @@ function UISetUpTeamLUA:OnCloseMe()
 		end
 	end
 end
-function UISetUpTeamLUA:OnDestroy()
-	self:RemoveEventListener()
-	self:stopSchedule()
+
+function UISetUpTeamLUA:destroyGrid()
 	for i, v in pairs(self._gridList) do
 		for _, grid in pairs(v) do
 			if grid and grid.OnDestroy then
@@ -94,10 +102,13 @@ function UISetUpTeamLUA:OnDestroy()
 		end
 	end
 	self._gridList = {}
+end
+
+function UISetUpTeamLUA:destroyModel()
 	for i, v in pairs(self._modelList) do
 		for _, node in pairs(v) do
-					if node and node.OnDestroy then
-						node:OnDestroy()
+			if node and node.OnDestroy then
+				node:OnDestroy()
 			end
 		end
 	end
@@ -106,20 +117,41 @@ function UISetUpTeamLUA:OnDestroy()
 			v:OnDestroy()
 		end
 	end
-
 	self._modelList = {}
+
+	if self._dragHeroItem and self._dragHeroItem.OnDestroy then
+		self._dragHeroItem:OnDestroy()
+	end
+	self._dragHeroItem = nil
+end
+
+function UISetUpTeamLUA:destroyScene()
+	BattleLoaderManager:put(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,self._go_scene)
+	self._go_scene = nil
+	self._sceneCamera = nil
+end
+
+function UISetUpTeamLUA:destroySceneRoot()
+	BattleLoaderManager:put(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,self._go_root)
+	self._go_root = nil
+	self._roleCamera = nil
+	self._go_left = nil
+	self._go_right = nil
+end
+
+function UISetUpTeamLUA:OnDestroy()
+	self:RemoveEventListener()
+	self:stopSchedule()
+	self:destroyGrid()
+	self:destroyModel()
+    self:destroyScene()
+	self:destroySceneRoot()
 	self._allHeroList = {}
 	-- todo 这里按理说 不应该由我手动调用
 	--self.listView_heroList:RecoveryItems()
 	--self._items = {}
 
 	self._map_upTeamHeroUid = {}
-
-
-	if self._dragHeroItem and self._dragHeroItem.OnDestroy then
-		self._dragHeroItem:OnDestroy()
-	end
-	self._dragHeroItem = nil
 
 	self._isSetDragData = false
 
@@ -159,18 +191,14 @@ function UISetUpTeamLUA:OnBattleClick()
 
 
 	BattleProxy:setBattleTeamMap(self._battleTimes,{teamMap = self:getSelfTeamData() },self._teamData_enemy)
-	self._battleTeam:setRoleMap(self:handleRoleMap())
+	--self._battleTeam:setRoleMap(self:handleRoleMap())
 	self._node:onLeave()
 	self:stopSchedule()
 
-	for i, v in pairs(self._gridList) do
-		for _, grid in pairs(v) do
-			if grid and grid.OnDestroy then
-				grid:OnDestroy()
-			end
-		end
-	end
-	self._gridList = {}
+	self:destroyGrid()
+	self:destroyModel()
+	self:destroyScene()
+	self:destroySceneRoot()
 end
 
 function UISetUpTeamLUA:getSelfTeamData()
@@ -201,7 +229,7 @@ function UISetUpTeamLUA:OnCloseClick()
 	-- todo 关闭
 	--EventManager:Dispatch(EventType.Event_CloseSetUpView)
 
-	self._battleTeam:destroy()
+
 
 	self:OnCloseMe()
 
@@ -275,6 +303,52 @@ function UISetUpTeamLUA:initList()
 	self.listView_heroList:ReLoad()
 end
 
+function UISetUpTeamLUA:loadScene()
+   self:tryLoadScene()
+   self:tryLoadRoot()
+end
+
+function UISetUpTeamLUA:tryLoadScene()
+	if self._go_scene == nil or self._sceneCamera == nil then
+		BattleLoaderManager:pop(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,function(scene)
+			self._go_scene = scene
+			self._go_scene.gameObject:SetActiveVirtual(true)
+			self._sceneCamera = scene.transform:Find("scene_camera"):GetComponent('Camera')
+		end)
+	end
+
+end
+
+function UISetUpTeamLUA:tryLoadRoot()
+	if self._go_root and self._roleCamera then
+		self:initGridList() --
+		self:tryInitTeamModels() --
+	else
+		BattleLoaderManager:pop(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,function(root)
+			self._go_root = root
+			self._go_root.gameObject:SetActiveVirtual(true)
+			self._roleCamera = root.transform:Find("role_camera"):GetComponent('Camera')
+			self:initRootList(root)
+
+
+			self:initGridList() --
+			self:tryInitTeamModels() --
+		end)
+	end
+
+end
+
+function UISetUpTeamLUA:initRootList(root)
+	self._go_left =  root.transform:Find("leftRoot").gameObject
+	--for i = 1, self._positionCount do
+	--	self._list_left_roots[i] =  self._go_left.transform:Find(tostring(i)).gameObject
+	--end
+	self._go_right =  root.transform:Find("rightRoot").gameObject
+	--for i = 1, self._positionCount do
+	--	self._list_right_roots[i] =  self._go_right.transform:Find(tostring(i)).gameObject
+	--end
+end
+
 function UISetUpTeamLUA:changeUpHeroMap(heroUid,index)
 	self._map_upTeamHeroUid[heroUid] = index
 end
@@ -282,7 +356,7 @@ end
 function UISetUpTeamLUA:initGridList()
 	self._gridList[Enum.SetUpTeamEnum.TeamPos.left] = {}
 	for index, pos in pairs(BattleConstant.HeroInitPos_Main.left) do
-		local item = UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.left, self._battleTeam)
+		local item = UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.left,self._go_left.transform)
 		local data =  self._teamData_self.teamMap[index]
 		if data then
 			item:put(data.heroUid)
@@ -294,7 +368,7 @@ function UISetUpTeamLUA:initGridList()
 
 	self._gridList[Enum.SetUpTeamEnum.TeamPos.right] = {}
 	for index, pos in pairs(BattleConstant.HeroInitPos_Main.right) do
-		local item = UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.right, self._battleTeam)
+		local item = UISetUpTeamGridItem:new(index,pos,Enum.SetUpTeamEnum.TeamPos.right, self._go_right.transform)
 		local data =  self._teamData_enemy.teamMap[index]
 		if data then
 			item:put(data.heroUid)
@@ -313,12 +387,12 @@ function UISetUpTeamLUA:onTeamLoadFinish(battleTimes)
 end
 
 function UISetUpTeamLUA:tryInitTeamModels()
-	if not (self._battleTeam and self._battleTeam._loadingFinish) then return end
+
 
 	self._modelList[Enum.SetUpTeamEnum.TeamPos.right] = {}
 	for index, data in pairs(self._teamData_enemy.teamMap) do
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self)
 		dragItem:setDelegate(nil,nil,function(node,pos,index)
 			self:onTeamModelDragEnd(node,pos,index)
 		end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
@@ -331,7 +405,7 @@ function UISetUpTeamLUA:tryInitTeamModels()
 	self._modelList[Enum.SetUpTeamEnum.TeamPos.left] = {}
 	for index, data in pairs(self._teamData_self.teamMap) do
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,index,self._battleTeam,self._rect_modelRoot)
+		local dragItem = UISetUpDragItem:new(obj.transform,index,self)
 		dragItem:setDelegate(nil,nil,function(node,pos,index)
 			self:onTeamModelDragEnd(node,pos,index)
 		end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
@@ -422,7 +496,7 @@ function UISetUpTeamLUA:startDrag(data)
 	self._isSetDragData = false
 	--if self._dragHeroItem == nil then
 	--	local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-	--	local dragItem = UISetUpDragItem:new(obj.transform,0,self._battleTeam,self._rect_modelRoot,function(node,pos,index)
+	--	local dragItem = UISetUpDragItem:new(obj.transform,0,self,self._rect_modelRoot,function(node,pos,index)
 	--		self:onTeamModelDragEnd(node,pos,index)
 	--	end)
 	--	dragItem:setData(data,Enum.SetUpTeamEnum.TeamPos.left) -- ,self:getModelUIInitPos(Enum.SetUpTeamEnum.TeamPos.right,index)
@@ -440,7 +514,7 @@ end
 function UISetUpTeamLUA:ingDrag(data)
 	if self._dragHeroItem == nil then
 		local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-		local dragItem = UISetUpDragItem:new(obj.transform,0,self._battleTeam,self._rect_modelRoot)
+		local dragItem = UISetUpDragItem:new(obj.transform,0,self)
 		dragItem:setDelegate(nil,nil,function(node,pos,index)
 			self:onTeamModelDragEnd(node,pos,index)
 		end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)
@@ -576,7 +650,7 @@ function UISetUpTeamLUA:onClickBottomHero(data,isUpTeam)
 			local node = self:popHideItem()
 			if node == nil then
 				local obj = UIUtils:createItem(self.go_heroDragItem,self.go_modelRoot)
-				node = UISetUpDragItem:new(obj.transform,upIndex,self._battleTeam,self._rect_modelRoot)
+				node = UISetUpDragItem:new(obj.transform,upIndex,self)
 				node:setDelegate(nil,nil,function(nodeItem,pos,index)
 					self:onTeamModelDragEnd(nodeItem,pos,index)
 				end,function(data,isUpTeam) self:onClickBottomHero(data,isUpTeam)  end,nil)

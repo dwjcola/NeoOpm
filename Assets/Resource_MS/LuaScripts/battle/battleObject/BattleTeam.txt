@@ -47,7 +47,7 @@ function BattleTeam:initialize(battleTimes)
 
     self._loadingFinish = false
 
-
+    self._loading = false
 end
 
 function BattleTeam:initLoadMap()
@@ -97,6 +97,7 @@ function BattleTeam:setLoadData(data)
 end
 
 function BattleTeam:tryLoad()
+    self._loading = true
     self:tryLoadScene()
     self:tryLoadRoot()
 
@@ -170,6 +171,7 @@ function BattleTeam:tryLoadFinish()
     --end
     if self._loadCount <= 0 then
         self._loadingFinish = true
+        self._loading = false
         EventManager:Dispatch_battle(EventType.Event_Battle_TeamLoadFinish,self._battleTimes)
     end
 end

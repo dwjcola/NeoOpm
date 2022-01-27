@@ -50,79 +50,79 @@ SpriteAtlas:
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: 21300000, guid: f41ac5e04f27c09438719a7bf1c9ec6b, type: 3}
-  - {fileID: 21300000, guid: e41f52515ad896e4cbb12f6c3c36ad73, type: 3}
-  - {fileID: 21300000, guid: f781e9b1272e7d4478cc8c2153bc2a93, type: 3}
-  - {fileID: 21300000, guid: aac3fec1efa77414392e02df741c8a61, type: 3}
+  - {fileID: 21300000, guid: d347dc30f8a6cb446ae694f9988389f1, type: 3}
+  - {fileID: 21300000, guid: 67adf94065f1271439fa50c2ea171ee1, type: 3}
+  - {fileID: 21300000, guid: 4a792eb0dbab57c46ba206169e51e3a8, type: 3}
+  - {fileID: 21300000, guid: 0b0c3a014d2ec5b4ba1fad6359ff3bd7, type: 3}
+  - {fileID: 21300000, guid: 15b955516f244964e8b9e1a5002ae50e, type: 3}
+  - {fileID: 21300000, guid: c9d461d1bd53c984a8a3aae8154831bc, type: 3}
+  - {fileID: 21300000, guid: ff309a221e688624183830f10b603c05, type: 3}
+  - {fileID: 21300000, guid: 7f470f42151d5ed4f9038931b7308ff3, type: 3}
   - {fileID: 21300000, guid: 09a3fe922e2a4524781975a1e28eea90, type: 3}
-  - {fileID: 21300000, guid: fa6ad8e2af4f23540b1b84478de1910b, type: 3}
-  - {fileID: 21300000, guid: e2c2f4f22b56b494dbc8c78393ca4a7d, type: 3}
-  - {fileID: 21300000, guid: 77ec47f2674ba0e478442cf29194c26e, type: 3}
+  - {fileID: 21300000, guid: 902f11332f39ddb4fadaa8bf3aa86cdb, type: 3}
+  - {fileID: 21300000, guid: 3796544346dc74e438b17638503953fd, type: 3}
   - {fileID: 21300000, guid: 1a1fe953dd9f7c6438ad94b658eb2540, type: 3}
-  - {fileID: 21300000, guid: e390c0c37eadd9a41895bb1b8d132c53, type: 3}
-  - {fileID: 21300000, guid: 15457ef310424fb47ae705569bda50f1, type: 3}
-  - {fileID: 21300000, guid: e04fa49413a6c5540b2be2e8d8353057, type: 3}
-  - {fileID: 21300000, guid: 2dee48947a53fc84c8ef3642b80eb756, type: 3}
-  - {fileID: 21300000, guid: deadf6c47c0bc134abb6f780aab2d14a, type: 3}
-  - {fileID: 21300000, guid: 889d0415792ffe944847039c63bed7f0, type: 3}
-  - {fileID: 21300000, guid: 0de634a56ab6b81438b096f9067d611b, type: 3}
-  - {fileID: 21300000, guid: 9f9150d66c3edff418fc2d96ce5946c0, type: 3}
-  - {fileID: 21300000, guid: e4f5e3f7dcc409d4cb0baaa2ba39ecf4, type: 3}
-  - {fileID: 21300000, guid: f60e8d088264b5942b2cde08185bc1de, type: 3}
-  - {fileID: 21300000, guid: dde58f68761029b40b34a655a4f74353, type: 3}
-  - {fileID: 21300000, guid: c1471069f4eb5db42943e80aa0d1ac76, type: 3}
-  - {fileID: 21300000, guid: 934667a9c53053c42a0daf21a9a327b5, type: 3}
-  - {fileID: 21300000, guid: a6db649af0451c44aa5cc77a34f94b45, type: 3}
-  - {fileID: 21300000, guid: bd0fd3aa30b9341479edd47181f0c57b, type: 3}
+  - {fileID: 21300000, guid: 2217b1446ff1fcf4f84dc0f8c8807ee1, type: 3}
+  - {fileID: 21300000, guid: da7f4126c253c0640ac336d1d3f7296f, type: 3}
+  - {fileID: 21300000, guid: f0199d46579c11143b0121cb0fdfa239, type: 3}
+  - {fileID: 21300000, guid: e22ea076d76927c448378241291af0b1, type: 3}
+  - {fileID: 21300000, guid: 87e88467024bacf4b9f480b9bff88ce3, type: 3}
+  - {fileID: 21300000, guid: d33d2277316adbd40bf3684ff6dfa586, type: 3}
+  - {fileID: 21300000, guid: 912abdf74f4826c46ad4ea62e070e7e5, type: 3}
+  - {fileID: 21300000, guid: 7ab1e05820ececd4da5e6433469b3858, type: 3}
+  - {fileID: 21300000, guid: 39c015091a132b840a85f6331d09f2b4, type: 3}
+  - {fileID: 21300000, guid: d31717399f82ab14f927a47218ccc8e9, type: 3}
+  - {fileID: 21300000, guid: 9eff9ad9f82685d429d462fe21e2b856, type: 3}
+  - {fileID: 21300000, guid: 18aa0ce9092549041a593e3eeba65efc, type: 3}
   - {fileID: 21300000, guid: 977247ba6fe6c0d498ffa2762e21c859, type: 3}
-  - {fileID: 21300000, guid: d8d115abf8fa36f43b20c5fda6b87009, type: 3}
+  - {fileID: 21300000, guid: 697b741bfb69d13418cd214ce2e61ae7, type: 3}
   - {fileID: 21300000, guid: 343829abadd6e6e4b988def09ec3f21a, type: 3}
-  - {fileID: 21300000, guid: 730b6eabb22efd243af222fd95e30f3f, type: 3}
-  - {fileID: 21300000, guid: faffc84c3129ac344b638fd4618015b0, type: 3}
-  - {fileID: 21300000, guid: dc79fb7cf5ab95c489d7d7c1ccae7b7f, type: 3}
-  - {fileID: 21300000, guid: 5be7ca8c38f10e64bb8d4050032af2c2, type: 3}
-  - {fileID: 21300000, guid: ae39adbce7e841140894fadb5787ed84, type: 3}
-  - {fileID: 21300000, guid: 97ec020df595b9a44a070636ff40de3f, type: 3}
-  - {fileID: 21300000, guid: 7099b46d126cb844589e6697cc1fc004, type: 3}
-  - {fileID: 21300000, guid: d0778dadf9a00554ab359aea14c0e369, type: 3}
-  - {fileID: 21300000, guid: abcc479fc4fa7d94ab1bd475391877d6, type: 3}
+  - {fileID: 21300000, guid: 1da88bebde6d4b746805b537b8684998, type: 3}
+  - {fileID: 21300000, guid: 477cf2fb1d5ad6b46a53f22a756da97e, type: 3}
+  - {fileID: 21300000, guid: 5fab602c08d2715439603d45e222d85b, type: 3}
+  - {fileID: 21300000, guid: 9012612ce8738254b883f9d5c769b144, type: 3}
+  - {fileID: 21300000, guid: 77db98ac1ebac7f478467f064cb1fd02, type: 3}
+  - {fileID: 21300000, guid: b6ad353db8254eb44be6f7419cad3091, type: 3}
+  - {fileID: 21300000, guid: 018ae9dd8ef3e934eab5fe02cae8d003, type: 3}
+  - {fileID: 21300000, guid: 4bf2346e747461e4a94266eebf269813, type: 3}
+  - {fileID: 21300000, guid: 6a2f6faeb4cc61f44997fee1f44b3c68, type: 3}
   m_PackedSpriteNamesToIndex:
-  - Panel_BPBg_Battle
-  - Temp_Temp3_Battle
-  - img_Buff1C_Battle.png
-  - Temp_Temp1_Battle
+  - Icon_star_big_6_battle
+  - Img_SkillFrame3_Battle
+  - Img_anger_battle
+  - Icon_star_1_battle
+  - Icon_star_big_3_battle
+  - Img_hp_green_battle
+  - Img_hp_bg_enemy_battle
+  - Icon_star_big_1_battle
   - Btn_AutoBtnBg_Battle
-  - Panel_BuffInfoBg_Battle
-  - img_Buff1A_Battle.png
-  - Btn_StartBattleBtnImg_Battle
+  - Img_SkillFrame7_Battle
+  - Img_skill_anger_bottom_battle
   - Btn_PauseBtnBg_Battle
-  - img_Buff2B_Battle.png
-  - img_Buff3B_Battle.png
-  - img_Buff4A_Battle.png
-  - Temp_Temp7_Battle
-  - img_Buff2A_Battle.png
-  - img_Buff5A_Battle.png
-  - Panel_LevelInfoBg_Battle
-  - Temp_Temp4_Battle
-  - img_Buff5C_Battle.png
-  - img_Buff3A_Battle.png
-  - Temp_Temp6_Battle
-  - Panel_TimeBg_Battle
-  - img_Buff3C_Battle.png
-  - img_Buff4C_Battle.png
-  - img_Buff5B_Battle.png
+  - Img_SkillFrame4_Battle
+  - img_shield_bg_battle
+  - Icon_star_2_battle
+  - Img_SkillFrame6_Battle
+  - Icon_star_6_battle
+  - Icon_star_3_battle
+  - Img_SkillFrame1_Battle
+  - Icon_star_big_7_battle
+  - Img_hp_red_battle
+  - Img_skill_hp_bg_battle
+  - Img_SkillFrame_Choose_Battle
+  - Icon_star_big_2_battle
   - Btn_SpdBtnBg_Battle
-  - Btn_StartBattleBtnBg_Battle
+  - Icon_star_big_5_battle
   - Btn_PauseBtnImg_Battle
-  - img_Buff2C_Battle.png
-  - Btn_StartBattleBtnImg2_Battle
-  - img_Buff1B_Battle.png
-  - Temp_Temp8_Battle
-  - img_Buff4B_Battle.png
-  - Img_BuffInfo_Battle.png
-  - Btn_StartBattleBtnImg3_Battle
-  - Temp_Temp2_Battle
-  - Temp_Temp5_Battle
+  - Icon_star_4_battle
+  - Img_shield_battle
+  - Img_skill_hp_bottom_battle
+  - Img_SkillFrame2_Battle
+  - Img_hp_bg_self_battle
+  - Img_SkillFrame5_Battle
+  - Icon_star_7_battle
+  - Icon_star_big_4_battle
+  - Icon_star_5_battle
   m_RenderDataMap: {}
   m_Tag: battle
   m_IsVariant: 0

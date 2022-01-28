@@ -8,3 +8,5 @@ UIDragMoveBaseItem = require("UIDragMoveBaseItem")
 UIHeroItemLUA = require("UIHeroItemLUA")
 UISetUpTeamGridItem = require("UISetUpTeamGridItem")
 UISetUpDragItem = require("UISetUpDragItem")
+
+UIBattleHeadItem = require("UIBattleHeadItem")

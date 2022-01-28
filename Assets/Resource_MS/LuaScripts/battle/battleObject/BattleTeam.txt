@@ -232,4 +232,11 @@ function BattleTeam:setRoleMap(roleMap)
     self._map_right_role = roleMap[Enum.SetUpTeamEnum.TeamPos.right]
 end
 
+function BattleTeam:getRoleModel(type,pos)
+    local list = type == Enum.SetUpTeamEnum.TeamPos.left and self._map_left_role or self._map_right_role
+    if list then
+        return list[pos]
+    end
+end
+
 return BattleTeam

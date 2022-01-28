@@ -3,18 +3,32 @@ UIBattleMainLUA=LUAUIBase:new({
 	
 	});
 
-function UIBattleMainLUA:Open()
+function UIBattleMainLUA:Open(params)
 	self:AddUIEventListener()
 	self:AddEventListener()
-	self:Init();
+	self:Init(params);
 end
-function UIBattleMainLUA:Init()
-	
+function UIBattleMainLUA:Init(params)
+	self:initParams(params)
+	self:initComponent()
+	self:initHeadList()
 end
 
+function UIBattleMainLUA:initParams(params)
+    self._team_self = params.battleData.team_self
+	self._team_enemy = params.battleData.team_enemy
+	self._list_headItem = {}
+	self._list_skillOItem = {}
+end
+
+function UIBattleMainLUA:initComponent()
+
+end
 --ui组件添加事件
 function UIBattleMainLUA:AddUIEventListener( )
-	--self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+	self:AddUIEvent("onclick", self.btn_pause.gameObject, self.onPauseClick)
+	self:AddUIEvent("onclick", self.btn_automatic.gameObject, self.onAutomaticClick)
+	self:AddUIEvent("onclick", self.btn_speed.gameObject, self.onSpeedClick)
 end
 --模块添加全局事件
 function UIBattleMainLUA:AddEventListener( )
@@ -37,4 +51,31 @@ function UIBattleMainLUA:OnDestroy()
 	self:RemoveEventListener()
 	UIBattleMainLUA = nil;
 end
+
+function UIBattleMainLUA:onPauseClick()
+	Logger.log("onPauseClick  ")
+end
+
+function UIBattleMainLUA:onAutomaticClick()
+	Logger.log("onAutomaticClick  ")
+end
+
+function UIBattleMainLUA:onSpeedClick()
+	Logger.log("onSpeedClick  ")
+end
+
+
+function UIBattleMainLUA:initHeadList()
+	self._list_headItem[Enum.SetUpTeamEnum.TeamPos.left] = self._list_headItem[Enum.SetUpTeamEnum.TeamPos.left] or {}
+	local tmpIndex = 1
+	for pos, data in pairs(self._team_self.teamMap) do
+		if self._list_headItem[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex] == nil then
+			local obj = UIUtils:createItem(self.go_heroItem,self.go_modelRoot)
+			local headItem = UIBattleHeadItem:new(obj.transform)
+			self._list_headItem[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex] = headItem
+		end
+		self._list_headItem[Enum.SetUpTeamEnum.TeamPos.left][tmpIndex]:setData(pos,data)
+	end
+end
+
 return UIBattleMainLUA

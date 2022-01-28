@@ -12,14 +12,14 @@ local function battleUpdateFunction(target)
    end
 end
 
-function BattleMainNode:initialize(tree,index,battleData,battleTimes)
+function BattleMainNode:initialize(tree,index,type,battleTimes)
 
    ---@type MainBattleProcessTree
    self._tree = tree
    ---@type number
    self._index = index
 
-   self._data = battleData
+
 
    self._battleTimes = battleTimes
 
@@ -41,20 +41,14 @@ function BattleMainNode:onStart()
 end
 
 function BattleMainNode:handleBattleData(rep,userData)
-   -----@type BattleTeam
-   --local battleTeam = self:getBattleTeam()
-   --if battleTeam and battleTeam._loading == false and battleTeam._loadingFinish == false then
-   --   battleTeam:tryLoad()
-   --end
-
+   self._data = BattleUtils:getTestBattleData()
+   self._data.team_self.teamMap = BattleProxy:getBattleTeamMap(self._battleTimes).team_self.teamMap
    local battleTeam = BattleTeam:new(self._battleTimes)
    battleTeam:setLoadData(self._data)
-   battleTeam:tryLoad()
+   battleTeam:tryLoad(function()
+      BattleProxy:OpenBattleMainView({battleData = self._data,battleTeam = battleTeam })
+   end)
 
-
-   BattleProxy:OpenBattleMainView()
-   self._data.team_self = BattleProxy:getBattleTeamMap(self._battleTimes).team_self
-   Logger.ErrorTable( self._data)
    --self:toStartBattle(false)
 end
 

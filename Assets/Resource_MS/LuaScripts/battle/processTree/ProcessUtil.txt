@@ -10,15 +10,10 @@ function ProcessUtil:creatTree()
 
 end
 ---@return ProcessTree
-function ProcessUtil:creatMainBattleProcessTree(data)
+function ProcessUtil:creatMainBattleProcessTree(type)
     local tempTree = MainBattleProcessTree:new()
-    local index = 0
-    for i, v in ipairs(data.battleList) do
-        index = index + 1
-        tempTree:addNode(SetUpTeamNode:new(tempTree,index,v,i))
-        index = index + 1
-        tempTree:addNode(BattleMainNode:new(tempTree,index,v,i))
-    end
+    tempTree:addNode(SetUpTeamNode:new(tempTree,1,type,1))
+    tempTree:addNode(BattleMainNode:new(tempTree,2,type,1))
     return tempTree
 end
 

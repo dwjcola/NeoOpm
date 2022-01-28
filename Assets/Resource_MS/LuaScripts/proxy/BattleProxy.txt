@@ -19,10 +19,9 @@ end
 ---进入战斗
 ---@param type Enum_Battle.BattleEntityType
 function BattleProxy:EnterBattle(type,data)
-    self._data = BattleUtils:getTestBattleData()
-    self._data._battleEntityType = type
 
-    self._processTree = ProcessUtil:creatMainBattleProcessTree(self._data)
+
+    self._processTree = ProcessUtil:creatMainBattleProcessTree(type)
     self._processTree:setDelegate(function()  self:EndBattle() end)
     self._processTree:start()
 end

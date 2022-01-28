@@ -62,12 +62,12 @@ function BattleTeam:initLoadMap()
     --    self:addLoadMap(path..i.."enemy")
     --end
     self._loadCount = 2
-    --for i, v in pairs(self._teamData_self.teamMap) do
-    --    self._loadCount = self._loadCount + 1
-    --end
-    --for i, v in pairs(self._teamData_enemy.teamMap) do
-    --    self._loadCount = self._loadCount + 1
-    --end
+    for i, v in pairs(self._teamData_self.teamMap) do
+        self._loadCount = self._loadCount + 1
+    end
+    for i, v in pairs(self._teamData_enemy.teamMap) do
+        self._loadCount = self._loadCount + 1
+    end
 end
 
 function BattleTeam:addLoadMap(key)
@@ -96,10 +96,12 @@ function BattleTeam:setLoadData(data)
     self:initLoadMap()
 end
 
-function BattleTeam:tryLoad()
+function BattleTeam:tryLoad(loadFinishFunc)
+    self._loadFinishFunc = loadFinishFunc
     self._loading = true
     self:tryLoadScene()
     self:tryLoadRoot()
+
 
 end
 
@@ -123,8 +125,8 @@ function BattleTeam:tryLoadRoot()
         self:initRootList(root)
         self:tryLoadFinish()
 
-        --self:tryLoadLeftRole()
-        --self:tryLoadRightRole()
+        self:tryLoadLeftRole()
+        self:tryLoadRightRole()
     end)
 end
 
@@ -141,7 +143,7 @@ function BattleTeam:tryLoadLeftRole()
                 model = model,
                 assetPath = path
             }
-            BattleUtils:setInitPos(true,pos,model, self._go_left.transform )
+            --BattleUtils:setInitPos(true,pos,model, self._go_left.transform )
             self:tryLoadFinish()
         end)
     end
@@ -160,7 +162,7 @@ function BattleTeam:tryLoadRightRole()
                 assetPath = path
             }
             self:tryLoadFinish()
-            BattleUtils:setInitPos(false,pos,model,self._go_right.transform)
+            --BattleUtils:setInitPos(false,pos,model,self._go_right.transform)
         end)
     end
 end
@@ -172,7 +174,10 @@ function BattleTeam:tryLoadFinish()
     if self._loadCount <= 0 then
         self._loadingFinish = true
         self._loading = false
-        EventManager:Dispatch_battle(EventType.Event_Battle_TeamLoadFinish,self._battleTimes)
+        --EventManager:Dispatch_battle(EventType.Event_Battle_TeamLoadFinish,self._battleTimes)
+        if self._loadFinishFunc then
+            self._loadFinishFunc()
+        end
     end
 end
 
@@ -194,6 +199,7 @@ function BattleTeam:reset()
     self._isEnemyTeamLoadFinish = false
 
     self._loadingFinish = false
+    self._loadFinishFunc = nil
 end
 
 function BattleTeam:destroy()
@@ -204,12 +210,12 @@ end
 function BattleTeam:putAsset()
     BattleLoaderManager:put(self._sceneAssetPath,Enum_Battle.BattleAssetType.Scene,self._go_scene)
     BattleLoaderManager:put(self._rootAssetPath,Enum_Battle.BattleAssetType.Scene,self._go_root)
-    --for i, v in pairs(self._map_left_role) do
-    --    BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
-    --end
-    --for i, v in pairs(self._map_right_role) do
-    --    BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
-    --end
+    for i, v in pairs(self._map_left_role) do
+        BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
+    end
+    for i, v in pairs(self._map_right_role) do
+        BattleLoaderManager:put(v.assetPath,Enum_Battle.BattleAssetType.Model,v.model)
+    end
 end
 
 function BattleTeam:addComponent(model)

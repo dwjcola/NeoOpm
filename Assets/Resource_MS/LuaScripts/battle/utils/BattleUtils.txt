@@ -50,7 +50,7 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    BattleLog.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
     --    return ""
     --end
-    if heroId == "hero101" then
+    if heroId == "14" then
         return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
     else
         return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi2.prefab"
@@ -80,99 +80,116 @@ function BattleUtils:getSkillFrameList(heroId,skillTag)
     }
 end
 
+function BattleUtils:getTestTeamData()
+    local params =  {
+        scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
+        rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
+        battleType = Enum_Battle.BattleType.PVE_C,
+        team_self = {
+            teamMap = {
+                --[1] = {
+                --    heroUid = "hero101_0000001",
+                --    heroId = "hero101",
+                --},
+                --[2] = {
+                --    heroUid = "hero101_0000002",
+                --    heroId = "hero101",
+                --},
+                --[3] = {
+                --    heroUid = "hero101_0000003",
+                --    heroId = "hero101",
+                --},
+                --[4] = {
+                --    heroUid = "hero101_0000004",
+                --    heroId = "hero101",
+                --},
+                [5] = {
+                    heroUid = "14_00001",
+                    heroId = "14",
+                }
+            },
+        },
+        team_enemy = {
+            blockId = "block_20_10",
+            isNpc = false,
+            teamMap = {
+                [1] = {
+                    heroUid = "15_00005",
+                    heroId = "15",
+                },
+                --[2] = {
+                --    heroUid = "hero102_0000002",
+                --    heroId = "hero102",
+                --},
+                --[3] = {
+                --    heroUid = "hero102_0000003",
+                --    heroId = "hero102",
+                --},
+                --[4] = {
+                --    heroUid = "hero102_0000004",
+                --    heroId = "hero102",
+                --},
+                --[5] = {
+                --    heroUid = "hero102_0000005",
+                --    heroId = "hero102",
+                --}
+            },
+        }
+    }
+    return params
+end
 
 function BattleUtils:getTestBattleData()
-    local params = {
-        isOnlyLogic = false,
-        sceneData =  {},
-        battleList = {
-            {
-                scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
-                rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
-                battleType = Enum_Battle.BattleType.PVE_C,
-                team_self = {
-                    teamMap = {
-                        --[1] = {
-                        --    heroUid = "hero101_0000001",
-                        --    heroId = "hero101",
-                        --},
-                        --[2] = {
-                        --    heroUid = "hero101_0000002",
-                        --    heroId = "hero101",
-                        --},
-                        --[3] = {
-                        --    heroUid = "hero101_0000003",
-                        --    heroId = "hero101",
-                        --},
-                        --[4] = {
-                        --    heroUid = "hero101_0000004",
-                        --    heroId = "hero101",
-                        --},
-                        [5] = {
-                            heroUid = "hero101_0000005",
-                            heroId = "hero101",
-                        }
-                    },
-                    playerData = {
-                        -- 各种养成数据
-                        handbook = {},
-                        equip = {},
+    local params =  {
+        scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
+        rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
+        battleType = Enum_Battle.BattleType.PVE_C,
+        team_self = {
+            teamMap = {
 
-                        heroList = {
-                            hero101_0000005 = {
-                                heroId = "hero101",
-                                star = 6,
-                                level = 180,
-                                quality = 8,
-                            }
-                        }
-                    },
-                    -- 本场战斗生效得 buff 一般跟玩法有关
-                    tmpBuffList = {}
-                },
-                team_enemy = {
-                    blockId = "block_20_10",
-                    isNpc = false,
-                    teamMap = {
-                        [1] = {
-                            heroUid = "hero102_0000001",
-                            heroId = "hero102",
-                        },
-                        --[2] = {
-                        --    heroUid = "hero102_0000002",
-                        --    heroId = "hero102",
-                        --},
-                        --[3] = {
-                        --    heroUid = "hero102_0000003",
-                        --    heroId = "hero102",
-                        --},
-                        --[4] = {
-                        --    heroUid = "hero102_0000004",
-                        --    heroId = "hero102",
-                        --},
-                        --[5] = {
-                        --    heroUid = "hero102_0000005",
-                        --    heroId = "hero102",
-                        --}
-                    },
-                    playerData = {
-                        -- 各种养成数据
-                        handbook = {},
-                        equip = {},
+            },
+            playerData = {
+                -- 各种养成数据
+                handbook = {},
+                equip = {},
 
-                        heroList = {
-                            hero102_0000001 = {
-                                heroId = "hero102",
-                                star = 5,
-                                level = 380,
-                                quality = 5,
-                            }
-                        }
-                    },
-                    -- 本场战斗生效得 buff 一般跟玩法有关
-                    tmpBuffList = {}
+                heroList = {
+                    ["14_00001"] = {
+                        heroId = "14",
+                        star = 6,
+                        level = 180,
+                        quality = 8,
+                    }
                 }
-            }
+            },
+            -- 本场战斗生效得 buff 一般跟玩法有关
+            tmpBuffList = {}
+        },
+        team_enemy = {
+            blockId = "block_20_10",
+            isNpc = false,
+            teamMap = {
+                [1] = {
+                    heroUid = "15_00005",
+                    heroId = "15",
+                },
+            },
+            playerData = {
+                -- 各种养成数据
+                handbook = {},
+                equip = {},
+
+                heroList = {
+                    ["15_00005"] = {
+                        heroId = "15",
+                        star = 5,
+                        level = 380,
+                        quality = 5,
+                    }
+                }
+            },
+            -- 本场战斗生效得 buff 一般跟玩法有关
+            tmpBuffList = {}
         }
     }
     return params

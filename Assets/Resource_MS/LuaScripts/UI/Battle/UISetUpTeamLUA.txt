@@ -192,13 +192,14 @@ function UISetUpTeamLUA:OnBattleClick()
 
 	BattleProxy:setBattleTeamMap(self._battleTimes,{teamMap = self:getSelfTeamData() },self._teamData_enemy)
 	--self._battleTeam:setRoleMap(self:handleRoleMap())
-	self._node:onLeave()
+
 	self:stopSchedule()
 
 	self:destroyGrid()
 	self:destroyModel()
 	self:destroyScene()
 	self:destroySceneRoot()
+	self._node:onLeave()
 end
 
 function UISetUpTeamLUA:getSelfTeamData()

@@ -5,29 +5,25 @@
 ---@class SetUpTeamNode:ProcessNodeBase
 local SetUpTeamNode = SimpleClassUtil:class(ProcessNodeBase)
 
-function SetUpTeamNode:initialize(tree,index,battleData,battleTimes)
+function SetUpTeamNode:initialize(tree,index,type,battleTimes)
 
     ---@type MainBattleProcessTree
     self._tree = tree
     ---@type number
     self._index = index
 
-    self._data = battleData
+    self._type = type
 
     self._battleTimes = battleTimes
 end
 
 function SetUpTeamNode:onStart()
-    ---@type MainBattleProcessTree
-    local _tree = self._tree
-    if  _tree._blackBoard._teamList == nil then
-        _tree._blackBoard._teamList = {}
-    end
-
+    -- todo 请求布阵数据
+    local data = BattleUtils:getTestTeamData()
     SetUpTeamProxy:OpenSetUpTeamView({
         battleTimes = self._battleTimes,
         teamType = Enum_Battle.BattleTeamType.MainTeam,
-        data = self._data,
+        data = data,
         node = self,
     })
 

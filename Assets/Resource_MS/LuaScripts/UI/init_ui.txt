@@ -10,3 +10,4 @@ UISetUpTeamGridItem = require("UISetUpTeamGridItem")
 UISetUpDragItem = require("UISetUpDragItem")
 
 UIBattleHeadItem = require("UIBattleHeadItem")
+UIBattleSkillItem = require("UIBattleSkillItem")

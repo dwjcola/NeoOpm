@@ -59,7 +59,7 @@ function UISetUpDragItem:traLoad()
         if self._isActive then
             -- todo 不应该在这里加 按理说应该移动到战斗内加
             model.gameObject:SetActiveVirtual(true)
-            BattleUtils:addComponentForModel(model)
+            --BattleUtils:addComponentForModel(model)
 
             local pos = self:getInitPos(self._isSelf,self._index)
             BattleUtils:setInitPos(self._isSelf,self._index,model,

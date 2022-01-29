@@ -143,6 +143,7 @@ function BattleTeam:tryLoadLeftRole()
                 model = model,
                 assetPath = path
             }
+            model.gameObject:SetActiveVirtual(true)
             --BattleUtils:setInitPos(true,pos,model, self._go_left.transform )
             self:tryLoadFinish()
         end)
@@ -161,6 +162,7 @@ function BattleTeam:tryLoadRightRole()
                 model = model,
                 assetPath = path
             }
+            model.gameObject:SetActiveVirtual(true)
             self:tryLoadFinish()
             --BattleUtils:setInitPos(false,pos,model,self._go_right.transform)
         end)
@@ -235,7 +237,10 @@ end
 function BattleTeam:getRoleModel(type,pos)
     local list = type == Enum.SetUpTeamEnum.TeamPos.left and self._map_left_role or self._map_right_role
     if list then
-        return list[pos]
+        local tmp =  list[pos]
+        if tmp then
+           return tmp.model
+        end
     end
 end
 

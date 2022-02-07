@@ -4,18 +4,22 @@
 --- DateTime: 2021/12/7 18:08
 ---
 ---
-
+require_path("init_test","battle/test/init_test")
 
 require_path("Bt_Enum","battle/behaviourTree/Bt_EnumType/Enum_BT")
 
 BehaviourAnalysis         =  require_path("BehaviourAnalysis","battle/behaviourTree/Analysis/BehaviourAnalysis")
-
+CreateUtils               =  require_path("CreateUtils","battle/behaviourTree/CreateUtils/CreateUtils")
 ------- node data ---------
 BlackBoard                 = require_path("BlackBoard","battle/behaviourTree/Bt_Data/BlackBoard")
+
+BlackBoard_BattleBase      = require_path("BlackBoard_BattleBase","battle/behaviourTree/Bt_Data/BlackBoard_BattleBase")
+SkillData                  = require_path("SkillData","battle/behaviourTree/Bt_Data/SkillData")
 IfJudgeData                = require_path("IfJudgeData","battle/behaviourTree/Nodes/NodeAsset/IfJudgeData")
 ------- node ---------
 NodeBase                   = require_path("NodeBase","battle/behaviourTree/Nodes/AbstractNode/NodeBase")
 NodeComposite              = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
+
 NodeLeaf                   = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
 
 NodeParallel               = require_path("NodeParallel","battle/behaviourTree/Nodes/Composite/NodeParallel")
@@ -37,7 +41,7 @@ NodeSubTree                = require_path("NodeSubTree","battle/behaviourTree/No
 
 NodeDecorator              = require_path("NodeDecorator","battle/behaviourTree/Nodes/Composite/NodeDecorator")
 
-NodeDecoratorInverter      = require_path("NodeDecoratorInverter","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecorator")
+NodeDecoratorInverter      = require_path("NodeDecoratorInverter","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorInverter")
 NodeDecoratorRepeat        = require_path("NodeDecoratorRepeat","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorRepeat")
 NodeDecoratorReturnConst   = require_path("NodeDecoratorReturnConst","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorReturnConst")
 NodeDecoratorReturnFail    = require_path("NodeDecoratorReturnFail","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorReturnFail")
@@ -48,6 +52,13 @@ NodeDecoratorUntilSuccess  = require_path("NodeDecoratorUntilSuccess","battle/be
 
 NodeAction                 = require_path("NodeAction","battle/behaviourTree/Nodes/Leaf/NodeAction")
 NodeCondition              = require_path("NodeCondition","battle/behaviourTree/Nodes/Leaf/NodeCondition")
+NodeConditionGroup         = require_path("NodeConditionGroup","battle/behaviourTree/Nodes/Leaf/NodeConditionGroup")
+
+ICondition                 = require_path("ICondition","battle/behaviourTree/Tasks/ICondition")
+IAction                    = require_path("IAction","battle/behaviourTree/Tasks/IAction")
+
+BehaviourTreeEntity        = require_path("BehaviourTreeEntity","battle/behaviourTree/BehaviourTreeEntity")
+
 ----------------------------------------------------------------------------------------------------------------------------------------
 btConfigMap                 = require_path("btConfigMap","battle/behaviourConfig/btConfigMap")
 btApplyMap                  = require_path("btConfigMap","battle/behaviourApply/btApplyMap")

@@ -13,4 +13,300 @@ function BattleUtils:getHeroInitOffsetPos(heroId,isLeft)
     end
 end
 
+function BattleUtils:getRotateVec(isTurnLeft)
+    return isTurnLeft and Vector3(0,-90,0) or Vector3(0,90,0)
+end
+
+function BattleUtils:getLocalZ(isTurnLeft)
+    return isTurnLeft and -1 or 1
+end
+
+function BattleUtils:posMapToVec3(map)
+    if map and map[1] and map[2] and map[3] then
+        return Vector3(map[1],map[2],map[3])
+    else
+        BattleLog.error("map 数据 不合法 ")
+        BattleLog.errorTable(map)
+        return Vector3.zero
+    end
+end
+
+function BattleUtils:getPositionByIndex(isLeft,index)
+    index = tonumber(index)
+    local map = isLeft and BattleConstant.HeroInitPos_Main.left or BattleConstant.HeroInitPos_Main.right
+    if index and  map[index] then
+        return map[index]
+    else
+        BattleLog.error("数据 错误 ",isLeft,"  ",index)
+    end
+
+end
+
+function BattleUtils:getHeroAssetPathByHeroId(heroId)
+    --local heroInfo = ConfigReader:getDataByNameAndId("HeroInfo",heroId)
+    --if heroInfo then
+    --    return heroInfo.path
+    --else
+    --    BattleLog.error("HeroInfo 招不到数据 heroId == ",tostring(heroId))
+    --    return ""
+    --end
+    if heroId == "14" then
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
+    else
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi2.prefab"
+    end
+
+end
+
+function BattleUtils:getSkillFrameList(heroId,skillTag)
+    --todo 根据 heroId 和 skillTag 判断技能等级 对应的技能tag
+    return {
+        [15] = {
+           frameType = 1,
+           attackType = 1,
+           value = 100,
+        },
+        --[24] = {
+        --    frameType = 1,
+        --    attackType = 1,
+        --    value = 100,
+        --},
+        --[41] = {
+        --    frameType = 1,
+        --    attackType = 1,
+        --    value = 100,
+        --}
+
+    }
+end
+
+function BattleUtils:getTestTeamData()
+    local params =  {
+        scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
+        rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
+        battleType = Enum_Battle.BattleType.PVE_C,
+        team_self = {
+            teamMap = {
+                --[1] = {
+                --    heroUid = "hero101_0000001",
+                --    heroId = "hero101",
+                --},
+                --[2] = {
+                --    heroUid = "hero101_0000002",
+                --    heroId = "hero101",
+                --},
+                --[3] = {
+                --    heroUid = "hero101_0000003",
+                --    heroId = "hero101",
+                --},
+                --[4] = {
+                --    heroUid = "hero101_0000004",
+                --    heroId = "hero101",
+                --},
+                [5] = {
+                    heroUid = "14_00001",
+                    heroId = "14",
+                }
+            },
+        },
+        team_enemy = {
+            blockId = "block_20_10",
+            isNpc = false,
+            teamMap = {
+                [1] = {
+                    heroUid = "15_00005",
+                    heroId = "15",
+                },
+                --[2] = {
+                --    heroUid = "hero102_0000002",
+                --    heroId = "hero102",
+                --},
+                --[3] = {
+                --    heroUid = "hero102_0000003",
+                --    heroId = "hero102",
+                --},
+                --[4] = {
+                --    heroUid = "hero102_0000004",
+                --    heroId = "hero102",
+                --},
+                --[5] = {
+                --    heroUid = "hero102_0000005",
+                --    heroId = "hero102",
+                --}
+            },
+        }
+    }
+    return params
+end
+
+function BattleUtils:getTestBattleData()
+    local params =  {
+        scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
+        rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
+        battleType = Enum_Battle.BattleType.PVE_C,
+        team_self = {
+            teamMap = {
+
+            },
+            playerData = {
+                -- 各种养成数据
+                handbook = {},
+                equip = {},
+
+                heroList = {
+                    ["14_00001"] = {
+                        heroId = "14",
+                        star = 6,
+                        level = 180,
+                        quality = 8,
+                    }
+                }
+            },
+            -- 本场战斗生效得 buff 一般跟玩法有关
+            tmpBuffList = {}
+        },
+        team_enemy = {
+            blockId = "block_20_10",
+            isNpc = false,
+            teamMap = {
+                [1] = {
+                    heroUid = "15_00005",
+                    heroId = "15",
+                },
+            },
+            playerData = {
+                -- 各种养成数据
+                handbook = {},
+                equip = {},
+
+                heroList = {
+                    ["15_00005"] = {
+                        heroId = "15",
+                        star = 5,
+                        level = 380,
+                        quality = 5,
+                    }
+                }
+            },
+            -- 本场战斗生效得 buff 一般跟玩法有关
+            tmpBuffList = {}
+        }
+    }
+    return params
+end
+
+
+---@param oriVec Vector3
+---@param tmpVec Vector3
+---@param entityContext BattleEntityContext
+---@param targetEnemyEntity BattleCharacter
+---@param blackBoard BlackBoard_BattleBase
+function BattleUtils:handleTarget_place_r(oriVec,entityContext,targetEnemyEntity,blackBoard,angle)
+    --if blackBoard._uid == 5 then
+    --    Logger.error("angle == ",angle)
+    --end
+    if angle == 360 or angle == -360 then
+        return false, nil
+    end
+    local result = oriVec
+    if angle ~= 0 then
+        local tmpDic = oriVec - targetEnemyEntity:getData()._position
+        local tmp = BattleMathUtils.AngleAxis_Y_V3(tmpDic,angle)
+        result = targetEnemyEntity:getData()._position + tmp
+    end
+    local isOk = true
+    local self_entityList = entityContext:getEntityListByCamp(blackBoard._campType)
+    for i, entity in pairs(self_entityList) do
+        if entity:getData()._uid ~= blackBoard._uid then
+            local entity_pos = entity:getData()._position
+            local place_r = entity:getData()._place_r + blackBoard._place_r
+            local dis = Vector3.Distance(result,entity_pos)
+            if dis < place_r then
+                --if blackBoard._uid == 5 then
+                --    BattleLog.error(" +++++++++ angle == ",angle,"  dis == ",dis,"  result == ",result,"  place_r == ",place_r," entity_pos = ",entity_pos)
+                --end
+                isOk = false
+                break
+            end
+        end
+    end
+    if isOk then
+        local enemy_entityList = entityContext:getEnemyEntityList(blackBoard._campType)
+        for i, entity in pairs(enemy_entityList) do
+            if entity:getData()._uid ~= targetEnemyEntity:getData()._uid then
+                local entity_pos = entity:getData()._position
+                local place_r = entity:getData()._place_r + blackBoard._place_r
+                local dis = Vector3.Distance(result,entity_pos)
+                if dis < place_r then
+                    isOk = false
+                    --if blackBoard._uid == 5 then
+                    --    BattleLog.error(" ********** angle == ",angle,"  dis == ",dis,"  result == ",result,"  place_r == ",place_r ," entity_pos = ",entity_pos)
+                    --end
+                    break
+                end
+            end
+        end
+    end
+    if isOk == false then
+
+        local nextAngle =  (angle > 0) and (-angle) or (-angle + 1)
+        return self:handleTarget_place_r(oriVec,entityContext,targetEnemyEntity,blackBoard,nextAngle)
+    end
+
+    return true,result
+end
+---@param blackBoard BlackBoard_BattleBase
+function BattleUtils:checkoutPosForPlace_r(oriVec,entityContext,targetEnemyEntity,blackBoard)
+    --do
+    --    return true
+    --
+    --end
+    local self_entityList = entityContext:getEntityListByCamp(blackBoard._campType)
+    local enemy_entityList = entityContext:getEnemyEntityList(blackBoard._campType)
+    for i, entity in pairs(self_entityList) do
+        if entity:getData()._uid ~= blackBoard._uid then
+            local entity_pos = entity:getData()._position
+            local place_r = entity:getData()._place_r + blackBoard._place_r
+            local dis = Vector3.Distance(oriVec,entity_pos)
+            --Logger.error(dis)
+            if dis < place_r then
+                return false
+            end
+        end
+    end
+    for i, entity in pairs(enemy_entityList) do
+        if entity:getData()._uid ~= targetEnemyEntity:getData()._uid then
+            local entity_pos = entity:getData()._position
+            local place_r = entity:getData()._place_r + blackBoard._place_r
+            local dis = Vector3.Distance(oriVec,entity_pos)
+            --Logger.error(dis)
+            if dis < place_r then
+                return false
+            end
+        end
+    end
+    return true
+end
+
+function BattleUtils:addComponentForModel(model)
+    if model then
+        if GameStatic_Battle.General_Grizmo then
+            --model.gameObject.GetOrAddComponent(typeof(CS.UnityEngine.GameObjectGizmosCircle))
+            CS.LC.GetOrAddComponent(model.gameObject, "GameObjectGizmosCircleLine")
+        end
+    end
+end
+---@param parent transform
+function BattleUtils:setInitPos(isSelf,idx_pos,modelGo,parent,pos)
+    modelGo.transform:SetParent(parent)
+    modelGo.transform.position = pos
+    --modelGo.transform.position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,idx_pos))
+    modelGo.transform.localEulerAngles = Vector3(0, 90 ,0)
+    --modelGo.transform.scale = Vector3(0,isSelf and 90 or -90,0)
+    local z = BattleUtils:getLocalZ(not isSelf)
+    modelGo.transform:SetLocalScaleZ(z);
+end
+
+
+
 return BattleUtils

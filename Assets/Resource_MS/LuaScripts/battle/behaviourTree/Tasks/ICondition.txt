@@ -3,15 +3,39 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 接口ICondition
----@class ICondition : NodeLeaf
+---@class ICondition
 local ICondition = SimpleClassUtil:class()
 
 function ICondition:initialize()
+   --self:registerEvent()
+end
+
+function ICondition:initData(data)
 
 end
 
-function ICondition:doCondition()
+function ICondition:doCondition(blackBoard,agent)
     return Enum_BT.Node_ResultType.Success
+end
+
+function ICondition:registerEvent()
+   --self._event_LV =  EventManager:AddListener(EventType.Diff_Lv,self.test,self)
+end
+
+function ICondition:unRegisterEvent()
+    --EventManager:RemoveListener(EventType.Diff_Lv,self._event_LV)
+end
+
+function ICondition:onExit()
+   self:unRegisterEvent()
+end
+
+function ICondition:log_enter(...)
+    --BattleLog.warning(" ########  enter:  ",...)
+end
+
+function ICondition:log(...)
+    BattleLog.warning(" ########  result:  ",...)
 end
 
 return ICondition

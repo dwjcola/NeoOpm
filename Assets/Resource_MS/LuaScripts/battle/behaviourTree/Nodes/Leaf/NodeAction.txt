@@ -3,11 +3,12 @@
 --- Created by lyb.
 --- DateTime: 2021/12/8 0:03
 --- 叶子节点
+--local NodeLeaf = require_path("NodeLeaf","battle/behaviourTree/Nodes/AbstractNode/NodeLeaf")
 ---@class NodeAction : NodeLeaf
 local NodeAction = SimpleClassUtil:class(NodeLeaf)
 
 function NodeAction:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Action)
+    NodeLeaf.initialize(self,Enum_BT.Node_Type.Action)
     ---@type IAction 因为lua 无法定义 接口 所以带有 doAction 方法得 表 就认为是 IAction
     self._iAction = nil
     self._list_parameterList = {}
@@ -18,13 +19,15 @@ function NodeAction:setIAction(iAction)
     self._iAction = iAction
 end
 
-function NodeAction:execute()
+function NodeAction:execute(blackboard,contextManager)
+    self:log_enter("NodeAction    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if false then -- not Application.isPlaying
         resultType = Enum_BT.Node_ResultType.Running
     else
-        resultType = self._iAction:doAction()
+        resultType = self._iAction:doAction(blackboard,contextManager)
     end
+    self:log("NodeAction    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

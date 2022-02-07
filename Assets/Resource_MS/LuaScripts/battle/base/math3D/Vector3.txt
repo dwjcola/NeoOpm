@@ -237,9 +237,9 @@ function Vector3.RotateTowards(current, target, maxRadiansDelta, maxMagnitudeDel
     return Vector3.MoveTowards(current, target, maxMagnitudeDelta)
 end
 
-function Vector3.SmoothDamp(current, target, currentVelocity, smoothTime)
+function Vector3.SmoothDamp(current, target, currentVelocity, smoothTime,deltaTime)
     local maxSpeed = Mathf.Infinity
-    local deltaTime = Time.deltaTime
+    --local deltaTime = Time.deltaTime
     smoothTime = max(0.0001, smoothTime)
     local num = 2 / smoothTime
     local num2 = num * deltaTime

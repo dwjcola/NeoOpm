@@ -1,5 +1,6 @@
 
 
 require("InitBase")
+require("init_ui")
 
 require_path("InitBattle","battle/InitBattle")

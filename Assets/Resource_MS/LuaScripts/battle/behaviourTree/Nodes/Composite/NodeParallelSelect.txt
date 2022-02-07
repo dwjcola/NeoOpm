@@ -9,24 +9,24 @@
 ---       当前执行节点返回 Running, 记录当前节点，继续执行下一个节点，记录所有返回 Running 的节点
 ---       当前执行节点返回 Fail，继续执行下一个节点
 ---      如果没有节点返回 Success，  Running 的节点数大于 0 向父节点返回 Running 否则向父节点返回 Fail
-
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeParallelSelect : NodeComposite
 local NodeParallelSelect = SimpleClassUtil:class(NodeComposite)
 
 function NodeParallelSelect:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Parallel_Select)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.Parallel_Select)
 
     self._runningNode = 0
 
 end
 
 function NodeParallelSelect:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
     self._runningNode = 0
 end
 
 function NodeParallelSelect:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     for index, nodeChild in ipairs(self:getChildes()) do
         local value =  1 << index
         if (self._runningNode & value) > 0 then
@@ -35,13 +35,14 @@ function NodeParallelSelect:onExit()
     end
 end
 
-function NodeParallelSelect:execute()
+function NodeParallelSelect:execute(blackboard,contextManager)
+    self:log_enter("NodeParallelSelect    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local failCount = 0
     local list_childes = self:getChildes() or {}
     for index, nodeChild in ipairs(list_childes) do
         nodeChild:prePosition()
-        resultType = nodeChild:execute()
+        resultType = nodeChild:execute(blackboard,contextManager)
         nodeChild:postPosition(resultType)
         if resultType == Enum_BT.Node_ResultType.Success then
             break
@@ -56,7 +57,7 @@ function NodeParallelSelect:execute()
     if resultType ~= Enum_BT.Node_ResultType.Success then
         resultType = (failCount >= #list_childes) and Enum_BT.Node_ResultType.Fail or Enum_BT.Node_ResultType.Running
     end
-
+    self:log("NodeParallelSelect    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 return NodeParallelSelect

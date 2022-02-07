@@ -5,21 +5,22 @@
 ---  修饰节点_返回Fail
 ---       执行节点，无论节点返回 Success、Fail、Running 执行结束后永远向父节点返回 Fail
 ---
+--local NodeDecoratorReturnConst =  require_path("NodeDecoratorReturnConst","battle/behaviourTree/Nodes/Composite/Decorator/NodeDecoratorReturnConst")
 ---@class NodeDecoratorReturnFail : NodeDecoratorReturnConst
 local NodeDecoratorReturnFail = SimpleClassUtil:class(NodeDecoratorReturnConst)
 
 function NodeDecoratorReturnFail:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Decorator_Return_Fail)
+    NodeDecoratorReturnConst.initialize(Enum_BT.Node_Type.Decorator_Return_Fail)
     self._runningNode = 0
 end
 
 function NodeDecoratorReturnFail:onEnter()
-    self.super:onEnter()
+    NodeDecoratorReturnConst.onEnter(self)
     self._runningNode = 0
 end
 
 function NodeDecoratorReturnFail:onExit()
-    self.super:onExit()
+    NodeDecoratorReturnConst.onExit(self)
     for i = 1, self:getChildesCount() do
         local value = 1 << i
         if (self._runningNode & value) > 0 then
@@ -29,21 +30,22 @@ function NodeDecoratorReturnFail:onExit()
     end
 end
 
-function NodeDecoratorReturnFail:execute()
+function NodeDecoratorReturnFail:execute(blackboard,contextManager)
+    self:log_enter("NodeDecoratorReturnFail    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
     for i = 1, count do
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Running then
             self._runningNode =  self._runningNode | (1 << i)
         end
     end
-
+    self:log("NodeDecoratorReturnFail    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return Enum_BT.Node_ResultType.Fail
 end
 

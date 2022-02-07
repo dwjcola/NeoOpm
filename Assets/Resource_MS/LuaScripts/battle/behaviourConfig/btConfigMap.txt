@@ -15,7 +15,7 @@ function btConfigMap:getClass(className)
     if self.classPath and self.classPath[className] then
         return require_path(className, self.classPath[className])
     else
-        Logger.Error("btConfigMap 文件 没有配置  ",className ," 数据 ")
+        BattleLog.error("btConfigMap 文件 没有配置  ",className ," 数据 ")
     end
 end
 

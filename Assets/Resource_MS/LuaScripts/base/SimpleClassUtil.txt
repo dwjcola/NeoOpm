@@ -28,16 +28,16 @@ function SimpleClassUtil:class(super)
     return cls
 end
 
-if false then
-    -------------------------------------------
-    ---@class SimpleClass
-    ---@field protected super SimpleClass
-    local mn = {}
-
-    ---@protected
-    function mn:initialize(...) end
-
-    function mn:new(...) end
-end
+--if false then
+--    -------------------------------------------
+--    ---@class SimpleClass
+--    ---@field protected super SimpleClass
+--    local mn = {}
+--
+--    ---@protected
+--    function mn:initialize(...) end
+--
+--    function mn:new(...) end
+--end
 
 return SimpleClassUtil

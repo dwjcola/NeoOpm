@@ -17,7 +17,7 @@ Enum_BT.Node_Type = {
     Parallel_Select = 7, -- 并行选择节点
     Parallel_All = 8,    -- 并行执行所有节点
     IF_Judge = 9,        -- IF 判断节点
-
+    SelectAbort = 10,    -- 选择节点
 
     Decorator_Inverter       = 100, -- 修饰节点_取反
     Decorator_Repeat         = 101, -- 修饰节点_重复
@@ -28,6 +28,7 @@ Enum_BT.Node_Type = {
 
 
     Condition = 200 , -- 条件节点
+    ConditionGroup = 201 , -- 条件节点
     Action = 300,     -- 行为节点
     Sub_Tree = 1000,  -- 子树
 }
@@ -52,3 +53,20 @@ Enum_BT.Node_If_Judge_Enum = {
     IF = 1,       --if 判断节点
     Action = 2,   --执行节点
 }
+
+Enum_BT.Condition_Relation= {
+   BT_AND = 1,
+   BT_OR = 2,
+}
+
+Enum_BT.CompareType = {
+    Bt_Equal = 1,         -- ==
+    BT_GreaterThan = 2,   -- >
+    BT_LessThan  = 3,     -- <
+    BT_GreaterThanEqual = 4, -- >=
+    BT_LessThanEqual = 5,  -- <=
+}
+
+
+
+

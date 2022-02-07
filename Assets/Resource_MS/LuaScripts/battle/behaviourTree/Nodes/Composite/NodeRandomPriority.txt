@@ -11,24 +11,24 @@
 ---      当前执行节点返回 Running, 记录当前节点向父节点返回 Running 下次执行直接从该节点开始
 ---      如果所有节点都返回Fail，执行完所有节点后  向父节点返回 Fail
 
-
+--local NodeRandom = require_path("NodeRandom","battle/behaviourTree/Nodes/Composite/NodeRandom")
 ---@class NodeRandomPriority : NodeRandom
 local NodeRandomPriority = SimpleClassUtil:class(NodeRandom)
 
 function NodeRandomPriority:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Random_Priority)
+    NodeRandom.initialize(self,Enum_BT.Node_Type.Random_Priority)
     ---@type NodeBase
     self._lastRunningNode = nil
     self._totalPriority = 0
 end
 
 function NodeRandomPriority:onEnter()
-    self.super:onEnter()
+    NodeRandom.onEnter(self)
     self._lastRunningNode = nil
 end
 
 function NodeRandomPriority:onExit()
-    self.super:onExit()
+    NodeRandom.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -36,7 +36,8 @@ function NodeRandomPriority:onExit()
 end
 
 
-function NodeRandomPriority:execute()
+function NodeRandomPriority:execute(blackboard,contextManager)
+    self:log_enter("NodeRandomPriority    Entity: ",self:getEntityId())
     local index = 0
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -52,7 +53,7 @@ function NodeRandomPriority:execute()
         index = 0
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -64,7 +65,7 @@ function NodeRandomPriority:execute()
             break
         end
     end
-
+    self:log("NodeRandomPriority   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

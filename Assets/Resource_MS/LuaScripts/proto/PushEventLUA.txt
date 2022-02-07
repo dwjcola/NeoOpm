@@ -9,25 +9,18 @@ function PushEventLUA:InitOn()
 
         self.OnEvent1=PomeloCLUA:PBOnEvent(self.serviceId.OnEvent1,"MessageTest",function(niltable,arg0)
             --===== OnEvent1 start============================================================
-                CS.LC.Error(arg0.value_value_1);
-                CS.LC.Error(arg0.value_value_2);
-                CS.LC.Error(arg0.value_value_3);
-                CS.LC.Error(arg0.value_value_4);
-                for i, v in ipairs(arg0.sm) do
-                        CS.LC.Error(v.value_test1);
-                        CS.LC.Error(v.value_test2);
-                        for _, vv in ipairs(v.sm) do
-                                CS.LC.Error(vv.sb2_value1);
-                                CS.LC.Error(vv.sb2_value2);
+                CS.LC.Error("收到push");
+--[[                CS.LC.Error(arg0.ValueValue2);
+                CS.LC.Error(arg0.ValueValue3);
+                CS.LC.Error(arg0.ValueValue4);
+                for i, v in ipairs(arg0.Sm) do
+                        CS.LC.Error(v.ValueTest1);
+                        CS.LC.Error(v.ValueTest2);
+                        for _, vv in ipairs(v.Sm) do
+                                CS.LC.Error(vv.Sb2Value1);
+                                CS.LC.Error(vv.Sb2Value2);
                         end
-                        
-                        CS.LC.Error(v.sm2.value_test1);
-                        CS.LC.Error(v.sm2.value_test2);
-                        for _, vvv in ipairs(v.sm2.sm) do
-                                CS.LC.Error(vvv.sb2_value1);
-                                CS.LC.Error(vvv.sb2_value2);
-                        end
-                end
+                end]]
 		--===== OnEvent1 end==============================================================
         end);
 end

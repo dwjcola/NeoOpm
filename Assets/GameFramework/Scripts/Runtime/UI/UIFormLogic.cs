@@ -19,7 +19,8 @@ namespace UnityGameFramework.Runtime
         private UIForm m_UIForm = null;
         private Transform m_CachedTransform = null;
         private int m_OriginalLayer = 0;
-
+        private Vector3 m_OriginalPos = Vector3.zero;
+        private Vector3 m_OutPos = new Vector3(10000,0,0);
         /// <summary>
         /// 获取界面。
         /// </summary>
@@ -135,7 +136,8 @@ namespace UnityGameFramework.Runtime
         protected internal virtual void OnClose(bool isShutdown, object userData)
         {
             gameObject.SetLayerRecursively(m_OriginalLayer);
-            Visible = false;
+            //Visible = false;
+            CloseByOut();
             m_Available = false;
         }
 
@@ -144,7 +146,8 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         protected internal virtual void OnPause()
         {
-            Visible = false;
+            //Visible = false;
+            CloseByOut();
         }
 
         /// <summary>
@@ -152,9 +155,18 @@ namespace UnityGameFramework.Runtime
         /// </summary>
         protected internal virtual void OnResume()
         {
-            Visible = true;
+            //Visible = true;
+            ShowFromOut();
         }
 
+        private void CloseByOut()
+        {
+            transform.localPosition = m_OutPos;
+        }
+        private void ShowFromOut()
+        {
+            transform.localPosition = m_OriginalPos;
+        }
         /// <summary>
         /// 界面遮挡。
         /// </summary>

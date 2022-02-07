@@ -78,6 +78,16 @@ public class LC
         }
 
     }
+    public static void RemoveUIEvent(GameObject go)
+    {
+        EventTriggerListener.Get(go).onClick = null;
+        EventTriggerListener.Get(go).onDown = null;
+        EventTriggerListener.Get(go).onDoubleClick = null;
+        EventTriggerListener.Get(go).onUp = null;
+        EventTriggerListener.Get(go).onPress  = null;
+        EventTriggerListener.Get(go).onExit  = null;
+
+    }
     public static void AddUIEvent_PointData(string key, GameObject go, Action<GameObject, PointerEventData> callBack)
     {
         switch (key)

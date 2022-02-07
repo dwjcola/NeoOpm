@@ -41,7 +41,7 @@ public class JJAddressableBuildEditor : Editor
 
 
     #region 打最新的资源包
-    const string aasProfilePath = "Assets/Resource_MS/SoTables/AdressablesConfigProfile.asset";
+    const string aasProfilePath = "Assets/Resource_MS/Configs/AdressablesConfigProfile.asset";
     /// <summary>
     /// 生成本地和远端打包路径
     /// 在streamingAssets目录写入一个包含更新地址的json文件
@@ -65,8 +65,7 @@ public class JJAddressableBuildEditor : Editor
 #else
         string profileName = "Develop";
 #endif
-        //待处理 重新读表处理 dwj 2021-12-2
-        /*var profileTable =AssetDatabase.LoadAssetAtPath<AdressablesConfigProfileTable>(aasProfilePath);
+        var profileTable =AssetDatabase.LoadAssetAtPath<AdressablesConfigProfileTable>(aasProfilePath);
         foreach (var item in profileTable.TableDic)
         {
             var pName = item.Value.ProfileName;
@@ -80,7 +79,7 @@ public class JJAddressableBuildEditor : Editor
 
             data[PlatformConfig.kRemoteLoadPath] = settings.profileSettings.EvaluateString(settings.profileSettings.GetProfileId(pName), remoteLoadPath);
 
-            settings.profileSettings.SetValue(settings.profileSettings.GetProfileId(pName), AddressableAssetSettings.kRemoteLoadPath, $"{NeoOPM.PlatformConfig.RemoteBundleURL}");
+            settings.profileSettings.SetValue(settings.profileSettings.GetProfileId(pName), AddressableAssetSettings.kRemoteLoadPath, "{NeoOPM.PlatformConfig.RemoteBundleURL}");
             settings.profileSettings.SetValue(settings.profileSettings.GetProfileId(pName), AddressableAssetSettings.kRemoteBuildPath, $"{RemoteRootPath}/Update-{System.DateTime.Now:yy.MM.dd.HH.mm.ss}");
         }
 
@@ -90,7 +89,7 @@ public class JJAddressableBuildEditor : Editor
         Debug.Log("配置 更新地址 完成");
         EditorUtility.SetDirty(profileTable);
         AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();*/
+        AssetDatabase.Refresh();
     }
     /// <summary>
     /// 生成打包的分组信息

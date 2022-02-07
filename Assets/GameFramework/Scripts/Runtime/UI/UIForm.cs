@@ -158,6 +158,11 @@ namespace UnityGameFramework.Runtime
             m_PauseCoveredUIForm = true;
         }
 
+        private void OnDestroy()
+        {
+            OnRecycle();
+        }
+
         /// <summary>
         /// 界面打开。
         /// </summary>

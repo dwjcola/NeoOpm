@@ -218,7 +218,7 @@ namespace GameFramework.UI
             while (m_RecycleQueue.Count > 0)
             {
                 IUIForm uiForm = m_RecycleQueue.Dequeue();
-                uiForm.OnRecycle();
+                //uiForm.OnRecycle();
                 m_InstancePool.Unspawn(uiForm.Handle);
             }
 
@@ -853,7 +853,7 @@ namespace GameFramework.UI
             while (m_RecycleQueue.Count > 0)
             {
                 IUIForm uiForm = m_RecycleQueue.Dequeue();
-                uiForm.OnRecycle();
+                //uiForm.OnRecycle();
                 m_InstancePool.Unspawn(uiForm.Handle);
             }
             m_InstancePool.ReleaseAllUnused();

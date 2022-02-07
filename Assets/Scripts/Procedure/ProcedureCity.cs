@@ -35,16 +35,6 @@ namespace NeoOPM
         {
             base.OnEnter(procedureOwner);
             GameEntry.UI.OpenUI("MainUI", this);
-            /*GameEntry.HeroScene.Open();
-            m_GoToWorld = false;
-            List<int> heros = new List<int>();
-            heros.Add(201);
-            heros.Add(202);
-            heros.Add(203);
-            heros.Add(204);
-            heros.Add(205);
-            
-            HeroSceneMgr.instance.InitHeroScene(heros);*/
         }
 
         protected override void OnLeave(ProcedureOwner procedureOwner, bool isShutdown)

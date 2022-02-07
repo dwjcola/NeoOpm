@@ -433,8 +433,8 @@ namespace NeoOPM
             }
 
             m_CachedCanvasContainer.Clear();
+            
         }
-
         private IEnumerator CloseCo(float duration)
         {
             yield return m_CanvasGroup.FadeToAlpha(0f, duration);

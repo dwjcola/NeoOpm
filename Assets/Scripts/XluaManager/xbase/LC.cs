@@ -16,8 +16,10 @@ using Pomelo.DotNetClient;
 using NeoOPM;
 using Spine.Unity;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityGameFramework.Runtime;
 using GameEntry = NeoOPM.GameEntry;
+using Image = UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 
 
@@ -142,37 +144,19 @@ public class LC
     /// <param name="key"></param>
     public static void CloseUI(string key)
     {
-        LuaTable panel = GetUITable(key);
+        var panel = GetUITable(key);
         if (panel == null)
         {
             return;
         }
-
-        string tAssetName = panel.Get<string>("AssetName");
-            
-        string tLuaName = panel.Get<string>("LuaName");
-        string tLuaPath = panel.Get<string>("LuaPath");
-
+        string tAssetName = panel.AssetName;
         string assetName = AssetUtility.GetUIFormAsset(tAssetName);
         if (GameEntry.UI.IsLoadingUIForm(assetName))
         {
             return;//如果ui正在打开停止close
         }
-        LuaTable ui;
-        var luaEnv = XluaManager.instance.LuaEnv;
-        if (XluaManager.instance.HasLua(tLuaName, tLuaPath))
-        {
-            ui = luaEnv.Global.Get<LuaTable>(tLuaName);
-            if (ui != null)
-            {
-                UGuiForm view;
-                ui.Get("view", out view);
-                if (view)
-                {
-                    GameEntry.UI.CloseUIForm(view);
-                }
-            }
-        }
+        GameEntry.UI.CloseUI(key);
+        
     }
     //读取xlua表
     public static LuaTable GetTable(string tableName,string key)
@@ -198,6 +182,7 @@ public class LC
         Func<LuaTable, LuaTable> func;
         t.Get(funcName, out func);
         func(t);
+        t.Dispose();
     }
 
 
@@ -232,17 +217,10 @@ public class LC
         return GameEntry.UI.ShowPartUIForm(key, parent, para);
     }
 
-    public static LuaTable GetUITable(string uiKey)
+    public static DataPoolComponent.ITableValue GetUITable(string uiKey)
     {
-        LuaTable ui = null;
-        var luaEnv = XluaManager.instance.LuaEnv;
-        LuaTable panel = luaEnv.Global.Get<LuaTable>("TPanel");
-        if (panel != null)
-        {
-           ui = panel.Get<LuaTable>(uiKey);
-        }
-
-        return ui;
+        DataPoolComponent.ITableValue tv = GameEntry.DataPool.GetPanelValueByKey(uiKey);
+        return tv;
     }
     public static LuaTable CreateItem(GameObject item, Transform parent, LuaTable lua)
     {

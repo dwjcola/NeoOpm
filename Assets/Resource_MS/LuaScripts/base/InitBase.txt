@@ -3,6 +3,9 @@
 --- Created by liuyubao.
 --- DateTime: 2021/11/25 15:05
 ---
+---表格
+TblManager = require "TblManager"
+TblManager:InitAllTbl()
 GameStatic = require("GameStatic")
 
 SimpleClassUtil = require("SimpleClassUtil")
@@ -20,9 +23,7 @@ require("LUADefine")
 --网络
 PomeloCLUA = require("PomeloCLUA")
 PomeloCLUA:Init()
---表格
-TblManager = require "TblManager"
-TblManager:InitAllTbl()
+
 
 require("UtilsLUA")--一些扩展函数
 

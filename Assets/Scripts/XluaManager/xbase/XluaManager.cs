@@ -75,30 +75,31 @@ public class XluaManager : Singleton<XluaManager>
             {
                 return null;
             }
-            if (className.EndsWith("Proxy"))
-            {
-                tempStr = GetLuaStringByName(className, LuaProxyPath);
-            }
-            else if (className.EndsWith("Data"))
-            {
-                tempStr = GetLuaStringByName(className, LuaDataPath);
-            }
-            else
-            {
-                LuaTable panel = LC.GetUITable(className);
-                if (panel != null)
-                {
-                    string tLuaName = panel.Get<string>("LuaName");
-                    string tLuaPath = panel.Get<string>("LuaPath");
-                    tempStr = GetLuaStringByName(tLuaName, tLuaPath);
-                } else
-                {
-                    tempStr = GetLuaStringByName(className, LuaRequirePath);
-                }
-            }
+            tempStr = GetLuaStringByName(className, "base");
             if (string.IsNullOrEmpty(tempStr))
             {
-                tempStr = GetLuaStringByName(className, "base");
+                if (className.EndsWith("Proxy"))
+                {
+                    tempStr = GetLuaStringByName(className, LuaProxyPath);
+                }
+                else if (className.EndsWith("Data"))
+                {
+                    tempStr = GetLuaStringByName(className, LuaDataPath);
+                }
+                else
+                {
+                    tempStr = GetLuaStringByName(className, LuaRequirePath);
+                    if (string.IsNullOrEmpty(tempStr))
+                    {
+                        var panel = LC.GetUITable(className);
+                        if (panel != null)
+                        {
+                            string tLuaName = panel.LuaName;
+                            string tLuaPath = panel.LuaPath;
+                            tempStr = GetLuaStringByName(tLuaName, tLuaPath);
+                        } 
+                    }
+                }
             }
             if (string.IsNullOrEmpty(tempStr))
             {

@@ -25,17 +25,10 @@ namespace NeoOPM
             private set;
         }
 
-
-        public static HeroSceneComponent HeroScene
-        {
-            get;
-            private set;
-        }
         internal static void InitCustomComponents()
         {
             BuiltinData = UnityGameFramework.Runtime.GameEntry.GetComponent<BuiltinDataComponent>();
             DataPool = UnityGameFramework.Runtime.GameEntry.GetComponent<DataPoolComponent>();
-            HeroScene = UnityGameFramework.Runtime.GameEntry.GetComponent<HeroSceneComponent>();
         }
 
     }

@@ -12,9 +12,6 @@ namespace NeoOPM
         public static class ProcedureData
         {
             public const string NextSceneId = "NextSceneId";
-            public const string AttackChapterID = "AttackChapterID";//debug模式进攻方的地图
-            public const string BattleChapterID = "BattleChapterID";//debug模式防守方的地图
-            public const string GameMode = "GameMode";
         }
     }
 }

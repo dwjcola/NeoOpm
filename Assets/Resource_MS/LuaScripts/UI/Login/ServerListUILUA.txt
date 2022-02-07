@@ -6,7 +6,6 @@ ServerListUILUA=LUAUIBase:new({
 
 function ServerListUILUA:Open(list)
 	self:AddUIEventListener()
-	self:AddEventListener()
 	self:Init(list);
 end
 function ServerListUILUA:Init(list)
@@ -56,21 +55,12 @@ function ServerListUILUA:UpdateServerItem(item,data,index)
 	item.name.text = tostring(data.id).."  "..data.sname;
 	self:AddUIEvent("onclick", item.trans.gameObject, function ()
 		self:OnCloseMe();
-		self:SendEvent("select_one_server",data)
+		self:Dispatch("select_one_server",data)
 	end);
 end
 --ui组件添加事件
 function ServerListUILUA:AddUIEventListener( )
-	
 	self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
-end
---模块添加全局事件
-function ServerListUILUA:AddEventListener( )
-	-- self:AddEvent("EventStringKey", self.EventHandle);
-end
---模块移除全局事件
-function ServerListUILUA:RemoveEventListener( )
-	-- self:RemoveEvent("EventStringKey", self.EventHandle);
 end
 function ServerListUILUA:OnCloseMe()
 	if(self.view~=nil)then
@@ -81,10 +71,12 @@ function ServerListUILUA:OnCloseMe()
 		end
 	end
 end
+--当UI主动或被动被关闭时会执行，此时界面不会销毁
+function ServerListUILUA:OnPause()
+	self:RemoveUIEvent()
+end
+--当UI被主动关闭并且缓存时间到被销毁时执行
 function ServerListUILUA:OnDestroy()
-	self:RemoveUIDataEvent()
-	self:RemoveEventListener()
-	package.loaded['ServerListUI']=nil
 	ServerListUILUA = nil;
 end
 return ServerListUILUA

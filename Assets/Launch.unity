@@ -921,7 +921,7 @@ MonoBehaviour:
   m_EnableOpenUIFormUpdateEvent: 0
   m_EnableOpenUIFormDependencyAssetEvent: 0
   m_EnableCloseUIFormCompleteEvent: 1
-  m_InstanceAutoReleaseInterval: 60
+  m_InstanceAutoReleaseInterval: 3
   m_InstanceCapacity: 16
   m_InstanceExpireTime: 3
   m_InstancePriority: 0
@@ -939,6 +939,7 @@ MonoBehaviour:
     m_Depth: 3
   - m_Name: Guide
     m_Depth: 4
+  m_uiCamera: {fileID: 0}
 --- !u!114 &349319366
 MonoBehaviour:
   m_ObjectHideFlags: 0

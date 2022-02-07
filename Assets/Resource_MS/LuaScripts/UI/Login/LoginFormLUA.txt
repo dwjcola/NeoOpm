@@ -24,23 +24,22 @@ function LoginFormLUA:Init(param)
 end
 function LoginFormLUA:ConnectLogin()
 
-	--if self.input.text == nil or self.input.text == "" then
-	--	self:Error("请输入账号")
-	--else
-	--	if self.ProcedureLogin ~= nil then
-	--		local jsData = {}
-	--		--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
-	--		jsData.acc = self.input.text;
-	--		self:Log("acc->"..jsData.acc)
-	--		CS.NeoOPM.PlayerPreferenceData.LastAccName = self.input.text
-	--		self.ProcedureLogin:GetServerInfo(jsData);
-	--	end
-	--end
+	if self.input.text == nil or self.input.text == "" then
+		self:Error("请输入账号")
+	else
+		if self.ProcedureLogin ~= nil then
+			local jsData = {}
+			--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
+			jsData.acc = self.input.text;
+			self:Log("acc->"..jsData.acc)
+			CS.NeoOPM.PlayerPreferenceData.LastAccName = self.input.text
+			self.ProcedureLogin:GetServerInfo(jsData);
+		end
+	end
 
-	self:EnterServerBack()
+	--self:EnterServerBack()
 end
 function LoginFormLUA:Login()
-
 	if self.CurrentServerInfo ~= nil then
 		self:ConnectToServer(self.CurrentServerInfo.ip,self.CurrentServerInfo.port);
 	end
@@ -120,21 +119,26 @@ function LoginFormLUA:AddUIEventListener( )
 end
 --模块添加全局事件
 function LoginFormLUA:AddEventListener( )
-	self:AddEvent("Get_server_list_back", self.ServerListBack);
-	self:AddEvent("Connect_server_succ",self.ConnectSucc)
-	self:AddEvent("select_one_server", self.SelectOneServer);
+	self:AddEvent_CS("Get_server_list_back", self.ServerListBack);
+	self:AddEvent_CS("Connect_server_succ",self.ConnectSucc)
+	self:AddListener("select_one_server", self.SelectOneServer);
 end
 --模块移除全局事件
 function LoginFormLUA:RemoveEventListener( )
-	self:RemoveEvent("Get_server_list_back", self.ServerListBack);
-	self:RemoveEvent("Connect_server_succ", self.ServerListBack);
-	self:RemoveEvent("select_one_server", self.SelectOneServer);
+	self:RemoveEvent_CS("Get_server_list_back", self.ServerListBack);
+	self:RemoveEvent_CS("Connect_server_succ", self.ServerListBack);
+	self:RemoveListener("select_one_server");
 end
 function LoginFormLUA:CloseMe()
 	self:CloseUI("LoginFormLUA")
 end
-function LoginFormLUA:OnDestroy()
+--当UI主动或被动被关闭时会执行，此时界面不会销毁
+function LoginFormLUA:OnPause()
 	self:RemoveUIEvent()
 	self:RemoveEventListener()
+end
+--当UI被主动关闭并且缓存时间到被销毁时执行
+function LoginFormLUA:OnDestroy()
 	LoginFormLUA = nil;
 end
+return LoginFormLUA

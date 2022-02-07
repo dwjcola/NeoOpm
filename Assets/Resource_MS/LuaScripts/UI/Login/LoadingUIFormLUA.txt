@@ -35,8 +35,8 @@ end
 --模块添加全局事件
 function LoadingUIFormLUA:AddEventListener( )
 	-- self:AddEvent("EventStringKey", self.EventHandle);
-	self:AddEvent("UPDATE_LOADING_PROGRESS",self.SetPercent)
-	self:AddEvent("SHOW_LOADING_UI",self.ShowUI)
+	self:AddEvent_CS("UPDATE_LOADING_PROGRESS",self.SetPercent)
+	self:AddEvent_CS("SHOW_LOADING_UI",self.ShowUI)
 end
 function LoadingUIFormLUA:ShowUI(param)
 	local isshow=param.Param1;
@@ -45,8 +45,8 @@ function LoadingUIFormLUA:ShowUI(param)
 end
 --模块移除全局事件
 function LoadingUIFormLUA:RemoveEventListener( )
-	self:RemoveEvent("UPDATE_LOADING_PROGRESS",self.SetPercent)
-	self:RemoveEvent("SHOW_LOADING_UI",self.ShowUI)
+	self:RemoveEvent_CS("UPDATE_LOADING_PROGRESS",self.SetPercent)
+	self:RemoveEvent_CS("SHOW_LOADING_UI",self.ShowUI)
 	-- self:RemoveEvent("EventStringKey", self.EventHandle);
 end
 function LoadingUIFormLUA:OnCloseMe()

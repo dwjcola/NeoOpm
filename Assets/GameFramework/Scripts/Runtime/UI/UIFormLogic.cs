@@ -144,10 +144,13 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 界面暂停。
         /// </summary>
-        protected internal virtual void OnPause()
+        protected internal virtual void OnPause(bool activePause = false)
         {
             //Visible = false;
-            CloseByOut();
+            if (!activePause)
+            {
+                CloseByOut();
+            }
         }
 
         /// <summary>

@@ -149,18 +149,33 @@ end
 function LUAUIBase:Error(...)
   Logger.Error(...)
 end
+--添加lua事件
+function LUAUIBase:AddListener(eventName,callBack)
+    self:Error("AddListener   "..eventName)
+    return EventManager:AddListener(eventName, callBack, self)
+end
 
---添加事件
-function LUAUIBase:AddEvent(key,callBack)
+--触发lua事件
+function LUAUIBase:Dispatch(eventName,...)
+    self:Error("Dispatch   "..eventName)
+    EventManager:Dispatch(eventName, ...)
+end
+--移除lua事件
+function LUAUIBase:RemoveListener(eventName)
+    self:Error("RemoveListener   "..eventName)
+    EventManager:RemoveListener(eventName,self)
+end
+--添加CS事件
+function LUAUIBase:AddEvent_CS(key,callBack)
   CS.LC.AddEvent(self,key,callBack);
 end
 
---SendEvent事件
-function LUAUIBase:SendEvent(key,para,p2,p3,p4)
+--触发CS事件
+function LUAUIBase:SendEvent_CS(key,para,p2,p3,p4)
   CS.LC.SendEvent(key,para,p2,p3,p4);
 end
---移除事件
-function LUAUIBase:RemoveEvent(key,callBack)
+--移除CS事件
+function LUAUIBase:RemoveEvent_CS(key,callBack)
   CS.LC.RemoveEvent(self,key,callBack);
 end
 --添加框架事件

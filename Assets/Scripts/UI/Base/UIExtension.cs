@@ -240,58 +240,5 @@ namespace NeoOPM
 
             return lua;
         }
-        /// <summary>
-        /// 对话形式文字动画
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static Coroutine DoDialogueAni(this TextMeshProUGUI target, Action callBack =null)
-        {
-            IEnumerator RevealCharacters()
-            {
-                target.ForceMeshUpdate();
-                TMP_TextInfo textInfo = target.textInfo;
-                int totalVisibleCharacters = textInfo.characterCount; // Get # of Visible Character in text object
-                int visibleCount = 0;
-                while (true)
-                {
-                    if (visibleCount > totalVisibleCharacters)
-                    {
-                        callBack?.Invoke();
-                        break;
-                    }
-                    target.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
-                    visibleCount += 1;
-                    yield return null;
-                }
-            }
-            return target.StartCoroutine(RevealCharacters());
-        }
-        /// <summary>
-        /// 立即完成对话文字动画
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="mCoroutine"></param>
-        public static void FinishDialogueAni(this TextMeshProUGUI target, Coroutine mCoroutine)
-        {
-            target.StopCoroutine(mCoroutine);
-            target.maxVisibleCharacters = target.textInfo.characterCount;
-        }
-		public static void PauseUIForm(this UIComponent uiComponent,string uiKey)
-        {
-            UIForm form = uiComponent.GetUIFormByKey(uiKey);
-            if (form != null)
-            {
-                form.OnPause();
-            }
-        }
-        public static void ResumeUIForm(this UIComponent uiComponent, string uiKey)
-        {
-            UIForm form = uiComponent.GetUIFormByKey(uiKey);
-            if (form != null)
-            {
-                form.OnResume();
-            }
-        }
     }
 }

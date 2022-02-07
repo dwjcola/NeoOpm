@@ -27,14 +27,12 @@ namespace NeoOPM
         private Canvas m_CachedCanvas = null;
         private CanvasGroup m_CanvasGroup = null;
         private List<Canvas> m_CachedCanvasContainer = new List<Canvas>();
-        private Action<LuaTable> luaOnEnable;
+        private Action<LuaTable> luaOnResume;
         private Action<LuaTable> luaUpdate;
-        private Action<LuaTable> luaOnDisable;
+        private Action<LuaTable> luaOnPause;
         private Action<LuaTable, object> luaOpen;
         private Action<LuaTable> luaOnDestroy;
         
-        private Action<LuaTable> luaShowTween;
-        private Action<LuaTable,Action> luaCloseTween;
 
         private Action<LuaTable> DestroyAllMonoItemLua;
         private TweenerCore<Vector3, Vector3, VectorOptions> currentTween;
@@ -76,24 +74,7 @@ namespace NeoOPM
             }
         }
 
-        public void Close()
-        {
-            Close(false);
-        }
-
-        public void Close(bool ignoreFade)
-        {
-            StopAllCoroutines();
-
-            if (ignoreFade)
-            {
-                GameEntry.UI.CloseUIForm(this);
-            }
-            else
-            {
-                StartCoroutine(CloseCo(FadeTime));
-            }
-        }
+       
 
         public static void SetMainFont(Font mainFont)
         {
@@ -120,7 +101,7 @@ namespace NeoOPM
         [HideInInspector]
         public List<string> strvalueList = new List<string>();
         /// <summary>
-        /// lua初始化
+        /// lua初始化属性绑定
         /// </summary>
         /// <param name="luatable"></param>
         /// <param name="errorSignId"></param>
@@ -148,6 +129,11 @@ namespace NeoOPM
             luatable.Set ( "trans", this.transform );
             luatable.Set ( "view", this );
         }
+        /// <summary>
+        /// 初始化lua生命周期函数绑定
+        /// </summary>
+        /// <param name="luaClassName"></param>
+        /// <param name="luapath"></param>
         public void InitLua(string luaClassName,string luapath)
         {
             if (m_LuaClass == null)
@@ -158,16 +144,18 @@ namespace NeoOPM
             }
             Debug.LogError(m_LuaClass);
             OnInit(m_LuaClass, luaClassName);
-            luaOnEnable = m_LuaClass.GetInPath<Action<LuaTable>>("OnEnable");
-            luaOpen = m_LuaClass.GetInPath<Action<LuaTable,object>>("Open");
-            luaUpdate = m_LuaClass.GetInPath<Action<LuaTable>>("Update");
-            luaOnDisable = m_LuaClass.GetInPath<Action<LuaTable>>("OnDisable");
-            luaOnDestroy = m_LuaClass.GetInPath<Action<LuaTable>>("OnDestroy");
-            luaShowTween = m_LuaClass.GetInPath<Action<LuaTable>>("ShowTween");
-            luaCloseTween = m_LuaClass.GetInPath<Action<LuaTable,Action>>("CloseTween");
+            luaOnResume = m_LuaClass.GetInPath<Action<LuaTable>>("OnResume");//当ui主动关闭后在缓存时间内没销毁前再次被打开时，或者打开其它UI被动被关闭后再次被打开时会调用
+            luaOpen = m_LuaClass.GetInPath<Action<LuaTable,object>>("Open");//每次打开UI时都会执行
+            luaUpdate = m_LuaClass.GetInPath<Action<LuaTable>>("Update");//在c#lateUpdate（每隔30帧执行一次）
+            luaOnPause = m_LuaClass.GetInPath<Action<LuaTable>>("OnPause");//当UI主动或被动被关闭时会执行
+            luaOnDestroy = m_LuaClass.GetInPath<Action<LuaTable>>("OnDestroy");//当UI被主动关闭并且缓存时间到被销毁时执行
             DestroyAllMonoItemLua = m_LuaClass.GetInPath<Action<LuaTable>>("DestroyAllMonoItemLua");
+            
+        }
 
-
+        public void LuaOpen(object param)
+        {
+            luaOpen?.Invoke(LuaClass, param);
             if (UIKey!=null)
             {
                 if (UITween>=0)
@@ -175,22 +163,6 @@ namespace NeoOPM
                     TweenToShow(UITween);
                 }
             }
-            luaShowTween?.Invoke(LuaClass);
-        }
-
-        public void LuaOpen(object param)
-        {
-            luaOpen?.Invoke(LuaClass, param);
-        }
-
-        private void OnEnable ( )
-        {
-            luaOnEnable?.Invoke(LuaClass);
-        }
-        
-        private void OnDisable ( )
-        {
-            luaOnDisable?.Invoke(LuaClass);
         }
         private int Interval = 30;
         private int TimeCount = 1;
@@ -232,6 +204,8 @@ namespace NeoOPM
                     ClearLuaFunc();
                     LuaClass.Dispose();
                     m_LuaClass = null;
+                    var luaEnv = XluaManager.instance.LuaEnv;
+                    luaEnv.DoString($"package.loaded['{UIKey}']=nil");
                 }
             }
             DisposeUiMonoItems();
@@ -239,22 +213,14 @@ namespace NeoOPM
 
         private void ClearLuaFunc()
         {
-            luaOnEnable = null;
+            luaOnResume = null;
             luaOpen = null;
             luaUpdate = null;
-            luaOnDisable = null;
+            luaOnPause = null;
             luaOnDestroy = null;
-            luaShowTween = null;
-            luaCloseTween = null;
             DestroyAllMonoItemLua = null;
         }
-        protected override void OnOpen(object userData)
-        {
-            base.OnOpen(userData);
-            /*m_CanvasGroup.alpha = 0f;
-            StopAllCoroutines();
-            StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));*/
-        }
+       
 
         private void TweenToShow(int type)
         {
@@ -315,14 +281,6 @@ namespace NeoOPM
                     });
                     currentQuenece.Play();
                 }
-                else if (UITween == -1 && luaCloseTween != null)
-                {
-                    luaCloseTween.Invoke(LuaClass, () =>
-                     {
-                         base.OnClose(isShutdown, userData);
-                         if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
-                     });
-                }
                 else
                 {
                     base.OnClose(isShutdown, userData);
@@ -338,69 +296,58 @@ namespace NeoOPM
         }
 
    
-        protected override void OnPause()
+        protected override void OnPause(bool activePause = false)
         {
-            if (UIKey!=null)
-            {
-                if (UITween == 0)
-                {
-                    transform.localScale = Vector3.one;
-                    currentTween?.Pause();
-                    currentTween = transform.DOScale(Vector3.one * 1.1f, FadeTime);
-                    currentTween.onComplete = () => { base.OnPause(); if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);};
-                }else if (UITween == 1)
-                {
-                    transform.localScale = Vector3.one;
-                    currentQuenece?.Kill();
-                    currentQuenece = DOTween.Sequence();
-                    currentQuenece.Append(transform.DOScale(Vector3.one * 1.2f, 0.2f));
-                    currentQuenece.Append(transform.DOScale(Vector3.one * 0.1f, 0.1f));
-                    currentQuenece.SetAutoKill(true);
-                    currentQuenece.OnComplete(() =>
-                    {
-                        base.OnPause();
-                        if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
-                    });
-                    currentQuenece.Play();
-                }
-                else if (UITween == -1 && luaCloseTween != null)
-                {
-                    luaCloseTween.Invoke(LuaClass, () =>
-                    {
-
-                        base.OnPause();
-                        if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
-                    });
-                }
-                else
-                {
-                    base.OnPause();
-                    if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
-                }
-            }
-            else
-            {
-                base.OnPause();
-                GameEntry.UI.CheckMask(UIForm.UIGroup);
-            }
-            //luaCloseTween?.Invoke(LuaClass,null);
+            base.OnPause(activePause);
+            luaOnPause?.Invoke(LuaClass);
+            if (UIMask)GameEntry.UI.CheckMask(UIForm.UIGroup);
         }
 
         protected override void OnResume()
         {
             base.OnResume();
-            if (UIKey!=null)
-            {
-                if (UITween >= 0)
-                {
-                    TweenToShow(UITween);
-                }
-            }
-            if (LuaClass!=null)
-                luaShowTween?.Invoke(LuaClass);
-
+            luaOnResume?.Invoke(LuaClass);
         }
 
+       
+
+        protected override void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
+        {
+            int oldDepth = Depth;
+            base.OnDepthChanged(uiGroupDepth, depthInUIGroup);
+            int deltaDepth = UGuiGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth + OriginalDepth;
+            GetComponentsInChildren(true, m_CachedCanvasContainer);
+            for (int i = 0; i < m_CachedCanvasContainer.Count; i++)
+            {
+                m_CachedCanvasContainer[i].sortingOrder += deltaDepth;
+            }
+
+            m_CachedCanvasContainer.Clear();
+            
+        }
+        
+        private void DisposeUiMonoItems()
+        {
+            for (int i = 0; i < valueList.Count; i++)
+            {
+                var va = valueList[i];
+                if(va is UIMonoItem)
+                {
+                    var item = va as UIMonoItem;
+                    item.DisposeUiMonoItems();
+                    item.DisposeLua();
+                }
+            }
+        }
+        
+        /*
+         protected override void OnOpen(object userData)
+       {
+           base.OnOpen(userData);
+           /*m_CanvasGroup.alpha = 0f;
+           StopAllCoroutines();
+           StartCoroutine(m_CanvasGroup.FadeToAlpha(1f, FadeTime));#1#
+       }
         protected override void OnCover()
         {
             base.OnCover();
@@ -420,38 +367,27 @@ namespace NeoOPM
         {
             base.OnUpdate(elapseSeconds, realElapseSeconds);
         }
-
-        protected override void OnDepthChanged(int uiGroupDepth, int depthInUIGroup)
-        {
-            int oldDepth = Depth;
-            base.OnDepthChanged(uiGroupDepth, depthInUIGroup);
-            int deltaDepth = UGuiGroupHelper.DepthFactor * uiGroupDepth + DepthFactor * depthInUIGroup - oldDepth + OriginalDepth;
-            GetComponentsInChildren(true, m_CachedCanvasContainer);
-            for (int i = 0; i < m_CachedCanvasContainer.Count; i++)
-            {
-                m_CachedCanvasContainer[i].sortingOrder += deltaDepth;
-            }
-
-            m_CachedCanvasContainer.Clear();
-            
-        }
+       public void Close()
+      {
+          Close(false);
+      }
         private IEnumerator CloseCo(float duration)
         {
             yield return m_CanvasGroup.FadeToAlpha(0f, duration);
             GameEntry.UI.CloseUIForm(this);
         }
-        private void DisposeUiMonoItems()
-        {
-            for (int i = 0; i < valueList.Count; i++)
-            {
-                var va = valueList[i];
-                if(va is UIMonoItem)
-                {
-                    var item = va as UIMonoItem;
-                    item.DisposeUiMonoItems();
-                    item.DisposeLua();
-                }
-            }
-        }
+      public void Close(bool ignoreFade)
+      {
+          StopAllCoroutines();
+
+          if (ignoreFade)
+          {
+              GameEntry.UI.CloseUIForm(this);
+          }
+          else
+          {
+              StartCoroutine(CloseCo(FadeTime));
+          }
+      }*/
     }
 }

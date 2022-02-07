@@ -355,7 +355,7 @@ namespace GameFramework.UI
                 if (!uiFormInfo.Paused)
                 {
                     uiFormInfo.Paused = true;
-                    uiForm.OnPause();
+                    uiForm.OnPause(true);
                 }
 
                 if (m_CachedNode != null && m_CachedNode.Value.UIForm == uiForm)

@@ -199,11 +199,11 @@ namespace UnityGameFramework.Runtime
         /// <summary>
         /// 界面暂停。
         /// </summary>
-        public void OnPause()
+        public void OnPause(bool activePause = false)
         {
             try
             {
-                m_UIFormLogic.OnPause();
+                m_UIFormLogic.OnPause(activePause);
             }
             catch (Exception exception)
             {

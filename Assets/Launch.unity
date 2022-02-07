@@ -923,7 +923,7 @@ MonoBehaviour:
   m_EnableCloseUIFormCompleteEvent: 1
   m_InstanceAutoReleaseInterval: 60
   m_InstanceCapacity: 16
-  m_InstanceExpireTime: 3
+  m_InstanceExpireTime: 60
   m_InstancePriority: 0
   m_InstanceRoot: {fileID: 1576232203}
   m_UIFormHelperTypeName: UnityGameFramework.Runtime.DefaultUIFormHelper
@@ -931,14 +931,17 @@ MonoBehaviour:
   m_UIGroupHelperTypeName: NeoOPM.UGuiGroupHelper
   m_CustomUIGroupHelper: {fileID: 0}
   m_UIGroups:
-  - m_Name: Main
-    m_Depth: 1
   - m_Name: Default
     m_Depth: 2
   - m_Name: Reminder
     m_Depth: 3
+  - m_Name: Scene
+    m_Depth: 0
   - m_Name: Guide
     m_Depth: 4
+  - m_Name: Main
+    m_Depth: 1
+  m_uiCamera: {fileID: 0}
 --- !u!114 &349319366
 MonoBehaviour:
   m_ObjectHideFlags: 0

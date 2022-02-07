@@ -22,8 +22,9 @@ function UIBattleMainLUA:initParams(params)
 	self._team_enemy = params.battleData.team_enemy
 	-- todo 映射表 映射entity 对应得血条和底部技能item得Index
 	self._map_index = {}
+	---@type UIBattleHeadItem[][]
 	self._list_headItem = {}
-	self._list_skillOItem = {}
+	self._list_skillItem = {}
 end
 
 function UIBattleMainLUA:initComponent()
@@ -89,15 +90,15 @@ function UIBattleMainLUA:initHeadList()
 end
 
 function UIBattleMainLUA:initSkillList()
-	self._skill_list = self._skill_list or {}
+	self._list_skillItem = self._list_skillItem or {}
 	local tmpIndex = 1
 	for pos, data in pairs(self._team_self.teamMap) do
-		if self._skill_list[tmpIndex] == nil then
+		if self._list_skillItem[tmpIndex] == nil then
 			local obj = UIUtils:createItem(self.go_skillHeadItem,self.go_skillroot)
 			local skillItem = UIBattleSkillItem:new(obj.transform,self._battleTeam)
-			self._skill_list[tmpIndex] = skillItem
+			self._list_skillItem[tmpIndex] = skillItem
 		end
-		self._skill_list[tmpIndex]:setData(pos,data)
+		self._list_skillItem[tmpIndex]:setData(pos,data)
 	end
 end
 

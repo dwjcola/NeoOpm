@@ -54,6 +54,17 @@ Enum_Battle.SkillTag = {
     Skill_4 = 4, -- 技能3
     Skill_5 = 5, -- 普攻
 }
+
+--- 技能标识 ：表示是什么技能
+Enum_Battle.SkillType = {
+    Skill_super = 1, -- 大招
+    Skill_general = 2, -- 普通技能
+    Skill_a = 3, -- 普攻
+    Skill_passive = 4, -- 被动
+    Skill_cCalled = 5, -- 被调用
+    Skill_special = 6, -- 特殊的
+}
+
 --- 战斗阵营 敌我 双方
 Enum_Battle.Camp = {
    CampSelf = 1,

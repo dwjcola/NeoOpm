@@ -57,14 +57,18 @@ end
 function PVE_Config_Battle_Manager:initEntity()
     local data = self._battleData
 
-    local func = function(teamMap,type)
-        for i, v in pairs(teamMap) do
+    local func = function(teamData,type)
+        for i, v in pairs(teamData.teamMap) do
             local index = i
             self._entityId = self._entityId + 1
 
             if self._list_logicCharacter[type] == nil then
                 self._list_logicCharacter[type] = {}
             end
+
+            -- todo 处理数据
+            --
+            local pamras = BattleUtils:handlerCharacterData(type,v,teamData,index, self._entityId)
             self._list_logicCharacter[type][index] = BattleCharacter:new(type,index,self,v, self._entityId )
             if not self._isOnlyLogic then
 
@@ -85,9 +89,9 @@ function PVE_Config_Battle_Manager:initEntity()
 
     end
 
-    func(data.team_self.teamMap,Enum_Battle.Camp.CampSelf)
+    func(data.team_self,Enum_Battle.Camp.CampSelf)
 
-    func(data.team_enemy.teamMap,Enum_Battle.Camp.CampEnemy)
+    func(data.team_enemy,Enum_Battle.Camp.CampEnemy)
 
 end
 

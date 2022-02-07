@@ -22,7 +22,7 @@ function BattleCharacter:initialize(campType,index,battleManager,heroData,uid)
     self._heroUid = heroData.heroUid
 
     self._uid = uid
-    --BattleLog.error( self._heroId)
+    Logger.ErrorTable( self._heroData)
 
 
 end

@@ -5,14 +5,24 @@
 ---@class SkillData
 local SkillData = SimpleClassUtil:class()
 
-function SkillData:initialize(con)
-    self._skillType = Enum_Battle.SkillTag.Skill_1
+function SkillData:initialize(type,con)
+    self:initParams(type,con)
+end
+
+function SkillData:initParams(type,con)
+    -- 大招 还是 普攻 还是 普通技能
+    self._skillType = type
     -- 攻击距离
-    self._skill_r = 1
+    self._skill_r = con
     -- 上次释放时间
     self._skill_time_play = 0
     -- 技能cd
     self._skill_time_cd = 0
+    -- 是否被动
+    self._isPassive = con.type == Enum_Battle.SkillType.Skill_passive
+
+
+
 end
 
 return SkillData

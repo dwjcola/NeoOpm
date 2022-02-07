@@ -72,6 +72,10 @@ function UIBattleHeadItem:updateTopPos()
 
 end
 
+function UIBattleHeadItem:update()
+    self:updateTopPos()
+end
+
 function UIBattleHeadItem:initPosition(rectPos)
     rectPos.y = rectPos.y - 50
     self._rect_root.anchoredPosition = rectPos

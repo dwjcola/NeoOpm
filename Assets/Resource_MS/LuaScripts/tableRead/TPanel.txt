@@ -163,7 +163,7 @@ TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowM
 ['UISetUpTeam']={Id='UISetUpTeam',AssetName='Battle/UISetUpTeam',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Battle',LuaName='UISetUpTeamLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 ['UIBattleMain']={Id='UIBattleMain',AssetName='Battle/UIBattleMain',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Battle',LuaName='UIBattleMainLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 ['ServerListUI']={Id='ServerListUI',AssetName='Login/ServerListUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='ServerListUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
-['MainUI']={Id='MainUI',AssetName='Main/MainUI',UIGroupName='Main',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Main',LuaName='MainUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
+['MainUI']={Id='MainUI',AssetName='Main/MainUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Main',LuaName='MainUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 ['ServerListUI']={Id='ServerListUI',AssetName='Login/ServerListUI',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='ServerListUILUA',Mask=false,ShowHead=false,ShowRes=false,UITween=0,},
 ['UICoinItem']={Id='UICoinItem',AssetName="",UIGroupName="",AllowMultiInstance=true,PauseCoveredUIForm=false,LuaPath='UI/Coin',LuaName='UICoinItemLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 });

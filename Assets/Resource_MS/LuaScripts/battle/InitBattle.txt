@@ -19,8 +19,12 @@ BattleLoaderManager = require_path("BattleLoaderManager","battle/manager/BattleL
 
 
 BattleUtils = require_path("BattleUtils","battle/utils/BattleUtils")
+ConfigUtils = require_path("ConfigUtils","battle/utils/ConfigUtils")
 BattleMathUtils = require_path("BattleMathUtils","battle/utils/BattleMathUtils")
-require_path("BattleUtils","battle/behaviourTree/Init_Bt")
+
+
+require_path("Init_Bt","battle/behaviourTree/Init_Bt")
+
 
 
 PVE_Config_Battle_Manager = require_path("PVE_Config_Battle_Manager","battle/manager/PVE_Config_Battle_Manager")

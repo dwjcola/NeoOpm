@@ -25,7 +25,7 @@ MonoBehaviour:
     m_IsDefault: 1
     m_Capabilities: 7
   m_UserSelectedRegistryName: 
-  m_UserAddingNewScopedRegistry: 0
+  m_UserAddingNewScopedRegistry: 1
   m_RegistryInfoDraft:
     m_ErrorMessage: 
     m_Original:

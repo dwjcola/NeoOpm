@@ -43,10 +43,14 @@ end
 function BattleMainNode:handleBattleData(rep,userData)
    self._data = BattleUtils:getTestBattleData()
    self._data.team_self.teamMap = BattleProxy:getBattleTeamMap(self._battleTimes).team_self.teamMap
-   local battleTeam = BattleTeam:new(self._battleTimes)
-   battleTeam:setLoadData(self._data)
-   battleTeam:tryLoad(function()
-      BattleProxy:OpenBattleMainView({battleData = self._data,battleTeam = battleTeam })
+   self._battleTeam = BattleTeam:new(self._battleTimes)
+   self._battleTeam:setLoadData(self._data)
+   self._battleTeam:tryLoad(function()
+      BattleProxy:OpenBattleMainView({battleData = self._data,battleTeam =  self._battleTeam })
+
+      -- todo 开始战斗 横幅
+      -- todo 开始战斗得其他准备工作
+      self:toStartBattle(false)
    end)
 
    --self:toStartBattle(false)
@@ -56,7 +60,7 @@ end
 
 function BattleMainNode:toStartBattle(isServer)
 
-   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer,self:getBattleTeam())
+   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer, self._battleTeam)
    self._battleManager:start()
    self:startScheduler()
 end

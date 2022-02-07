@@ -14,7 +14,7 @@ function UIBattleSkillItem:initialize(transform,battleTeam)
 end
 
 function UIBattleSkillItem:initComponent(transform)
-
+    self._go_root = transform:Find("m_go_root").gameObject
     self._img_choose = transform:Find("m_go_root/m_img_choose"):GetComponent("Image")
     self._img_img = transform:Find("m_go_root/m_img_choose"):GetComponent("Image")
     self._img_choose = transform:Find("m_go_root/m_img_choose"):GetComponent("Image")
@@ -29,7 +29,11 @@ function UIBattleSkillItem:setData(posIndex,data)
     self:setActive(true)
 end
 
-
+function UIBattleSkillItem:setSkillConjure(isConjure)
+    self._isCanConjure = isConjure
+    self._img_choose:SetActiveVirtual(isConjure)
+    self._go_root.transform.localPosition = isConjure and Vector3_CS(0,10,0) or Vector3_CS.zero
+end
 
 function UIBattleSkillItem:setActive(isActive)
     self._isActive = isActive

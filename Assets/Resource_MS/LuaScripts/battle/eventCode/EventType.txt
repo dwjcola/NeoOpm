@@ -7,6 +7,30 @@
 local EventType = {
     ---diff event type
     Diff_Lv = "",               --等级
+
+
+    Event_CloseSetUpView = "",
+
+    Event_GoBattle = "",     --
+
+    Event_GetBattleData = "", -- 获取战斗数据
+
+    Event_BigSkillCanRelease = "",
+    Event_BigSkillCannotRelease = "",
+    Event_Battle_Died = "",
+    Event_Battle_Be_Attack = "",
+
+    Event_Battle_Be_Attack_from_newEnemy = "", -- 这个人 不在攻击我得列表里
+    Event_Battle_EnmityChange = "",
+    Event_Battle_Render_SwitchAni = "",   -- 切换动画
+    Event_Battle_Render_Move_Line = "",   -- 直线移动
+    Event_Battle_Render_Turn = "",        -- 转向
+
+    Event_Battle_Render_Debug_GizmosCircle = "",   -- GizmosCircle
+
+    Event_Battle_Attack_Hp = "",
+
+    Event_Battle_TeamLoadFinish = "", -- TeamModelLoadEnd
 }
 
 --给所有的Event赋值

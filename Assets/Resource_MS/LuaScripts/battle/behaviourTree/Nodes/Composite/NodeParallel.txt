@@ -11,22 +11,22 @@
 ---       如果没有节点  返回 Fail，
 ---       如果所有节点都返回 Success 向父节点返回 Success 否则向父节点返回 Running
 ---
-
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeParallel : NodeComposite
 local NodeParallel = SimpleClassUtil:class(NodeComposite)
 
 function NodeParallel:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Parallel)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.Parallel)
     self._runningNode = 0
 end
 
 function NodeParallel:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
     self._runningNode = 0
 end
 
 function NodeParallel:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     for index, nodeChild in ipairs(self:getChildes()) do
         local value =  1 << index
         if (self._runningNode & value) > 0 then
@@ -35,13 +35,14 @@ function NodeParallel:onExit()
     end
 end
 
-function NodeParallel:execute()
+function NodeParallel:execute(blackboard,contextManager)
+    self:log_enter("NodeParallel    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local successCount = 0
     local list_childes = self:getChildes() or {}
     for index, nodeChild in ipairs(list_childes) do
         nodeChild:prePosition()
-        resultType = nodeChild:execute()
+        resultType = nodeChild:execute(blackboard,contextManager)
         nodeChild:postPosition(resultType)
         if resultType == Enum_BT.Node_ResultType.Fail then
             break
@@ -56,7 +57,7 @@ function NodeParallel:execute()
     if resultType ~= Enum_BT.Node_ResultType.Fail then
         resultType = (successCount >= #list_childes) and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Running
     end
-
+    self:log("NodeParallel   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 return NodeParallel

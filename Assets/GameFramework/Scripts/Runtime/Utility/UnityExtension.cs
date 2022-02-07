@@ -343,5 +343,56 @@ public static class UnityExtension
         }
     }
 
+
+    private const float GIZMO_DISK_THICKNESS = 0.01f;
+    public static void DrawGizmoDisk(this Transform t, float radius,Color color )
+    {
+        Matrix4x4 oldMatrix = Gizmos.matrix;
+        Gizmos.color = color; //this is gray, could be anything
+        Gizmos.matrix = Matrix4x4.TRS(t.position, t.rotation, new Vector3(1, GIZMO_DISK_THICKNESS, 1));
+        Gizmos.DrawSphere(Vector3.zero, radius);
+        Gizmos.matrix = oldMatrix;
+    }
+    public static void SetActiveVirtual(this GameObject go, bool bVisible)
+    {
+        if (bVisible != go.activeSelf)
+            go.SetActive(bVisible);
+    }
+    public static void DrawGizmoCircleLine(this Transform t, float radius, Color color, float m_Theta = 0.01f)
+    {
+        if (radius <= 0) return;
+        if (t == null) return;
+        if (m_Theta < 0.0001f) m_Theta = 0.0001f;
+        // 设置矩阵
+        Matrix4x4 defaultMatrix = Gizmos.matrix;
+        Gizmos.matrix = t.localToWorldMatrix;
+        // 设置颜色
+        Color defaultColor = Gizmos.color;
+        Gizmos.color = color;
+        // 绘制圆环
+        Vector3 beginPoint = Vector3.zero;
+        Vector3 firstPoint = Vector3.zero;
+        for (float theta = 0; theta < 2 * Mathf.PI; theta += m_Theta)
+        {
+            float x = radius * Mathf.Cos(theta);
+            float z = radius * Mathf.Sin(theta);
+            Vector3 endPoint = new Vector3(x, 0, z);
+            if (theta == 0)
+            {
+                firstPoint = endPoint;
+            }
+            else
+            {
+                Gizmos.DrawLine(beginPoint, endPoint);
+            }
+            beginPoint = endPoint;
+        }
+        // 绘制最后一条线段
+        Gizmos.DrawLine(firstPoint, beginPoint);
+        // 恢复默认颜色
+        Gizmos.color = defaultColor;
+        // 恢复默认矩阵
+        Gizmos.matrix = defaultMatrix;
+    }
     #endregion Transform
 }

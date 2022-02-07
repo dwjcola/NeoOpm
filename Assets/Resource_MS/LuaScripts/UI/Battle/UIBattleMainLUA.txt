@@ -1,0 +1,127 @@
+--界面
+UIBattleMainLUA=LUAUIBase:new({
+	
+	});
+
+function UIBattleMainLUA:Open(params)
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init(params);
+end
+function UIBattleMainLUA:Init(params)
+	self:initParams(params)
+	self:initComponent()
+	self:initHeadList()
+	self:initSkillList()
+	self:startUpdate()
+end
+
+function UIBattleMainLUA:initParams(params)
+	self._battleTeam = params.battleTeam
+    self._team_self = params.battleData.team_self
+	self._team_enemy = params.battleData.team_enemy
+	-- todo 映射表 映射entity 对应得血条和底部技能item得Index
+	self._map_index = {}
+	self._list_headItem = {}
+	self._list_skillOItem = {}
+end
+
+function UIBattleMainLUA:initComponent()
+	self._rect_modelRoot = self.go_modelRoot.transform:GetComponent("RectTransform")
+end
+--ui组件添加事件
+function UIBattleMainLUA:AddUIEventListener( )
+	self:AddUIEvent("onclick", self.btn_pause.gameObject, self.onPauseClick)
+	self:AddUIEvent("onclick", self.btn_automatic.gameObject, self.onAutomaticClick)
+	self:AddUIEvent("onclick", self.btn_speed.gameObject, self.onSpeedClick)
+end
+--模块添加全局事件
+function UIBattleMainLUA:AddEventListener( )
+	-- self:AddEvent("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function UIBattleMainLUA:RemoveEventListener( )
+	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+end
+function UIBattleMainLUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("UIBattleMain")
+		end
+	end
+end
+function UIBattleMainLUA:OnDestroy()
+	self:RemoveEventListener()
+	self:stopSchedule()
+
+	UIBattleMainLUA = nil;
+end
+
+function UIBattleMainLUA:onPauseClick()
+	Logger.log("onPauseClick  ")
+end
+
+function UIBattleMainLUA:onAutomaticClick()
+	Logger.log("onAutomaticClick  ")
+end
+
+function UIBattleMainLUA:onSpeedClick()
+	Logger.log("onSpeedClick  ")
+end
+
+function UIBattleMainLUA:initHeadList()
+	local func = function(type,teamMap)
+		self._list_headItem[type] = self._list_headItem[type] or {}
+		local tmpIndex = 1
+		for pos, data in pairs(teamMap) do
+			if self._list_headItem[type][tmpIndex] == nil then
+				local obj = UIUtils:createItem(self.go_heroItem,self.go_modelRoot)
+				local headItem = UIBattleHeadItem:new(obj.transform,self._battleTeam,self._rect_modelRoot)
+				self._list_headItem[type][tmpIndex] = headItem
+			end
+			self._list_headItem[type][tmpIndex]:setData(type,pos,data)
+		end
+	end
+	func(Enum.SetUpTeamEnum.TeamPos.left,self._team_self.teamMap)
+	func(Enum.SetUpTeamEnum.TeamPos.right,self._team_enemy.teamMap)
+end
+
+function UIBattleMainLUA:initSkillList()
+	self._skill_list = self._skill_list or {}
+	local tmpIndex = 1
+	for pos, data in pairs(self._team_self.teamMap) do
+		if self._skill_list[tmpIndex] == nil then
+			local obj = UIUtils:createItem(self.go_skillHeadItem,self.go_skillroot)
+			local skillItem = UIBattleSkillItem:new(obj.transform,self._battleTeam)
+			self._skill_list[tmpIndex] = skillItem
+		end
+		self._skill_list[tmpIndex]:setData(pos,data)
+	end
+end
+
+function UIBattleMainLUA:startUpdate()
+	self._scheduleUpdate = TimerScheduler:schedulePerFrame(function()
+		self:update()
+	end)
+end
+
+function UIBattleMainLUA:stopSchedule()
+	if self._scheduleUpdate then
+		TimerScheduler:removeSchedule(self._scheduleUpdate)
+		self._scheduleUpdate = nil
+	end
+end
+
+function UIBattleMainLUA:update()
+	for type, itemList in pairs(self._list_headItem ) do
+		for posIndex, item in pairs(itemList) do
+			if item and item._isActive == true and item.update then
+				item:update()
+			end
+		end
+	end
+end
+
+return UIBattleMainLUA

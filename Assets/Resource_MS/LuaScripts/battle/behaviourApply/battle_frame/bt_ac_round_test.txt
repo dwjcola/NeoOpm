@@ -7,7 +7,7 @@
 local bt_ac_round_test = SimpleClassUtil:class(IAction)
 
 function bt_ac_round_test:doAction()
-    Logger.Error("战斗回合 进行中 ！！！")
+    BattleLog.error("战斗回合 进行中 ！！！")
     return Enum_BT.Node_ResultType.Running
 end
 

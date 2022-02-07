@@ -29,6 +29,7 @@ function NodeBase:initAttribute()
    --- 节点状态
    ---@type  Enum_BT.Node_Status
    self._nodeStatus =  Enum_BT.Node_Status.Ready
+
 end
 
 function NodeBase:setNodeType(nodeType)
@@ -83,7 +84,7 @@ function NodeBase:onEnter()
 
 end
 
-function NodeBase:execute()
+function NodeBase:execute(blackboard,contextManager)
    return Enum_BT.ResultType.Fail
 end
 
@@ -103,6 +104,13 @@ function NodeBase:postPosition(resultType)
       self:setNodeStatus( Enum_BT.Node_Status.Ready)
       self:onExit()
    end
+end
+function NodeBase:log_enter(...)
+   --BattleLog.warning(" ########  enter:  ",...)
+end
+
+function NodeBase:log(...)
+   BattleLog.warning(" ########  result:  ",...)
 end
 
 return NodeBase

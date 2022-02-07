@@ -5,24 +5,24 @@
 ---  随机节点(组合节点)
 ---
 
-
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeRandom : NodeComposite
 local NodeRandom = SimpleClassUtil:class(NodeComposite)
 
 function NodeRandom:initialize(nodeType)
-    self.super:initialize(nodeType)
+    NodeComposite.initialize(self,nodeType)
     self._randomCount = 0
     self._arr_ids = nil
 
 end
 
 function NodeRandom:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
     self._randomCount = 0
 end
 
 function NodeRandom:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     self._randomCount = 0
 end
 

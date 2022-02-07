@@ -7,7 +7,7 @@
 local bt_ac_ui_start_battle = SimpleClassUtil:class(IAction)
 
 function bt_ac_ui_start_battle:doAction()
-    Logger.Error("战斗开始 ！！！")
+    BattleLog.error("战斗开始 ！！！")
     return Enum_BT.Node_ResultType.Success
 end
 

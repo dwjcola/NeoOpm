@@ -37,7 +37,7 @@ namespace NeoOPM
           
             m_GoToWorld = false;
 
-            LC.CallLuaFunc("BattleScene", "enter");
+           // LC.CallLuaFunc("BattleScene", "enter");
 
         }
 

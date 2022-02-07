@@ -12,6 +12,7 @@ Vector3 = require_path("Mathf", "battle/base/math3D/Vector3")
 
 ------------------------------- container ------------------------------------------
 IndexSet = require_path("IndexSet","battle/Container/IndexSet")
+Queue = require_path("IndexSet","battle/Container/Queue")
 
 
 

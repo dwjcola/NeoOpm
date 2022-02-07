@@ -24,18 +24,20 @@ function LoginFormLUA:Init(param)
 end
 function LoginFormLUA:ConnectLogin()
 
-	if self.input.text == nil or self.input.text == "" then
-		self:Error("请输入账号")
-	else
-		if self.ProcedureLogin ~= nil then
-			local jsData = {}
-			--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
-			jsData.acc = self.input.text;
-			self:Log("acc->"..jsData.acc)
-			CS.NeoOPM.PlayerPreferenceData.LastAccName = self.input.text
-			self.ProcedureLogin:GetServerInfo(jsData);
-		end
-	end
+	--if self.input.text == nil or self.input.text == "" then
+	--	self:Error("请输入账号")
+	--else
+	--	if self.ProcedureLogin ~= nil then
+	--		local jsData = {}
+	--		--local accId = CS.UnityEngine.SystemInfo.deviceUniqueIdentifier;
+	--		jsData.acc = self.input.text;
+	--		self:Log("acc->"..jsData.acc)
+	--		CS.NeoOPM.PlayerPreferenceData.LastAccName = self.input.text
+	--		self.ProcedureLogin:GetServerInfo(jsData);
+	--	end
+	--end
+
+	self:EnterServerBack()
 end
 function LoginFormLUA:Login()
 

@@ -8,22 +8,22 @@
 ---      当前执行节点返回 Fail，退出当前节点继续执行下一个节点
 ---      当前执行节点返回 Running, 记录当前节点，向父节点返回 Running，下次执行直接从该节点开始
 ---      如果所有节点都返回Fail，执行完所有节点后向父节点返回 Fail
-
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeSelect : NodeComposite
 local NodeSelect = SimpleClassUtil:class(NodeComposite)
 
 function NodeSelect:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Select)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.Select)
     ---@type NodeBase
     self._lastRunningNode = nil
 end
 
 function NodeSelect:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
 end
 
 function NodeSelect:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -31,7 +31,8 @@ function NodeSelect:onExit()
 end
 
 
-function NodeSelect:execute()
+function NodeSelect:execute(blackboard,contextManager)
+    self:log_enter("NodeSelect    Entity: ",self:getEntityId())
     local index = 1
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -44,7 +45,7 @@ function NodeSelect:execute()
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -56,7 +57,7 @@ function NodeSelect:execute()
             break
         end
     end
-
+    self:log("NodeSelect   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

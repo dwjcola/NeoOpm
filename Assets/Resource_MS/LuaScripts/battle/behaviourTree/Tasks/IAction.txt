@@ -10,8 +10,20 @@ function IAction:initialize()
 
 end
 
-function IAction:doAction()
+function IAction:initData(data)
+   self._value = data
+end
+
+function IAction:doAction(blackBoard,contextManager)
     return Enum_BT.Node_ResultType.Success
+end
+
+function IAction:log_enter(...)
+    --BattleLog.warning(" ########  enter:  ",...)
+end
+
+function IAction:log(...)
+    BattleLog.warning(" ########  result:  ",...)
 end
 
 return IAction

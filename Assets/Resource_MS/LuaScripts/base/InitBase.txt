@@ -4,9 +4,10 @@
 --- DateTime: 2021/11/25 15:05
 ---
 GameStatic = require("GameStatic")
-
+class = require("MiddleClass")
 SimpleClassUtil = require("SimpleClassUtil")
 
+require("Enum")
 require("CSImport")
 
 require("Logger")
@@ -17,6 +18,7 @@ require("LUAUIBase")
 LUAUIBase:init()
 
 require("LUADefine")
+
 --网络
 PomeloCLUA = require("PomeloCLUA")
 PomeloCLUA:Init()

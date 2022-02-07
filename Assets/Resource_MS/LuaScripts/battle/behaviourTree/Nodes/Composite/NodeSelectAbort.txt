@@ -9,21 +9,22 @@
 ---      当前执行节点返回 Running, 记录当前节点，向父节点返回 Running，下次执行直接从该节点开始
 ---      如果所有节点都返回Fail，执行完所有节点后向父节点返回 Fail
 --- 注意哈 这里 得子节点 第一个节点 需要是条件节点  这里相当于是 做了 ifelse
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeSelectAbort : NodeComposite
 local NodeSelectAbort = SimpleClassUtil:class(NodeComposite)
 
 function NodeSelectAbort:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Select)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.SelectAbort)
     ---@type NodeBase
     self._lastRunningNode = nil
 end
 
 function NodeSelectAbort:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
 end
 
 function NodeSelectAbort:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -31,7 +32,8 @@ function NodeSelectAbort:onExit()
 end
 
 
-function NodeSelectAbort:execute()
+function NodeSelectAbort:execute(blackboard,contextManager)
+    self:log_enter("NodeSelectAbort    Entity: ",self:getEntityId())
     local index = #self:getChildes() + 1
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -40,12 +42,12 @@ function NodeSelectAbort:execute()
     local resultType = Enum_BT.Node_ResultType.Fail
 
     local count = #self:getChildes()
-     count = count < index and count or index
+    count = count < index and count or index
     for i = 1, count do
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -69,7 +71,7 @@ function NodeSelectAbort:execute()
             end
         end
     end
-
+    self:log("NodeSelectAbort   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

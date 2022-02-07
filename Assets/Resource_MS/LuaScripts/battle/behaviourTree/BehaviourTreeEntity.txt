@@ -6,20 +6,43 @@
 ---@class BehaviourTreeEntity:MiddleClass
 local BehaviourTreeEntity = SimpleClassUtil:class()
 
-function BehaviourTreeEntity:initialize(treeData,blackboard,contextManager)
-   ---@type Blackboard
-   self._blackboard = blackboard
+function BehaviourTreeEntity:initialize(treeData,data,agent)
+    ---@type BlackBoard_BattleBase
+    self._blackboard = BlackBoard_BattleBase:new()
+    self:initBlackBoard(data)
+    self._agent = agent
+    self._tree_end = false
 
    ---@type NodeBase
-   self._rootNode = self:initTree(treeData,blackboard,contextManager)
+   self._rootNode = self:initTree(treeData,self._blackboard,agent)
 
-   self._contextManager = contextManager
+end
+
+function BehaviourTreeEntity:initBlackBoard(data)
+    for i, v in pairs(data) do
+        self._blackboard[i] = v
+    end
 end
 
 function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
-    self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
+    --self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
+    self._rootNode = CreateUtils:createTree(self._blackboard._heroId,{},{})
+
     if self._rootNode == nil then
-        Logger.Error("行为树 初始化失败")
+        BattleLog.error("行为树 初始化失败")
+    end
+    --self:logTree(self._rootNode," ")
+    return self._rootNode
+end
+---@param rootNode NodeBase
+function BehaviourTreeEntity:logTree(rootNode,strHead)
+    if rootNode and rootNode.getEntityId and rootNode.getNodeType then
+        BattleLog.error("\n" .. strHead  ,rootNode:getEntityId(),"  ",rootNode:getNodeType())
+        if rootNode._list_nodeChild and #rootNode._list_nodeChild > 0 then
+            for i, v in ipairs(rootNode._list_nodeChild) do
+                self:logTree(v,strHead ..  "   ")
+            end
+        end
     end
 end
 
@@ -31,17 +54,34 @@ function BehaviourTreeEntity:getRootNode()
     return self._rootNode
 end
 
-function BehaviourTreeEntity:execute()
-    if self._rootNode then
+function BehaviourTreeEntity:execute(dt)
+    if self._rootNode and not self._tree_end then
         self._rootNode:prePosition()
-        local  resultType = self._rootNode:execute()
+        local  resultType = self._rootNode:execute(self._blackboard, self._agent)
         self._rootNode:postPosition(resultType)
+
+        self:postPosition(resultType)
     end
+end
+
+function BehaviourTreeEntity:postPosition(resultType)
+    if resultType ~= Enum_BT.Node_ResultType.Running then
+        self:onExit()
+    end
+end
+
+function BehaviourTreeEntity:onExit()
+    self._tree_end = true
+end
+
+function BehaviourTreeEntity:reset()
+    self._tree_end = false
 end
 
 function BehaviourTreeEntity:clear()
     if self._rootNode then
         self._rootNode:postPosition(Enum_BT.Node_ResultType.Fail)
     end
+    self._tree_end = true
 end
 return BehaviourTreeEntity

@@ -3,6 +3,7 @@ Author: DWJ
 Date: 2021-11-18
 Description:所有UI的base类
 --]]
+---@class LUAUIBase
 LUAUIBase={
 };
 function LUAUIBase:new (o)
@@ -47,6 +48,22 @@ end
 function LUAUIBase:GetUILogicByKey(uiKey)
   return CS.LC.GetUILogicByKey(uiKey);
 end
+---@alias LUAUIBase.UIEventType
+LUAUIBase.UIEventType = {
+  OnClick = "onclick",
+  onDown = "onDown",
+  onDoubleClick = "onDoubleClick",
+  onUp = "onUp",
+  onPress = "onPress",
+  onExit = "onExit",
+  OnDragBegin = "OnDragBegin",
+  OnDragIng = "OnDragFuc",
+  OnDragEnd = "OnDragEnd",
+
+  OnDragBeginOMP = "onBeginDragOPM",   -- 回调带 eventData
+  OnDragIngOMP = "onDragOPM",
+  onEndDragOPM = "onEndDragOPM",
+}
  --添加UI事件
 function LUAUIBase:AddUIEvent(eventType,gameObject,callBack)
     self.unregisterPointEventGO = self.unregisterPointEventGO or {}
@@ -221,9 +238,6 @@ function LUAUIBase:SetSingleSpriteByFolderPath(image,folderPath,name,native)
   end
   CS.LC.SetSingleSpriteByFolderPath(image,folderPath,name,n)
 end
-
-
-
 
 function LUAUIBase:SetImageSprite(image,atls,name,native)
   local n = native

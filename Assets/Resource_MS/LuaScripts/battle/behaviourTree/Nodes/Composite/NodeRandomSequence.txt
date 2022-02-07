@@ -10,22 +10,22 @@
 ---      当前执行节点返回 Running, 记录当前节点 向父节点返回 Running，下次执行直接从该节点开始
 ---      如果所有节点都返回 Success 向父节点返回 Success
 
-
+--local NodeRandom = require_path("NodeRandom","battle/behaviourTree/Nodes/Composite/NodeRandom")
 ---@class NodeRandomSequence : NodeRandom
 local NodeRandomSequence = SimpleClassUtil:class(NodeRandom)
 
 function NodeRandomSequence:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Random_Sequence)
+    NodeRandom.initialize(self,Enum_BT.Node_Type.Random_Sequence)
     ---@type NodeBase
     self._lastRunningNode = nil
 end
 
 function NodeRandomSequence:onEnter()
-    self.super:onEnter()
+    NodeRandom.onEnter(self)
 end
 
 function NodeRandomSequence:onExit()
-    self.super:onExit()
+    NodeRandom.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -33,7 +33,8 @@ function NodeRandomSequence:onExit()
 end
 
 
-function NodeRandomSequence:execute()
+function NodeRandomSequence:execute(blackboard,contextManager)
+    self:log_enter("NodeRandomSequence    Entity: ",self:getEntityId())
     local index = 0
     if self._lastRunningNode then
         index = self._lastRunningNode:getNodeIndex()
@@ -49,7 +50,7 @@ function NodeRandomSequence:execute()
         index = 0
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then
@@ -61,7 +62,7 @@ function NodeRandomSequence:execute()
             break
         end
     end
-
+    self:log("NodeRandomSequence   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

@@ -7,7 +7,7 @@
 local bt_ac_enter_scene_ani = SimpleClassUtil:class(IAction)
 
 function bt_ac_enter_scene_ani:doAction()
-    Logger.Error("播放日常动画！！！")
+    BattleLog.error("播放日常动画！！！")
     return Enum_BT.Node_ResultType.Success
 end
 

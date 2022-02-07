@@ -6,9 +6,15 @@
 
 ---@class Logger
 Logger = {}
+local unityLog = CS.UnityEngine.Debug.Log
+local unityWarn = CS.UnityEngine.Debug.LogWarning
+local unityError = CS.UnityEngine.Debug.LogError
+
+
 
 local isLogEnable = true
-local isUserUnityLog = false
+
+local isUserUnityLog = true
 
 local MAX_TABLE_DEEP = 8
 
@@ -21,8 +27,12 @@ function Logger.Log(...)
     do
         temp = temp..tostring(v)
     end
-    --temp = temp.."\n" .. debug.traceback()
-    LC.Log(temp)
+    temp = temp.."\n" .. debug.traceback()
+    if isUserUnityLog then
+        unityLog(temp)
+        return
+    end
+    --LC.Log(temp)
 end
 
 function Logger.Error(...)
@@ -38,8 +48,12 @@ function Logger.Error(...)
     do
         temp = temp ..tostring(v)
     end
-    --temp = temp.."\n" .. debug.traceback()
-    LC.Error(temp)
+    temp = temp.."\n" .. debug.traceback()
+    if isUserUnityLog then
+        unityError(temp)
+        return
+    end
+    --LC.Error(temp)
 end
 
 function Logger.Warning(...)
@@ -53,8 +67,12 @@ function Logger.Warning(...)
     do
         temp = temp ..tostring(v)
     end
-    --temp = temp.."\n" .. debug.traceback()
-    LC.Warning(temp)
+    temp = temp.."\n" .. debug.traceback()
+    if isUserUnityLog then
+        unityWarn(temp)
+        return
+    end
+    --LC.Warning(temp)
 end
 
 
@@ -113,9 +131,9 @@ end
         -- 打印{
         str = string.format("%s%s{ ", str, ex)
     end
-
+    tbl = tbl or {}
     -- 如果tbl非空
-    if next(tbl) then
+    if tbl and next(tbl) then
         local isFull = layer >= MAX_TABLE_DEEP
         for k, v in pairs(tbl) do
             if type(v) ~= "table" or isFull then

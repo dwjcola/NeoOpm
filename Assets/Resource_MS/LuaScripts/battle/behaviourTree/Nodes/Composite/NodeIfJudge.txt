@@ -14,11 +14,12 @@
 ---      或者
 ---      第一个节点返回 Fail 执行第二个节点
 ---      第一个节点返回 Success 执行第三个节点
+--local NodeComposite = require_path("NodeComposite","battle/behaviourTree/Nodes/AbstractNode/NodeComposite")
 ---@class NodeIfJudge : NodeComposite
 local NodeIfJudge = SimpleClassUtil:class(NodeComposite)
 
 function NodeIfJudge:initialize()
-    self.super:initialize(Enum_BT.Node_Type.IF_Judge)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.IF_Judge)
     ---@type NodeBase
     self._lastRunningNode = nil
     ---@type IfJudgeData[]
@@ -26,11 +27,11 @@ function NodeIfJudge:initialize()
 end
 
 function NodeIfJudge:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
 end
 
 function NodeIfJudge:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -38,30 +39,38 @@ function NodeIfJudge:onExit()
 end
 
 
-function NodeIfJudge:execute()
+function NodeIfJudge:execute(blackboard,contextManager)
+    self:log_enter("NodeIfJudge    Entity: ",self:getEntityId())
     if self:getChildesCount() <= 0 then
         return Enum_BT.Node_ResultType.Fail
     end
-
     local resultType = Enum_BT.Node_ResultType.Fail
 
     local ifNode = self:getChildesByIndex(1)
-    resultType = self:executeNode(ifNode)
+    resultType = self:executeNode(ifNode,blackboard,contextManager)
 
-    local nodeBase = self:getBaseNode(resultType)
-    if  self._lastRunningNode and  self._lastRunningNode:getNodeId() ~= nodeBase:getNodeId() then
-        self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
-        self._lastRunningNode = nil
+    --local nodeBase = self:getBaseNode(resultType)
+
+    local nodeBase = resultType == Enum_BT.Node_ResultType.Success and self:getChildesByIndex(2) or self:getChildesByIndex(3)
+
+    if nodeBase then
+        if  self._lastRunningNode and  self._lastRunningNode:getNodeId() ~= nodeBase:getNodeId() then
+            self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
+            self._lastRunningNode = nil
+        end
+        resultType = self:executeNode(nodeBase,blackboard,contextManager)
+    else
+        resultType = Enum_BT.Node_ResultType.Fail
     end
-    resultType = self:executeNode(nodeBase)
+    self:log("NodeIfJudge    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 
-function NodeIfJudge:executeNode(nodeBase)
+function NodeIfJudge:executeNode(nodeBase,blackboard,contextManager)
     local resultType = Enum_BT.Node_ResultType.Fail
     if nodeBase then
         nodeBase:prePosition()
-        resultType = nodeBase:execute()
+        resultType = nodeBase:execute(blackboard,contextManager)
         nodeBase:postPosition(resultType)
     end
     if resultType ==  Enum_BT.Node_ResultType.Running then

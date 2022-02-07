@@ -9,17 +9,17 @@
 local NodeSubTree = SimpleClassUtil:class(NodeComposite)
 
 function NodeSubTree:initialize()
-    self.super:initialize(Enum_BT.Node_Type.Sub_Tree)
+    NodeComposite.initialize(self,Enum_BT.Node_Type.Sub_Tree)
     ---@type NodeBase
     self._lastRunningNode = nil
 end
 
 function NodeSubTree:onEnter()
-    self.super:onEnter()
+    NodeComposite.onEnter(self)
 end
 
 function NodeSubTree:onExit()
-    self.super:onExit()
+    NodeComposite.onExit(self)
     if self._lastRunningNode then
         self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
         self._lastRunningNode = nil
@@ -27,21 +27,21 @@ function NodeSubTree:onExit()
 end
 
 
-function NodeSubTree:execute()
-
+function NodeSubTree:execute(blackboard,contextManager)
+    self:log_enter("NodeSubTree    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self:getChildesCount() <= 0 then
         return resultType
     end
     local nodeBase = self:getChildesByIndex(1)
     nodeBase:prePosition()
-    resultType = nodeBase:execute()
+    resultType = nodeBase:execute(blackboard,contextManager)
     nodeBase:postPosition(resultType)
 
     if resultType == Enum_BT.Node_ResultType.Running then
         self._lastRunningNode = nodeBase
     end
-
+    self:log("NodeSubTree    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType
 end
 

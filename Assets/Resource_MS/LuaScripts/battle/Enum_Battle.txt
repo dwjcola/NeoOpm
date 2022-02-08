@@ -6,7 +6,6 @@
 Enum_Battle = {}
 
 --- 战斗类型
----@class Enum_Battle.BattleType
 Enum_Battle.BattleType = {
     PVE_C = 1,  --- 玩家对数值选手
     PVP_E = 2,  --- 玩家对玩家选手 挂机
@@ -14,7 +13,6 @@ Enum_Battle.BattleType = {
 }
 
 --- 战斗资源类型
----@class Enum_Battle.BattleAssetType
 Enum_Battle.BattleAssetType = {
     Scene = 1,  --- 场景
     Model = 2,  --- 角色模型
@@ -22,19 +20,16 @@ Enum_Battle.BattleAssetType = {
 }
 
 --- 战斗实例
----@class Enum_Battle.BattleEntityType
 Enum_Battle.BattleEntityType = {
     MainBattle = 1,  --- 主战斗
 }
 
 --- 布阵类型
----@class Enum_Battle.BattleTeamType
 Enum_Battle.BattleTeamType = {
     MainTeam = 1,  --- 主战斗类型
 }
 
 --- 技能目标选择类型
----@class Enum_Battle.SkillTargetType
 Enum_Battle.SkillTargetType = {
     FacePos  = 1,         --- 对位得
     XiangQianShiFang = 2, --- 向前释放得（没懂）
@@ -92,3 +87,20 @@ Enum_Battle.Orientation = {
     Right = 2,      -- 朝右
 }
 
+--- 战斗技能 释放的条件判断 类型
+Enum_Battle.SkillLaunchRangeType = {
+    Passive = -1,          -- 被动的
+    JumpRange = 0,         -- 跳过判断 不需要 判断
+    Roundness = 1,         -- 圆形
+    FullScreen = 2,        -- 全屏
+    Rectangle_forward = 3, -- 前方矩形
+    Sector_forward = 4,    -- 前方扇形
+
+}
+--- 技能释放目标选择类型
+Enum_Battle.SkillLaunchTargetType = {
+    Enemy  = 1,         --- 敌人
+    ZZSelf = 2,         --- 自己
+    FriendNoSelf = 3,   --- 友军不含自己
+    AllFriend = 4,      --- 友军含自己
+}

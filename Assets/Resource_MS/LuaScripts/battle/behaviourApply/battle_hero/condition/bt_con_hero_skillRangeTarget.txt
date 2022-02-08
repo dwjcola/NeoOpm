@@ -6,8 +6,7 @@
 local bt_con_hero_skillRangeTarget = SimpleClassUtil:class(ICondition)
 
 function bt_con_hero_skillRangeTarget:initData(data)
-    ---@type Enum_Battle.SkillTargetType
-    self._skillType = data._skillType
+
 
     --if self._skillType == Enum_Battle.SkillTargetType.Directivity then
     --     self._dir_targetType =

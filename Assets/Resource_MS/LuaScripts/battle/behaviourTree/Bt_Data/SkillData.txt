@@ -12,16 +12,46 @@ end
 function SkillData:initParams(type,con)
     -- 大招 还是 普攻 还是 普通技能
     self._skillType = type
-    -- 攻击距离
-    self._skill_r = con
+    -- 数值表数值
+    self._skillCon = con
     -- 上次释放时间
     self._skill_time_play = 0
-    -- 技能cd
-    self._skill_time_cd = 0
+
     -- 是否被动
     self._isPassive = con.type == Enum_Battle.SkillType.Skill_passive
 
+    -------------------------------
 
+    -- 技能释放的消耗
+    self._skillCost = con.cost or nil
+    -- 释放释放得条件 怒气 -- 目前是约定得只有大招才需要怒气 而且是 常量 1000
+    self._skill_need_power = con.type == Enum_Battle.SkillType.Skill_super and BattleConstant.SkillLaunchEnergy or 0
+    -- 技能释放得特殊条件
+    self._condition = con.condition or nil
+    -- 技能释放得范围判断类型条件
+    self._skill_launch_ranger_type = con.rangeType or Enum_Battle.SkillLaunchRangeType.Passive
+    --技能释放的范围
+    self._skill_launch_ranger_params = con.ranger
+    --技能释放的目标类型
+    self._skill_launch_target_type = con.targetType
+    -- 普攻攻击距离
+    self._skill_r = con.type == Enum_Battle.SkillType.Skill_a and con.ranger[1] or 0
+    -- 技能cd
+    self._skill_time_cd = con.cd2 or 0
+    -- 初始前置技能cd
+    self._skill_time_initCd = con.cd1 or 0
+    -- Gcd
+    self._skill_gCd = con.gcd or 0
+    -- 释放时增加的怒气
+    self._skill_add_power = con.addPower or 0
+    -- 是否是蓄力
+    self._isStoreUp = (con.isSing and con.isSing == 1) or false
+    -- 是否持续施法
+    self._isSpell =  (con.isSpell and con.isSpell == 1) or false
+    -- 持续施法中满怒是否立刻放大
+    self._spellUltra = (con.spellUltra and con.spellUltra == 1) or false
+    -- 是否无视异常状态
+    self._unstoppable = (con.unstoppable and con.unstoppable == 1) or false
 
 end
 

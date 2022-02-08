@@ -48,6 +48,8 @@ local BattleConstant = {
     Dist_r = 0.01,
     --- 判断是否到达位置得 差值 2
     Dist_r_2 = 0.02,
+    --- 发招释放需要得能量
+    SkillLaunchEnergy = 1000,
 }
 
 

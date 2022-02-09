@@ -67,10 +67,10 @@ Enum_Battle.Camp = {
 }
 --- 战斗动画 状态
 Enum_Battle.AniState = {
-    idle = "Stand",
-    run = "Move",
-    show = "Show",
-    Ultra = "Ultra",
+    idle   = "Stand",
+    run    = "Move",
+    show   = "Show",
+    ultra  = "Ultra",
     skill1 = "Skill1",
     skill2 = "Skill2",
     skill3 = "Skill3",
@@ -103,4 +103,19 @@ Enum_Battle.SkillLaunchTargetType = {
     ZZSelf = 2,         --- 自己
     FriendNoSelf = 3,   --- 友军不含自己
     AllFriend = 4,      --- 友军含自己
+}
+--- 技能timeline事件枚举
+Enum_Battle.TimeLineEventType = {
+    Art = -3,
+    Sound = -2,
+    Cast = -1,
+    Animation = 0,
+    Attack = 1,
+    Missle = 2,
+    MovePos = 3,
+}
+--- 技能timeline事件枚举
+Enum_Battle.TimeLineGroupType = {
+   FixFrame = 1,    -- 固定帧率
+   TargetFrame = 2, -- 达到目标点得 帧率
 }

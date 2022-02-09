@@ -15,7 +15,7 @@ function ConfigUtils:getConBase(tabName,id)
         return nil
     end
     local con = ConfigReader:getDataByNameAndId(tabName,id)
-    if con then
+    if con == nil then
         Logger.Error(tabName," 表内找不到 id 为 ",id ,"  得数据")
     end
     return con

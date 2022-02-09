@@ -7,7 +7,7 @@
 local PVE_Config_Battle_Manager = SimpleClassUtil:class()
 
 function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
-    -- todo 检查 data 合法性
+
     self._battleData = data or {}
     ---@type boolean 是否只跑逻辑
     self._isOnlyLogic = isOnlyLogic or false
@@ -66,10 +66,8 @@ function PVE_Config_Battle_Manager:initEntity()
                 self._list_logicCharacter[type] = {}
             end
 
-            -- todo 处理数据
-            --
-            local pamras = BattleUtils:handlerCharacterData(type,v,teamData,index, self._entityId)
-            self._list_logicCharacter[type][index] = BattleCharacter:new(type,index,self,v, self._entityId )
+            local param = BattleUtils:handlerCharacterData(type,v,teamData,index, self._entityId)
+            self._list_logicCharacter[type][index] = BattleCharacter:new(param,self)
             if not self._isOnlyLogic then
 
                 if self._list_renderCharacter[type] == nil then
@@ -81,7 +79,7 @@ function PVE_Config_Battle_Manager:initEntity()
                     index = i,
                     heroId = v.heroId,
                     campType = type,
-                    uid =  self._entityId ,
+                    uid =  self._entityId,
                 })
                 self._list_renderCharacter[type][index] =  renderCharacter
             end

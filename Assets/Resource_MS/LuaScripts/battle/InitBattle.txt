@@ -58,6 +58,10 @@ require_path("Enum_Battle","battle/Enum_Battle")
 
 require_path("Init_Process","battle/processTree/Init_Process")
 
+SkillAnalysis = require_path("SkillAnalysis","battle/specialSkillCon/SkillAnalysis")
+
+
+
 
 
 

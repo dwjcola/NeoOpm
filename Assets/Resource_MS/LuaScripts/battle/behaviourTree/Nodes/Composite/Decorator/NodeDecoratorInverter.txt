@@ -29,7 +29,7 @@ function NodeDecoratorInverter:onExit()
 end
 
 
-function NodeDecoratorInverter:execute(blackboard,contextManager)
+function NodeDecoratorInverter:execute(blackboard,agent,dt)
     self:log_enter("NodeDecoratorInverter    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
@@ -37,7 +37,7 @@ function NodeDecoratorInverter:execute(blackboard,contextManager)
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Running then

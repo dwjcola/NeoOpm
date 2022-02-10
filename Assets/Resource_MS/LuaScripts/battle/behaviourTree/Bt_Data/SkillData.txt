@@ -10,6 +10,7 @@ function SkillData:initialize(con)
 end
 
 function SkillData:initParams(con)
+    self._skillTag = con.tag
     -- 大招 还是 普攻 还是 普通技能
     self._skillType = con.position
     -- 数值表数值
@@ -18,7 +19,7 @@ function SkillData:initParams(con)
     self._skill_time_play = 0
 
     -- 是否被动
-    self._isPassive = con.type == Enum_Battle.SkillType.Skill_passive
+    self._isPassive = (con.type == Enum_Battle.SkillType.Skill_passive) or (con.type == Enum_Battle.SkillType.Skill_cCalled)
 
     -------------------------------
 
@@ -37,9 +38,9 @@ function SkillData:initParams(con)
     -- 普攻攻击距离
     self._skill_r = con.type == Enum_Battle.SkillType.Skill_a and con.range[1] or 0
     -- 技能cd
-    self._skill_time_cd = con.cd2 or 0
+    self._skill_time_cd = con.cd2 and con.cd2 * 1000 or 0
     -- 初始前置技能cd
-    self._skill_time_initCd = con.cd1 or 0
+    self._skill_time_initCd = con.cd1 and con.cd1 * 1000 or 0
     -- Gcd
     self._skill_gCd = con.gcd or 0
     -- 释放时增加的怒气
@@ -83,6 +84,10 @@ end
 function SkillData:handleTimeLineMap(con)
     if con.type == Enum_Battle.SkillType.Skill_special then
         return con.timeLineMap
+    end
+
+    if (con.type == Enum_Battle.SkillType.Skill_passive) or (con.type == Enum_Battle.SkillType.Skill_cCalled) then
+        return {}
     end
 
     if con.isSpell and con.isSpell == 1 then

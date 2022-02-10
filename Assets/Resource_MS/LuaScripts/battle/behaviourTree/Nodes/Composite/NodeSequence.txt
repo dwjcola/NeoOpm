@@ -31,7 +31,7 @@ function NodeSequence:onExit()
 end
 
 
-function NodeSequence:execute(blackboard,contextManager)
+function NodeSequence:execute(blackboard,agent,dt)
     self:log_enter("NodeSequence    Entity: ",self:getEntityId())
     local index = 1
     if self._lastRunningNode then
@@ -44,7 +44,7 @@ function NodeSequence:execute(blackboard,contextManager)
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then

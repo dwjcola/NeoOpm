@@ -33,7 +33,7 @@ function NodeRandomSequence:onExit()
 end
 
 
-function NodeRandomSequence:execute(blackboard,contextManager)
+function NodeRandomSequence:execute(blackboard,agent,dt)
     self:log_enter("NodeRandomSequence    Entity: ",self:getEntityId())
     local index = 0
     if self._lastRunningNode then
@@ -50,7 +50,7 @@ function NodeRandomSequence:execute(blackboard,contextManager)
         index = 0
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then

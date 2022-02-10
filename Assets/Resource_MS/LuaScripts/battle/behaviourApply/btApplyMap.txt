@@ -27,9 +27,10 @@ btApplyMap.classPath = {
     ["bt_ac_check_change_place_r"] = "battle/behaviourApply/battle_hero/action/bt_ac_check_change_place_r",
     ["bt_ac_malposed_findWay"] = "battle/behaviourApply/battle_hero/action/bt_ac_malposed_findWay",
     ["bt_ac_malposed_findTarget"] = "battle/behaviourApply/battle_hero/action/bt_ac_malposed_findTarget",
-    --
+    ["bt_ac_passive"] = "battle/behaviourApply/battle_hero/action/bt_ac_passive",
+    ["bt_ac_count_down"] = "battle/behaviourApply/battle_hero/action/bt_ac_count_down",
 
-
+-------------------------------------------------------------------------------------
 
     ["bt_con_astrict"] = "battle/behaviourApply/battle_hero/condition/bt_con_astrict",
     ["bt_con_cd"] = "battle/behaviourApply/battle_hero/condition/bt_con_cd",

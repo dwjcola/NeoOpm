@@ -35,14 +35,14 @@ function NodeParallel:onExit()
     end
 end
 
-function NodeParallel:execute(blackboard,contextManager)
+function NodeParallel:execute(blackboard,agent,dt)
     self:log_enter("NodeParallel    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local successCount = 0
     local list_childes = self:getChildes() or {}
     for index, nodeChild in ipairs(list_childes) do
         nodeChild:prePosition()
-        resultType = nodeChild:execute(blackboard,contextManager)
+        resultType = nodeChild:execute(blackboard,agent,dt)
         nodeChild:postPosition(resultType)
         if resultType == Enum_BT.Node_ResultType.Fail then
             break

@@ -19,13 +19,13 @@ function NodeAction:setIAction(iAction)
     self._iAction = iAction
 end
 
-function NodeAction:execute(blackboard,contextManager)
+function NodeAction:execute(blackboard,agent,dt)
     self:log_enter("NodeAction    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if false then -- not Application.isPlaying
         resultType = Enum_BT.Node_ResultType.Running
     else
-        resultType = self._iAction:doAction(blackboard,contextManager)
+        resultType = self._iAction:doAction(blackboard,agent,dt)
     end
     self:log("NodeAction    Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType

@@ -21,11 +21,11 @@ function NodeCondition:setICondition(iCondition)
     self._iCondition = iCondition
 end
 
-function NodeCondition:execute(blackBoard,battleManager)
+function NodeCondition:execute(blackBoard,agent,dt)
     self:log_enter("NodeCondition    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self._iCondition then
-        resultType = self._iCondition:doCondition(blackBoard,battleManager)
+        resultType = self._iCondition:doCondition(blackBoard,agent,dt)
     end
     self:log("NodeCondition   Entity: ",self:getEntityId(),    "  resultType :", resultType)
     return resultType

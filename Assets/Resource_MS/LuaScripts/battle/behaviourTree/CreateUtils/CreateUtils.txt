@@ -61,13 +61,19 @@ function CreateUtils:getNodeByType(type,entityId)
     node:setEntityId(entityId)
     return node
 end
-
-function CreateUtils:getICondition()
-
+---@return ICondition
+function CreateUtils:getICondition(conName,data)
+    ---@type ICondition
+    local con = btApplyMap:getClass(conName)
+    con:initData(data)
+    return con
 end
-
-function CreateUtils:getIAction()
-
+---@return IAction
+function CreateUtils:getIAction(conName,data)
+    ---@type IAction
+    local action = btApplyMap:getClass(conName)
+    action:initData(data)
+    return action
 end
 ---@return BlackBoard
 function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
@@ -84,78 +90,130 @@ function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
     return blackBoard
 end
 
-function CreateUtils:createTree(heroId,sceneData,data)
+function CreateUtils:createTree(blackboard)
     ---@type NodeIfJudge
     local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
     -------------------------------------------------------------------------------
           ---@type NodeCondition  判断是否活着
           local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000002")
-                local condition_1 = btApplyMap:getClass("bt_con_compare_base")
-                condition_1:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_hp", _compareTargetValue = 0, })
-                node_1:setICondition(condition_1)
+          node_1:setICondition(self:getICondition("bt_con_compare_base",{ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_hp", _compareTargetValue = 0, }))
     root:addNode(node_1)
     ---------------------------------------------------------------------------------
-          ---@type NodeDecoratorRepeat 一直 判断技能 树
-          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
-          node_2:setRepeatCount(-1)
-                ---@type NodeParallelAll
-                local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000004")
-                       -- 1.todo 先添加 被动技能
-                       -- 仇恨值 目标计算
-                       local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
-                            ---@type NodeConditionGroup
-                            local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
-                                  local con_2_1_3_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
-                                  local con_2_1_3_1_2 = btApplyMap:getClass("bt_con_enmityCd")
-                                        con_2_1_3_1_2:initData({cdTime = 10000})
-                                  local con_2_1_3_1_3 = btApplyMap:getClass("bt_onReceive")
-                                        con_2_1_3_1_3:initData({eventId = EventType.Event_Battle_Died})
-                                  local con_2_1_3_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
-                                        con_2_1_3_1_4:initData()
-                            node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
-                      node_2_1_3:addNode(node_2_1_3_1)
-                            ---@type NodeAction
-                            local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
-                                  local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
-                            node_2_1_3_2:setIAction(ac_2_1_3_2_1)
-                      node_2_1_3:addNode(node_2_1_3_2)
-                node_2_1:addNode(node_2_1_3)
-                       -- 2.技能树
-                       ---@type NodeParallelAll 技能 行为
-                       local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
-                              node_2_1_2:addNode(self:createBigSkillJudgeTree())
-                              node_2_1_2:addNode(self:createBigSkillTree())
-                node_2_1:addNode(node_2_1_2)
-          node_2:addNode(node_2_1)
-    root:addNode(node_2)
+    root:addNode(self:createSkillTree(blackboard))
     ---------------------------------------------------------------------------------
-          ---@type NodeAction 死亡 行为
-          local node_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000006")
-                local action_3 = btApplyMap:getClass("bt_ac_died")
-          node_3:setIAction(action_3)
-    root:addNode(node_3)
+    root:addNode(self:createDiedTree(blackboard))
     --------------
     return  root
 end
 
-function CreateUtils:createBigSkillJudgeTree()
+--- 死亡树
+function CreateUtils:createDiedTree(blackboard)
+    ---@type NodeAction 死亡 行为
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"0000006")
+    node:setIAction(self:getIAction("bt_ac_died"))
+    return node
+end
+--- 技能树
+function CreateUtils:createSkillTree(blackboard)
+    ---@type NodeDecoratorRepeat 一直 判断技能 树
+    local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
+    node_2:setRepeatCount(-1)
+          ---@type NodeParallelAll
+          local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000004")
+              -- 1.先添加 被动技能
+             local  passiveNode = self:createPassiveTree(blackboard)
+             if passiveNode then
+                 node_2_1:addNode(passiveNode)
+             end
+             -- 2. 仇恨值列表刷新树
+          node_2_1:addNode(self:createHostilityValueTree(blackboard))
+             -- 3.技能树
+              ---@type NodeParallelAll 技能 行为
+              local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
+              node_2_1_2:addNode(self:createBigSkillJudgeTree(blackboard))
+              node_2_1_2:addNode(self:createBigSkillTree(blackboard))
+          node_2_1:addNode(node_2_1_2)
+          node_2_1:addNode(self:getGcdTree(blackboard))
+    node_2:addNode(node_2_1)
+    return node_2
+end
+--- GCD计时树
+---@param blackboard BlackBoard_BattleBase
+function CreateUtils:getGcdTree(blackboard)
+    ---@type NodeIfJudge
+    local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"GcdTree_1")
+    node:addNode(self:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_gcd", _compareTargetValue = 0}))
+    node:addNode(self:getIAction("bt_ac_count_down")) --
+    return node
+end
+--- 被动树
+---@param blackboard BlackBoard_BattleBase
+function CreateUtils:createPassiveTree(blackboard)
+    ---@type bt_ac_passive
+    local node = nil
+    if blackboard and blackboard._skillData then
+        for i, v in pairs(blackboard._skillData) do
+            if v and v._isPassive then
+                if node == nil then
+                    node = btApplyMap:getClass("bt_ac_passive")
+                    node:addPassive(v)
+                end
+            end
+        end
+    end
+    return node
+end
+--- 仇恨值列表
+function CreateUtils:createHostilityValueTree(blackboard)
+    -- 仇恨值 目标计算
+    local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
+          ---@type NodeConditionGroup
+          local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
+                local con_2_1_3_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
+                local con_2_1_3_1_2 = btApplyMap:getClass("bt_con_enmityCd")
+                con_2_1_3_1_2:initData({cdTime = 10000})
+                local con_2_1_3_1_3 = btApplyMap:getClass("bt_onReceive")
+                con_2_1_3_1_3:initData({eventId = EventType.Event_Battle_Died})
+                local con_2_1_3_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
+                con_2_1_3_1_4:initData()
+          node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
+    node_2_1_3:addNode(node_2_1_3_1)
+          ---@type NodeAction
+          local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
+                local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
+          node_2_1_3_2:setIAction(ac_2_1_3_2_1)
+    node_2_1_3:addNode(node_2_1_3_2)
+    return node_2_1_3
+end
+---@param blackboard BlackBoard_BattleBase
+function CreateUtils:createBigSkillJudgeTree(blackboard)
+    ---@type SkillData
+    local skillData = blackboard._skillData[Enum_Battle.SkillTag.Skill_1]
     ---@type NodeIfJudge 判断是否满足 大招释放条件
     local node_2_2_1 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000007")
          ---@type NodeConditionGroup
          local node_2_2_1_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000008")
                -----@type bt_con_compare_base
                local condition_2_2_1_1_1 = btApplyMap:getClass("bt_con_compare_base")
-               condition_2_2_1_1_1:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = "_anger", _compareTargetValue = 100, })
+               condition_2_2_1_1_1:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = "_anger", _compareTargetValue = skillData._skill_need_power, })
                -----@type bt_con_astrict
                local condition_2_2_1_1_2 = btApplyMap:getClass("bt_con_astrict")
-               condition_2_2_1_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_1, isDefy = false, })
+               condition_2_2_1_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_1, isDefy = skillData._unstoppable, })
+
                -----@type ICondition
                local condition_2_2_1_1_3 = btApplyMap:getClass("bt_con_find_s_live")
                condition_2_2_1_1_3:initData({ skillTag = Enum_Battle.SkillTag.Skill_1 })
                -----@type ICondition
                local condition_2_2_1_1_4 = btApplyMap:getClass("bt_con_compare_base")
-               condition_2_2_1_1_4:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_nothingToSkill", _compareTargetValue = false, })
-         local tmp_01 = {condition_2_2_1_1_1,condition_2_2_1_1_2,condition_2_2_1_1_3,condition_2_2_1_1_4}
+               condition_2_2_1_1_4:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_nothingToSkill", _compareTargetValue = true, })
+               -----@type bt_con_cd
+               local condition_2_2_1_1_5 = btApplyMap:getClass("bt_con_cd")
+               condition_2_2_1_1_5:initData({ skillTag = Enum_Battle.SkillTag.Skill_1, cdTime = skillData._skill_time_cd })
+               -----@type ICondition
+               local condition_2_2_1_1_6 = btApplyMap:getClass("bt_con_compare_base")
+               condition_2_2_1_1_6:initData({ _compareType = Enum_BT.CompareType.BT_LessThanEqual, _key = "_gcd", _compareTargetValue = 0, })
+         local tmp_01 = {condition_2_2_1_1_1,condition_2_2_1_1_2,condition_2_2_1_1_3,condition_2_2_1_1_4,condition_2_2_1_1_5,condition_2_2_1_1_6}
          node_2_2_1_1:setIConditionS(tmp_01,Enum_BT.Condition_Relation.BT_AND)
          ---@type NodeSequence
          local node_2_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000009")

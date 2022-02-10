@@ -33,6 +33,8 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._moveSpeed = 1
     ---@type SkillData[]
     self._skillData = {}
+    -- gcd
+    self._gcd = 0
     -- 普攻半径
     self._attack_r_a = 1
 

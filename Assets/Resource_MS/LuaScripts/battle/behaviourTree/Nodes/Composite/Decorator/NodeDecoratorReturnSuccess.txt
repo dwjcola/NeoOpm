@@ -29,7 +29,7 @@ function NodeDecoratorReturnSuccess:onExit()
     end
 end
 
-function NodeDecoratorReturnSuccess:execute(blackboard,contextManager)
+function NodeDecoratorReturnSuccess:execute(blackboard,agent,dt)
     self:log_enter("NodeDecoratorReturnSuccess    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     local count = #self:getChildes()
@@ -37,7 +37,7 @@ function NodeDecoratorReturnSuccess:execute(blackboard,contextManager)
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Running then

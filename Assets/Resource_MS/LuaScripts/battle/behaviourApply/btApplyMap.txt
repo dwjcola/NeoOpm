@@ -47,6 +47,8 @@ btApplyMap.classPath = {
     ["bt_con_skillRange_to_enmity"] = "battle/behaviourApply/battle_hero/condition/bt_con_skillRange_to_enmity",
     ["bt_con_need_turn"] = "battle/behaviourApply/battle_hero/condition/bt_con_need_turn",
     ["bt_con_isDislocation"] = "battle/behaviourApply/battle_hero/condition/bt_con_isDislocation",
+    ["bt_con_aroundNoEnemy"] = "battle/behaviourApply/battle_hero/condition/bt_con_aroundNoEnemy",
+
 
 }
 

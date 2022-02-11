@@ -119,3 +119,8 @@ Enum_Battle.TimeLineGroupType = {
    FixFrame = 1,    -- 固定帧率
    TargetFrame = 2, -- 达到目标点得 帧率
 }
+
+--- 技能释放得特殊条件
+Enum_Battle.SkillFireSpecialCondition = {
+    AroundNoEnemy = 1,    -- 周围半径没有敌人
+}

@@ -48,7 +48,7 @@ namespace NeoOPM
             temp["status"] = 1;
             temp["id"] = 10001;
             temp["sname"] = "只手遮天";
-            temp["ip"] = "10.1.10.50";
+            temp["ip"] = "47.94.233.15";
             temp["port"] = 9039;
             list.Add(temp);
             temp = new JsonData();

@@ -151,18 +151,15 @@ function LUAUIBase:Error(...)
 end
 --添加lua事件
 function LUAUIBase:AddListener(eventName,callBack)
-    self:Error("AddListener   "..eventName)
     return EventManager:AddListener(eventName, callBack, self)
 end
 
 --触发lua事件
 function LUAUIBase:Dispatch(eventName,...)
-    self:Error("Dispatch   "..eventName)
     EventManager:Dispatch(eventName, ...)
 end
 --移除lua事件
 function LUAUIBase:RemoveListener(eventName)
-    self:Error("RemoveListener   "..eventName)
     EventManager:RemoveListener(eventName,self)
 end
 --添加CS事件

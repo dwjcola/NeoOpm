@@ -65,7 +65,7 @@ function UICoinItemLUA:OnAssetValueChanged()---如果使用玩家自身的资源
 end
 
 function UICoinItemLUA:AddEventListener()---添加的默认监听，更新货币条上的数量显示
-self:AddEvent(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
+self:AddListener(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
 end
 
 function UICoinItemLUA:AddUIEventListener()
@@ -122,7 +122,7 @@ end
 
 
 function  UICoinItemLUA:RemoveEventListener()
-	self:RemoveEvent(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
+	self:RemoveListener(LUADefine.ON_SERVER_UPDATE_COIN,self.OnAssetValueChanged)
 end
 function UICoinItemLUA:ondestroy()
 	self:RemoveEventListener();

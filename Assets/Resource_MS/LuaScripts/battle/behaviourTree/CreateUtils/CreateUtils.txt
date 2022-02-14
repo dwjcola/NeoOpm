@@ -129,7 +129,7 @@ function CreateUtils:createTree(blackboard)
           node_1:setICondition(self:getICondition("bt_con_compare_base",{ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_hp", _compareTargetValue = 0, }))
     root:addNode(node_1)
     ---------------------------------------------------------------------------------
-    root:addNode(self:createSkillTree(blackboard))
+    root:addNode(self:createLiveTree(blackboard))
     ---------------------------------------------------------------------------------
     root:addNode(self:createDiedTree(blackboard))
     --------------
@@ -143,8 +143,24 @@ function CreateUtils:createDiedTree(blackboard)
     node:setIAction(self:getIAction("bt_ac_died"))
     return node
 end
+
+function CreateUtils:createLiveTree(blackboard)
+    ---@type NodeSequence
+    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"createLiveTree_001")
+    node:addNode(self:createInitSkillCdTree(blackboard))
+    node:addNode(self:createLoopSkillsTree(blackboard))
+    return node
+end
+
+function CreateUtils:createInitSkillCdTree(blackboard)
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createInitSkillCdTree_0001")
+    node:setIAction(self:getIAction("bt_ac_initSkillCd"))
+    return node
+end
+
 --- 技能树
-function CreateUtils:createSkillTree(blackboard)
+function CreateUtils:createLoopSkillsTree(blackboard)
     ---@type NodeDecoratorRepeat 一直 判断技能 树
     local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
     node_2:setRepeatCount(-1)
@@ -245,8 +261,7 @@ function CreateUtils:bigSkillCondition(blackboard,skillData)
     local condition_4 =  self:getICondition("bt_con_compare_base",
             { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_nothingToSkill", _compareTargetValue = true, })
 
-    local condition_5 = self:getICondition("bt_con_cd",
-            { skillTag = Enum_Battle.SkillTag.Skill_1, cdTime = skillData._skill_time_cd })
+    local condition_5 = self:getICondition("bt_con_cd", skillData)
 
     local condition_6 = self:getICondition("bt_con_compare_base",
             { _compareType = Enum_BT.CompareType.BT_LessThanEqual, _key = "_gcd", _compareTargetValue = 0, })
@@ -261,7 +276,9 @@ function CreateUtils:bigSkillCondition(blackboard,skillData)
     end
     if skillData and skillData._skill_launch_ranger_type then
         local rangerConNode = self:getSkillFireRangerCon(blackboard, skillData)
-
+        if rangerConNode then
+            table.insert(tmp,rangerConNode)
+        end
     end
     node:setIConditionS(tmp,Enum_BT.Condition_Relation.BT_AND)
     return node

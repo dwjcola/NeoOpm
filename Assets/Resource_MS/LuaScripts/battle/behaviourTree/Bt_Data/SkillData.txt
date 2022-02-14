@@ -42,7 +42,7 @@ function SkillData:initParams(con)
     -- 初始前置技能cd
     self._skill_time_initCd = con.cd1 and con.cd1 * 1000 or 0
     -- Gcd
-    self._skill_gCd = con.gcd or 0
+    self._skill_gCd = con.gcd and con.gcd * 1000 or 0
     -- 释放时增加的怒气
     self._skill_add_power = con.addPower or 0
     -- 是否是蓄力

@@ -1,0 +1,11 @@
+fileFormatVersion: 2
+guid: e0a35b5f233f83343968dde564e1cf6d
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures:
+  - _rongjietu: {fileID: 2800000, guid: 9789d23040cb1fb45ad60392430c3c15, type: 3}
+  nonModifiableTextures: []
+  preprocessorOverride: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

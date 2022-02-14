@@ -5,13 +5,41 @@
 --- 前方矩形范围判定
 ---@class bt_con_rectangle_forward
 local bt_con_rectangle_forward = SimpleClassUtil:class(ICondition)
-
-function bt_con_rectangle_forward:initData(data)
-
+---@param skillData SkillData
+function bt_con_rectangle_forward:initData(skillData)
+    self._skillData = skillData
 end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_con_rectangle_forward:doCondition(blackBoard,agent,dt)
-    return Enum_BT.Node_ResultType.Success
+    local result = Enum_BT.Node_ResultType.Fail
+    if blackBoard._enmityIndex == 0 then
+        result = Enum_BT.Node_ResultType.Fail
+    else
+        if self._skillData then
+            local rangerParams = self._skillData._skill_launch_ranger_params or {}
+            local self_pos2 = Vector2(blackBoard._position.x,blackBoard._position.z)
+            local width = rangerParams[1] or 0
+            local length = rangerParams[2] or 0
+            local vec2_c = BattleMathUtils.getRectangleCenterPos(self_pos2,width,blackBoard._orientation == Enum_Battle.Orientation.Right)
+            local vec2_h = BattleMathUtils.getRectangleDiagonal_1(width,length)
+            --- @type BattleEntityContext
+            local _entityContext = agent._entityContext
+            --- @type BattleCharacter[]
+            local _enemyEntity_list = _entityContext:getEnemyEntityList(blackBoard._campType)
+            for i, _enemyEntity in pairs(_enemyEntity_list) do
+                if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
+                    local volume_r = blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0
+                    local vec2_p = Vector2( _enemyEntity:getData()._position.x, _enemyEntity:getData()._position.z)
+                    if BattleMathUtils.BoxCircleIntersect(vec2_c,vec2_h,vec2_p,volume_r) then
+                        result = Enum_BT.Node_ResultType.Success
+                        break
+                    end
+                end
+            end
+        end
+    end
+    return result
+
 end
 
 return bt_con_rectangle_forward

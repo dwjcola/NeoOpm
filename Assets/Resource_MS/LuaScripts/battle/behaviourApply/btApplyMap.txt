@@ -48,6 +48,10 @@ btApplyMap.classPath = {
     ["bt_con_need_turn"] = "battle/behaviourApply/battle_hero/condition/bt_con_need_turn",
     ["bt_con_isDislocation"] = "battle/behaviourApply/battle_hero/condition/bt_con_isDislocation",
     ["bt_con_aroundNoEnemy"] = "battle/behaviourApply/battle_hero/condition/bt_con_aroundNoEnemy",
+    ["bt_con_sector_forward"] = "battle/behaviourApply/battle_hero/condition/bt_con_sector_forward",
+    ["bt_con_rectangle_forward"] = "battle/behaviourApply/battle_hero/condition/bt_con_rectangle_forward",
+    ["bt_con_fullScreen"] = "battle/behaviourApply/battle_hero/condition/bt_con_fullScreen",
+    ["bt_con_around_circle"] = "battle/behaviourApply/battle_hero/condition/bt_con_around_circle",
 
 
 }

@@ -27,58 +27,13 @@ function bt_con_around_circle:doCondition(blackBoard,agent,dt)
                      attack_r = attack_r + (blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0)
                      local self_pos = blackBoard._position
                      local target_pos =  _enemyEntity:getData()._position
-                     local dis = Vector3.Distance(self_pos,target_pos) - attack_r
-
+                     local dis = Vector3.Distance(self_pos,target_pos)
+                     if dis <= attack_r then
+                         result = Enum_BT.Node_ResultType.Success
+                         break
+                     end
                 end
             end
-        end
-
-
-
-        --- @type BattleEntityContext
-        local _entityContext = agent._entityContext
-        --- @type BattleCharacter
-        local _enemyEntity = _entityContext:getEnemyEntityByIndex(blackBoard._campType,blackBoard._enmityIndex)
-        if _enemyEntity  and _enemyEntity:getData()._alive == true and  _enemyEntity:getData()._isCanBeSelected == true then
-            local self_pos = blackBoard._position
-            local target =  _enemyEntity:getData()._position
-            local dis = Vector3.Distance(self_pos,target)
-            local skillData = blackBoard._skillData[Enum_Battle.SkillTag.Skill_5]
-
-            if skillData then
-                local attack_r = skillData._skill_r + (blackBoard._isCloseIn and _enemyEntity:getData()._volume_r or 0)
-                dis = dis - attack_r
-                if blackBoard._find_target_pos then
-                    local disTarget = Vector3.Distance(blackBoard._position , blackBoard._find_target_pos)
-                    if disTarget < BattleConstant.Dist_r then
-                        if dis < BattleConstant.Dist_r then
-                            result = Enum_BT.Node_ResultType.Success
-                        else
-                            BattleLog.error(" 已到达目的地 但 技能范围判定失败 ！！！！ uid ==  ",blackBoard._uid,"  dis  == ",dis,"   disTarget == ",disTarget)
-                            result = Enum_BT.Node_ResultType.Fail
-                        end
-                    else
-                        result = Enum_BT.Node_ResultType.Fail
-                    end
-                else
-                    if dis < BattleConstant.Dist_r then
-                        result = Enum_BT.Node_ResultType.Success
-                    else
-                        result = Enum_BT.Node_ResultType.Fail
-                    end
-                end
-                --if dis < BattleConstant.Dist_r then
-                --    result = Enum_BT.Node_ResultType.Success
-                --else
-                --    result = Enum_BT.Node_ResultType.Fail
-                --end
-
-            else
-                BattleLog.error("SkillData 没有 普工技能数据 ！！！")
-                result = Enum_BT.Node_ResultType.Fail
-            end
-        else
-            result = Enum_BT.Node_ResultType.Fail
         end
     end
     return result

@@ -11,7 +11,13 @@ function bt_con_fullScreen:initData(data)
 end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_con_fullScreen:doCondition(blackBoard,agent,dt)
-    return Enum_BT.Node_ResultType.Success
+    local result = Enum_BT.Node_ResultType.Fail
+    if blackBoard._enmityIndex == 0 then
+        result = Enum_BT.Node_ResultType.Fail
+    else
+        result = Enum_BT.Node_ResultType.Success
+    end
+    return result
 end
 
 return bt_con_fullScreen

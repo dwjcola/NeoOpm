@@ -339,6 +339,11 @@ namespace NeoOPM
                 }
             }
         }
+
+        public bool IsDestroy()
+        {
+            return this == null;
+        }
         
         /*
          protected override void OnOpen(object userData)

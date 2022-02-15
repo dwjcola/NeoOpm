@@ -227,7 +227,7 @@ function LUAUIBase:SetSprite(image,name,native)
     self:Error("图片："..name.."没有找到图集")
     return
   end
-  CS.LC.SetSprite(image,atlas,name,n)
+  CS.LC.SetSprite(self.view,image,atlas,name,n)
 end
 
 ---@param image UnityEngine.UI.RawImage
@@ -240,15 +240,6 @@ function LUAUIBase:SetRawImageSprite(image,name,native)
     n = false
   end
   CS.LC.SetRawImageSprite(image,name,n)
-end
-
-
-function LUAUIBase:SetSingleSpriteByFolderPath(image,folderPath,name,native)
-  local n = native
-  if n == nil then
-    n = false
-  end
-  CS.LC.SetSingleSpriteByFolderPath(image,folderPath,name,n)
 end
 
 function LUAUIBase:SetImageSprite(image,atls,name,native)

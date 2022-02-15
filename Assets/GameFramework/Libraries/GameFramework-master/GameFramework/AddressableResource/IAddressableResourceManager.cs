@@ -9,6 +9,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using UnityEngine.U2D;
 
 namespace GameFramework.AddressableResource
 {
@@ -46,6 +47,7 @@ namespace GameFramework.AddressableResource
         Task<Texture2D> GetTexture(string textureName);
         Task<Sprite[]> GetSprites(string atlas);
         Task<Sprite> GetAtlasSprite(string atlas, string spname);
+        Task<SpriteAtlas> GetAtlas(string atlas);
         Task<Material> GetMaterial(string path);
         /// <summary>
         /// 实例化资源

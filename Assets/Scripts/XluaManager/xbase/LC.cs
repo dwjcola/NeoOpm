@@ -21,7 +21,10 @@ using GameEntry = NeoOPM.GameEntry;
 using Image = UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine.EventSystems;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.U2D;
 
 public class LC
 {
@@ -86,7 +89,12 @@ public class LC
         EventTriggerListener.Get(go).onUp = null;
         EventTriggerListener.Get(go).onPress  = null;
         EventTriggerListener.Get(go).onExit  = null;
-
+        EventTriggerListener.Get(go).OnDragBegin = null;
+        EventTriggerListener.Get(go).OnDragFuc = null;
+        EventTriggerListener.Get(go).OnDragEnd = null;
+        EventTriggerListener.Get(go).onBeginDragOPM = null;
+        EventTriggerListener.Get(go).onDragOPM = null;
+        EventTriggerListener.Get(go).onEndDragOPM = null;
     }
     public static void AddUIEvent_PointData(string key, GameObject go, Action<GameObject, PointerEventData> callBack)
     {
@@ -430,7 +438,7 @@ public class LC
             mh = null;
         }
     }
-
+    private static Dictionary<GameObject,List<SpriteAtlas>> CatchAtlas = new Dictionary<GameObject, List<SpriteAtlas>>();
     /// <summary>
     /// 与SetSprite的区别在于这个不是找的SpriteAtlas后缀的图集，而是.png等
     /// </summary>
@@ -439,7 +447,9 @@ public class LC
     /// <param name="spname"></param>
     public static async void SetImageSprite(Image sp, string atlas, string spname, bool native = false)
     {
-        var sprite = await ResMgr.GetSprite(atlas, spname);
+        Task<Sprite> task = ResMgr.GetSprite(atlas, spname);
+        var sprite = await task;
+        
         if (sp == null)
             return;
         sp.sprite = sprite;
@@ -482,17 +492,51 @@ public class LC
         spRender.sprite = sprite;
     }
 
-    //只适用于一张图中只有一个sprite的，且sprite名字和图片名字一致
-    public static void SetSingleSpriteByFolderPath(Image sp, string folderPath, string spname, bool native = false)
+    private static void CatchAtlasHandle(GameObject target,SpriteAtlas atlas)
     {
-        SetImageSprite(sp, $"{folderPath}/{spname}.png", spname, native);
+        List<SpriteAtlas> list;
+        if (CatchAtlas.TryGetValue(target,out list))
+        {
+            list.Add(atlas);
+        }
+        else
+        {
+            list = new List<SpriteAtlas>();
+            list.Add(atlas);
+            CatchAtlas.Add(target,list);
+        }
     }
 
-
-    public static async void SetSprite(Image sp, string atlas, string spname, bool native = false)
+    public static void RealeasAtlas(GameObject target)
     {
-        atlas = AssetUtility.GetUIAtalsAsset(atlas);
-        var sprite = await ResMgr.GetAtlasSprite(atlas, spname);
+        List<SpriteAtlas> list;
+        if (CatchAtlas.TryGetValue(target,out list))
+        {
+            for (int i = 0; i < list.Count; i++)
+            {
+                while (list.Count > 0)
+                {
+                    ResMgr.UnloadAsset(list[0]);
+                    list.RemoveAt(0);
+                }
+                
+            }
+        }
+    }
+    public static async void SetSprite(UGuiForm target,Image sp, string atlasName, string spname, bool native = false)
+    {
+        atlasName = AssetUtility.GetUIAtalsAsset(atlasName);
+        Task<SpriteAtlas> task = ResMgr.GetAtlas(atlasName);
+        var atlas = await task;
+        var sprite = atlas.GetSprite(spname);
+        if (target.IsDestroy())
+        {
+            RealeasAtlas(target.gameObject);
+        }
+        else
+        {
+            CatchAtlasHandle(target.gameObject, task.Result);
+        }
         if (sp == null)
             return;
         sp.sprite = sprite;
@@ -583,7 +627,48 @@ public class LC
         GameObject go = Object.Instantiate(per);
         action?.Invoke(go);
     }
-   
+
+    private static Dictionary<Action<GameObject>, bool> testDic;
+
+    private static void RegistCallBack(Action<GameObject> act)
+    {
+        if (testDic==null)
+        {
+            testDic = new Dictionary<Action<GameObject>, bool>();
+        }
+
+        if (!testDic.ContainsKey(act))
+        {
+            testDic.Add(act,true);
+        }
+        
+    }
+    public static bool UnRegistCallBack(Action<GameObject> act)
+    {
+        if (testDic!=null )
+        {
+            return testDic.Remove(act);
+        }
+        return false;
+    }
+    public static async void test(string assetPath, Action<GameObject> action)
+    {
+        RegistCallBack(action);
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        var handle = resMgr.LoadAssetAsync<GameObject>(assetPath);
+        GameObject per = await handle.Task;
+        bool b;
+        if (testDic!=null && action != null && testDic.TryGetValue(action,out b))
+        {
+            GameObject go = Object.Instantiate(per);
+            action?.Invoke(go);
+        }
+        else
+        {
+            resMgr.Release(handle);
+        }
+        
+    }
     public static void AddButtonEvent(Button btn, Action<LuaTable, object> action, LuaTable lua, bool isOverride = true)
     {
         if (isOverride)

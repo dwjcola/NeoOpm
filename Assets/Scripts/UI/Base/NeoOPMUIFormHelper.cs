@@ -16,7 +16,7 @@ namespace NeoOPM
     /// <summary>
     /// 默认界面辅助器。
     /// </summary>
-    public class SLGUIFormHelper : UIFormHelperBase
+    public class NeoOPMUIFormHelper : UIFormHelperBase
     {
         //private ResourceComponent m_ResourceComponent = null;
         private AddressableResourceComponent m_ResourceComponent = null;
@@ -48,7 +48,7 @@ namespace NeoOPM
             }
 
             Transform transform = gameObject.transform;
-            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform);
+            transform.SetParent(((MonoBehaviour)uiGroup.Helper).transform,false);
             transform.localScale = Vector3.one;
 
             return gameObject.GetOrAddComponent<UIForm>();
@@ -61,8 +61,10 @@ namespace NeoOPM
         /// <param name="uiFormInstance">要释放的界面实例。</param>
         public override void ReleaseUIForm(object uiFormAsset, object uiFormInstance)
         {
-           var resMgr=GameFramework.GameFrameworkEntry.GetModule<GameFramework.AddressableResource.IAddressableResourceManager>();
-            resMgr.ReleaseInstantiateAsset((GameObject)uiFormInstance);
+            GameObject go = (GameObject) uiFormInstance;
+            LC.RealeasAtlas(go);
+            var resMgr = GameFramework.GameFrameworkEntry.GetModule<GameFramework.AddressableResource.IAddressableResourceManager>();
+            resMgr.ReleaseInstantiateAsset(go);
             resMgr.UnloadAsset(uiFormAsset);
             //m_ResourceComponent.UnloadAsset(uiFormAsset);
             //Destroy((Object)uiFormInstance);

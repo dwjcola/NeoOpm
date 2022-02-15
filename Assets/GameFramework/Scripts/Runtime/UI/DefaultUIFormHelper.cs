@@ -60,8 +60,9 @@ namespace UnityGameFramework.Runtime
         /// <param name="uiFormInstance">要释放的界面实例。</param>
         public override void ReleaseUIForm(object uiFormAsset, object uiFormInstance)
         {
+            GameObject go = (GameObject) uiFormInstance;
             var resMgr = GameFramework.GameFrameworkEntry.GetModule<GameFramework.AddressableResource.IAddressableResourceManager>();
-            resMgr.ReleaseInstantiateAsset((GameObject)uiFormInstance);
+            resMgr.ReleaseInstantiateAsset(go);
             resMgr.UnloadAsset(uiFormAsset);
             //m_ResourceComponent.UnloadAsset(uiFormAsset);
             //Destroy((Object)uiFormInstance);

@@ -926,7 +926,7 @@ MonoBehaviour:
   m_InstanceExpireTime: 3
   m_InstancePriority: 0
   m_InstanceRoot: {fileID: 1576232203}
-  m_UIFormHelperTypeName: UnityGameFramework.Runtime.DefaultUIFormHelper
+  m_UIFormHelperTypeName: NeoOPM.NeoOPMUIFormHelper
   m_CustomUIFormHelper: {fileID: 0}
   m_UIGroupHelperTypeName: NeoOPM.UGuiGroupHelper
   m_CustomUIGroupHelper: {fileID: 0}

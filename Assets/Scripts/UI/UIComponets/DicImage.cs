@@ -23,7 +23,12 @@ namespace NeoOPM
          
          LuaTable lt = XluaManager.instance.GetLua("TAtlas");
          string atlas = lt.Get<string>(image.sprite.name);
-         LC.SetSprite(image,atlas,spriteName,IsNative);
+         UIMonoPanel p = GetComponentInParent<UIMonoPanel>();
+         if (p!=null)
+         {
+            LC.SetSprite(p,image,atlas,spriteName,IsNative);
+         }
+         
       }
    }
 }

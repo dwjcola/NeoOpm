@@ -33,10 +33,9 @@ public class LC
 #else
     public static bool ISDEBUG = false;
 #endif
-
     private static IAddressableResourceManager _resMgr;
+    public static IAddressableResourceManager ResMgr => _resMgr ??= GameFrameworkEntry.GetModule<IAddressableResourceManager>();
 
-    public static IAddressableResourceManager ResMgr => _resMgr ?? GameFrameworkEntry.GetModule<IAddressableResourceManager>();
 
     /// <summary>
     /// lua添加ui事件
@@ -275,23 +274,7 @@ public class LC
 
         return new Vector2(imgPos.x, imgPos.y);
     }
-    public static void ChangeStateTo(Type procedureType)
-    {
-        IProcedureManager pm = GameFrameworkEntry.GetModule<IProcedureManager>(); ;
-        pm.AnyStateToChange(procedureType);
-    }
-    public static void ShowOrHideUIGroup(string groupName, bool b)
-    {
-        IUIGroup g = GameEntry.UI.GetUIGroup(groupName);
-        if (g != null)
-        {
-            UGuiGroupHelper ugh = (UGuiGroupHelper)g.Helper;
-            if (ugh != null)
-            {
-                ugh.gameObject.SetActive(b);
-            }
-        }
-    }
+
     /// <summary>
     /// 打开UI
     /// </summary>
@@ -529,51 +512,19 @@ public class LC
         Task<SpriteAtlas> task = ResMgr.GetAtlas(atlasName);
         var atlas = await task;
         var sprite = atlas.GetSprite(spname);
-        if (target.IsDestroy())
+        if (target.IsDestroy() || sp == null)
         {
             RealeasAtlas(target.gameObject);
-        }
-        else
-        {
-            CatchAtlasHandle(target.gameObject, task.Result);
-        }
-        if (sp == null)
             return;
+        }
+        CatchAtlasHandle(target.gameObject, task.Result);
         sp.sprite = sprite;
         if (native)
         {
             sp.SetNativeSize();
         }
     }
-    /*public static async void PlayMovieClip(MovieClip mc, string atlasName, string spname
-        , float Framerate = 10f, bool loop = true, int maxFrame = 100)
-    {
-        mc.Stop();
-        string atlas = AssetUtility.GetMovieClipAtalsAsset(atlasName);
-        string matPath = AssetUtility.GetMaterialsAsset(atlasName);
 
-        Sprite[] sps = await ResMgr.GetSprites(atlas);
-
-        List<Sprite> spList = new List<Sprite>();
-        Sprite temp = null;
-        //暫定100幀
-        for (int i = 0; i < sps.Length; i++)
-        {
-            temp = sps[i];
-            if (temp.name.IndexOf(spname, StringComparison.Ordinal) > -1)
-            {
-                spList.Add(temp);
-            }
-        }
-        mc.Frames = spList.ToArray();
-        mc.Framerate = Framerate;
-        mc.Loop = loop;
-        Material mat = await ResMgr.GetMaterial(matPath);
-        mat = Object.Instantiate(mat);
-        mat.SetColor("_RColor", new Color(0, 0.4f, 1));
-        mc.SetMaterial(mat);
-        mc.Play();
-    }*/
     public static async void SetMaterial(Image sp, string path)
     {
         sp.material = await ResMgr.GetMaterial(path);
@@ -587,11 +538,6 @@ public class LC
     public static void ClearMaterial(Image sp)
     {
         sp.material = null;
-    }
-
-    public static UIFormLogic GetUILogicByKey(string uikey)
-    {
-        return GameEntry.UI.GetUILogic(uikey);
     }
 
     public static async void LoadSpine(string spineName, Transform parent, Action<LuaTable, SkeletonGraphic> callback, LuaTable lua)
@@ -622,111 +568,11 @@ public class LC
     }
     public static async void LoadAsset(string assetPath, Action<GameObject> action)
     {
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        GameObject per = await resMgr.LoadAssetAsync<GameObject>(assetPath).Task;
+        GameObject per = await ResMgr.LoadAssetAsync<GameObject>(assetPath).Task;
         GameObject go = Object.Instantiate(per);
         action?.Invoke(go);
     }
 
-    private static Dictionary<Action<GameObject>, bool> testDic;
-
-    private static void RegistCallBack(Action<GameObject> act)
-    {
-        if (testDic==null)
-        {
-            testDic = new Dictionary<Action<GameObject>, bool>();
-        }
-
-        if (!testDic.ContainsKey(act))
-        {
-            testDic.Add(act,true);
-        }
-        
-    }
-    public static bool UnRegistCallBack(Action<GameObject> act)
-    {
-        if (testDic!=null )
-        {
-            return testDic.Remove(act);
-        }
-        return false;
-    }
-    public static async void test(string assetPath, Action<GameObject> action)
-    {
-        RegistCallBack(action);
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        var handle = resMgr.LoadAssetAsync<GameObject>(assetPath);
-        GameObject per = await handle.Task;
-        bool b;
-        if (testDic!=null && action != null && testDic.TryGetValue(action,out b))
-        {
-            GameObject go = Object.Instantiate(per);
-            action?.Invoke(go);
-        }
-        else
-        {
-            resMgr.Release(handle);
-        }
-        
-    }
-    public static void AddButtonEvent(Button btn, Action<LuaTable, object> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            btn.onClick.RemoveAllListeners();
-        }
-        btn.onClick.AddListener(() => { action?.Invoke(lua, btn); });
-    }
-    public static void AddInputEvent(InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onValueChanged.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddInputEvent(TMPro.TMP_InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onValueChanged.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddInputEditEvent(TMPro.TMP_InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onEndEdit.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddDropDownEvent(TMPro.TMP_Dropdown dropdown, Action<LuaTable, int> action, LuaTable lua, bool isOverride = true)
-    {
-        List<int> a = new List<int>();
-        a.Clear();
-        if (isOverride)
-        {
-            dropdown.onValueChanged.RemoveAllListeners();
-        }
-        dropdown.onValueChanged.AddListener((int value) => { action?.Invoke(lua, value); });
-    }
-    public static void AddSliderEvent(Slider slider, Action<LuaTable, float> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            slider.onValueChanged.RemoveAllListeners();
-        }
-        slider.onValueChanged.AddListener((float value) => { action?.Invoke(lua, value); });
-    }
-    public static void AddToggleEvent(Toggle toggle, Action<LuaTable, bool> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            toggle.onValueChanged.RemoveAllListeners();
-        }
-        toggle.onValueChanged.AddListener((value) => { action?.Invoke(lua, value); });
-    }
     public static async void LoadText(string TextPath, Action<string> action)
     {
         IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();

@@ -45,9 +45,6 @@ function LUAUIBase:init()
   self.ServerTime = CS.NeoOPM.ServerTime
 end
 
-function LUAUIBase:GetUILogicByKey(uiKey)
-  return CS.LC.GetUILogicByKey(uiKey);
-end
 ---@alias LUAUIBase.UIEventType
 LUAUIBase.UIEventType = {
   OnClick = "onclick",

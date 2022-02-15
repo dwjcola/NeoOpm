@@ -142,7 +142,7 @@ namespace NeoOPM
                 luaEnv.DoString($"require ('{UIKey}') ;");
                 m_LuaClass = luaEnv.Global.Get<LuaTable>(luaClassName);
             }
-            Debug.LogError(m_LuaClass);
+            //Debug.LogError(m_LuaClass);
             OnInit(m_LuaClass, luaClassName);
             luaOnResume = m_LuaClass.GetInPath<Action<LuaTable>>("OnResume");//当ui主动关闭后在缓存时间内没销毁前再次被打开时，或者打开其它UI被动被关闭后再次被打开时会调用
             luaOpen = m_LuaClass.GetInPath<Action<LuaTable,object>>("Open");//每次打开UI时都会执行

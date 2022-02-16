@@ -14,6 +14,7 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
 
     self._interval = 0.033334
 
+
     self._battleTime = 0
     --- 单位 ms
     self._time = 0
@@ -32,9 +33,24 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     self._list_logicCharacter = {}
 
     self._list_renderCharacter = {}
+    -- 战斗倍速
+    self._battleSpeed = 1
+    -- 计算后的 倍速下 每帧时间间隔
+    self._speedInterval = self._interval/self._battleSpeed
 end
 
+function PVE_Config_Battle_Manager:getBattleSpeed()
+    return self._battleSpeed
+end
 
+function PVE_Config_Battle_Manager:getSpeedInterval()
+    return self._speedInterval
+end
+
+function PVE_Config_Battle_Manager:setBattleSpeed(speed)
+    self._battleSpeed = speed or self._battleSpeed
+    self._speedInterval = self._interval/self._battleSpeed
+end
 
 function PVE_Config_Battle_Manager:start()
     self:initEntity()
@@ -108,8 +124,8 @@ function PVE_Config_Battle_Manager:_updateBattle(dt)
     local actime = self._battleTime + dt
     self._loop = 0
     -- BattleLog.filter("PVEBattle","_updateBattle",dt,actime)
-    while actime >= self._interval and self._loop < self._maxLoop do
-        actime = actime - self._interval
+    while actime >= self._speedInterval and self._loop < self._maxLoop do
+        actime = actime - self._speedInterval
         self._loop = self._loop + 1
         --if self:updateLogic(BattleConstant.FrameTime) then
         --    self:_changeToWait()
@@ -138,7 +154,9 @@ end
 
 
 function PVE_Config_Battle_Manager:_updateRender(dt)
-    local interpolation = self._battleTime / self._interval
+    -- todo interpolation 计算是不对的 因为  _speedInterval 实在变化的 不要对 interpolation 进行累加操作
+    -- todo 如果帧同步 这里必须修改 但是 此处 不要需要帧同步 不做修改
+    local interpolation = self._battleTime / self._speedInterval
     --BattleLog.filter("BattleManager.updateBattle",1000*dt,interpolation)
     self:updateRender(dt * 1000, interpolation)
 end

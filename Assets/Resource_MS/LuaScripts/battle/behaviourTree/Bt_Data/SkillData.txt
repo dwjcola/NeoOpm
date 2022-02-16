@@ -106,7 +106,7 @@ function SkillData:handleCommonTimeline(con)
 
     tmp.type = Enum_Battle.TimeLineGroupType.FixFrame
 
-    tmp[-1] = { self:newAnimationFrameEvent(0,BattleUtils:getAnimationNameByPos(con.position)) }
+    tmp[-1] = { self:newAnimationFrameEvent(1,BattleUtils:getAnimationNameByPos(con.position))}
     local artTimeline = con.artTimeline or {}
     for i, v in ipairs(artTimeline) do
         local frame = v[1]
@@ -141,11 +141,22 @@ function SkillData:handleCommonTimeline(con)
         if tmp[frame] == nil then
             tmp[frame] = {}
         end
-        table.insert(tmp[frame],self:newEventFrameEvent(frame,v,con.param))
+        table.insert(tmp[frame],self:newEventFrameEvent(frame,v,con.param,con.movParam))
     end
 
     return {tmp}
 end
+
+---@class FrameDataBase
+local FrameDataBase = {}
+FrameDataBase.type = Enum_Battle.TimeLineEventType.Animation
+FrameDataBase.frame = 0
+
+---@class AnimationFrameData
+local AnimationFrameData = {}
+AnimationFrameData.type = Enum_Battle.TimeLineEventType.Animation
+AnimationFrameData.frame = 0
+AnimationFrameData.aniName = ""
 
 function SkillData:newAnimationFrameEvent(frame,aniName)
     return {
@@ -154,6 +165,13 @@ function SkillData:newAnimationFrameEvent(frame,aniName)
         frame = frame,
     }
 end
+
+---@class ArtFrameData
+local ArtFrameData = {}
+ArtFrameData.type = Enum_Battle.TimeLineEventType.Art
+ArtFrameData.frame = 0
+ArtFrameData.srcName = "parma_1"
+ArtFrameData.pos = 0
 
 function SkillData:newArtFrameEvent(frame,parma_1,parma_2)
     return {
@@ -164,6 +182,12 @@ function SkillData:newArtFrameEvent(frame,parma_1,parma_2)
     }
 end
 
+---@class SoundFrameData
+local SoundFrameData = {}
+SoundFrameData.type = Enum_Battle.TimeLineEventType.Sound
+SoundFrameData.frame = 0
+SoundFrameData.srcName = ""
+
 function SkillData:newSoundFrameEvent(frame,parma_1)
     return {
         type = Enum_Battle.TimeLineEventType.Sound,
@@ -171,6 +195,12 @@ function SkillData:newSoundFrameEvent(frame,parma_1)
         srcName = parma_1,
     }
 end
+
+---@class CastFrameData
+local CastFrameData = {}
+CastFrameData.type = Enum_Battle.TimeLineEventType.Cast
+CastFrameData.frame = 0
+CastFrameData.srcName = ""
 
 function SkillData:newCastFrameEvent(frame,parma_1)
     return {
@@ -180,12 +210,29 @@ function SkillData:newCastFrameEvent(frame,parma_1)
     }
 end
 
-function SkillData:newEventFrameEvent(frame,frameData,specialParam)
+function SkillData:getSkillFirstFrameEvent(specialParam)
+    return {
+        type = Enum_Battle.TimeLineEventType.Blackout,
+        frame = 1,
+        eventTag = Enum_Battle.SkillBlackOut.Open,
+        specialParam = specialParam,
+    }
+end
+
+---@class EventFrameData
+local EventFrameData = {}
+EventFrameData.type = Enum_Battle.TimeLineEventType.Blackout
+EventFrameData.frame = 0
+EventFrameData.eventTag = 0
+EventFrameData.specialParam = {}
+EventFrameData.movParam = {}
+function SkillData:newEventFrameEvent(frame,frameData,specialParam,movParam)
     return {
         type = frameData[2],
         frame = frame,
         eventTag = frameData[3],
         specialParam = specialParam,
+        movParam = movParam,
     }
 end
 

@@ -12,7 +12,7 @@ function bt_ac_sendMag:initData(data)
 
 end
 
-function bt_ac_sendMag:doAction(blackBoard,contextManager)
+function bt_ac_sendMag:doAction(blackBoard,agent,dt)
     if self._eventKey then
         EventManager:Dispatch_battle(self._eventKey, self._params )
     end

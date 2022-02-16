@@ -106,13 +106,14 @@ Enum_Battle.SkillLaunchTargetType = {
 }
 --- 技能timeline事件枚举
 Enum_Battle.TimeLineEventType = {
-    Art = -3,
-    Sound = -2,
-    Cast = -1,
-    Animation = 0,
-    Attack = 1,
-    Missle = 2,
-    MovePos = 3,
+    Art = -3,      -- 美术资源 特效啥得
+    Sound = -2,    -- 音效
+    Cast = -1,     -- 配音
+    Animation = 0, -- 动作
+    Attack = 1,    -- AttackId
+    Missle = 2,    -- MissileId
+    MovePos = 3,   -- 位移
+    Blackout = 4,  -- 黑屏
 }
 --- 技能timeline事件枚举
 Enum_Battle.TimeLineGroupType = {
@@ -123,4 +124,10 @@ Enum_Battle.TimeLineGroupType = {
 --- 技能释放得特殊条件
 Enum_Battle.SkillFireSpecialCondition = {
     AroundNoEnemy = 1,    -- 周围半径没有敌人
+}
+
+--- 技能释放得特殊条件
+Enum_Battle.SkillBlackOut = {
+    Open = 0,    -- 开启黑屏
+    Close = 1,    -- 关闭黑屏
 }

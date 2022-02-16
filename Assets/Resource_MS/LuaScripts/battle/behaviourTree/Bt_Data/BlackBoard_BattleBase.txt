@@ -60,6 +60,11 @@ function BlackBoard_BattleBase:initialize(contextManager)
     ---@type BattleCharacter
     self._dislocation_friend_entity = nil
 
+    -- 带位移的技能要移动的速度
+    self._skill_moveSpeed = 0
+    -- 带位移的技能要移动的帧率
+    self._skill_moveFrame = 0
+
     -- 小技能进行中
     self._smallSkillIng = false
     -- 其他技能释放中 不能被大招打算

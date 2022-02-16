@@ -33,13 +33,7 @@ function BattleCharacter:init(entityContext)
 end
 
 function BattleCharacter:initTree()
-
-    local agent = {
-        _battleManager =  self._battleManager,
-        _entityContext = self._entityContext
-    }
-
-    self._logicTree = BehaviourTreeEntity:new({}, self._param,agent)
+    self._logicTree = BehaviourTreeEntity:new({}, self._param,Agent:new(self._battleManager,self._entityContext))
     self:debugSetting( self._param._volume_r,self._param._place_r,self._param._dislocation_r,
             self._param._detection_r,0.2,self._param._place_r)
 end

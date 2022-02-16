@@ -178,6 +178,7 @@ function CreateUtils:createLoopSkillsTree(blackboard)
               local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
               node_2_1_2:addNode(self:createBigSkillJudgeTree(blackboard))
               node_2_1_2:addNode(self:createBigSkillTree(blackboard))
+              node_2_1_2:addNode(self:createSkillMoveTree(blackboard))
           node_2_1:addNode(node_2_1_2)
           node_2_1:addNode(self:getGcdTree(blackboard))
     node_2:addNode(node_2_1)
@@ -313,7 +314,28 @@ function CreateUtils:bigSkillCondition_to_false(blackboard,skillData)
     node:addNode(node_2)
     return node
 end
-function CreateUtils:createBigSkillTree()
+
+function CreateUtils:createSkillMoveTree(blackBoard)
+   ---@type NodeIfJudge
+   local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"createSkillMove_Tree 001")
+      ---@type NodeConditionGroup
+      local node_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"createSkillMove_Tree 002")
+        -----@type ICondition
+        local condition_1_1 = btApplyMap:getClass("bt_con_compare_base")
+        condition_1_1:initData({ _compareType = Enum_BT.CompareType.BT_UnequalTo, _key = "_skill_moveSpeed", _compareTargetValue = 0,})
+        -----@type ICondition
+        local condition_1_2 = btApplyMap:getClass("bt_con_compare_base")
+        condition_1_2:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_skill_moveFrame", _compareTargetValue = 0,})
+      node_1:setIConditionS({condition_1_1,condition_1_2},Enum_BT.Condition_Relation.BT_AND)
+      ---@type NodeAction
+      local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"createSkillMove_Tree 003")
+      node_2:setIAction(self:getIAction("bt_ac_skill_move"))
+    node:addNode(node_1)
+    node:addNode(node_2)
+    return node
+end
+
+function CreateUtils:createBigSkillTree(blackBoard)
     ---@type NodeIfJudge
     local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000015")
           ---@type NodeConditionGroup
@@ -328,17 +350,41 @@ function CreateUtils:createBigSkillTree()
           local tmp_1 = {condition_1_1,condition_1_2}
           node_1:setIConditionS(tmp_1,Enum_BT.Condition_Relation.BT_AND)
     node:addNode(node_1)
-          ---@type NodeAction
-          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000017")
-                -----@type bt_ac_playSkill
-                local ac_2 = btApplyMap:getClass("bt_ac_playSkill")
-                ac_2:initData({})
-          node_2:setIAction(ac_2)
-    node:addNode(node_2)
+
+    node:addNode(self:createSkillSuper(blackBoard))
 
     node:addNode(self:createSmallSkillTree())
     return node
 end
+--- 大招释放树
+function CreateUtils:createSkillSuper(blackBoard)
+    ---@type NodeSequence
+    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"create_SkillSuper_001")
+
+    ---@type NodeAction
+    local node_ac_skillPlayTime = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_002")
+    node_ac_skillPlayTime:setIAction(self:getIAction("bt_ac_setSkillPlayTime",Enum_Battle.SkillTag.Skill_1))
+
+    node:addNode(node_ac_skillPlayTime)
+    node:addNode(self:createStopFindWay())
+
+    local skillData = blackBoard._skillData[Enum_Battle.SkillTag.Skill_1]
+    ---@type NodeAction
+    local node_ac_playSkill = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
+    node_ac_playSkill:setIAction(self:getIAction("bt_ac_playSkill", skillData))
+
+    node:addNode(node_ac_playSkill)
+
+    return node
+end
+--- 停止寻路
+function CreateUtils:createStopFindWay()
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createStopFindWay001")
+    node:setIAction(self:getIAction("bt_ac_setValue",{key = "_find_target_pos",value = nil}))
+    return node
+end
+
 
 function CreateUtils:createSmallSkillTree()
     ---@type NodeParallelAll

@@ -11,7 +11,7 @@ public class RendererLayerEditor
 {
     public static void Register()
     {
-        
+        //UnityEditor.MeshRendererEditor
         // MeshRendererEditor
         Type type = typeof(AssetDatabase).Assembly.GetType("UnityEditor.MeshRendererEditor");
         MethodInfo method = type.GetMethod("OnInspectorGUI", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
@@ -34,45 +34,76 @@ public class RendererLayerEditor
     static void SubRendererOnInspectorGUI(Editor editor)
     {
         //Debug.Log(editor.target);
-        if (editor.target != null)
+        if (editor.target == null)
         {
+            return;
+        }
+        
 
-            var renderer = editor.target as Renderer;
+        var renderer = editor.target as Renderer;
 
-            var options = GetSortingLayerNames();
-            var picks = new int[options.Length];
-            //Debug.Log($"renderer.sortingLayerName:{renderer.sortingLayerName},options.len:{options.Length}");
-            var name = renderer.sortingLayerName;
-            var choice = -1;
-            for (int i = 0; i < options.Length; i++)
-            {
-                picks[i] = i;
-                if (name == options[i]) choice = i;
-            }
+        FieldInfo info = editor.GetType().BaseType.GetField("m_SortingOrder", BindingFlags.NonPublic | BindingFlags.Instance);
+        SerializedProperty sp = info.GetValue(editor) as SerializedProperty;
+        FieldInfo info1 = editor.GetType().BaseType.GetField("m_SortingLayerID", BindingFlags.NonPublic | BindingFlags.Instance);
+        SerializedProperty sp1 = info1.GetValue(editor) as SerializedProperty;
 
+        var options = RendererLayerEditor.GetSortingLayerNames();
+        var picks = new int[options.Length];
+        //Debug.Log($"renderer.sortingLayerName:{renderer.sortingLayerName},options.len:{options.Length}");
+        var name = renderer.sortingLayerName;
+        var choice = -1;
+        for (int i = 0; i < options.Length; i++)
+        {
+            picks[i] = i;
+            if (name == options[i]) choice = i;
+        }
+        if(!sp1.hasMultipleDifferentValues)
+        {
             choice = EditorGUILayout.IntPopup("Sorting Layer", choice, options, picks);
 
             string oldLayerName = renderer.sortingLayerName;
-            renderer.sortingLayerName = options[choice];
-
-            int order = renderer.sortingOrder;
-            renderer.sortingOrder = EditorGUILayout.IntField("Sorting Order", renderer.sortingOrder);
-
-            if(renderer.sortingOrder!=order||renderer.sortingLayerName!= oldLayerName)
+            string newLayerName = options[choice];
+            renderer.sortingLayerName = newLayerName;
+            ///多重编辑
+            if(oldLayerName!=newLayerName)
             {
-                EditorUtility.SetDirty(renderer);
+                foreach (var item in editor.targets)
+                {
+                    var renderer1 = item as Renderer;
+                    renderer1.sortingLayerName = newLayerName;
+                    EditorUtility.SetDirty(renderer1);
+                }
             }
-            if(editor.target is MeshRenderer)
-            {
-                SubRendererOnInspectorGUIProxy(editor);
-            }
-            else 
-            {
-                SubRendererOnInspectorGUIProxyE(editor);
-            }
-            
         }
-        
+
+        if(!sp.hasMultipleDifferentValues&& !sp1.hasMultipleDifferentValues)
+        {
+            int oldOrder = renderer.sortingOrder;
+            int newOrder = EditorGUILayout.IntField("Sorting Order", renderer.sortingOrder);
+            ///多重编辑
+            if (oldOrder != newOrder)
+            {
+                foreach (var item in editor.targets)
+                {
+                    var renderer1 = item as Renderer;
+                    renderer1.sortingOrder = newOrder;
+                    EditorUtility.SetDirty(renderer1);
+                }
+            }
+        }
+
+
+        if (editor.target is MeshRenderer)
+        {
+            SubRendererOnInspectorGUIProxy(editor);
+        }
+        else
+        {
+            SubRendererOnInspectorGUIProxyE(editor);
+        }
+
+
+
 
     }
     [MethodImpl(MethodImplOptions.NoOptimization)]

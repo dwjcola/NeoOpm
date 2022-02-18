@@ -391,7 +391,7 @@ GameObject:
   - component: {fileID: 1349334463}
   - component: {fileID: 1349334462}
   m_Layer: 0
-  m_Name: Quad
+  m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -468,7 +468,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1349334461}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.64, y: 0, z: -0.48}
+  m_LocalPosition: {x: -0.64, y: 0, z: 2.32}
   m_LocalScale: {x: 10, y: 10, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

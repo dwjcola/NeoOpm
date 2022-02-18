@@ -555,6 +555,10 @@ public class LC
         };
         return handle;
     }
+    public static void ReleaseAsset(AsyncOperationHandle<GameObject> handle)
+    {
+        ResMgr.Release(handle);
+    }
    
     public static void ClearAll()
     {

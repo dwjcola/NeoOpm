@@ -25,7 +25,7 @@ function BehaviourTreeEntity:initBlackBoard(data)
 end
 
 function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
-    Logger.ErrorTable(blackboard)
+    --Logger.ErrorTable(blackboard)
     --self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
     self._rootNode = CreateUtils:createTree(blackboard)
 

@@ -12,4 +12,4 @@ function Agent:initialize(battleManager,entityContext)
     self._entityContext = entityContext
 end
 
-return
+return Agent

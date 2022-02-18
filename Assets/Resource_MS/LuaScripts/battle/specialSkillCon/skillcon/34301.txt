@@ -23,9 +23,11 @@ local tmp = {
     endFrame = 60,
     timeLineMap = {
         {
+            type = Enum_Battle.TimeLineGroupType.FixFrame ,
             [-1] = {
 
-            }
+            },
+
         },
     },
 

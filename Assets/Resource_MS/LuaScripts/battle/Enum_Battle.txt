@@ -106,6 +106,8 @@ Enum_Battle.SkillLaunchTargetType = {
 }
 --- 技能timeline事件枚举
 Enum_Battle.TimeLineEventType = {
+    UnBreakOffStart = -5,-- 不可被打断开始
+    UnBreakOffEnd = -4, -- 不可被打断结束
     Art = -3,      -- 美术资源 特效啥得
     Sound = -2,    -- 音效
     Cast = -1,     -- 配音
@@ -119,6 +121,7 @@ Enum_Battle.TimeLineEventType = {
 Enum_Battle.TimeLineGroupType = {
    FixFrame = 1,    -- 固定帧率
    TargetFrame = 2, -- 达到目标点得 帧率
+   BreakFixFrame = 3, -- 可以提前结束的 固定帧率
 }
 
 --- 技能释放得特殊条件

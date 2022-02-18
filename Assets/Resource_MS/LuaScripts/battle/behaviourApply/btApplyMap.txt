@@ -32,9 +32,7 @@ btApplyMap.classPath = {
     ["bt_ac_initSkillCd"] = "battle/behaviourApply/battle_hero/action/bt_ac_initSkillCd",
     ["bt_ac_setSkillPlayTime"] = "battle/behaviourApply/battle_hero/action/bt_ac_setSkillPlayTime",
     ["bt_ac_skill_move"] = "battle/behaviourApply/battle_hero/action/bt_ac_skill_move",
-
-
-
+    ["bt_ac_playTimeLine"] = "battle/behaviourApply/battle_hero/action/bt_ac_playTimeLine",
 -------------------------------------------------------------------------------------
 
     ["bt_con_astrict"] = "battle/behaviourApply/battle_hero/condition/bt_con_astrict",

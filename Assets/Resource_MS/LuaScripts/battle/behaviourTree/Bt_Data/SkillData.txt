@@ -5,19 +5,20 @@
 ---@class SkillData
 local SkillData = SimpleClassUtil:class()
 
-function SkillData:initialize(con)
-    self:initParams(con)
+function SkillData:initialize(con,supplementaryData)
+    self:initParams(con,supplementaryData)
 end
 
-function SkillData:initParams(con)
-    self._skillTag = con.tag
+function SkillData:initParams(con,supplementaryData)
+    self._skillTag = con.skillId
     -- 大招 还是 普攻 还是 普通技能
-    self._skillType = con.position
+    self._skillPosition = con.position
     -- 数值表数值
     self._skillCon = con
     -- 上次释放时间
     self._skill_time_play = 0
-
+    -- 技能类型
+    self._skillType = con.type
     -- 是否被动
     self._isPassive = (con.type == Enum_Battle.SkillType.Skill_passive) or (con.type == Enum_Battle.SkillType.Skill_cCalled)
 
@@ -26,13 +27,13 @@ function SkillData:initParams(con)
     -- 技能释放的消耗
     self._skillCost = con.cost or nil
     -- 释放释放得条件 怒气 -- 目前是约定得只有大招才需要怒气 而且是 常量 1000
-    self._skill_need_power = con.type == Enum_Battle.SkillType.Skill_super and BattleConstant.SkillLaunchEnergy or 0
+    self._skill_need_power = con.position == Enum_Battle.SkillTag.Skill_1 and BattleConstant.SkillLaunchEnergy or 0
     -- 技能释放得特殊条件
     self._condition = con.condition or nil
     -- 技能释放得范围判断类型条件
     self._skill_launch_ranger_type = con.rangeType or Enum_Battle.SkillLaunchRangeType.Passive
     --技能释放的范围
-    self._skill_launch_ranger_params = con.ranger
+    self._skill_launch_ranger_params = con.range
     --技能释放的目标类型
     self._skill_launch_target_type = con.targetType
     -- 普攻攻击距离
@@ -44,7 +45,7 @@ function SkillData:initParams(con)
     -- Gcd
     self._skill_gCd = con.gcd and con.gcd * 1000 or 0
     -- 释放时增加的怒气
-    self._skill_add_power = con.addPower or 0
+    self._skill_add_anger = con.addPower or 0
     -- 是否是蓄力
     self._isStoreUp = (con.isSing and con.isSing == 1) or false
     -- 是否持续施法
@@ -68,37 +69,91 @@ function SkillData:initParams(con)
     -- 特殊参数
     self._specialParam = con.param
     -- 帧事件map
-    self._timeLineMap = self:handleTimeLineMap(con)
+    self._timeLineMap = self:handleTimeLineMap(con,supplementaryData)
 
-    ---- 美术timeline
-    --self._artTimeline = self:handleArtTimeLine(con.artTimeline)
-    ---- 声音timeline
-    --self._soundTimeline = self:handleSoundTimeLine(con.soundTimeline)
-    ---- 配音timeline
-    --self._castTimeline = self:handleCastTimeLine(con.castTimeline)
-    ---- 配音timeline
-    --self._eventTimeline = self:handleEventTimeLine(con.eventTimeline)
 
 end
 
-function SkillData:handleTimeLineMap(con)
+function SkillData:handleTimeLineMap(con,supplementaryData)
     if con.type == Enum_Battle.SkillType.Skill_special then
-        return con.timeLineMap
+        return supplementaryData.timeLineMap
     end
-
+    -- 被动 或者 是 被调用
     if (con.type == Enum_Battle.SkillType.Skill_passive) or (con.type == Enum_Battle.SkillType.Skill_cCalled) then
         return {}
     end
-
+    -- 持续施法
     if con.isSpell and con.isSpell == 1 then
-       return {}
+       return self:handleSpellTimeLine(con,supplementaryData)
     end
+    -- 蓄力大招
     if con.isSing and con.isSing == 1 then
-        return {}
+        if self._skillPosition == Enum_Battle.SkillTag.Skill_1 then
+            return self:handleSingTimeLine(con,supplementaryData)
+        else
+            Logger.error("不是 大招 所以 蓄力与否 不做处理  tag == ",self._skillTag)
+        end
     end
-
+    -- 普通大招
     return self:handleCommonTimeline(con)
 
+end
+
+function SkillData:handleSingTimeLine(con,supplementaryData)
+    local tmp = {}
+    tmp.type = Enum_Battle.TimeLineGroupType.BreakFixFrame
+    local supplementaryTimeMap = supplementaryData.timeLineMap[1]
+    for frameCount, frameInfo in pairs(supplementaryTimeMap) do
+        for _, frameData in pairs(frameInfo) do
+            tmp[frameCount] = tmp[frameCount] or {}
+            table.insert(tmp[frameCount],frameData)
+        end
+    end
+    if self._skillPosition == Enum_Battle.SkillTag.Skill_1 then
+        tmp[-1] = tmp[-1] or {}
+        table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
+    end
+    self:handleArtTimeLine(tmp,con)
+
+    self:handleSoundTimeLine(tmp,con)
+
+    self:handleCastTimeLine(tmp,con)
+
+    self:handleEventTimeLine(tmp,con)
+
+    self:handleBreakFrame(tmp,con)
+
+
+end
+
+function SkillData:handleSpellTimeLine(con,supplementaryData)
+    local tmp = {}
+    tmp.type = Enum_Battle.TimeLineGroupType.FixFrame
+
+    local supplementaryTimeMap = supplementaryData.timeLineMap[1]
+    for frameCount, frameInfo in pairs(supplementaryTimeMap) do
+        for _, frameData in pairs(frameInfo) do
+            tmp[frameCount] = tmp[frameCount] or {}
+            table.insert(tmp[frameCount],frameData)
+        end
+    end
+
+    if self._skillPosition == Enum_Battle.SkillTag.Skill_1 then
+        tmp[-1] = tmp[-1] or {}
+        table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
+    end
+
+    self:handleArtTimeLine(tmp,con)
+
+    self:handleSoundTimeLine(tmp,con)
+
+    self:handleCastTimeLine(tmp,con)
+
+    self:handleEventTimeLine(tmp,con)
+
+    if not (con.isSpell and con.isSpell == 1 and con.spellUltra and con.spellUltra == 1) then
+        self:handleBreakFrame(tmp,con)
+    end
 end
 
 function SkillData:handleCommonTimeline(con)
@@ -106,7 +161,27 @@ function SkillData:handleCommonTimeline(con)
 
     tmp.type = Enum_Battle.TimeLineGroupType.FixFrame
 
-    tmp[-1] = { self:newAnimationFrameEvent(1,BattleUtils:getAnimationNameByPos(con.position))}
+    tmp[-1] = { SkillUtils:newAnimationFrameEventByPos(1,con.position)}
+
+    if self._skillPosition == Enum_Battle.SkillTag.Skill_1 then
+       table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
+    end
+
+    self:handleArtTimeLine(tmp,con)
+
+    self:handleSoundTimeLine(tmp,con)
+
+    self:handleCastTimeLine(tmp,con)
+
+    self:handleEventTimeLine(tmp,con)
+
+    self:handleBreakFrame(tmp,con)
+
+
+    return {tmp}
+end
+
+function SkillData:handleArtTimeLine(tmp,con)
     local artTimeline = con.artTimeline or {}
     for i, v in ipairs(artTimeline) do
         local frame = v[1]
@@ -114,8 +189,11 @@ function SkillData:handleCommonTimeline(con)
         if tmp[frame] == nil then
             tmp[frame] = {}
         end
-        table.insert(tmp[frame],self:newArtFrameEvent(frame,v[2],v[3]))
+        table.insert(tmp[frame],SkillUtils:newArtFrameEvent(frame,v[2],v[3]))
     end
+end
+
+function SkillData:handleSoundTimeLine(tmp,con)
     local soundTimeline = con.soundTimeline or {}
     for i, v in ipairs(soundTimeline) do
         local frame = v[1]
@@ -123,8 +201,11 @@ function SkillData:handleCommonTimeline(con)
         if tmp[frame] == nil then
             tmp[frame] = {}
         end
-        table.insert(tmp[frame],self:newSoundFrameEvent(frame,v[2]))
+        table.insert(tmp[frame],SkillUtils:newSoundFrameEvent(frame,v[2]))
     end
+end
+
+function SkillData:handleCastTimeLine(tmp,con)
     local castTimeline = con.castTimeline or {}
     for i, v in ipairs(castTimeline) do
         local frame = v[1]
@@ -132,8 +213,11 @@ function SkillData:handleCommonTimeline(con)
         if tmp[frame] == nil then
             tmp[frame] = {}
         end
-        table.insert(tmp[frame],self:newCastFrameEvent(frame,v[2]))
+        table.insert(tmp[frame],SkillUtils:newCastFrameEvent(frame,v[2]))
     end
+end
+
+function SkillData:handleEventTimeLine(tmp,con)
     local eventTimeline = con.eventTimeline or {}
     for i, v in ipairs(eventTimeline) do
         local frame = v[1]
@@ -141,99 +225,32 @@ function SkillData:handleCommonTimeline(con)
         if tmp[frame] == nil then
             tmp[frame] = {}
         end
-        table.insert(tmp[frame],self:newEventFrameEvent(frame,v,con.param,con.movParam))
+        table.insert(tmp[frame],SkillUtils:newEventFrameEvent(frame,v,con.param,con.movParam))
     end
-
-    return {tmp}
 end
 
----@class FrameDataBase
-local FrameDataBase = {}
-FrameDataBase.type = Enum_Battle.TimeLineEventType.Animation
-FrameDataBase.frame = 0
+function SkillData:handleBreakFrame(tmp,con)
 
----@class AnimationFrameData
-local AnimationFrameData = {}
-AnimationFrameData.type = Enum_Battle.TimeLineEventType.Animation
-AnimationFrameData.frame = 0
-AnimationFrameData.aniName = ""
-
-function SkillData:newAnimationFrameEvent(frame,aniName)
-    return {
-        type = Enum_Battle.TimeLineEventType.Animation,
-        aniName = aniName,
-        frame = frame,
-    }
-end
-
----@class ArtFrameData
-local ArtFrameData = {}
-ArtFrameData.type = Enum_Battle.TimeLineEventType.Art
-ArtFrameData.frame = 0
-ArtFrameData.srcName = "parma_1"
-ArtFrameData.pos = 0
-
-function SkillData:newArtFrameEvent(frame,parma_1,parma_2)
-    return {
-        type = Enum_Battle.TimeLineEventType.Art,
-        frame = frame,
-        srcName = parma_1,
-        pos = parma_2,
-    }
-end
-
----@class SoundFrameData
-local SoundFrameData = {}
-SoundFrameData.type = Enum_Battle.TimeLineEventType.Sound
-SoundFrameData.frame = 0
-SoundFrameData.srcName = ""
-
-function SkillData:newSoundFrameEvent(frame,parma_1)
-    return {
-        type = Enum_Battle.TimeLineEventType.Sound,
-        frame = frame,
-        srcName = parma_1,
-    }
-end
-
----@class CastFrameData
-local CastFrameData = {}
-CastFrameData.type = Enum_Battle.TimeLineEventType.Cast
-CastFrameData.frame = 0
-CastFrameData.srcName = ""
-
-function SkillData:newCastFrameEvent(frame,parma_1)
-    return {
-        type = Enum_Battle.TimeLineEventType.Cast,
-        frame = frame,
-        srcName = parma_1,
-    }
-end
-
-function SkillData:getSkillFirstFrameEvent(specialParam)
-    return {
-        type = Enum_Battle.TimeLineEventType.Blackout,
-        frame = 1,
-        eventTag = Enum_Battle.SkillBlackOut.Open,
-        specialParam = specialParam,
-    }
-end
-
----@class EventFrameData
-local EventFrameData = {}
-EventFrameData.type = Enum_Battle.TimeLineEventType.Blackout
-EventFrameData.frame = 0
-EventFrameData.eventTag = 0
-EventFrameData.specialParam = {}
-EventFrameData.movParam = {}
-function SkillData:newEventFrameEvent(frame,frameData,specialParam,movParam)
-    return {
-        type = frameData[2],
-        frame = frame,
-        eventTag = frameData[3],
-        specialParam = specialParam,
-        movParam = movParam,
-    }
+    -- 前摇不可被打算
+    if not (con.canBreak1 and con.canBreak1 == 1) then
+        tmp[1] = tmp[1] or {}
+        table.insert(tmp[1],SkillUtils:newUnBreakOffStartFrameEvent(1,con.position))
+    else
+        if con.position ~= Enum_Battle.SkillTag.Skill_5 then
+            tmp[con.frontHalf] = tmp[con.frontHalf] or {}
+            table.insert(tmp[con.frontHalf],SkillUtils:newUnBreakOffStartFrameEvent(con.frontHalf,con.position))
+        end
+    end
+    -- 后摇不可以被打断
+    if not (con.canBreak2 and con.canBreak2 == 1) then
+        tmp[con.behindHalf] = tmp[con.behindHalf] or {}
+        table.insert(tmp[con.behindHalf],SkillUtils:newUnBreakOffStartFrameEvent(con.behindHalf,con.position))
+    else
+        if con.position ~= Enum_Battle.SkillTag.Skill_5 then
+            tmp[con.endFrame] = tmp[con.endFrame] or {}
+            table.insert(tmp[con.endFrame],SkillUtils:newUnBreakOffStartFrameEvent(con.endFrame,con.position))
+        end
+    end
 end
 
 return SkillData

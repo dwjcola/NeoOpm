@@ -67,8 +67,10 @@ function BlackBoard_BattleBase:initialize(contextManager)
 
     -- 小技能进行中
     self._smallSkillIng = false
-    -- 其他技能释放中 不能被大招打算
-    self._nothingToSkill = false
+    -- 小技能释放中不能被打断
+    self._smallSkillContBeBreak = false
+    ---- 其他技能释放中 不能被大招打算  暂时没啥用
+    --self._nothingToSkill = true
     -- 大招是否可以释放
     self._bigSkillReady = false
     -- 大招释放按钮是否按下

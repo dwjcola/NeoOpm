@@ -17,7 +17,7 @@ function bt_con_astrict:doCondition(blackBoard,battleManager)
             or blackBoard._isSwimmy
             or blackBoard._isExiled
             or blackBoard._isBeatBack
-            or blackBoard._nothingToSkill
+            --or blackBoard._nothingToSkill
     if not _isUnPutSkill or self._isDefy then
         return Enum_BT.Node_ResultType.Success
     else

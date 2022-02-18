@@ -8,23 +8,23 @@ local bt_con_cd = SimpleClassUtil:class(ICondition)
 ---@param skillData SkillData
 function bt_con_cd:initData(skillData)
     self._skillData = skillData
-    self._skillTag = data.skillTag
-    self._cdTime = data.cdTime
 end
----@param battleManager PVE_Config_Battle_Manager
-function bt_con_cd:doCondition(blackBoard,battleManager)
+---@param agent Agent
+function bt_con_cd:doCondition(blackBoard,agent)
+    local result = Enum_BT.Node_ResultType.Fail
     if  self._skillData then
         if  self._skillData._skill_time_play then
-            local time = skillData._skill_time_play + skillData._skill_time_cd
-            return battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
+            local time =  self._skillData._skill_time_play +  self._skillData._skill_time_cd
+            result = agent._battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
         else
-            BattleLog.log(" 技能数据 没有播放时间戳  ",tostring(self._skillTag))
-            return Enum_BT.Node_ResultType.Success
+            BattleLog.log(" 技能数据 没有播放时间戳  ",tostring( self._skillData._skillTag))
+            result = Enum_BT.Node_ResultType.Success
         end
     else
-        BattleLog.error("黑板没有 技能数据 ",tostring(self._skillTag))
-        return Enum_BT.Node_ResultType.Fail
+        BattleLog.error("黑板没有 技能数据 ",tostring( self._skillData._skillTag))
+        result = Enum_BT.Node_ResultType.Fail
     end
+    return result
 end
 
 

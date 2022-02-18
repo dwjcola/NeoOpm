@@ -42,18 +42,25 @@ function BattleUtils:getPositionByIndex(isLeft,index)
 
 end
 
-function BattleUtils:getAnimationNameByPos(pos)
+function BattleUtils:getAnimationNameByPos(pos,piece)
+    local ani = ""
     if pos == Enum_Battle.SkillTag.Skill_1 then
-        return Enum_Battle.AniState.ultra
+        ani = Enum_Battle.AniState.ultra
     elseif  pos == Enum_Battle.SkillTag.Skill_2 then
-        return Enum_Battle.AniState.skill1
+        ani = Enum_Battle.AniState.skill1
     elseif  pos == Enum_Battle.SkillTag.Skill_3 then
-        return Enum_Battle.AniState.skill2
+        ani = Enum_Battle.AniState.skill2
     elseif  pos == Enum_Battle.SkillTag.Skill_4 then
-        return Enum_Battle.AniState.skill3
+        ani = Enum_Battle.AniState.skill3
     elseif  pos == Enum_Battle.SkillTag.Skill_5 then
-        return Enum_Battle.AniState.baseSkill
+        ani = Enum_Battle.AniState.baseSkill
+    else
+        Logger.error("未处理得技能 位置 pos == ",pos)
     end
+    if piece then
+        ani = string.format("%s_%s",ani,piece)
+    end
+    return ani
 end
 
 function BattleUtils:getHeroAssetPathByHeroId(heroId)

@@ -5,29 +5,33 @@
 --- 技能是固定timeline
 ---@class bt_ac_playTimeLine : IAction
 local bt_ac_playTimeLine = SimpleClassUtil:class(IAction)
----@param skillData SkillData
-function bt_ac_playTimeLine:initData(skillData,timeLineInfo)
-    self._skillData = skillData
-    self._timeLineInfo = timeLineInfo
+
+function bt_ac_playTimeLine:initData(data)
+    ---@type  SkillData
+    self._skillData = data.skillData
+    self._timeLineInfo = data.timeLineInfo
     self._frameCount = 0
 end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_ac_playTimeLine:doAction(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
-    if self._frameCount > self._maxFrameCount then
+    if self._frameCount >  self._skillData._endFrame then
+        self._frameCount = 0
         result = Enum_BT.Node_ResultType.Success
     else
         if self._frameCount == 0 then
             local frameDataList =  self._timeLineInfo[-1] or {}
-            BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList)
+            if frameDataList then
+                BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList)
+            end
         end
         self._frameCount = self._frameCount + 1
-        local frameDataList = self._timeLineInf[self._frameCount]
-        BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList)
-
+        local frameDataList = self._timeLineInfo[self._frameCount]
+        if frameDataList then
+            BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList)
+        end
         result = Enum_BT.Node_ResultType.Running
     end
-
     return result
 end
 

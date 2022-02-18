@@ -7,17 +7,14 @@ local SkillAnalysis = {}
 
 SkillAnalysis.classMap = {
     ["34301"] = "battle/specialSkillCon/skillcon/34301",
+    ["21101"] = "battle/specialSkillCon/skillcon/21101",
 }
 
 
 
 function SkillAnalysis:getSpecialSkillData(skillId)
     if self.classMap and self.classMap[skillId] then
-        local c =  require_path(skillId, self.classPath[skillId])
-        return SkillData:new(c)
-    else
-        BattleLog.error("SkillAnalysis 文件 没有配置  ",skillId ," 数据 ")
-        return nil
+        return require_path(skillId, self.classPath[skillId])
     end
 end
 
@@ -25,10 +22,7 @@ end
 function SkillAnalysis:getSkillData(skillId)
     local con = ConfigUtils:getSkill_BaseCon(skillId)
     if con then
-        if con.type == Enum_Battle.SkillType.Skill_special then
-            return self:getSpecialSkillData(skillId)
-        end
-        return SkillData:new(con)
+        return SkillData:new(con,self:getSpecialSkillData(skillId))
     else
         return nil
     end

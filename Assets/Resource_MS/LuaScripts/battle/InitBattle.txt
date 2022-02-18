@@ -10,6 +10,7 @@ require_path("BattleLog","battle/base/logger/BattleLog")
 require_path("Init_base","battle/base/Init_base")
 require_path("Init_event","battle/eventCode/Init_event")
 require_path("Init_timer","battle/timerScheduler/Init_timer")
+require_path("Enum_Battle","battle/Enum_Battle")
 
 BattleMainManager = require_path("BattleMainManager","battle/manager/BattleMainManager")
 
@@ -21,7 +22,7 @@ BattleLoaderManager = require_path("BattleLoaderManager","battle/manager/BattleL
 BattleUtils = require_path("BattleUtils","battle/utils/BattleUtils")
 ConfigUtils = require_path("ConfigUtils","battle/utils/ConfigUtils")
 BattleMathUtils = require_path("BattleMathUtils","battle/utils/BattleMathUtils")
-
+SkillUtils = require_path("SkillUtils","battle/utils/SkillUtils")
 
 require_path("Init_Bt","battle/behaviourTree/Init_Bt")
 
@@ -55,7 +56,7 @@ MoveSystem =  require_path("MoveSystem","battle/battleRender/system/MoveSystem")
 DebugSystem =  require_path("MoveSystem","battle/battleRender/system/DebugSystem")
 RotationSystem =  require_path("MoveSystem","battle/battleRender/system/RotationSystem")
 
-require_path("Enum_Battle","battle/Enum_Battle")
+
 
 
 

@@ -11,6 +11,7 @@ public class InitializeInEditor
     static InitializeInEditor()
     {
         ObjectFactory.componentWasAdded += ComponentWasAdded;
+        Register();
     }
 
     // Update is called once per frame
@@ -54,5 +55,17 @@ public class InitializeInEditor
         }
 
         list.Clear();
+    }
+
+    static bool register = false;
+
+    static void Register()
+    {
+        if (!register)
+        {
+            RendererLayerEditor.Register();
+            register = true;
+        }
+
     }
 }

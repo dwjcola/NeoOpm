@@ -227,24 +227,13 @@ function LUAUIBase:SetSprite(image,name,native)
   CS.LC.SetSprite(self.view,image,atlas,name,n)
 end
 
----@param image UnityEngine.UI.RawImage
----@param atls string
----@param name string
----@param native bool
-function LUAUIBase:SetRawImageSprite(image,name,native)
-  local n = native
-  if n == nil then
-    n = false
-  end
-  CS.LC.SetRawImageSprite(image,name,n)
-end
 
 function LUAUIBase:SetImageSprite(image,atls,name,native)
   local n = native
   if n == nil then
     n = false
   end
-  CS.LC.SetImageSprite(image,atls,name,n)
+  CS.LC.SetImageSprite(self.view,image,atls,name,n)
 end
 
 function LUAUIBase:ItemTableData(_itemId)---现在道具表分了好几个，这个函数可以找到_itemId所在表的那一行,如果表里没有就为空

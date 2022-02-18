@@ -21,7 +21,7 @@ function LoadingUIFormLUA:Init()
 --[[	if(not isNil(self.bgImage.sprite))then
 		CS.LC.ResMgr:UnloadAsset(self.bgImage.sprite)
 	end]]
-	CS.LC.SetImageSprite(self.bgImage,"Assets/Resource_MS/UI/UITexture/Bg_Login.png","Bg_Login",true)
+	self:SetImageSprite(self.bgImage,"Bg_Login","Bg_Login",true)
 end
 function LoadingUIFormLUA:SetPercent(va)
 	self.slider.value=va.Param1;

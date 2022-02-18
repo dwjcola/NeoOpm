@@ -20,7 +20,7 @@ function PomeloCLUA:Init()
     require("RPCLUA");
     -- self.XluaManager:DoLuaString("RPCLUA","proto")
     -- self.XluaManager:DoLuaString("PushEventLUA","proto")
-    CS.LC.AddEvent(self,"Connect_server_succ",self.ConnectServerInit);
+    CS.LC.AddCSEvent(self,"Connect_server_succ",self.ConnectServerInit);
     require("MessageEnum")
 end
 function PomeloCLUA:ConnectServerInit()

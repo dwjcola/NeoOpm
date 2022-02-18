@@ -7,7 +7,6 @@
 
 using GameFramework;
 using UnityEngine;
-
 namespace NeoOPM
 {
     public static class AssetUtility
@@ -33,6 +32,11 @@ namespace NeoOPM
         public static string GetUIAtalsAsset(string assetName)
         {
             return Utility.Text.Format("Assets/Resource_MS/UI/UIAtlas/{0}.spriteatlas", assetName);
+        }
+        
+        public static string GetUITextrueAsset(string assetName)
+        {
+            return Utility.Text.Format("Assets/Resource_MS/UI/UITexture/{0}.png", assetName);
         }
         
         public static string GetSpineAsset(string assetName)

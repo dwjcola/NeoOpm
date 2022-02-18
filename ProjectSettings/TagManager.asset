@@ -52,6 +52,9 @@ TagManager:
   - name: Role
     uniqueID: 2628433213
     locked: 0
+  - name: RoleMask
+    uniqueID: 3287225001
+    locked: 0
   - name: RoleShow
     uniqueID: 762988525
     locked: 0

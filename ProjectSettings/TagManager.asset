@@ -43,3 +43,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Ground
+    uniqueID: 3179979289
+    locked: 0
+  - name: WidgetBack
+    uniqueID: 2490006135
+    locked: 0
+  - name: Role
+    uniqueID: 2628433213
+    locked: 0
+  - name: RoleMask
+    uniqueID: 3931715121
+    locked: 0
+  - name: RoleShow
+    uniqueID: 762988525
+    locked: 0
+  - name: WidgetFront
+    uniqueID: 1918083
+    locked: 0

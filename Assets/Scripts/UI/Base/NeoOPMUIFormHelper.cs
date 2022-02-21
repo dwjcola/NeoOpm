@@ -62,7 +62,7 @@ namespace NeoOPM
         public override void ReleaseUIForm(object uiFormAsset, object uiFormInstance)
         {
             GameObject go = (GameObject) uiFormInstance;
-            LC.RealeasAtlas(go);
+            LC.RealeasUICatch(go);
             var resMgr = GameFramework.GameFrameworkEntry.GetModule<GameFramework.AddressableResource.IAddressableResourceManager>();
             resMgr.ReleaseInstantiateAsset(go);
             resMgr.UnloadAsset(uiFormAsset);

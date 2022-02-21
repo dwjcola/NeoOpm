@@ -69,3 +69,4 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 Assets/StreamingAssets/config/
 
+/Packages/packages-lock.json

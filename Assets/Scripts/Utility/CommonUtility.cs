@@ -1,77 +1,30 @@
-﻿using System.Collections.Generic;
+﻿#region << 文 件 说 明 >>
+
+/*----------------------------------------------------------------
+// 文件名称：qqq
+// 创 建 者：dongwj
+// 创建时间：2022年02月17日 星期四 15:05
+// 文件版本：V1.0.0
+//===============================================================
+// 功能描述：
+//            
+//
+//----------------------------------------------------------------*/
+
+#endregion
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using UnityGameFramework.Runtime;
 using System;
+using Object = UnityEngine.Object;
 
 namespace NeoOPM
 {
     public static class CommonUtility
     {
-    
-        public static Vector3 getMousePosition(float cPlane)
-        {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, cPlane));
-            Debug.LogError(cPlane);
-            Debug.LogError(Input.mousePosition);
-            worldPosition.y = -1;
-            return worldPosition;
-        }
-
-        public static void DestroyChildren(Transform trans)
-        {
-            int count = trans.childCount;
-            for (int i = count - 1; i >= 0; i--)
-            {
-                var itemTemp = trans.GetChild(i);
-                itemTemp.transform.parent = null;
-                GameObject.DestroyImmediate(itemTemp.gameObject);
-            }
-        }
-
-        public static string[] GetSplitStr(string _str, string _symbol)
-        {
-            char[] tempChar = _symbol.ToCharArray();
-            char tempSymbol = tempChar[0];
-            string[] tempStr = _str.Split(tempSymbol);
-            return tempStr;
-        }
-
-        //string转换为float Arr
-        //eg 1,1,1 
-        public static float[] GetSplitStrFloat(string _str, string _symbol)
-        {
-            char[] tempChar = _symbol.ToCharArray();
-            char tempSymbol = tempChar[0];
-            string[] tempStr = _str.Split(tempSymbol);
-            float[] tempfloat = Array.ConvertAll(tempStr, s => float.Parse(s));
-
-            return tempfloat;
-        }
-
-        //string转换为Vector3
-        //eg 1,1,1 
-        public static Vector3 GetSplitStrVector3(string _str, string _symbol)
-        {
-            char[] tempChar = _symbol.ToCharArray();
-            char tempSymbol = tempChar[0];
-            string[] tempStr = _str.Split(tempSymbol);
-
-            if (tempStr.Length == 3)
-            {
-                float[] tempfloat = Array.ConvertAll(tempStr, s => float.Parse(s));
-                return new Vector3(tempfloat[0], tempfloat[1], tempfloat[2]);
-            }
-            else
-            {
-                return Vector3.zero;
-            }
-            
-        }
-
         /// <summary>
         /// 通过文件路径 读取内容
         /// </summary>
@@ -79,41 +32,21 @@ namespace NeoOPM
         /// <returns></returns>
         public static string ReadFromFile(string fileName)
         {
-            FileStream fstream = new FileStream(fileName, FileMode.OpenOrCreate);
-            fstream.Position = 0;
+            FileStream fStream = new FileStream(fileName, FileMode.OpenOrCreate);
+            fStream.Position = 0;
             StringBuilder logBuilder = new StringBuilder();
-            if (fstream != null)
+            int num = 0;
+            byte[] buffer = new byte[1024];
+            while ((num = fStream.Read(buffer, 0, buffer.Length)) > 0)
             {
-                int num = 0;
-                byte[] buffer = new byte[1024];
-                while ((num = fstream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    logBuilder.Append(Encoding.UTF8.GetString(buffer, 0, num));//使用utf-8编码格式
-                }//返回本次实际读取到的有效字节数
+                logBuilder.Append(Encoding.UTF8.GetString(buffer, 0, num));//使用utf-8编码格式
+            }//返回本次实际读取到的有效字节数
 
-                fstream.Close();
-                return logBuilder.ToString();
-            }
-            return "";
+            fStream.Close();
+            return logBuilder.ToString();
         }
 
-
-        public static bool CheckGuiRaycastObjects()
-        {
-            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
-            eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
-
-            for (int i = 0; i < results.Count; i++)
-            {
-                if (results[i].gameObject.layer == 5)
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
+        
         
 
         public static void SetParent(Transform trans, Transform parent)
@@ -185,7 +118,23 @@ namespace NeoOPM
                 Target.localPosition = position;
             }
         }
-
+        /// <summary>
+        /// 颜色转换
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
+        public static Color HexToColor(string hex)
+        {
+            byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+            byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+            byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+            return new Color(r/255f,g/255f,b/255f,1);
+        }
+        public static Color32 HexToColor32(string hex)
+        {
+            return HexToColor(hex);
+        }
+        #region 截图相关
 
         //持有一个缓存 关闭界面时候清除
         private static int CaptureIndex = -1;
@@ -216,7 +165,7 @@ namespace NeoOPM
             CaptureIndex = index;
             if (Texture2DCache != null)
             {
-                GameObject.DestroyImmediate(Texture2DCache);
+                Object.DestroyImmediate(Texture2DCache);
                 Texture2DCache = tex;
             }
 
@@ -260,7 +209,7 @@ namespace NeoOPM
             CaptureIndex = index;
             if (Texture2DCache != null)
             {
-                GameObject.DestroyImmediate(Texture2DCache);
+                Object.DestroyImmediate(Texture2DCache);
                 Texture2DCache = Texture;
             }
 
@@ -272,10 +221,13 @@ namespace NeoOPM
             CaptureIndex = -1;
             if (Texture2DCache != null)
             {
-                GameObject.DestroyImmediate(Texture2DCache);
+                Object.DestroyImmediate(Texture2DCache);
                 Texture2DCache = null;
             }
         }
+
+        #endregion
+        
     }
     
 }

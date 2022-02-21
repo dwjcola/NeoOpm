@@ -1,0 +1,156 @@
+--===== @Head start============================================================
+--GM指令界面
+GMCommandFormLUA=LUAUIBase:new({
+    tabNames = {},
+    tabsData = {}
+	});
+
+function GMCommandFormLUA:Open()
+    self:AddUIEvent("onclick", self.CloseBtn.gameObject, self.OnCloseMe)
+	self:InitTab();
+end
+function GMCommandFormLUA:InitTab()
+    local gmts = ConfigReader:getDataTable("GmCommand")
+    for i, v in pairs(gmts) do
+        if self.tabsData[v.type] == nil then
+            table.insert(self.tabNames,v.type)
+            self.tabsData[v.type] = {v}
+        else
+            local datas = self.tabsData[v.type]
+            table.insert(datas,v)
+        end
+    end
+    self.tabroot:InitListLua(self,self.tabNames,"UpdateItem");
+end
+
+function GMCommandFormLUA:UpdateItem(item,data,index)
+    item.name1.text = data
+    item.name2.text = data
+    if index == #self.tabNames-1 then--全部初始化完成再做监听
+        self:AddTabEvent(self.tabs,self.TabClick)
+        self.tabs:SelectTab(0)
+    end
+end
+function GMCommandFormLUA:TabClick(index)
+    local key = self.tabNames[index+1]
+    local data = self.tabsData[key]
+    self:Error("click  "..index)
+    self:Error("clickKey  "..key)
+    self:CreateCommand(data)
+end
+function GMCommandFormLUA:CreateCommand(data)
+    self.UIUtility.DestroyChildren(self.root)
+    for _, v in ipairs(data) do
+        local command = self:CreateItem(self.gmTemplate.gameObject,self.root,1)[1]
+        for i = 1, 10 do
+            if v["param"..i.."key"] ~= nil then
+                command["input"..i].gameObject:SetActive(true)
+                command["input"..i].placeholder.text = v["param"..i.."name"]
+            end
+        end
+        command.txt.text = ""
+        command.gmName.text = v.name
+        local rpc = string.split(v.rpc,".")
+        local handle = RPCLUA[rpc[1]]
+        local rpcFunc = handle[rpc[2]]
+        self:AddUIEvent("onclick", command.btn.gameObject, function()
+            local msg = nil
+            for i = 1, 10 do
+                local key = v["param"..i.."key"]
+                if key ~= nil then
+                    msg = msg or {}
+                    msg[key] = tonumber(command["input"..i].text)
+                end
+            end
+            if msg == nil then
+                rpcFunc(function(obj,rep)
+                    command.txt.text = "请求成功,rep:"
+                    for k,v in pairs(rep) do
+                        command.txt.text = command.txt.text..","..tostring(k).."="..tostring(v)
+                    end
+                end,self)
+            else
+                rpcFunc(msg,function(obj,rep)
+                    command.txt.text = "请求成功,rep:"
+                    for k,v in pairs(rep) do
+                        command.txt.text = command.txt.text..","..tostring(k).."="..tostring(v)
+                    end
+                end,self)
+            end
+            
+        end)
+    end
+end
+function GMCommandFormLUA:InitUI()
+--===== @Head end==============================================================
+    
+    local AddBlockUI = self:CreateItem(self.gmTemplate.gameObject,self.root,1)[1]
+    AddBlockUI.input1.gameObject:SetActive(true)
+    AddBlockUI.input1.placeholder.text = "地块id"
+
+    AddBlockUI.input2.gameObject:SetActive(false)
+    AddBlockUI.input3.gameObject:SetActive(false)
+    AddBlockUI.input4.gameObject:SetActive(false)
+    AddBlockUI.input5.gameObject:SetActive(false)
+    AddBlockUI.input6.gameObject:SetActive(false)
+    AddBlockUI.input7.gameObject:SetActive(false)
+    AddBlockUI.input8.gameObject:SetActive(false)
+    AddBlockUI.input9.gameObject:SetActive(false)
+    AddBlockUI.input10.gameObject:SetActive(false)
+    AddBlockUI.txt.text = "增加指定id地块"
+    AddBlockUI.gmName.text = "增加地块"
+    self:AddUIEvent("onclick", AddBlockUI.btn.gameObject, function()
+        local msg = {}
+        --===== AddBlock start============================================================
+        msg.Param = tonumber(AddBlockUI.input1.text)
+	    --===== AddBlock end==============================================================
+        RPCLUA.wbBuilding_GM_Handler.AddBlock(msg,function(obj,rep)
+            AddBlockUI.txt.text = "请求成功,rep:"
+            for k,v in pairs(rep) do
+                AddBlockUI.txt.text = AddBlockUI.txt.text..","..tostring(k).."="..tostring(v)
+            end
+        end,self)
+    end)
+
+    local AddTurretUI = self:CreateItem(self.gmTemplate.gameObject,self.root,1)[1]
+    AddTurretUI.input1.gameObject:SetActive(true)
+    AddTurretUI.input1.placeholder.text = "炮塔id"
+
+    AddTurretUI.input2.gameObject:SetActive(true)
+    AddTurretUI.input2.placeholder.text = "炮塔等级"
+
+    AddTurretUI.input3.gameObject:SetActive(true)
+    AddTurretUI.input3.placeholder.text = "炮塔数量"
+
+    AddTurretUI.input4.gameObject:SetActive(false)
+    AddTurretUI.input5.gameObject:SetActive(false)
+    AddTurretUI.input6.gameObject:SetActive(false)
+    AddTurretUI.input7.gameObject:SetActive(false)
+    AddTurretUI.input8.gameObject:SetActive(false)
+    AddTurretUI.input9.gameObject:SetActive(false)
+    AddTurretUI.input10.gameObject:SetActive(false)
+    AddTurretUI.txt.text = "增加指定id炮塔"
+    AddTurretUI.gmName.text = "增加炮塔"
+    self:AddUIEvent("onclick", AddTurretUI.btn.gameObject, function()
+        local msg = {}
+        --===== AddTurret start============================================================
+        msg.TurretId = tonumber(AddTurretUI.input1.text)
+        msg.TurretLevel = tonumber(AddTurretUI.input2.text)
+        msg.TurretCount = tonumber(AddTurretUI.input3.text)
+	--===== AddTurret end==============================================================
+        RPCLUA.wbBuilding_GM_Handler.AddTurret(msg,function(obj,rep)
+            AddTurretUI.txt.text = "请求成功,rep:"..tostring(rep)
+        end,self)
+    end)
+end
+
+function GMCommandFormLUA:OnCloseMe()
+	self:CloseUI("GMCommandForm")
+	self:DestroyChildren(self.root)
+end
+
+function GMCommandFormLUA:OnDestroy()
+	GMCommandFormLUA = nil;
+end
+return GMCommandFormLUA
+--===== @End end==============================================================

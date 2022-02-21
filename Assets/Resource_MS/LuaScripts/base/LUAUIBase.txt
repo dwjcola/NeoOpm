@@ -42,7 +42,8 @@ function LUAUIBase:init()
   self.cs_coroutine=require("cs_coroutine")
   self.UIReminder=CS.UIReminder;
   self.EventTriggerListener=CS.GameFramework.UI.EventTriggerListener
-  self.ServerTime = CS.NeoOPM.ServerTime
+  self.ServerTime = CS.NeoOPM.ServerTime 
+  self.UIUtility = CS.NeoOPM.UIUtility
 end
 
 ---@alias LUAUIBase.UIEventType

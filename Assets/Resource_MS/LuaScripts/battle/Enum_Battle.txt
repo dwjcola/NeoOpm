@@ -134,3 +134,16 @@ Enum_Battle.SkillBlackOut = {
     Open = 0,    -- 开启黑屏
     Close = 1,    -- 关闭黑屏
 }
+--- buff 类型
+Enum_Battle.BuffTimeType = {
+    once = 1,          -- 一次性得
+    forever = 2,       -- 永久
+    timeLimit = 3,     -- 限时
+}
+
+--- 技能释放得特殊条件
+Enum_Battle.SkillCostType = {
+    Anger = 1,    -- 怒气
+    Hp = 2,       -- 生命值
+    Buff = 3,     -- buff
+}

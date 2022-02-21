@@ -109,8 +109,6 @@ function PVE_Config_Battle_Manager:initEntity()
 
 end
 
-
-
 function PVE_Config_Battle_Manager:update(dt)
     if self._ready then
         self._time =  self._time + dt * 1000

@@ -23,7 +23,7 @@ function BattleLogicEventHandle:initialize()
 end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param agent Agent
-function BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameInfo)
+function BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameInfo,frameCount,skillTag)
     for _, frameData in ipairs(frameInfo) do
         if frameData then
             BattleLogicEventHandle:handleSkillFrameData(blackBoard,agent,frameData)
@@ -61,7 +61,6 @@ end
 ---@param frameData AnimationFrameData
 function BattleLogicEventHandle:handleAnimationEvent(blackBoard,agent,frameData)
     local data = {uid = blackBoard._uid,aniName = frameData.aniName,isReset = true,speed = agent._battleManager:getBattleSpeed()}
-
     EventManager:Dispatch_battle(EventType.Event_Battle_Render_SwitchAni, data)
 end
 ---@param agent Agent
@@ -100,7 +99,7 @@ function BattleLogicEventHandle:handleBlackoutEvent(blackBoard,agent,frameData)
     -- todo  战斗黑屏  其他人停止update
 
     local data = {uid = blackBoard._uid,openType = frameData.eventTag}
-    EventManager:Dispatch_battle(EventType.Event_Battle_Render_SwitchAni, data)
+    --EventManager:Dispatch_battle(EventType.Event_Battle_Render_SwitchAni, data)
 
 end
 
@@ -108,6 +107,7 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param frameData UnBreakOffStartFrameData
 function BattleLogicEventHandle:handleUnBreakOffStartEvent(blackBoard,agent,frameData)
+
     blackBoard._smallSkillContBeBreak = true
 end
 

@@ -11,7 +11,7 @@ function bt_ac_setValue:initData(data)
     self._value = data.value
     self._setValueType = data.setValueType or Enum_BT.SetValueType.Bt_Equal
 end
-
+---@param blackBoard BlackBoard_BattleBase
 function bt_ac_setValue:doAction(blackBoard,contextManager)
     if blackBoard then
         if self._setValueType == Enum_BT.SetValueType.Bt_Equal then
@@ -31,7 +31,6 @@ function bt_ac_setValue:doAction(blackBoard,contextManager)
         else
             BattleLog.error("未处理赋值类型 ： ",self._setValueType)
         end
-
     end
     return Enum_BT.Node_ResultType.Success
 end

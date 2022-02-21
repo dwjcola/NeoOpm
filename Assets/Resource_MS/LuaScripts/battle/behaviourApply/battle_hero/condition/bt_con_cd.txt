@@ -13,12 +13,15 @@ end
 function bt_con_cd:doCondition(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
     if  self._skillData then
-        if  self._skillData._skill_time_play then
-            local time =  self._skillData._skill_time_play +  self._skillData._skill_time_cd
-            result = agent._battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
-        else
-            BattleLog.log(" 技能数据 没有播放时间戳  ",tostring( self._skillData._skillTag))
+        if blackBoard._playSkillTag and blackBoard._playSkillTag == self._skillData._skillPosition then
             result = Enum_BT.Node_ResultType.Success
+        else
+            if  self._skillData._skill_time_play then
+                local time =  self._skillData._skill_time_play +  self._skillData._skill_time_cd
+                result = agent._battleManager._time >= time and Enum_BT.Node_ResultType.Success or Enum_BT.Node_ResultType.Fail
+            else
+                result = Enum_BT.Node_ResultType.Success
+            end
         end
     else
         BattleLog.error("黑板没有 技能数据 ",tostring( self._skillData._skillTag))

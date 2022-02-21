@@ -6,62 +6,20 @@
 
 
 require_path("GameStatic_Battle","battle/GameStatic_Battle")
-require_path("BattleLog","battle/base/logger/BattleLog")
 require_path("Init_base","battle/base/Init_base")
+require_path("Enum_Battle","battle/Enum_Battle")
 require_path("Init_event","battle/eventCode/Init_event")
 require_path("Init_timer","battle/timerScheduler/Init_timer")
-require_path("Enum_Battle","battle/Enum_Battle")
-
-BattleMainManager = require_path("BattleMainManager","battle/manager/BattleMainManager")
-
+require_path("Init_Utils","battle/utils/Init_Utils")
+require_path("Init_Manager","battle/manager/Init_Manager")
+require_path("Init_Buff","battle/buff/Init_Buff")
 require_path("BattleContext","battle/context/BattleContext")
-
-BattleLoaderManager = require_path("BattleLoaderManager","battle/manager/BattleLoaderManager"):new()
-
-
-BattleUtils = require_path("BattleUtils","battle/utils/BattleUtils")
-ConfigUtils = require_path("ConfigUtils","battle/utils/ConfigUtils")
-BattleMathUtils = require_path("BattleMathUtils","battle/utils/BattleMathUtils")
-SkillUtils = require_path("SkillUtils","battle/utils/SkillUtils")
-
+require_path("Init_BattleRender","battle/battleRender/Init_BattleRender")
+require_path("Init_BattleLogic","battle/battleLogic/Init_BattleLogic")
 require_path("Init_Bt","battle/behaviourTree/Init_Bt")
-
-
-
-PVE_Config_Battle_Manager = require_path("PVE_Config_Battle_Manager","battle/manager/PVE_Config_Battle_Manager")
-
-BattleTeam = require_path("BattleTeam","battle/battleObject/BattleTeam")
-BattleCharacter = require_path("BattleTeam","battle/battleObject/BattleCharacter")
-
-BattleConstant =  require_path("BattleConstant","battle/model/BattleConstant")
-
-
-BattleLogicWorld = require_path("BattleLogicWorld","battle/battleLogic/BattleLogicWorld")
-
-BattleLogicEventHandle = require_path("BattleEntityContext","battle/battleLogic/BattleLogicEventHandle"):new()
-
-BattleEntityContext = require_path("BattleEntityContext","battle/battleLogic/BattleEntityContext")
-BattleLogicSystemContext = require_path("BattleEntityContext","battle/battleLogic/BattleLogicSystemContext")
-BattleLogicContext = require_path("BattleLogicContext","battle/battleLogic/BattleLogicContext")
-
-BattleRenderCharacter =  require_path("BattleRenderContext","battle/battleRender/BattleRenderCharacter")
-BattleRenderEntityContext = require_path("BattleRenderContext","battle/battleRender/BattleRenderEntityContext")
-BattleRenderContext = require_path("BattleRenderContext","battle/battleRender/BattleRenderContext")
-BattleRenderWorld = require_path("BattleRenderWorld","battle/battleRender/BattleRenderWorld")
-BattleRenderSystemContext = require_path("BattleRenderSystemContext","battle/battleRender/BattleRenderSystemContext")
-
-ISystem =  require_path("ISystem","battle/battleRender/system/ISystem")
-AnimatorSystem =  require_path("AnimatorSystem","battle/battleRender/system/AnimatorSystem")
-MoveSystem =  require_path("MoveSystem","battle/battleRender/system/MoveSystem")
-DebugSystem =  require_path("MoveSystem","battle/battleRender/system/DebugSystem")
-RotationSystem =  require_path("MoveSystem","battle/battleRender/system/RotationSystem")
-
-
-
-
-
+require_path("Init_Model","battle/model/Init_Model")
+require_path("Init_BattleObject","battle/battleObject/Init_BattleObject")
 require_path("Init_Process","battle/processTree/Init_Process")
-
 SkillAnalysis = require_path("SkillAnalysis","battle/specialSkillCon/SkillAnalysis")
 
 

@@ -19,3 +19,7 @@ Queue = require_path("IndexSet","battle/Container/Queue")
 
 -------------------------pool--------------------------------------
 TablePool = require_path("TablePool","battle/pool/TablePool")
+
+
+
+require_path("BattleLog","battle/base/logger/BattleLog")

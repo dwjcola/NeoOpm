@@ -363,7 +363,7 @@ function BattleUtils:handlerCharacterData(campType,heroTeamData,teamData,posInde
         _anger = 0,
         _smallSkillIng = false,
         _bigSkillReady = false,
-        _isKeyDownBigSkill = false,
+        _isKeyDownBigSkill = true,
         _moveSpeed = 0.05,
         _skillData = self:getSkillData(con_hero_detail,heroData.level),
         _volume_r = volume_r,

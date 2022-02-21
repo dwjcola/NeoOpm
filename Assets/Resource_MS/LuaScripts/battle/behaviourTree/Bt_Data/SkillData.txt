@@ -230,9 +230,11 @@ function SkillData:handleEventTimeLine(tmp,con)
 end
 
 function SkillData:handleBreakFrame(tmp,con)
-
-    -- 前摇不可被打算
-    if not (con.canBreak1 and con.canBreak1 == 1) then
+    if con.position == Enum_Battle.SkillTag.Skill_1 then
+        return
+    end
+         -- 前摇不可被打算
+    if (not (con.canBreak1 and con.canBreak1 == 1))  then
         tmp[1] = tmp[1] or {}
         table.insert(tmp[1],SkillUtils:newUnBreakOffStartFrameEvent(1,con.position))
     else
@@ -242,13 +244,13 @@ function SkillData:handleBreakFrame(tmp,con)
         end
     end
     -- 后摇不可以被打断
-    if not (con.canBreak2 and con.canBreak2 == 1) then
-        tmp[con.behindHalf] = tmp[con.behindHalf] or {}
-        table.insert(tmp[con.behindHalf],SkillUtils:newUnBreakOffStartFrameEvent(con.behindHalf,con.position))
+    if (not (con.canBreak2 and con.canBreak2 == 1)) then
+        tmp[con.endFrame] = tmp[con.endFrame] or {}
+        table.insert(tmp[con.endFrame],SkillUtils:newUnBreakOffEndFrameEvent(con.endFrame,con.position))
     else
         if con.position ~= Enum_Battle.SkillTag.Skill_5 then
-            tmp[con.endFrame] = tmp[con.endFrame] or {}
-            table.insert(tmp[con.endFrame],SkillUtils:newUnBreakOffStartFrameEvent(con.endFrame,con.position))
+            tmp[con.behindHalf] = tmp[con.behindHalf] or {}
+            table.insert(tmp[con.behindHalf],SkillUtils:newUnBreakOffEndFrameEvent(con.behindHalf,con.position))
         end
     end
 end

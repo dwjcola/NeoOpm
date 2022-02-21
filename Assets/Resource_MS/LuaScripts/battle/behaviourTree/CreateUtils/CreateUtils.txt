@@ -151,7 +151,7 @@ function CreateUtils:createLiveTree(blackboard)
     node:addNode(self:createLoopSkillsTree(blackboard))
     return node
 end
-
+---初始化技能Cd
 function CreateUtils:createInitSkillCdTree(blackboard)
     ---@type NodeAction
     local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createInitSkillCdTree_0001")
@@ -248,7 +248,7 @@ function CreateUtils:createBigSkillJudgeTree(blackboard)
     ---@type NodeIfJudge 判断是否满足 大招释放条件
     local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000007")
 
-    node:addNode(self:baseSkillCondition(blackboard,skillData))
+    node:addNode(self:baseSkillCondition(blackboard,skillData,false))
 
     node:addNode(self:bigSkillCondition_to_true(blackboard,skillData))
 
@@ -258,25 +258,28 @@ function CreateUtils:createBigSkillJudgeTree(blackboard)
 end
 ---@param blackboard BlackBoard_BattleBase
 ---@param skillData SkillData
-function CreateUtils:baseSkillCondition(blackboard,skillData)
+function CreateUtils:baseSkillCondition(blackboard,skillData,isInfluenced_gcd)
     ---@type NodeConditionGroup
-    local node = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"baseSkillCondition__"..tostring(skillData._skillTag))
-    local condition_1 = self:getICondition("bt_con_compare_base",
+    local node = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,tostring(skillData._skillTag))
+    local tmp = {}
+
+    table.insert(tmp, self:getICondition("bt_con_compare_base",
             { _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = "_anger",
-              _compareTargetValue = skillData._skill_need_power or 0 })
-    local condition_2 = self:getICondition("bt_con_astrict",
-            { skillTag = Enum_Battle.SkillTag.Skill_1, isDefy = skillData._unstoppable, })
+              _compareTargetValue = skillData._skill_need_power or 0 }))
 
-    local condition_4 =  self:getICondition("bt_con_compare_base",
-            { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_smallSkillContBeBreak", _compareTargetValue = false, })
+    table.insert(tmp,self:getICondition("bt_con_astrict",
+            { skillTag = Enum_Battle.SkillTag.Skill_1, isDefy = skillData._unstoppable, }))
 
-    local condition_5 = self:getICondition("bt_con_cd", skillData)
+    table.insert(tmp, self:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_smallSkillContBeBreak", _compareTargetValue = false, }))
 
-    local condition_6 = self:getICondition("bt_con_compare_base",
-            { _compareType = Enum_BT.CompareType.BT_LessThanEqual, _key = "_gcd", _compareTargetValue = 0, })
+    table.insert(tmp, self:getICondition("bt_con_cd", skillData))
 
 
-    local tmp = {condition_1,condition_2,condition_4,condition_5,condition_6} --condition_6
+    if isInfluenced_gcd then
+        table.insert(tmp, self:getICondition("bt_con_compare_base",
+                { _compareType = Enum_BT.CompareType.BT_LessThanEqual, _key = "_gcd", _compareTargetValue = 0, }))
+    end
     if skillData and skillData._condition then
         local specialConNode = self:getSkillFireSpecialCon(blackboard, skillData)
         if specialConNode then
@@ -369,11 +372,16 @@ function CreateUtils:createSkill(blackBoard,skillTag)
     ---@type NodeSequence
     local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"create_SkillSuper_001")
 
+    node:addNode(self:createSetPlaySkill(skillTag))
     node:addNode(self:createSetSkillPlayTime())
     node:addNode(self:createStopFindWay())
     ---@type SkillData
     local skillData = blackBoard._skillData[skillTag]
+
+    self:createSetGcd(node,skillData)
+
     local timeMap = skillData._timeLineMap or {}
+
     for i, v in ipairs(timeMap) do
         ---@type NodeAction
         local node_ac_playSkill = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
@@ -388,20 +396,41 @@ function CreateUtils:createSkill(blackBoard,skillTag)
         end
         node:addNode(node_ac_playSkill)
     end
-    if skillData._skill_gCd > 0 then
-        node:addNode(self:createSetGcd(skillData._skill_gCd))
-    end
     node:addNode(self:createSetAnger(skillData._skill_add_anger))
+    self:setSkillPlayCost(node,skillData)
+    node:addNode(self:createSetPlaySkill(nil))
     return node
 end
-
-function CreateUtils:createSetGcd(gcd)
+-- 设置 gcd
+function CreateUtils:createSetGcd(rootNode,skillData)
+    if skillData._skill_gCd and skillData._skill_gCd > 0 then
+        ---@type NodeAction
+        local node = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SetGcd")
+        node:setIAction(self:getIAction("bt_ac_setValue",{key = "_gcd",value = skillData._skill_gCd}))
+        rootNode:addNode(node)
+    end
+end
+-- 技能释放得 消耗 gcd
+---@param skillData SkillData
+function CreateUtils:setSkillPlayCost(rootNode,skillData)
+    if skillData._skillCost and skillData._skillCost[1] and skillData._skillCost[2]  then
+        if skillData._skillCost[1] == Enum_Battle.SkillCostType.Anger then
+            ---@type NodeAction
+            local node = self:getNodeByType(Enum_BT.Node_Type.Action,"set_SkillPlayCost_anger")
+            node:setIAction(self:getIAction("bt_ac_setValue",{key = "_anger",value = 0}))
+            rootNode:addNode(node)
+        end
+    end
+end
+--设置正在释放得技能 是哪个
+function CreateUtils:createSetPlaySkill(skillTag)
     ---@type NodeAction
-    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createSetGcd")
-    node:setIAction(self:getIAction("bt_ac_setValue",{key = "_gcd",value = gcd}))
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SetPlaySkill")
+    node:setIAction(self:getIAction("bt_ac_setValue",{key = "_playSkillTag",value = skillTag}))
     return node
 end
 
+-- 设置怒气
 function CreateUtils:createSetAnger(anger)
     ---@type NodeAction
     local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createSetAnger")
@@ -534,7 +563,7 @@ function CreateUtils:createOrdinarySkillTree(blackboard)
     local skillData = blackboard._skillData[Enum_Battle.SkillTag.Skill_5]
     ---@type NodeIfJudge 判断 能不能 释放普攻
     local node_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000027")
-    node_2:addNode(self:baseSkillCondition(blackboard,skillData))
+    node_2:addNode(self:baseSkillCondition(blackboard,skillData,false))
     node_2:addNode(self:createSkill(blackboard,Enum_Battle.SkillTag.Skill_5))
     node_2:addNode(self:createTreeExceptSkillTree())
     return node_2

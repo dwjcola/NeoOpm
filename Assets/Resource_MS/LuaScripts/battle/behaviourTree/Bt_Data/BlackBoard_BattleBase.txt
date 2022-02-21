@@ -96,6 +96,8 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._attackMe_map ={}
 
 
+    -- 正在播放的技能tag
+    self._playSkillTag = nil
 end
 
 return BlackBoard_BattleBase

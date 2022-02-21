@@ -22,13 +22,13 @@ function bt_ac_playTimeLine:doAction(blackBoard,agent)
         if self._frameCount == 0 then
             local frameDataList =  self._timeLineInfo[-1] or {}
             if frameDataList then
-                BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList)
+                BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList,self._frameCount,self._skillData._skillTag)
             end
         end
         self._frameCount = self._frameCount + 1
         local frameDataList = self._timeLineInfo[self._frameCount]
         if frameDataList then
-            BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList)
+            BattleLogicEventHandle:handleSkillFrameInfo(blackBoard,agent,frameDataList,self._frameCount,self._skillData._skillTag)
         end
         result = Enum_BT.Node_ResultType.Running
     end

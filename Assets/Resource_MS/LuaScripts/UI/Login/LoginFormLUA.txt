@@ -37,50 +37,13 @@ function LoginFormLUA:ConnectLogin()
 		end
 	end
 
-	--self:EnterServerBack()
+	--self:EnterServerBack()--跳过登录
 end
 function LoginFormLUA:Login()
---[[	local gos = {}
-	for i = 1, 40000 do
-		table.insert(gos,CS.UnityEngine.GameObject())
-	end
-	startT = os.clock()
-	--
-	for i = 1, 9999 do
-		CS.LC.GetOrAddComponent(gos[i], "GameObjectGizmosCircleLine")
-	end
-	endT = os.clock()
-	print("--------------A-----------------"..tostring(endT - startT))
-	
-	startT = os.clock()
-	for i = 10000, 19999 do
-		gos[i]:GetOrAddComponent(typeof(CS.GameObjectGizmosCircleLine))
-	end
-	endT = os.clock()
-	print("--------------B-----------------"..tostring(endT - startT))
-	
-	startT = os.clock()
-	for i = 20000, 29999 do
-		CS.LC.GetOrAddComponent(gos[i], typeof(CS.GameObjectGizmosCircleLine))
-	end
-	endT = os.clock()
-	print("--------------C-----------------"..tostring(endT - startT))
-
-	startT = os.clock()
-	for i = 30000, 39999 do
-		CS.LC.GetOrAddComponent(gos[i], typeof(CS.GameObjectGizmosCircleLine))
-	end
-	endT = os.clock()
-	print("--------------C-----------------"..tostring(endT - startT))]]
-	
-	--self.loginBtn:GetOrAddComponent(CS.GameObjectGizmosCircleLine)
-	--self:OpenUI("Test1")
 	if self.CurrentServerInfo ~= nil then
 		self:ConnectToServer(self.CurrentServerInfo.ip,self.CurrentServerInfo.port);
 	end
 	self:CloseUI("ServerListForm")
---[[	local lv = ConfigReader:getDataByNameAndId("Hero_Level",1)
-	self:Error(lv.name)]]
 end
 function LoginFormLUA:ServerListBack(e)
 	self.login:SetActive(true)

@@ -171,6 +171,7 @@ public static class XLuaRegister
         typeof( System.Action<> ),
            typeof( System.Action<Google.Protobuf.IMessage> ),
             typeof( System.Action<byte[]> ),
+            typeof( System.Action<uint,byte[]> ),
             typeof(Action<byte[],int>),
               typeof( Action<LuaTable,List<string>>),
         typeof(Action<LuaTable,float,LuaTable>),

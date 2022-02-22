@@ -34,8 +34,6 @@ end
 function GMCommandFormLUA:TabClick(index)
     local key = self.tabNames[index+1]
     local data = self.tabsData[key]
-    self:Error("click  "..index)
-    self:Error("clickKey  "..key)
     self:CreateCommand(data)
 end
 function GMCommandFormLUA:CreateCommand(data)
@@ -81,10 +79,10 @@ function GMCommandFormLUA:CreateCommand(data)
         end)
     end
 end
-function GMCommandFormLUA:InitUI()
+function GMCommandFormLUA:AddCommand()
 --===== @Head end==============================================================
     
-    local AddBlockUI = self:CreateItem(self.gmTemplate.gameObject,self.root,1)[1]
+--[[    local AddBlockUI = self:CreateItem(self.gmTemplate.gameObject,self.root,1)[1]
     AddBlockUI.input1.gameObject:SetActive(true)
     AddBlockUI.input1.placeholder.text = "地块id"
 
@@ -141,7 +139,7 @@ function GMCommandFormLUA:InitUI()
         RPCLUA.wbBuilding_GM_Handler.AddTurret(msg,function(obj,rep)
             AddTurretUI.txt.text = "请求成功,rep:"..tostring(rep)
         end,self)
-    end)
+    end)]]
 end
 
 function GMCommandFormLUA:OnCloseMe()

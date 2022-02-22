@@ -238,13 +238,13 @@ namespace Pomelo.DotNetClient
         }*/
         public void LuaPBRequest(uint serviceId, byte[] msg, Action<byte[]> action)
         {
-            this.eventManager.AddCallBack(serviceId, new LuaProtobufReceiver(action));
+            this.eventManager.AddCallBack(reqId, new LuaProtobufReceiver(action));
             protocol.send(reqId, serviceId, msg);
             reqId++;
         }
         public void LuaJsonRequest(uint serviceid,string msg,Action<string> action)
         {
-            this.eventManager.AddCallBack(serviceid, new LuajsonReceiver(action));
+            this.eventManager.AddCallBack(reqId, new LuajsonReceiver(action));
             protocol.send(reqId, serviceid, Encoding.UTF8.GetBytes(msg));
             reqId++;
 

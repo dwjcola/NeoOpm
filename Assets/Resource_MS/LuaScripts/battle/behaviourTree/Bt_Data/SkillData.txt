@@ -98,11 +98,13 @@ function SkillData:handleTimeLineMap(con,supplementaryData)
     return self:handleCommonTimeline(con)
 
 end
-
+--- 蓄力timeLine
 function SkillData:handleSingTimeLine(con,supplementaryData)
     local tmp = {}
     tmp.type = Enum_Battle.TimeLineGroupType.BreakFixFrame
+
     local supplementaryTimeMap = supplementaryData.timeLineMap[1]
+    tmp.param = supplementaryTimeMap.param
     for frameCount, frameInfo in pairs(supplementaryTimeMap) do
         for _, frameData in pairs(frameInfo) do
             tmp[frameCount] = tmp[frameCount] or {}
@@ -113,6 +115,7 @@ function SkillData:handleSingTimeLine(con,supplementaryData)
         tmp[-1] = tmp[-1] or {}
         table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
     end
+
     self:handleArtTimeLine(tmp,con)
 
     self:handleSoundTimeLine(tmp,con)
@@ -124,8 +127,10 @@ function SkillData:handleSingTimeLine(con,supplementaryData)
     self:handleBreakFrame(tmp,con)
 
 
-end
+    return tmp
 
+end
+--- 持续施法timeLine
 function SkillData:handleSpellTimeLine(con,supplementaryData)
     local tmp = {}
     tmp.type = Enum_Battle.TimeLineGroupType.FixFrame
@@ -154,6 +159,7 @@ function SkillData:handleSpellTimeLine(con,supplementaryData)
     if not (con.isSpell and con.isSpell == 1 and con.spellUltra and con.spellUltra == 1) then
         self:handleBreakFrame(tmp,con)
     end
+    return tmp
 end
 
 function SkillData:handleCommonTimeline(con)
@@ -178,7 +184,7 @@ function SkillData:handleCommonTimeline(con)
     self:handleBreakFrame(tmp,con)
 
 
-    return {tmp}
+    return tmp
 end
 
 function SkillData:handleArtTimeLine(tmp,con)

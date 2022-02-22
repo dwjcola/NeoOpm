@@ -119,9 +119,9 @@ Enum_Battle.TimeLineEventType = {
 }
 --- 技能timeline事件枚举
 Enum_Battle.TimeLineGroupType = {
-   FixFrame = 1,    -- 固定帧率
-   TargetFrame = 2, -- 达到目标点得 帧率
-   BreakFixFrame = 3, -- 可以提前结束的 固定帧率
+   FixFrame = 1,      -- 固定帧率
+   BreakFixFrame = 2, -- 可以提前结束的 固定帧率
+   Condition = 3,     -- 达到目标点得 帧率
 }
 
 --- 技能释放得特殊条件

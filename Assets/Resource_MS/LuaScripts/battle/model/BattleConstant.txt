@@ -50,6 +50,9 @@ local BattleConstant = {
     Dist_r_2 = 0.02,
     --- 发招释放需要得能量
     SkillLaunchEnergy = 1000,
+
+    --- 10s
+    BattleEnmityListRefreshCd = 10000,
 }
 
 

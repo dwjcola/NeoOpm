@@ -222,24 +222,24 @@ end
 --- 仇恨值列表
 function CreateUtils:createHostilityValueTree(blackboard)
     -- 仇恨值 目标计算
-    local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
+    local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
           ---@type NodeConditionGroup
-          local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
-                local con_2_1_3_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
-                local con_2_1_3_1_2 = btApplyMap:getClass("bt_con_enmityCd")
-                con_2_1_3_1_2:initData({cdTime = 10000})
-                local con_2_1_3_1_3 = btApplyMap:getClass("bt_onReceive")
-                con_2_1_3_1_3:initData({eventId = EventType.Event_Battle_Died})
-                local con_2_1_3_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
-                con_2_1_3_1_4:initData()
-          node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
-    node_2_1_3:addNode(node_2_1_3_1)
+          local node1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
+                local con_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
+                local con_1_2 = btApplyMap:getClass("bt_con_enmityCd")
+                con_1_2:initData({cdTime = BattleConstant.BattleEnmityListRefreshCd})
+                local con_1_3 = btApplyMap:getClass("bt_onReceive")
+                con_1_3:initData({eventId = EventType.Event_Battle_Died})
+                local con_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
+                con_1_4:initData()
+         node1:setIConditionS({con_1_1,con_1_2,con_1_3,con_1_4},Enum_BT.Condition_Relation.BT_OR)
+    node:addNode(node1)
           ---@type NodeAction
-          local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
-                local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
-          node_2_1_3_2:setIAction(ac_2_1_3_2_1)
-    node_2_1_3:addNode(node_2_1_3_2)
-    return node_2_1_3
+          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
+                local ac_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
+          node_2:setIAction(ac_1)
+    node:addNode(node_2)
+    return node
 end
 ---@param blackboard BlackBoard_BattleBase
 function CreateUtils:createBigSkillJudgeTree(blackboard)
@@ -381,21 +381,19 @@ function CreateUtils:createSkill(blackBoard,skillTag)
     self:createSetGcd(node,skillData)
 
     local timeMap = skillData._timeLineMap or {}
+    ---@type NodeAction
+    local node_ac_playSkill = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
+    if timeMap.type == Enum_Battle.TimeLineGroupType.FixFrame then
+        node_ac_playSkill:setIAction(self:getIAction("bt_ac_playTimeLine",
+                {skillData = skillData ,timeLineInfo = timeMap}))
 
-    for i, v in ipairs(timeMap) do
-        ---@type NodeAction
-        local node_ac_playSkill = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
-        if v.type == Enum_Battle.TimeLineGroupType.FixFrame then
-            node_ac_playSkill:setIAction(self:getIAction("bt_ac_playTimeLine",
-                    {skillData = skillData ,timeLineInfo = v}))
-
-        elseif v.type == Enum_Battle.TimeLineGroupType.BreakFixFrame then
-            -- todo 等待开发
-        else
-            -- todo 等待开发
-        end
-        node:addNode(node_ac_playSkill)
+    elseif timeMap.type == Enum_Battle.TimeLineGroupType.BreakFixFrame then
+        -- todo 等待开发
+    else
+        -- todo 等待开发
     end
+    node:addNode(node_ac_playSkill)
+
     node:addNode(self:createSetAnger(skillData._skill_add_anger))
     self:setSkillPlayCost(node,skillData)
     node:addNode(self:createSetPlaySkill(nil))

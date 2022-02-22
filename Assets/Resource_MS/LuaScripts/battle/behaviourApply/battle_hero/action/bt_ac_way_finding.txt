@@ -15,6 +15,7 @@ function bt_ac_way_finding:initData(data)
 
 end
 ---@param blackBoard BlackBoard_BattleBase
+---@param agent Agent
 function bt_ac_way_finding:doAction(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
     if blackBoard._enmityIndex == 0 then

@@ -6,6 +6,16 @@
 local tmp = {
     timeLineMap = {
         {
+            type = Enum_Battle.TimeLineGroupType.BreakFixFrame,
+            param = {
+                sectionParams = {-1,10,40},
+                breakParams = {
+                    [1] = {
+
+                    }
+                }
+            },
+
             [-1] = {SkillUtils:newAnimationFrameEventByPos(-1,1,1)},
             [10] = {SkillUtils:newAnimationFrameEventByPos(10,1,2)},
             [40] = {SkillUtils:newAnimationFrameEventByPos(40,1,3)},

@@ -74,8 +74,10 @@ namespace Pomelo.DotNetClient
             }
             uint requestId = MsgProtocol.ReadUShortBE(buffer, offset);
             offset += 2;
+            uint errorCode = MsgProtocol.ReadUShortBE(buffer, offset);
+            offset += 2;
             //Construct the message
-            return new Message(type, requestId, buffer, offset);
+            return new Message(type, requestId, errorCode,buffer, offset);
 
         }
 

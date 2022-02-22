@@ -8,6 +8,7 @@ namespace Pomelo.DotNetClient
         public MessageType type;
         //public string route;
         public uint id;
+        public uint errorCode;
         public byte[] body;
         //public int bodyLen;
         public int offset;
@@ -15,10 +16,11 @@ namespace Pomelo.DotNetClient
 
 
 
-        public Message(MessageType type,uint id,byte[]body ,int offset )
+        public Message(MessageType type,uint id,uint errorCode,byte[]body ,int offset )
         {
             this.type = type;
             this.id = id;
+            this.errorCode = errorCode;
             this.body = body;
             this.offset = offset;
         }

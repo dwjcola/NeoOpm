@@ -45,14 +45,14 @@ function PomeloCLUA:PbRequest(serviceid,requstMsgType,requstMsg,callbackParaType
     if(requstMsg~=nil and requstMsgType~=nil)then
         reqMsg=self.pb.encode(requstMsgType,requstMsg);
     end
-    local cbFunc=function(byteArray)
+    local cbFunc=function(errorCode,byteArray)
         local self=PomeloCLUA;
         if(self==nil)then
             CS.LC.Error("PomeloCLUA==nil")
             return;
         end
         local ans =self.pb.decode(callbackParaType,byteArray)
-        callback(backTable,ans);
+        callback(backTable,errorCode,ans);
     end
     self.pomeloClient:LuaPBRequest(serviceid,reqMsg,cbFunc);
     return true
@@ -82,7 +82,7 @@ end
     返回的这个cbFunc是用来删除的,注意仅能使用 RemovePBEvent 删除
 ]]
 function PomeloCLUA:PBOnEvent(serviceid,callbackParaType,callback,backTable)
-    local cbFunc=function(byteArray)
+    local cbFunc=function(errorCode,byteArray)
         local self=PomeloCLUA;
         if(self==nil)then
             CS.LC.Error("PomeloCLUA==nil")
@@ -118,14 +118,14 @@ function PomeloCLUA:JsonRequest(serviceid,requstMsg,callback,backTable)
     if(requstMsg~=nil)then
         reqMsg=self.rapid.encode(requstMsg);
     end
-    local cbFunc=function(jsonStr)
+    local cbFunc=function(errorCode,jsonStr)
         local self=PomeloCLUA;
         if(self==nil)then
             CS.LC.Error("PomeloCLUA==nil")
             return;
         end
         local ans=self.rapid.decode(jsonStr)
-        callback(backTable,ans);
+        callback(backTable,errorCode,ans);
     end
     self.pomeloClient:LuaJsonRequest(serviceid,reqMsg,cbFunc);
     return true

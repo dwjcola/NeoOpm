@@ -12,7 +12,7 @@ function LoginProxy:EnterServer(ServerInfo,cb,lua)
 	local requstMsg = {}
 	requstMsg.PfId = ServerInfo.AccId;
 	self:Warning("RPCLUA.server_even.Login")
-	RPCLUA.server_even.Login(requstMsg,function(l,rep)
+	RPCLUA.server_even.Login(requstMsg,function(l,code,rep)
 		self:UpdataPlayerData(rep)
 		if cb ~= nil then
 			cb(lua);

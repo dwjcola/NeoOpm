@@ -101,7 +101,7 @@ namespace Pomelo.DotNetClient
         {
             get;
         }
-        void doHandle(byte[] data, int offset, byte bodyType);
+        void doHandle(byte[] data, int offset, byte bodyType,uint errorCode);
 
     }
     public class RawReceiver : IReceiveTransfer
@@ -115,7 +115,7 @@ namespace Pomelo.DotNetClient
         {
             this.callback = callback;
         }
-        public void doHandle(byte[] buffer, int offset, byte bodyType)
+        public void doHandle(byte[] buffer, int offset, byte bodyType,uint errorCode)
         {
             callback(buffer, offset);
         }
@@ -131,16 +131,8 @@ namespace Pomelo.DotNetClient
         {
             this.callback = callback;
         }
-        public void doHandle(byte[] buffer, int offset, byte bodyType)
+        public void doHandle(byte[] buffer, int offset, byte bodyType,uint errorCode)
         {
-            //Code type = (Code)bodyType;
-            //if (type != Code.Json)
-            //{
-            //    //Logger.Error("message type error 2 :", type);
-            //    return;
-            //}
-
-
             JsonData msg = null;
 
             if (null != buffer)
@@ -159,13 +151,8 @@ namespace Pomelo.DotNetClient
         {
             callback = callback_;
         }
-        public void doHandle(byte[] buffer, int offset, byte bodyType)
+        public void doHandle(byte[] buffer, int offset, byte bodyType,uint errorCode)
         {
-            //Code type = (Code)bodyType;
-            //if (type != Code.Protobufc && type != Code.Protobuf)
-            //{
-            //    return;
-            //}
             var cis = new pb.CodedInputStream(buffer, offset, buffer.Length - offset);
             T t = new T();
             t.MergeFrom(cis);
@@ -178,61 +165,65 @@ namespace Pomelo.DotNetClient
     }
     public class LuajsonReceiver : IReceiveTransfer
     {
-        private Action<string> callback;
+        private Action<uint,string> callback;
         public Delegate Callback
         {
             get { return callback; }
         }
-        public LuajsonReceiver(Action<string> callback_)
+        public LuajsonReceiver(Action<uint,string> callback_)
         {
             callback = callback_;
         }
-        public void doHandle(byte[] buffer, int offset, byte bodyType)
+        public void doHandle(byte[] buffer, int offset, byte bodyType,uint errorCode)
         {
-            /*Code type = (Code)bodyType;
-            if (type != Code.Protobufc && type != Code.Protobuf)
+            if (errorCode > 0) //有错误则不进行解析
             {
-                return;
-            }*/
-            string str = "";
-            //MemoryStream m = new MemoryStream(buffer, offset, buffer.Length - offset);
-            if (null != buffer)
-            {
-                 str = Encoding.UTF8.GetString(buffer, offset, buffer.Length - offset);
-                
+                callback?.Invoke(errorCode,"");
             }
-            callback?.Invoke(str);
+            else
+            {
+                string str = "";
+                if (null != buffer)
+                {
+                    str = Encoding.UTF8.GetString(buffer, offset, buffer.Length - offset);
+                
+                }
+                callback?.Invoke(errorCode,str);
+            }
+            
         }
         public void doCB(object data)
         {
-            callback(data.ToString());
+            callback(0,data.ToString());
         }
     }
     public class LuaProtobufReceiver : IReceiveTransfer
     {
-        private Action<byte[]> callback;
+        private Action<uint,byte[]> callback;
         public Delegate Callback
         {
             get { return callback; }
         }
-        public LuaProtobufReceiver(Action<byte[]> callback_)
+        public LuaProtobufReceiver(Action<uint,byte[]> callback_)
         {
             callback = callback_;
         }
-        public void doHandle(byte[] buffer, int offset, byte bodyType)
+        public void doHandle(byte[] buffer, int offset, byte bodyType,uint errorCode)
         {
-            /*Code type = (Code)bodyType;
-            if (type != Code.Protobufc && type != Code.Protobuf)
+            if (errorCode > 0)//有错误则不进行解析
             {
-                return;
-            }*/
-            MemoryStream m = new MemoryStream(buffer, offset, buffer.Length - offset);
+                callback?.Invoke(errorCode,null);
+            }
+            else
+            {
+                MemoryStream m = new MemoryStream(buffer, offset, buffer.Length - offset);
+                callback?.Invoke(errorCode,m.ToArray());
+            }
             
-            callback?.Invoke(m.ToArray());
         }
         public void doCB(object data)
         {
-            callback((byte[])data);
+            callback(0,(byte[])data);
         }
     }
 

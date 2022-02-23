@@ -123,4 +123,216 @@ function SkillUtils:newUnBreakOffEndFrameEvent(frame,skillPosition)
     }
 end
 
+function SkillUtils:getCreateType(con)
+    if con.type == Enum_Battle.SkillType.Skill_special then
+        return Enum_Battle.SkillCreateType.Special
+    end
+    -- 被动 或者 是 被调用
+    if (con.type == Enum_Battle.SkillType.Skill_passive) or (con.type == Enum_Battle.SkillType.Skill_cCalled) then
+        return Enum_Battle.SkillCreateType.Passive
+    end
+    -- 持续施法
+    if con.isSpell and con.isSpell == 1 then
+        return Enum_Battle.SkillCreateType.Sustain
+    end
+    -- 蓄力大招
+    if con.isSing and con.isSing == 1 then
+        if con.position == Enum_Battle.SkillTag.Skill_1 then
+            return Enum_Battle.SkillCreateType.Accumulate
+        else
+            Logger.error("不是 大招 所以 蓄力与否 不做处理  tag == ",self._skillTag)
+        end
+    end
+
+    return Enum_Battle.SkillCreateType.General
+end
+
+function SkillUtils:handleTimeLineMap(con,supplementaryData)
+    if con.type == Enum_Battle.SkillType.Skill_special then
+        return supplementaryData.timeLineMap
+    end
+    -- 被动 或者 是 被调用
+    if (con.type == Enum_Battle.SkillType.Skill_passive) or (con.type == Enum_Battle.SkillType.Skill_cCalled) then
+        return {}
+    end
+    -- 持续施法
+    if con.isSpell and con.isSpell == 1 then
+        return self:handleSpellTimeLine(con,supplementaryData)
+    end
+    -- 蓄力大招
+    if con.isSing and con.isSing == 1 then
+        if con.position == Enum_Battle.SkillTag.Skill_1 then
+            return self:handleSingTimeLine(con,supplementaryData)
+        else
+            Logger.error("不是 大招 所以 蓄力与否 不做处理  tag == ",con.skillId)
+        end
+    end
+    -- 普通大招
+    return self:handleCommonTimeline(con)
+
+end
+--- 蓄力timeLine
+function SkillUtils:handleSingTimeLine(con,supplementaryData)
+    local tmp = {}
+    tmp.type = Enum_Battle.TimeLineGroupType.BreakFixFrame
+
+    local supplementaryTimeMap = supplementaryData.timeLineMap[1]
+    tmp.param = supplementaryTimeMap.param
+    for frameCount, frameInfo in pairs(supplementaryTimeMap) do
+        for _, frameData in pairs(frameInfo) do
+            tmp[frameCount] = tmp[frameCount] or {}
+            table.insert(tmp[frameCount],frameData)
+        end
+    end
+    if con.position == Enum_Battle.SkillTag.Skill_1 then
+        tmp[-1] = tmp[-1] or {}
+        table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
+    end
+
+    self:handleArtTimeLine(tmp,con)
+
+    self:handleSoundTimeLine(tmp,con)
+
+    self:handleCastTimeLine(tmp,con)
+
+    self:handleEventTimeLine(tmp,con)
+
+    self:handleBreakFrame(tmp,con)
+
+
+    return tmp
+
+end
+--- 持续施法timeLine
+function SkillUtils:handleSpellTimeLine(con,supplementaryData)
+    local tmp = {}
+    tmp.type = Enum_Battle.TimeLineGroupType.FixFrame
+
+    local supplementaryTimeMap = supplementaryData.timeLineMap[1]
+    for frameCount, frameInfo in pairs(supplementaryTimeMap) do
+        for _, frameData in pairs(frameInfo) do
+            tmp[frameCount] = tmp[frameCount] or {}
+            table.insert(tmp[frameCount],frameData)
+        end
+    end
+
+    if con.position == Enum_Battle.SkillTag.Skill_1 then
+        tmp[-1] = tmp[-1] or {}
+        table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
+    end
+
+    self:handleArtTimeLine(tmp,con)
+
+    self:handleSoundTimeLine(tmp,con)
+
+    self:handleCastTimeLine(tmp,con)
+
+    self:handleEventTimeLine(tmp,con)
+
+    if not (con.isSpell and con.isSpell == 1 and con.spellUltra and con.spellUltra == 1) then
+        self:handleBreakFrame(tmp,con)
+    end
+    return tmp
+end
+
+function SkillUtils:handleCommonTimeline(con)
+    local tmp = {}
+
+    tmp.type = Enum_Battle.TimeLineGroupType.FixFrame
+
+    tmp[-1] = { SkillUtils:newAnimationFrameEventByPos(1,con.position)}
+
+    if con.position == Enum_Battle.SkillTag.Skill_1 then
+        table.insert(tmp[-1],SkillUtils:newSkillBlackoutStartFrameEvent(con.param,con.movParam))
+    end
+
+    self:handleArtTimeLine(tmp,con)
+
+    self:handleSoundTimeLine(tmp,con)
+
+    self:handleCastTimeLine(tmp,con)
+
+    self:handleEventTimeLine(tmp,con)
+
+    self:handleBreakFrame(tmp,con)
+
+
+    return tmp
+end
+
+function SkillUtils:handleArtTimeLine(tmp,con)
+    local artTimeline = con.artTimeline or {}
+    for i, v in ipairs(artTimeline) do
+        local frame = v[1]
+        frame = frame == 0 and -1 or frame
+        if tmp[frame] == nil then
+            tmp[frame] = {}
+        end
+        table.insert(tmp[frame],SkillUtils:newArtFrameEvent(frame,v[2],v[3]))
+    end
+end
+
+function SkillUtils:handleSoundTimeLine(tmp,con)
+    local soundTimeline = con.soundTimeline or {}
+    for i, v in ipairs(soundTimeline) do
+        local frame = v[1]
+        frame = frame == 0 and -1 or frame
+        if tmp[frame] == nil then
+            tmp[frame] = {}
+        end
+        table.insert(tmp[frame],SkillUtils:newSoundFrameEvent(frame,v[2]))
+    end
+end
+
+function SkillUtils:handleCastTimeLine(tmp,con)
+    local castTimeline = con.castTimeline or {}
+    for i, v in ipairs(castTimeline) do
+        local frame = v[1]
+        frame = frame == 0 and -1 or frame
+        if tmp[frame] == nil then
+            tmp[frame] = {}
+        end
+        table.insert(tmp[frame],SkillUtils:newCastFrameEvent(frame,v[2]))
+    end
+end
+
+function SkillUtils:handleEventTimeLine(tmp,con)
+    local eventTimeline = con.eventTimeline or {}
+    for i, v in ipairs(eventTimeline) do
+        local frame = v[1]
+        frame = frame == 0 and -1 or frame
+        if tmp[frame] == nil then
+            tmp[frame] = {}
+        end
+        table.insert(tmp[frame],SkillUtils:newEventFrameEvent(frame,v,con.param,con.movParam))
+    end
+end
+
+function SkillUtils:handleBreakFrame(tmp,con)
+    if con.position == Enum_Battle.SkillTag.Skill_1 then
+        return
+    end
+    -- 前摇不可被打算
+    if (not (con.canBreak1 and con.canBreak1 == 1))  then
+        tmp[1] = tmp[1] or {}
+        table.insert(tmp[1],SkillUtils:newUnBreakOffStartFrameEvent(1,con.position))
+    else
+        if con.position ~= Enum_Battle.SkillTag.Skill_5 then
+            tmp[con.frontHalf] = tmp[con.frontHalf] or {}
+            table.insert(tmp[con.frontHalf],SkillUtils:newUnBreakOffStartFrameEvent(con.frontHalf,con.position))
+        end
+    end
+    -- 后摇不可以被打断
+    if (not (con.canBreak2 and con.canBreak2 == 1)) then
+        tmp[con.endFrame] = tmp[con.endFrame] or {}
+        table.insert(tmp[con.endFrame],SkillUtils:newUnBreakOffEndFrameEvent(con.endFrame,con.position))
+    else
+        if con.position ~= Enum_Battle.SkillTag.Skill_5 then
+            tmp[con.behindHalf] = tmp[con.behindHalf] or {}
+            table.insert(tmp[con.behindHalf],SkillUtils:newUnBreakOffEndFrameEvent(con.behindHalf,con.position))
+        end
+    end
+end
+
+
 return SkillUtils

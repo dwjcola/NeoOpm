@@ -86,6 +86,14 @@ Enum_Battle.Orientation = {
     Left = 1,       -- 朝左
     Right = 2,      -- 朝右
 }
+--- 技能实现 类型
+Enum_Battle.SkillCreateType = {
+    General = 1,   -- 普通技能
+    Accumulate = 2,-- 蓄力技能
+    Sustain = 3,   -- 持续释放
+    Special = 4,   -- 特殊技能
+    Passive = 5,   -- 被动
+}
 
 --- 战斗技能 释放的条件判断 类型
 Enum_Battle.SkillLaunchRangeType = {
@@ -117,6 +125,8 @@ Enum_Battle.TimeLineEventType = {
     MovePos = 3,   -- 位移
     Blackout = 4,  -- 黑屏
 }
+
+
 --- 技能timeline事件枚举
 Enum_Battle.TimeLineGroupType = {
    FixFrame = 1,      -- 固定帧率

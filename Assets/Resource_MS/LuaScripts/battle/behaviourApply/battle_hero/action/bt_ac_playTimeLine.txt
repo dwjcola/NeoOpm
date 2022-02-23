@@ -9,13 +9,14 @@ local bt_ac_playTimeLine = SimpleClassUtil:class(IAction)
 function bt_ac_playTimeLine:initData(data)
     ---@type  SkillData
     self._skillData = data.skillData
-    self._timeLineInfo = data.timeLineInfo
+    self._timeLineInfo = SkillUtils:handleCommonTimeline(self._skillData._skillCon)
     self._frameCount = 0
+    self._endFrame =  self._skillData._skillCon.endFrame or 0
 end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_ac_playTimeLine:doAction(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
-    if self._frameCount >  self._skillData._endFrame then
+    if self._frameCount >  self._endFrame then
         self._frameCount = 0
         result = Enum_BT.Node_ResultType.Success
     else

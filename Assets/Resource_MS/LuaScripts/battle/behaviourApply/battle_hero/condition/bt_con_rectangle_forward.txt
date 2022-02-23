@@ -16,7 +16,7 @@ function bt_con_rectangle_forward:doCondition(blackBoard,agent,dt)
         result = Enum_BT.Node_ResultType.Fail
     else
         if self._skillData then
-            local rangerParams = self._skillData._skill_launch_ranger_params or {}
+            local rangerParams = self._skillData._skillCon.range or {}
             local self_pos2 = Vector2(blackBoard._position.x,blackBoard._position.z)
             local width = rangerParams[1] or 0
             local length = rangerParams[2] or 0

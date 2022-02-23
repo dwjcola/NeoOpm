@@ -13,7 +13,7 @@ end
 function bt_con_cd:doCondition(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
     if  self._skillData then
-        if blackBoard._playSkillTag and blackBoard._playSkillTag == self._skillData._skillPosition then
+        if blackBoard._playSkillTag and blackBoard._playSkillTag == self._skillData._skillCon.position then
             result = Enum_BT.Node_ResultType.Success
         else
             if  self._skillData._skill_time_play then

@@ -7,7 +7,7 @@
 local bt_con_aroundNoEnemy = SimpleClassUtil:class(ICondition)
 ---@param skillData SkillData
 function bt_con_aroundNoEnemy:initData(skillData)
-    self._condition = skillData._condition or {}
+    self._condition = skillData._skillCon.condition or {}
     self._r = self._condition[2] or 0
 end
 ---@param blackBoard BlackBoard_BattleBase

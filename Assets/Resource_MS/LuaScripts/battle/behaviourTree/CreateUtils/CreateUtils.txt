@@ -78,7 +78,7 @@ end
 ---@param blackboard BlackBoard_BattleBase
 ---@param skillData SkillData
 function CreateUtils:getSkillFireSpecialCon(blackboard, skillData)
-    local condition = skillData._condition
+    local condition = skillData._skillCon.condition
     local type = condition[1]
     if type == Enum_Battle.SkillFireSpecialCondition.AroundNoEnemy then
         return  self:getICondition("bt_con_aroundNoEnemy",skillData)
@@ -89,7 +89,7 @@ end
 ---@param blackboard BlackBoard_BattleBase
 ---@param skillData SkillData
 function CreateUtils:getSkillFireRangerCon(blackboard, skillData)
-    local rangeType = skillData._skill_launch_ranger_type
+    local rangeType = skillData._skillCon.rangeType or Enum_Battle.SkillLaunchRangeType.Passive
     if rangeType == Enum_Battle.SkillLaunchRangeType.Passive or rangeType == Enum_Battle.SkillLaunchRangeType.JumpRange then
         return nil
     elseif rangeType == Enum_Battle.SkillLaunchRangeType.Roundness then
@@ -103,21 +103,6 @@ function CreateUtils:getSkillFireRangerCon(blackboard, skillData)
     else
         BattleLog.error("技能范围判断类型 未处理 ： ",rangeType)
     end
-end
-
----@return BlackBoard
-function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
-    local blackBoard = BlackBoard:new()
-    blackBoard._heroId = heroId
-    blackBoard._sceneData = sceneData
-    --blackBoard._index = sceneData.index
-    --blackBoard._position = sceneData.position
-    --blackBoard._skeleton_head = sceneData.skeleton_head
-    --blackBoard._skeleton_bosom = sceneData.skeleton_bosom
-    --blackBoard._skeleton_root = sceneData.skeleton_root
-
-    blackBoard._cultivateData = cultivateData
-    return blackBoard
 end
 
 function CreateUtils:createTree(blackboard)
@@ -209,7 +194,7 @@ function CreateUtils:createPassiveTree(blackboard)
     local node = nil
     if blackboard and blackboard._skillData then
         for i, v in pairs(blackboard._skillData) do
-            if v and v._isPassive then
+            if v and ( v._skillCon.type == Enum_Battle.SkillType.Skill_passive) or (v._skillCon.type == Enum_Battle.SkillType.Skill_cCalled) then
                 if node == nil then
                     node = btApplyMap:getClass("bt_ac_passive")
                     node:addPassive(v)
@@ -280,13 +265,13 @@ function CreateUtils:baseSkillCondition(blackboard,skillData,isInfluenced_gcd)
         table.insert(tmp, self:getICondition("bt_con_compare_base",
                 { _compareType = Enum_BT.CompareType.BT_LessThanEqual, _key = "_gcd", _compareTargetValue = 0, }))
     end
-    if skillData and skillData._condition then
+    if skillData and skillData._skillCon and skillData._skillCon.condition then
         local specialConNode = self:getSkillFireSpecialCon(blackboard, skillData)
         if specialConNode then
             table.insert(tmp,specialConNode)
         end
     end
-    if skillData and skillData._skill_launch_ranger_type then
+    if skillData and skillData._skillCon.rangeType then
         local rangerConNode = self:getSkillFireRangerCon(blackboard, skillData)
         if rangerConNode then
             table.insert(tmp,rangerConNode)
@@ -371,32 +356,22 @@ end
 function CreateUtils:createSkill(blackBoard,skillTag)
     ---@type NodeSequence
     local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"create_SkillSuper_001")
-
+    local skillData = blackBoard._skillData[skillTag]
     node:addNode(self:createSetPlaySkill(skillTag))
     node:addNode(self:createSetSkillPlayTime())
     node:addNode(self:createStopFindWay())
-    ---@type SkillData
-    local skillData = blackBoard._skillData[skillTag]
-
     self:createSetGcd(node,skillData)
-
-    local timeMap = skillData._timeLineMap or {}
-    ---@type NodeAction
-    local node_ac_playSkill = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
-    if timeMap.type == Enum_Battle.TimeLineGroupType.FixFrame then
-        node_ac_playSkill:setIAction(self:getIAction("bt_ac_playTimeLine",
-                {skillData = skillData ,timeLineInfo = timeMap}))
-
-    elseif timeMap.type == Enum_Battle.TimeLineGroupType.BreakFixFrame then
-        -- todo 等待开发
-    else
-        -- todo 等待开发
-    end
-    node:addNode(node_ac_playSkill)
-
+    node:addNode(self:createTimeLineSkill(skillData))
     node:addNode(self:createSetAnger(skillData._skill_add_anger))
     self:setSkillPlayCost(node,skillData)
     node:addNode(self:createSetPlaySkill(nil))
+    return node
+end
+
+function CreateUtils:createTimeLineSkill(skillData)
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
+    node:setIAction(self:getIAction("bt_ac_playTimeLine", {skillData = skillData}))
     return node
 end
 -- 设置 gcd
@@ -411,8 +386,8 @@ end
 -- 技能释放得 消耗 gcd
 ---@param skillData SkillData
 function CreateUtils:setSkillPlayCost(rootNode,skillData)
-    if skillData._skillCost and skillData._skillCost[1] and skillData._skillCost[2]  then
-        if skillData._skillCost[1] == Enum_Battle.SkillCostType.Anger then
+    if skillData._skillCon.cost and skillData._skillCon.cost[1] and skillData._skillCon.cost[2]  then
+        if skillData._skillCon.cost[1] == Enum_Battle.SkillCostType.Anger then
             ---@type NodeAction
             local node = self:getNodeByType(Enum_BT.Node_Type.Action,"set_SkillPlayCost_anger")
             node:setIAction(self:getIAction("bt_ac_setValue",{key = "_anger",value = 0}))
@@ -427,7 +402,6 @@ function CreateUtils:createSetPlaySkill(skillTag)
     node:setIAction(self:getIAction("bt_ac_setValue",{key = "_playSkillTag",value = skillTag}))
     return node
 end
-
 -- 设置怒气
 function CreateUtils:createSetAnger(anger)
     ---@type NodeAction
@@ -442,7 +416,6 @@ function CreateUtils:createSetSkillPlayTime(skillTag)
     node_ac_skillPlayTime:setIAction(self:getIAction("bt_ac_setSkillPlayTime",skillTag))
     return node_ac_skillPlayTime
 end
-
 --- 停止寻路
 function CreateUtils:createStopFindWay()
     ---@type NodeAction
@@ -450,7 +423,6 @@ function CreateUtils:createStopFindWay()
     node:setIAction(self:getIAction("bt_ac_setValue",{key = "_find_target_pos",value = nil}))
     return node
 end
-
 
 function CreateUtils:createSmallSkillTree(blackboard)
     ---@type NodeParallelAll
@@ -632,7 +604,6 @@ function CreateUtils:createFindWayTree()
     node:addNode(node_2)
     return node
 end
-
 
 function CreateUtils:getAwaitTree()
     ---@type NodeSequence

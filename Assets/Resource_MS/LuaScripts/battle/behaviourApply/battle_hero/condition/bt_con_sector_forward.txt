@@ -16,7 +16,7 @@ function bt_con_sector_forward:doCondition(blackBoard,agent,dt)
         result = Enum_BT.Node_ResultType.Fail
     else
         if self._skillData then
-            local rangerParams = self._skillData._skill_launch_ranger_params or {}
+            local rangerParams = self._skillData._skillCon.range or {}
             local attack_angle = rangerParams[1] or 0
             local attack_r = rangerParams[2] or 0
             local vec2_a = Vector2( blackBoard._position.x ,blackBoard._position.z)

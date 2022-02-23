@@ -22,7 +22,7 @@ namespace NeoOPM
 {
 
 
-    public abstract class UGuiForm : UIFormLogic
+    public abstract class UGuiForm : UIFormLogic, ISerializationCallbackReceiver
     {
         [StructLayout(LayoutKind.Explicit, Size = 4)]
         public struct UNum
@@ -160,6 +160,12 @@ namespace NeoOPM
                 key = strkeyList [ i ];
                 if ( string.IsNullOrEmpty ( key ) ) continue;
                 luatable.Set ( key, strvalueList [ i ] );
+            }
+            for (int i = 0; i < intkeyList.Count && i < intvalueList.Count; i++)
+            {
+                key = intkeyList[i];
+                if (string.IsNullOrEmpty(key)) continue;
+                luatable.Set(key, intvalueList[i]);
             }
             luatable.Set ( "trans", this.transform );
             luatable.Set ( "view", this );
@@ -379,7 +385,18 @@ namespace NeoOPM
         {
             return this == null;
         }
-        
+
+        [XLua.BlackList]
+        public void OnBeforeSerialize()
+        {
+            
+        }
+        [XLua.BlackList]
+        public void OnAfterDeserialize()
+        {
+            
+        }
+
         /*
          protected override void OnOpen(object userData)
        {

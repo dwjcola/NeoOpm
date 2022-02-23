@@ -83,6 +83,13 @@ internal class UIViewBaseEditor
     List<Field> fields = null;
     UGuiForm tmpForm;
 
+    static List<string> copykeyList = null;
+    static List<Object> copyvalueList = null; 
+    static List<string> copystrkeyList = null; 
+    static List<string> copystrvalueList = null; 
+    static List<string> copyintkeyList = null; 
+    static List<int>    copyintvalueList = null;
+
     public void ShowGUI(UGuiForm form)
     {
         
@@ -265,6 +272,34 @@ internal class UIViewBaseEditor
         {
             fields.Add(new Field());
         }
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("copy list"))
+        {
+            copykeyList = form.keyList;
+            copyvalueList = form.valueList;
+            copystrkeyList = form.strkeyList;
+            copystrvalueList = form.strvalueList;
+            copyintkeyList = form.intkeyList;
+            copyintvalueList = form.intvalueList;
+        }
+        if (GUILayout.Button("paste list"))
+        {
+            if (copykeyList != null)
+                form.keyList.AddRange(copykeyList);
+            if(copyvalueList != null)
+                form.valueList.AddRange(copyvalueList);
+            if(copystrkeyList != null)
+                form.strkeyList.AddRange(copystrkeyList);
+            if(copystrvalueList != null)
+                form.strvalueList.AddRange(copystrvalueList);
+            if(copyintkeyList != null)
+                form.intkeyList.AddRange(copyintkeyList);
+            if(copyintvalueList != null)
+                form.intvalueList.AddRange(copyintvalueList);
+            fields = null;
+        }
+        EditorGUILayout.EndHorizontal();
+
         EditorGUILayout.EndVertical();
 
 

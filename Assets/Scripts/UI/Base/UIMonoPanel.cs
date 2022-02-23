@@ -3,6 +3,8 @@ using XLua;
 
 namespace NeoOPM
 {
+    // custom editor UIViewEditor
+
     [AddComponentMenu("UIMonoPanel")]
     public class UIMonoPanel : UGuiForm
     {

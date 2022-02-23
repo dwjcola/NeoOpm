@@ -8,6 +8,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
@@ -19,8 +20,32 @@ using Object = UnityEngine.Object;
 
 namespace NeoOPM
 {
+
+
     public abstract class UGuiForm : UIFormLogic
     {
+        [StructLayout(LayoutKind.Explicit, Size = 4)]
+        public struct UNum
+        {
+            [FieldOffset(0)]
+            public byte b0;
+            [FieldOffset(1)]
+            public byte b1;
+            [FieldOffset(2)]
+            public byte b2;
+            [FieldOffset(3)]
+            public byte b3;
+
+            [FieldOffset(0)]
+            public int iv;
+
+            [FieldOffset(0)]
+            public float fv;
+
+            [FieldOffset(0)]
+            public bool bv;
+        }
+
         public const int DepthFactor = 100;
         private const float FadeTime = 0.1f;
         private static Font s_MainFont = null;
@@ -90,16 +115,26 @@ namespace NeoOPM
             go.AddComponent<Text>().font = mainFont;
             Destroy(go);
         }
+        [SerializeField]
         [HideInInspector]
         public List<string> keyList = new List<string>();
+        [SerializeField]
         [HideInInspector]
         public List<Object> valueList = new List<Object>();
-
+        [SerializeField]
         [HideInInspector]
         public List<string> strkeyList = new List<string>();
-
+        [SerializeField]
         [HideInInspector]
         public List<string> strvalueList = new List<string>();
+
+        [SerializeField]
+        [HideInInspector]
+        public List<string> intkeyList = new List<string>();
+        [SerializeField]
+        [HideInInspector]
+        public List<int> intvalueList = new List<int>();
+
         /// <summary>
         /// lua初始化属性绑定
         /// </summary>

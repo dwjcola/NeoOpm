@@ -306,10 +306,10 @@ public class LUAComponentEditor:UIViewItemEditor
     {
         uimono = target as LUAComponent;
         LUAComponent lUA = target as LUAComponent;
-        valueList = uimono.valueList;
-        keyList = uimono.keyList;
-        strkeyList = uimono.strkeyList;
-        strvalueList = uimono.strvalueList;
+        //valueList = uimono.valueList;
+        //keyList = uimono.keyList;
+        //strkeyList = uimono.strkeyList;
+        //strvalueList = uimono.strvalueList;
         AddProperty();
         GUILayout.BeginHorizontal();
         GUILayout.Label("LUAClassName:");

@@ -1,13 +1,18 @@
 --GM指令界面
 GMCommandFormLUA=LUAUIBase:new({
     tabNames = {},
-    tabsData = {}
+    tabsData = {},
+    init = false
 	});
 
 function GMCommandFormLUA:Open()
     self:AddUIEvent("onclick", self.CloseBtn.gameObject, self.OnCloseMe)
-	self:InitTab();
+    if self.init == false then
+        self:InitTab();
+        self.init = true
+    end
 end
+
 function GMCommandFormLUA:InitTab()
     local gmts = ConfigReader:getDataTable("GmCommand")
     for i, v in pairs(gmts) do

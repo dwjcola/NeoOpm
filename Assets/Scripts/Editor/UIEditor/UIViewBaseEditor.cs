@@ -193,7 +193,7 @@ internal class UIViewBaseEditor
             else if (field.type == FieldType.Int)
             {
                 int originiv = field.num.iv;
-                int newiv = EditorGUILayout.DelayedIntField(originiv, GUILayout.MaxWidth(200));
+                int newiv = EditorGUILayout.IntField(originiv, GUILayout.MaxWidth(200));
                 if (newiv != originiv)
                 {
                     field.num.iv = newiv;
@@ -205,7 +205,7 @@ internal class UIViewBaseEditor
             else if (field.type == FieldType.Float)
             {
                 float originfv = field.num.fv;
-                float newfv = EditorGUILayout.DelayedFloatField(originfv, GUILayout.MaxWidth(200));
+                float newfv = EditorGUILayout.FloatField(originfv, GUILayout.MaxWidth(200));
                 if (newfv != originfv)
                 {
                     field.num.fv = newfv;
@@ -216,7 +216,7 @@ internal class UIViewBaseEditor
             else if (field.type == FieldType.String)
             {
                 string originStr = field.content;
-                string newStr = EditorGUILayout.DelayedTextField(originStr, GUILayout.MaxWidth(200));
+                string newStr = EditorGUILayout.TextField(originStr, GUILayout.MaxWidth(200));
                 newStr = newStr.Trim().Replace(" ", "");
                 if (newStr != originStr)
                 {

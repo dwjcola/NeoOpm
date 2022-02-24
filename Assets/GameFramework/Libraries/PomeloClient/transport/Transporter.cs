@@ -162,7 +162,19 @@ namespace Pomelo.DotNetClient
                 pkgLength = (headBuffer[1] << 24) | (headBuffer[2] << 16) |
                                  (headBuffer[3] << 8) | (headBuffer[4] ) ;
                 //pkgLength = (headBuffer[1] << 16) + (headBuffer[2] << 8) + headBuffer[3];
-                pkgLength += 2;//2是serviceId
+                byte[] temp = new byte[2];
+                writeBytes(bytes, offset + headNum, 2, bufferOffset, temp);
+                //为了减小心跳包这里写了个特例
+                PackageType type = PackageType.PKG_DATA;
+                int serviceId = temp[0] << 8 | temp[1];
+                if ((int)PackageType.PKG_HEARTBEAT == serviceId)
+                {
+                    pkgLength += 2;//serviceId->2 心跳包没有reqId和Code
+                }
+                else
+                {
+                    pkgLength += 6;//serviceId->2,requestId->2,errorCode->2
+                }
                 //Init message buffer
                 buffer = new byte[HeadLength + pkgLength];
                 writeBytes(headBuffer, 0, HeadLength, buffer);

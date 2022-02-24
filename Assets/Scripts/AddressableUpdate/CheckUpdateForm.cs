@@ -79,16 +79,6 @@ namespace NeoOPM
             }
         }
 
-        protected override void OnResume()
-        {
-
-            base.OnResume();
-        }
-
-        protected override void OnClose(bool isShutdown, object userData)
-        {
-            base.OnClose(isShutdown, userData);
-        }
         //检查更新，结果表现在UI上
 
         public void ShowUpdateMessage(string _Title, string _Message, UnityAction action = null)

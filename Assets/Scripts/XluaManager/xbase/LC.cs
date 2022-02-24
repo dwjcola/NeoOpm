@@ -18,9 +18,13 @@ using Spine.Unity;
 using UnityEngine.UI;
 using UnityGameFramework.Runtime;
 using GameEntry = NeoOPM.GameEntry;
+using Image = UnityEngine.UI.Image;
 using Object = UnityEngine.Object;
 using System.Reflection;
+using System.Threading.Tasks;
 using UnityEngine.EventSystems;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.U2D;
 
 public class LC
 {
@@ -29,10 +33,9 @@ public class LC
 #else
     public static bool ISDEBUG = false;
 #endif
-
     private static IAddressableResourceManager _resMgr;
+    public static IAddressableResourceManager ResMgr => _resMgr ??= GameFrameworkEntry.GetModule<IAddressableResourceManager>();
 
-    public static IAddressableResourceManager ResMgr => _resMgr ?? GameFrameworkEntry.GetModule<IAddressableResourceManager>();
 
     /// <summary>
     /// lua添加ui事件
@@ -43,7 +46,6 @@ public class LC
     /// <param name="callBack"></param>
     public static void AddUIEvent(LuaTable luaClass, string key, GameObject go, Action<LuaTable, GameObject> callBack)
     {
-        
         switch (key)
         {
             case "onclick":
@@ -86,7 +88,12 @@ public class LC
         EventTriggerListener.Get(go).onUp = null;
         EventTriggerListener.Get(go).onPress  = null;
         EventTriggerListener.Get(go).onExit  = null;
-
+        EventTriggerListener.Get(go).OnDragBegin = null;
+        EventTriggerListener.Get(go).OnDragFuc = null;
+        EventTriggerListener.Get(go).OnDragEnd = null;
+        EventTriggerListener.Get(go).onBeginDragOPM = null;
+        EventTriggerListener.Get(go).onDragOPM = null;
+        EventTriggerListener.Get(go).onEndDragOPM = null;
     }
     public static void AddUIEvent_PointData(string key, GameObject go, Action<GameObject, PointerEventData> callBack)
     {
@@ -172,37 +179,19 @@ public class LC
     /// <param name="key"></param>
     public static void CloseUI(string key)
     {
-        LuaTable panel = GetUITable(key);
+        var panel = GetUITable(key);
         if (panel == null)
         {
             return;
         }
-
-        string tAssetName = panel.Get<string>("AssetName");
-            
-        string tLuaName = panel.Get<string>("LuaName");
-        string tLuaPath = panel.Get<string>("LuaPath");
-
+        string tAssetName = panel.AssetName;
         string assetName = AssetUtility.GetUIFormAsset(tAssetName);
         if (GameEntry.UI.IsLoadingUIForm(assetName))
         {
             return;//如果ui正在打开停止close
         }
-        LuaTable ui;
-        var luaEnv = XluaManager.instance.LuaEnv;
-        if (XluaManager.instance.HasLua(tLuaName, tLuaPath))
-        {
-            ui = luaEnv.Global.Get<LuaTable>(tLuaName);
-            if (ui != null)
-            {
-                UGuiForm view;
-                ui.Get("view", out view);
-                if (view)
-                {
-                    GameEntry.UI.CloseUIForm(view);
-                }
-            }
-        }
+        GameEntry.UI.CloseUI(key);
+        
     }
     //读取xlua表
     public static LuaTable GetTable(string tableName,string key)
@@ -228,7 +217,11 @@ public class LC
         Func<LuaTable, LuaTable> func;
         t.Get(funcName, out func);
         func(t);
+        t.Dispose();
     }
+
+    #region 移动到了GameUtility.cs中
+
     public static Vector3 GetRayRaycastHitInfo(Ray ray)
     {
         RaycastHit hit;
@@ -284,431 +277,6 @@ public class LC
 
         return new Vector2(imgPos.x, imgPos.y);
     }
-    public static void ChangeStateTo(Type procedureType)
-    {
-        IProcedureManager pm = GameFrameworkEntry.GetModule<IProcedureManager>(); ;
-        pm.AnyStateToChange(procedureType);
-    }
-    public static void ShowOrHideUIGroup(string groupName, bool b)
-    {
-        IUIGroup g = GameEntry.UI.GetUIGroup(groupName);
-        if (g != null)
-        {
-            UGuiGroupHelper ugh = (UGuiGroupHelper)g.Helper;
-            if (ugh != null)
-            {
-                ugh.gameObject.SetActive(b);
-            }
-        }
-    }
-    /// <summary>
-    /// 打开UI
-    /// </summary>
-    /// <param name="key"></param>
-    /// <param name="para"></param>
-	public static int? OpenUI(string key, object para = null)
-    {
-        return GameEntry.UI.OpenUI(key, para);
-    }
-    public static LuaTable ShowPartPanel(string key, Transform parent, object para = null)
-    {
-        return GameEntry.UI.ShowPartUIForm(key, parent, para);
-    }
- 
-    public static LuaTable GetUITable(string uiKey)
-    {
-        LuaTable ui = null;
-        var luaEnv = XluaManager.instance.LuaEnv;
-        LuaTable panel = luaEnv.Global.Get<LuaTable>("TPanel");
-        if (panel != null)
-        {
-           ui = panel.Get<LuaTable>(uiKey);
-        }
-
-        return ui;
-    }
-    public static LuaTable CreateItem(GameObject item, Transform parent, LuaTable lua)
-    {
-        GameObject go = Object.Instantiate<GameObject>(item, parent, false);
-        go.transform.localPosition = Vector3.zero;
-        go.transform.localScale = Vector3.one;
-        go.SetActive(true);
-        UIMonoItem mono = go.GetComponent<UIMonoItem>();
-        if (mono)
-        {
-            mono.OnInit(lua);
-        }
-
-        return lua;
-    }
-    public static GameObject CreatePrefab(GameObject prefab,Transform parent)
-    {
-        GameObject obj = Object.Instantiate(prefab,Vector3.zero,Quaternion.identity, parent);
-        obj.SetActive(true);
-        return obj;
-    }
-    public static GameObject CreateGame()
-    {
-        GameObject obj = new GameObject();
-        obj.SetActive(true);
-        return obj;
-    }
-    public static void AddCSEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
-    {
-        EventHandler<GameEventArgs> handler = (send, e) =>
-        {
-            callBack(luaClass, e);
-        };
-        string luaId = "";
-        luaClass.Get<string, string>("luaId", out luaId);
-        string hkey = luaId + callBack.GetHashCode() + key.ToString();
-        if (!handlers.ContainsKey(hkey))
-        {
-            handlers.Add(hkey, handler);
-        }
-        else
-        {
-            handlers[hkey] = handler;
-        }
-
-        GameEntry.Event.Subscribe(key, handler);
-    }
-    public static void RemoveCSEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
-    {
-        EventHandler<GameEventArgs> mh;
-        string luaId = "";
-        luaClass.Get<string, string>("luaId", out luaId);
-        var hkey = luaId + callBack.GetHashCode() + key.ToString();
-        if (handlers.TryGetValue(hkey, out mh))
-        {
-            GameEntry.Event.Unsubscribe(key, mh);
-            handlers.Remove(hkey);
-            mh = null;
-        }
-
-    }
-
-    public static void Subscribe(string key, EventHandler<GameEventArgs> handler)
-    {
-        GameEntry.Event.Subscribe(key.GetHashCode(), handler);
-    }
-    public static void Unsubscribe(string key, EventHandler<GameEventArgs> handler)
-    {
-        GameEntry.Event.Unsubscribe(key.GetHashCode(), handler);
-    }
-    public static void AddEvent(LuaTable luaClass, string key, Action<LuaTable, object> callBack)
-    {
-        AddEvent(luaClass, key.GetHashCode(), callBack);
-    }
-    public static void SendEvent(string key, object data = null, object data2 = null, object data3 = null, object data4 = null)
-    {
-        SendEvent(key.GetHashCode(), data, data2, data3, data4);
-    }
-
-    public static void RemoveEvent(LuaTable luaClass, string key, Action<LuaTable, object> callBack)
-    {
-        RemoveEvent(luaClass, key.GetHashCode(), callBack);
-    }
-    private static Dictionary<string, EventHandler<GameEventArgs>> handlers = new Dictionary<string, EventHandler<GameEventArgs>>();
-    private static void AddEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
-    {
-        EventHandler<GameEventArgs> handler = (send, e) =>
-        {
-            LUAEventArgs lea = (LUAEventArgs)e;
-            callBack(luaClass, lea);
-        };
-        string luaId = "";
-        luaClass.Get<string, string>("luaId", out luaId);
-        string hkey = luaId + callBack.GetHashCode() + key.ToString();
-        if (!handlers.ContainsKey(hkey))
-        {
-            handlers.Add(hkey, handler);
-        }
-        else
-        {
-            handlers[hkey] = handler;
-        }
-        GameEntry.Event.Subscribe(key, handler);
-    }
-
-    private static EventComponent m_EventComponent = null;
-    private static object EventSender = new object();
-    private static void SendEvent(int key, object data = null, object data2 = null, object data3 = null, object data4 = null)
-    {
-        if (m_EventComponent == null)
-        {
-            m_EventComponent = UnityGameFramework.Runtime.GameEntry.GetComponent<EventComponent>();
-        }
-        m_EventComponent.Fire(EventSender, LUAEventArgs.Create(key, data, data2, data3, data4));
-    }
-    private static void RemoveEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
-    {
-        EventHandler<GameEventArgs> mh;
-        string luaId = "";
-        luaClass.Get<string, string>("luaId", out luaId);
-        var hkey = luaId + callBack.GetHashCode() + key.ToString();
-        if (handlers.TryGetValue(hkey, out mh))
-        {
-            GameEntry.Event.Unsubscribe(key, mh);
-            handlers.Remove(hkey);
-            mh = null;
-        }
-    }
-
-    /// <summary>
-    /// 与SetSprite的区别在于这个不是找的SpriteAtlas后缀的图集，而是.png等
-    /// </summary>
-    /// <param name="sp"></param>
-    /// <param name="atlas"></param>
-    /// <param name="spname"></param>
-    public static async void SetImageSprite(Image sp, string atlas, string spname, bool native = false)
-    {
-        var sprite = await ResMgr.GetSprite(atlas, spname);
-        if (sp == null)
-            return;
-        sp.sprite = sprite;
-        if (native)
-        {
-            sp.SetNativeSize();
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="sp"></param>
-    /// <param name="atlas"></param>
-    /// <param name="spname"></param>
-    public static async void SetRawImageSprite(RawImage sp,string textureName, bool native = false)
-    {
-        var texture = await ResMgr.GetTexture(textureName);
-        if (sp == null)
-            return;
-        sp.texture = texture;
-        if (native)
-        {
-            sp.SetNativeSize();
-        }
-    }
-    
-    /// <summary>
-    /// 设置SpriteRenderer sprite
-    /// </summary>
-    /// <param name="spRender"></param>
-    /// <param name="atlas"></param>
-    /// <param name="spname"></param>
-    public static async void SetSpriteRenderSprite(SpriteRenderer spRender, string atlas, string spname)
-    {
-        atlas = AssetUtility.GetUIAtalsAsset(atlas);
-        var sprite = await ResMgr.GetAtlasSprite(atlas, spname);
-        if (spRender == null || sprite == null)
-            return;
-        spRender.sprite = sprite;
-    }
-
-    //只适用于一张图中只有一个sprite的，且sprite名字和图片名字一致
-    public static void SetSingleSpriteByFolderPath(Image sp, string folderPath, string spname, bool native = false)
-    {
-        SetImageSprite(sp, $"{folderPath}/{spname}.png", spname, native);
-    }
-
-
-    public static async void SetSprite(Image sp, string atlas, string spname, bool native = false)
-    {
-        atlas = AssetUtility.GetUIAtalsAsset(atlas);
-        var sprite = await ResMgr.GetAtlasSprite(atlas, spname);
-        if (sp == null)
-            return;
-        sp.sprite = sprite;
-        if (native)
-        {
-            sp.SetNativeSize();
-        }
-    }
-    /*public static async void PlayMovieClip(MovieClip mc, string atlasName, string spname
-        , float Framerate = 10f, bool loop = true, int maxFrame = 100)
-    {
-        mc.Stop();
-        string atlas = AssetUtility.GetMovieClipAtalsAsset(atlasName);
-        string matPath = AssetUtility.GetMaterialsAsset(atlasName);
-
-        Sprite[] sps = await ResMgr.GetSprites(atlas);
-
-        List<Sprite> spList = new List<Sprite>();
-        Sprite temp = null;
-        //暫定100幀
-        for (int i = 0; i < sps.Length; i++)
-        {
-            temp = sps[i];
-            if (temp.name.IndexOf(spname, StringComparison.Ordinal) > -1)
-            {
-                spList.Add(temp);
-            }
-        }
-        mc.Frames = spList.ToArray();
-        mc.Framerate = Framerate;
-        mc.Loop = loop;
-        Material mat = await ResMgr.GetMaterial(matPath);
-        mat = Object.Instantiate(mat);
-        mat.SetColor("_RColor", new Color(0, 0.4f, 1));
-        mc.SetMaterial(mat);
-        mc.Play();
-    }*/
-    public static async void SetMaterial(Image sp, string path)
-    {
-        sp.material = await ResMgr.GetMaterial(path);
-    }
-
-    public static async void SetRawImageMaterial(RawImage sp, string path)
-    {
-        sp.material = await ResMgr.GetMaterial(path);
-    }
-
-    public static void ClearMaterial(Image sp)
-    {
-        sp.material = null;
-    }
-
-    public static UIFormLogic GetUILogicByKey(string uikey)
-    {
-        return GameEntry.UI.GetUILogic(uikey);
-    }
-
-    public static async void LoadSpine(string spineName, Transform parent, Action<LuaTable, SkeletonGraphic> callback, LuaTable lua)
-    {
-        string path = AssetUtility.GetSpineAsset(spineName); ;
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        GameObject go = await resMgr.LoadAssetAsync<GameObject>(path).Task;
-        GameObject skeleGo = Object.Instantiate(go, parent, false);
-        SkeletonGraphic sa = skeleGo.GetComponent<SkeletonGraphic>();
-        callback?.Invoke(lua, sa);
-    }
-
-    public static async void LoadSpineAnimation(string spineName, Transform parent, Action<LuaTable, SkeletonAnimation> callback, LuaTable lua)
-    {
-        string path = AssetUtility.GetSpineAssetBattle(spineName); ;
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        GameObject go = await resMgr.LoadAssetAsync<GameObject>(path).Task;
-        GameObject skeleGo = Object.Instantiate(go, parent, false);
-        SkeletonAnimation sa = skeleGo.GetComponent<SkeletonAnimation>();      
-        callback?.Invoke(lua, sa);
-    }
-    public static async void LoadBattleScene(string sceneName, LuaTable lua, Action<LuaTable, GameObject> action)
-    {
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        GameObject per = await resMgr.LoadAssetAsync<GameObject>(AssetUtility.GetBattleScene(sceneName)).Task;
-        GameObject go = Object.Instantiate(per);
-        action?.Invoke(lua, go);
-    }
-    public static async void LoadAsset(string assetPath, Action<GameObject> action)
-    {
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        GameObject per = await resMgr.LoadAssetAsync<GameObject>(assetPath).Task;
-        GameObject go = Object.Instantiate(per);
-        action?.Invoke(go);
-    }
-   
-    public static void AddButtonEvent(Button btn, Action<LuaTable, object> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            btn.onClick.RemoveAllListeners();
-        }
-        btn.onClick.AddListener(() => { action?.Invoke(lua, btn); });
-    }
-    public static void AddInputEvent(InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onValueChanged.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddInputEvent(TMPro.TMP_InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onValueChanged.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddInputEditEvent(TMPro.TMP_InputField input, Action<LuaTable, string> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            input.onValueChanged.RemoveAllListeners();
-        }
-        input.onEndEdit.AddListener((string str) => { action?.Invoke(lua, str); });
-    }
-    public static void AddDropDownEvent(TMPro.TMP_Dropdown dropdown, Action<LuaTable, int> action, LuaTable lua, bool isOverride = true)
-    {
-        List<int> a = new List<int>();
-        a.Clear();
-        if (isOverride)
-        {
-            dropdown.onValueChanged.RemoveAllListeners();
-        }
-        dropdown.onValueChanged.AddListener((int value) => { action?.Invoke(lua, value); });
-    }
-    public static void AddSliderEvent(Slider slider, Action<LuaTable, float> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            slider.onValueChanged.RemoveAllListeners();
-        }
-        slider.onValueChanged.AddListener((float value) => { action?.Invoke(lua, value); });
-    }
-    public static void AddToggleEvent(Toggle toggle, Action<LuaTable, bool> action, LuaTable lua, bool isOverride = true)
-    {
-        if (isOverride)
-        {
-            toggle.onValueChanged.RemoveAllListeners();
-        }
-        toggle.onValueChanged.AddListener((value) => { action?.Invoke(lua, value); });
-    }
-    public static async void LoadText(string TextPath, Action<string> action)
-    {
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        TextAsset text = await resMgr.LoadAssetAsync<TextAsset>(TextPath, true).Task;
-        if (text != null)
-        {
-            action?.Invoke(text.text);
-        }
-    }
-    public static async void LoadGuide(LuaTable lua, Action<LuaTable, GameObject, GameObject> action, GameObject param)
-    {
-        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
-        GameObject go = await resMgr.LoadAssetAsync<GameObject>(AssetUtility.GetUIFormAsset("Guide/GuideForm")).Task;
-        action?.Invoke(lua, go, param);
-    }
-   
-    public static void ClearAll()
-    {
-        GameEntry.UI.RemoveAllUI();
-        PomeloClient.Instance.Dispose();
-        if (XluaManager.instance != null)
-        {
-            XluaManager.instance.ClearLuaCache();
-            XluaManager.instance.init = false;
-        }
-
-        GameEntry.Event.UnsubscribeAll();
-
-        handlers?.Clear();
-    }
-    public static void ReconnectSucc()
-    {
-        Rpc.PushEvent.Init(PomeloClient.Instance);
-
-        XluaManager.instance.LuaEnv.DoString(@"
-        if PomeloCLUA ~= nil then 
-            PomeloCLUA:ConnectServerInit() 
-        else
-            PomeloCLUA=require('PomeloCLUA')
-            PomeloCLUA:Init()
-        end");
-    }
-
     public static Type GetType(string typeName)
     {
         // 先在当前Assembly找,再在UnityEngine里找.
@@ -771,6 +339,255 @@ public class LC
         }
         return com;
     }
+    public static GameObject CreateGame()
+    {
+        GameObject obj = new GameObject();
+        obj.SetActive(true);
+        return obj;
+    }
+    #endregion
+    
+
+    /// <summary>
+    /// 打开UI
+    /// </summary>
+    /// <param name="key"></param>
+    /// <param name="para"></param>
+	public static int? OpenUI(string key, object para = null)
+    {
+        return GameEntry.UI.OpenUI(key, para);
+    }
+    public static LuaTable ShowPartPanel(string key, Transform parent, object para = null)
+    {
+        return GameEntry.UI.ShowPartUIForm(key, parent, para);
+    }
+ 
+    public static DataPoolComponent.ITableValue GetUITable(string uiKey)
+    {
+        DataPoolComponent.ITableValue tv = GameEntry.DataPool.GetPanelValueByKey(uiKey);
+        return tv;
+    }
+    public static LuaTable CreateItem(GameObject item, Transform parent, LuaTable lua)
+    {
+        GameObject go = Object.Instantiate<GameObject>(item, parent, false);
+        go.transform.localPosition = Vector3.zero;
+        go.transform.localScale = Vector3.one;
+        go.SetActive(true);
+        UIMonoItem mono = go.GetComponent<UIMonoItem>();
+        if (mono)
+        {
+            mono.OnInit(lua);
+        }
+
+        return lua;
+    }
+
+
+    #region c#和lua互通的事件
+
+    public static void Subscribe(string key, EventHandler<GameEventArgs> handler)
+    {
+        GameEntry.Event.Subscribe(key.GetHashCode(), handler);
+    }
+    public static void Unsubscribe(string key, EventHandler<GameEventArgs> handler)
+    {
+        GameEntry.Event.Unsubscribe(key.GetHashCode(), handler);
+    }
+    public static void AddEvent(LuaTable luaClass, string key, Action<LuaTable, object> callBack)
+    {
+        AddEvent(luaClass, key.GetHashCode(), callBack);
+    }
+    private static void AddEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
+    {
+        EventHandler<GameEventArgs> handler = (send, e) =>
+        {
+            LUAEventArgs lea = (LUAEventArgs)e;
+            callBack(luaClass, lea);
+        };
+        string luaId = "";
+        luaClass.Get<string, string>("luaId", out luaId);
+        string hkey = luaId + callBack.GetHashCode() + key.ToString();
+        if (!handlers.ContainsKey(hkey))
+        {
+            handlers.Add(hkey, handler);
+        }
+        else
+        {
+            handlers[hkey] = handler;
+        }
+        GameEntry.Event.Subscribe(key, handler);
+    }
+    public static void AddCSEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
+    {
+        EventHandler<GameEventArgs> handler = (send, e) =>
+        {
+            callBack(luaClass, e);
+        };
+        string luaId = "";
+        luaClass.Get<string, string>("luaId", out luaId);
+        string hkey = luaId + callBack.GetHashCode() + key.ToString();
+        if (!handlers.ContainsKey(hkey))
+        {
+            handlers.Add(hkey, handler);
+        }
+        else
+        {
+            handlers[hkey] = handler;
+        }
+
+        GameEntry.Event.Subscribe(key, handler);
+    }
+    public static void RemoveEvent(LuaTable luaClass, string key, Action<LuaTable, object> callBack)
+    {
+        RemoveEvent(luaClass, key.GetHashCode(), callBack);
+    }
+    private static void RemoveEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
+    {
+        EventHandler<GameEventArgs> mh;
+        string luaId = "";
+        luaClass.Get<string, string>("luaId", out luaId);
+        var hkey = luaId + callBack.GetHashCode() + key.ToString();
+        if (handlers.TryGetValue(hkey, out mh))
+        {
+            GameEntry.Event.Unsubscribe(key, mh);
+            handlers.Remove(hkey);
+            mh = null;
+        }
+    }
+    public static void RemoveCSEvent(LuaTable luaClass, int key, Action<LuaTable, object> callBack)
+    {
+        EventHandler<GameEventArgs> mh;
+        string luaId = "";
+        luaClass.Get<string, string>("luaId", out luaId);
+        var hkey = luaId + callBack.GetHashCode() + key.ToString();
+        if (handlers.TryGetValue(hkey, out mh))
+        {
+            GameEntry.Event.Unsubscribe(key, mh);
+            handlers.Remove(hkey);
+            mh = null;
+        }
+    }
+    
+    public static void SendEvent(string key, object data = null, object data2 = null, object data3 = null, object data4 = null)
+    {
+        SendEvent(key.GetHashCode(), data, data2, data3, data4);
+    }
+    private static Dictionary<string, EventHandler<GameEventArgs>> handlers = new Dictionary<string, EventHandler<GameEventArgs>>();
+
+
+    private static EventComponent m_EventComponent = null;
+    private static object EventSender = new object();
+    private static void SendEvent(int key, object data = null, object data2 = null, object data3 = null, object data4 = null)
+    {
+        if (m_EventComponent == null)
+        {
+            m_EventComponent = UnityGameFramework.Runtime.GameEntry.GetComponent<EventComponent>();
+        }
+        m_EventComponent.Fire(EventSender, LUAEventArgs.Create(key, data, data2, data3, data4));
+    }
+
+
+    #endregion
+    
+    public static void RealeasUICatch(GameObject target)
+    {
+        ReferenceManager.RealeasAtlas(target);
+        ReferenceManager.RealeasTextrues(target);
+        ReferenceManager.RealeasMats(target);
+    }
+    public static async void SetSprite(UGuiForm target,Image sp, string atlasName, string spname, bool native = false)
+    {
+        ReferenceManager.SetSprite(target,sp,atlasName,spname,native);
+    }
+
+    /// <summary>
+    /// 与SetSprite的区别在于这个不是找的SpriteAtlas后缀的图集，而是.png等
+    /// </summary>
+    /// <param name="target"></param>
+    /// <param name="sp"></param>
+    /// <param name="atlasName"></param>
+    /// <param name="spname"></param>
+    public static async void SetImageSprite(UGuiForm target,Image image, string atlasName, string spname, bool native = false)
+    {
+        ReferenceManager.SetImageSprite(target,image,atlasName,spname,native);
+    }
+    public static void SetMaterial(UGuiForm target,Image sp, string path)
+    {
+        ReferenceManager.SetMaterial(target,sp,path);
+    }
+
+    /*public static async void LoadSpine(string spineName, Transform parent, Action<LuaTable, SkeletonGraphic> callback, LuaTable lua)
+    {
+        string path = AssetUtility.GetSpineAsset(spineName); ;
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        GameObject go = await resMgr.LoadAssetAsync<GameObject>(path).Task;
+        GameObject skeleGo = Object.Instantiate(go, parent, false);
+        SkeletonGraphic sa = skeleGo.GetComponent<SkeletonGraphic>();
+        callback?.Invoke(lua, sa);
+    }
+
+    public static async void LoadSpineAnimation(string spineName, Transform parent, Action<LuaTable, SkeletonAnimation> callback, LuaTable lua)
+    {
+        string path = AssetUtility.GetSpineAssetBattle(spineName); ;
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        GameObject go = await resMgr.LoadAssetAsync<GameObject>(path).Task;
+        GameObject skeleGo = Object.Instantiate(go, parent, false);
+        SkeletonAnimation sa = skeleGo.GetComponent<SkeletonAnimation>();      
+        callback?.Invoke(lua, sa);
+    }*/
+    public static async void LoadBattleScene(string sceneName, LuaTable lua, Action<LuaTable, GameObject> action)
+    {
+        IAddressableResourceManager resMgr = GameFrameworkEntry.GetModule<IAddressableResourceManager>();
+        GameObject per = await resMgr.LoadAssetAsync<GameObject>(AssetUtility.GetBattleScene(sceneName)).Task;
+        GameObject go = Object.Instantiate(per);
+        action?.Invoke(lua, go);
+    }
+    public static AsyncOperationHandle<GameObject> LoadAsset(string assetPath, Action<GameObject> action)
+    {
+        var handle = ResMgr.LoadAssetAsync<GameObject>(assetPath);
+        handle.Completed+= (per) =>
+        {
+            if (action != null)
+            {
+                GameObject go = Object.Instantiate(per.Result);
+                action.Invoke(go);
+            }
+        };
+        return handle;
+    }
+    public static void ReleaseAsset(AsyncOperationHandle<GameObject> handle)
+    {
+        ResMgr.Release(handle);
+    }
+   
+    public static void ClearAll()
+    {
+        GameEntry.UI.RemoveAllUI();
+        PomeloClient.Instance.Dispose();
+        if (XluaManager.instance != null)
+        {
+            XluaManager.instance.ClearLuaCache();
+            XluaManager.instance.init = false;
+        }
+
+        GameEntry.Event.UnsubscribeAll();
+
+        handlers?.Clear();
+    }
+    public static void ReconnectSucc()
+    {
+        Rpc.PushEvent.Init(PomeloClient.Instance);
+
+        XluaManager.instance.LuaEnv.DoString(@"
+        if PomeloCLUA ~= nil then 
+            PomeloCLUA:ConnectServerInit() 
+        else
+            PomeloCLUA=require('PomeloCLUA')
+            PomeloCLUA:Init()
+        end");
+    }
+
+   
 }
 
 #region LUAEventArgs

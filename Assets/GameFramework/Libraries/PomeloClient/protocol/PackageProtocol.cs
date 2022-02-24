@@ -33,6 +33,12 @@ namespace Pomelo.DotNetClient
             offset += MsgProtocol.WriteInt32BE(buf, offset, (int)srId);
             return buf;
         }
+        /**
+        *  format:
+        * +------+------+------------+-------------+------------------+
+        * | head(1b) | body length(4b) | serviceId(2b)| reqId(2b) | body |
+        * +------+------+------------+-------------+------------------+
+        **/
         public static Package decode(byte[] buf)
         {
             PackageType type = PackageType.PKG_DATA;
@@ -58,15 +64,20 @@ namespace Pomelo.DotNetClient
             //Decode head
             //Get flag
             var buffer = pkg.body;
-            uint serviceId = MsgProtocol.ReadUShortBE(buffer, 0);
+            int offset = 0;
+            uint serviceId = MsgProtocol.ReadUShortBE(buffer, offset);
+            offset += 2;
             MessageType type = MessageType.MSG_RESPONSE;
             if (serviceId >= (int)MessageType.MSG_PUSH_START)
             {
                 type = MessageType.MSG_PUSH;
             }
-
+            uint requestId = MsgProtocol.ReadUShortBE(buffer, offset);
+            offset += 2;
+            uint errorCode = MsgProtocol.ReadUShortBE(buffer, offset);
+            offset += 2;
             //Construct the message
-            return new Message(type, serviceId, buffer, 2);
+            return new Message(type, requestId, errorCode,buffer, offset);
 
         }
 

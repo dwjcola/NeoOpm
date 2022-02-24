@@ -126,7 +126,7 @@ public class PackTextureEditor : AssetPostprocessor
                 {
                     if (assetPath.Contains(_uiPath))
                     {
-                        importer.textureType = TextureImporterType.Sprite;
+                        importer.textureType = TextureImporterType.Sprite;  
                     }
                     else
                     {

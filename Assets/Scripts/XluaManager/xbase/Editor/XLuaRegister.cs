@@ -73,7 +73,6 @@ public static class XLuaRegister
         typeof(UnityExtension),
         typeof(StringExtension),
         typeof(NeoOPM.UIExtension),
-        typeof(NeoOPM.MessageExtension),
         typeof(DG.Tweening.ShortcutExtensions),
         typeof(DG.Tweening.DOTweenModuleUI),
         typeof(DG.Tweening.Tween),
@@ -87,6 +86,7 @@ public static class XLuaRegister
         typeof(LC),
         typeof(GameObjectGizmosCircle),
         typeof(DoTweenTools),
+        typeof(GameObjectGizmosCircleLine)
     };
 
     [ReflectionUse]
@@ -171,6 +171,7 @@ public static class XLuaRegister
         typeof( System.Action<> ),
            typeof( System.Action<Google.Protobuf.IMessage> ),
             typeof( System.Action<byte[]> ),
+            typeof( System.Action<uint,byte[]> ),
             typeof(Action<byte[],int>),
               typeof( Action<LuaTable,List<string>>),
         typeof(Action<LuaTable,float,LuaTable>),

@@ -66,13 +66,13 @@ namespace NeoOPM
         }
         public static string GetAssetNameByKey(this UIComponent uiComponent, string uiKey)
         {
-            LuaTable panel = LC.GetUITable(uiKey);
+            var panel = LC.GetUITable(uiKey);
             if (panel == null)
             {
                 Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
                 return null;
             }
-            string tAssetName = panel.Get<string>("AssetName");
+            string tAssetName = panel.AssetName;
             return  AssetUtility.GetUIFormAsset(tAssetName);
         }
         public static void CloseUI(this UIComponent uiComponent, string uiKey)
@@ -97,22 +97,22 @@ namespace NeoOPM
 
         public static int? OpenUI(this UIComponent uiComponent, string uiKey, object userData = null)
         {
-            LuaTable panel = LC.GetUITable(uiKey);
+            var panel = LC.GetUITable(uiKey);
             if (panel == null)
             {
                 Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
                 return null;
             }
 
-            string tAssetName = panel.Get<string>("AssetName");
-            bool tAllowMultiInstance = panel.Get<bool>("AllowMultiInstance");
-            string tUIGroupName = panel.Get<string>("UIGroupName");
-            bool tPauseCoveredUIForm = panel.Get<bool>("PauseCoveredUIForm");
+            string tAssetName = panel.AssetName;
+            bool tAllowMultiInstance = panel.AllowMultiInstance;
+            string tUIGroupName = panel.UIGroupName;
+            bool tPauseCoveredUIForm = panel.PauseCoveredUIForm;
             
-            string tLuaName = panel.Get<string>("LuaName");
-            string tLuaPath = panel.Get<string>("LuaPath");
-            bool tMask = panel.Get<bool>("Mask");
-            int tween = panel.Get<int>("UITween");
+            string tLuaName = panel.LuaName;
+            string tLuaPath = panel.LuaPath;
+            bool tMask = panel.Mask;
+            int tween = panel.UITween;
             
             string assetName = AssetUtility.GetUIFormAsset(tAssetName);
             if (!tAllowMultiInstance)
@@ -171,8 +171,8 @@ namespace NeoOPM
                 UGuiForm ctrl = (UGuiForm) form.Logic;
                 if(ctrl.UIKey!=null)
                 {
-                    LuaTable panel = LC.GetUITable(ctrl.UIKey);
-                    bool tMask = panel.Get<bool>("Mask");
+                    var panel = LC.GetUITable(ctrl.UIKey);
+                    bool tMask = panel.Mask;
                     
                     if (tMask && !mask)
                     {
@@ -192,15 +192,15 @@ namespace NeoOPM
         }
         public static LuaTable ShowPartUIForm(this UIComponent uiComponent, string uiKey, Transform parent,object userData = null)
         {
-            LuaTable panel = LC.GetUITable(uiKey);
+            var panel = LC.GetUITable(uiKey);
             if (panel == null)
             {
                 Log.Warning("Can not load UI form '{0}' from data table.", uiKey);
                 return null;
             }
-            string tAssetName = panel.Get<string>("AssetName");
-            string tLuaName = panel.Get<string>("LuaName");
-            string tLuaPath = panel.Get<string>("LuaPath");
+            string tAssetName = panel.AssetName;
+            string tLuaName = panel.LuaName;
+            string tLuaPath = panel.LuaPath;
             LuaTable lua = null;
             string assetName = AssetUtility.GetUIFormAsset(tAssetName);
             GameObject go=LC.ResMgr.InstantiateAsset(assetName);
@@ -239,59 +239,6 @@ namespace NeoOPM
             }
 
             return lua;
-        }
-        /// <summary>
-        /// 对话形式文字动画
-        /// </summary>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        public static Coroutine DoDialogueAni(this TextMeshProUGUI target, Action callBack =null)
-        {
-            IEnumerator RevealCharacters()
-            {
-                target.ForceMeshUpdate();
-                TMP_TextInfo textInfo = target.textInfo;
-                int totalVisibleCharacters = textInfo.characterCount; // Get # of Visible Character in text object
-                int visibleCount = 0;
-                while (true)
-                {
-                    if (visibleCount > totalVisibleCharacters)
-                    {
-                        callBack?.Invoke();
-                        break;
-                    }
-                    target.maxVisibleCharacters = visibleCount; // How many characters should TextMeshPro display?
-                    visibleCount += 1;
-                    yield return null;
-                }
-            }
-            return target.StartCoroutine(RevealCharacters());
-        }
-        /// <summary>
-        /// 立即完成对话文字动画
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="mCoroutine"></param>
-        public static void FinishDialogueAni(this TextMeshProUGUI target, Coroutine mCoroutine)
-        {
-            target.StopCoroutine(mCoroutine);
-            target.maxVisibleCharacters = target.textInfo.characterCount;
-        }
-		public static void PauseUIForm(this UIComponent uiComponent,string uiKey)
-        {
-            UIForm form = uiComponent.GetUIFormByKey(uiKey);
-            if (form != null)
-            {
-                form.OnPause();
-            }
-        }
-        public static void ResumeUIForm(this UIComponent uiComponent, string uiKey)
-        {
-            UIForm form = uiComponent.GetUIFormByKey(uiKey);
-            if (form != null)
-            {
-                form.OnResume();
-            }
         }
     }
 }

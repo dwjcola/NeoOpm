@@ -59,7 +59,6 @@ sysinfo.txt
 # Builds
 *.apk
 *.aab
-*.unitypackage
 
 # Crashlytics generated file
 crashlytics-build.properties
@@ -70,3 +69,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 Assets/StreamingAssets/config/
 
+/Packages/packages-lock.json
+/.vscode
+/Assets/Resource_MS/LuaScripts/.vscode

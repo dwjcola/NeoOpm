@@ -42,12 +42,10 @@ function LUAUIBase:init()
   self.cs_coroutine=require("cs_coroutine")
   self.UIReminder=CS.UIReminder;
   self.EventTriggerListener=CS.GameFramework.UI.EventTriggerListener
-  self.ServerTime = CS.NeoOPM.ServerTime
+  self.ServerTime = CS.NeoOPM.ServerTime 
+  self.UIUtility = CS.NeoOPM.UIUtility
 end
 
-function LUAUIBase:GetUILogicByKey(uiKey)
-  return CS.LC.GetUILogicByKey(uiKey);
-end
 ---@alias LUAUIBase.UIEventType
 LUAUIBase.UIEventType = {
   OnClick = "onclick",
@@ -149,18 +147,30 @@ end
 function LUAUIBase:Error(...)
   Logger.Error(...)
 end
+--添加lua事件
+function LUAUIBase:AddListener(eventName,callBack)
+    return EventManager:AddListener(eventName, callBack, self)
+end
 
---添加事件
-function LUAUIBase:AddEvent(key,callBack)
+--触发lua事件
+function LUAUIBase:Dispatch(eventName,...)
+    EventManager:Dispatch(eventName, ...)
+end
+--移除lua事件
+function LUAUIBase:RemoveListener(eventName)
+    EventManager:RemoveListener(eventName,self)
+end
+--添加CS事件
+function LUAUIBase:AddEvent_CS(key,callBack)
   CS.LC.AddEvent(self,key,callBack);
 end
 
---SendEvent事件
-function LUAUIBase:SendEvent(key,para,p2,p3,p4)
+--触发CS事件
+function LUAUIBase:SendEvent_CS(key,para,p2,p3,p4)
   CS.LC.SendEvent(key,para,p2,p3,p4);
 end
---移除事件
-function LUAUIBase:RemoveEvent(key,callBack)
+--移除CS事件
+function LUAUIBase:RemoveEvent_CS(key,callBack)
   CS.LC.RemoveEvent(self,key,callBack);
 end
 --添加框架事件
@@ -179,7 +189,7 @@ end
 
  --关闭UI
 function LUAUIBase:CloseUI(key)
-  local lua=_G[key];
+--[[  local lua=_G[key];
   if(lua==nil)then
     local panel= TPanel[key];
     local luaname=(panel or {LuaName=""}).LuaName
@@ -187,7 +197,7 @@ function LUAUIBase:CloseUI(key)
   end
   if(lua~=nil and lua.DestroyAllMonoItemLua~=nil)then
     lua.DestroyAllMonoItemLua(lua);
-  end
+  end]]
   local result = CS.LC.CloseUI(key)
   if self.CloseOpenData ~= nil then
     local t = type(self.CloseOpenData);
@@ -215,36 +225,16 @@ function LUAUIBase:SetSprite(image,name,native)
     self:Error("图片："..name.."没有找到图集")
     return
   end
-  CS.LC.SetSprite(image,atlas,name,n)
+  CS.LC.SetSprite(self.view,image,atlas,name,n)
 end
 
----@param image UnityEngine.UI.RawImage
----@param atls string
----@param name string
----@param native bool
-function LUAUIBase:SetRawImageSprite(image,name,native)
-  local n = native
-  if n == nil then
-    n = false
-  end
-  CS.LC.SetRawImageSprite(image,name,n)
-end
-
-
-function LUAUIBase:SetSingleSpriteByFolderPath(image,folderPath,name,native)
-  local n = native
-  if n == nil then
-    n = false
-  end
-  CS.LC.SetSingleSpriteByFolderPath(image,folderPath,name,n)
-end
 
 function LUAUIBase:SetImageSprite(image,atls,name,native)
   local n = native
   if n == nil then
     n = false
   end
-  CS.LC.SetImageSprite(image,atls,name,n)
+  CS.LC.SetImageSprite(self.view,image,atls,name,n)
 end
 
 function LUAUIBase:ItemTableData(_itemId)---现在道具表分了好几个，这个函数可以找到_itemId所在表的那一行,如果表里没有就为空

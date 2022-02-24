@@ -22,6 +22,27 @@ namespace NeoOPM
             return Mathf.Max(1, Mathf.Max(scaleH, scaleW));
         }
         /// <summary>
+        /// 判断是否点击到了UI
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckGuiRaycastObjects()
+        {
+            PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+            eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            List<RaycastResult> results = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                if (results[i].gameObject.layer == Constant.Layer.UILayerId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        /// <summary>
         /// 销毁子控件
         /// </summary>
         /// <param name="trans"></param>
@@ -39,18 +60,7 @@ namespace NeoOPM
                 GameObject.Destroy(itemTemp.gameObject);
             }
         }
-//颜色值转换工具
-        public static Color HexToColor(string hex)
-        {
-            byte r = byte.Parse(hex.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
-            byte g = byte.Parse(hex.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
-            byte b = byte.Parse(hex.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-            return new Color(r/255f,g/255f,b/255f,1);
-        }
-        public static Color32 HexToColor32(string hex)
-        {
-            return HexToColor(hex);
-        }
+
         public static Vector3[] GetWorldCorners(RectTransform rt)
         {
             Vector3[] cs = new Vector3[4];
@@ -224,19 +234,6 @@ namespace NeoOPM
             }
             return Vector2.zero;
         }
-
-        public static bool IsInCity()
-        {
-            if (GameEntry.Procedure.CurrentProcedure is ProcedureCity)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
     }
    
 }

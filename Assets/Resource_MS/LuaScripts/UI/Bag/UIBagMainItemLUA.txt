@@ -1,0 +1,45 @@
+--界面
+UIBagMainItemLUA=LUAUIBase:new({
+	
+	});
+
+function UIBagMainItemLUA:Open()
+	self:AddUIEventListener()
+	self:AddEventListener()
+	self:Init();
+end
+function UIBagMainItemLUA:Init()
+	
+end
+
+--ui组件添加事件
+function UIBagMainItemLUA:AddUIEventListener( )
+	--self:AddUIEvent("onclick", self.closeBtn, self.OnCloseMe);
+end
+--模块添加全局事件
+function UIBagMainItemLUA:AddEventListener( )
+	-- self:AddListener("EventStringKey", self.EventHandle);
+end
+--模块移除全局事件
+function UIBagMainItemLUA:RemoveEventListener( )
+	-- self:RemoveListener("EventStringKey");
+end
+function UIBagMainItemLUA:OnCloseMe()
+	if(self.view~=nil)then
+		if(self.view.isUIMonoItem)then
+			self:RemoveItem(self);
+		else
+			self:CloseUI("UIBagMainItem")
+		end
+	end
+end
+--当UI主动或被动被关闭时会执行，此时界面不会销毁
+function UIBagMainItemLUA:OnPause()
+	self:RemoveUIEvent()
+	self:RemoveEventListener()
+end
+--当UI被主动关闭并且缓存时间到被销毁时执行
+function UIBagMainItemLUA:OnDestroy()
+	UIBagMainItemLUA = nil;
+end
+return UIBagMainItemLUA

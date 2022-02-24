@@ -112,6 +112,11 @@ namespace GameFramework.AddressableResource
             SpriteAtlas a= await AASResourceManager.Instance.LoadAssetAsync<SpriteAtlas>(atlas.Trim());
             return a.GetSprite(spname);
         }
+        public async Task<SpriteAtlas> GetAtlas(string atlas)
+        {
+            SpriteAtlas a= await AASResourceManager.Instance.LoadAssetAsyncNoCatch<SpriteAtlas>(atlas.Trim());
+            return a;
+        }
         public async Task<Material> GetMaterial(string path)
         {
             return await AASResourceManager.Instance.LoadAssetAsync<Material>(path);
@@ -161,7 +166,7 @@ namespace GameFramework.AddressableResource
         /// <param name="asset">要卸载的资源。</param>
         public void UnloadAsset(object asset)
         {
-            //Addressables.Release(asset);
+            Addressables.Release(asset);
         }
 
         /// <summary>

@@ -92,7 +92,7 @@ namespace GameFramework.UI
         /// <summary>
         /// 界面暂停。
         /// </summary>
-        void OnPause();
+        void OnPause(bool activePause = false);
 
         /// <summary>
         /// 界面暂停恢复。

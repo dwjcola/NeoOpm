@@ -5,22 +5,30 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NeoOPM;
+using System.Collections;
+using System;
+using UnityEngine.UI;
+using XLua;
+using Object = UnityEngine.Object;
 
 [CustomEditor(typeof(UIMonoPanel))]
 public class UIViewEditor : Editor
 {
+
     private static UIViewEditorWin wind;
     private string UIRootPath = "UIForms";
     private const string panelTxt = "Assets/Resource_MS/LuaScripts/tableRead/TPanel.txt";
+    internal static UIViewBaseEditor baseEditor=new UIViewBaseEditor();
     public override void OnInspectorGUI()
     {
         uimono = target as UIMonoPanel;
-        valueList = uimono.valueList;
-        keyList = uimono.keyList;
-        strkeyList = uimono.strkeyList;
-        strvalueList = uimono.strvalueList;    
-        ShowInfo();
-        ShowStringInfo ( );
+        //valueList = uimono.valueList;
+        //keyList = uimono.keyList;
+        //strkeyList = uimono.strkeyList;
+        //strvalueList = uimono.strvalueList;    
+        //ShowInfo();
+        //ShowStringInfo ( );
+        baseEditor.ShowGUI(uimono);
         if (GUILayout.Button("打开独立编辑界面"))
         {
             if (wind != null)
@@ -101,6 +109,7 @@ public class UIViewEditor : Editor
  
         }
 
+
     private static int _index = 0;
     private static string error = "";
     private static string name = "";
@@ -115,6 +124,7 @@ public class UIViewEditor : Editor
     /// <summary>
     /// 显示Action层动作信息
     /// </summary>
+    /*
     public static void ShowInfo()
     {
         EditorGUILayout.BeginVertical("Box");
@@ -238,8 +248,9 @@ public class UIViewEditor : Editor
         }
         EditorGUILayout.EndVertical();
     }
-
+    */
     static string tempKey="",tempValue="";
+    /*
     public static void ShowStringInfo ( )
     {
         EditorGUILayout.BeginVertical ( "Box" );
@@ -306,5 +317,5 @@ public class UIViewEditor : Editor
         EditorGUILayout.EndVertical ( );
         }
 
-
+    */
     }

@@ -13,16 +13,18 @@ public class UIViewItemEditor : Editor
     private static UIViewItemEditorWin wind;
     private string UIRootPath = "UIForms";
     private const string panelTxt = "Assets/Resource_MS/LuaScripts/tableRead/TPanel.txt";
+    internal static UIViewBaseEditor baseEditor = new UIViewBaseEditor();
     public override void OnInspectorGUI()
     {
         uimono = target as UIMonoItem;
-        valueList = uimono.valueList;
-        keyList = uimono.keyList;
-        strkeyList = uimono.strkeyList;
-        strvalueList = uimono.strvalueList;
-      
-        ShowInfo ();
-        ShowStringInfo ( );
+        //valueList = uimono.valueList;
+        //keyList = uimono.keyList;
+        //strkeyList = uimono.strkeyList;
+        //strvalueList = uimono.strvalueList;
+
+        //ShowInfo ();
+        //ShowStringInfo ( );
+        baseEditor.ShowGUI(uimono);
         if (GUILayout.Button("打开独立编辑界面"))
         {
             if (wind != null)
@@ -105,6 +107,7 @@ public class UIViewItemEditor : Editor
     /// <summary>
     /// 显示Action层动作信息
     /// </summary>
+    /*
     public static void ShowInfo()
     {
         EditorGUILayout.BeginVertical("Box");
@@ -227,71 +230,72 @@ public class UIViewItemEditor : Editor
 
    
     static string tempKey="",tempValue="";
-    public static void ShowStringInfo ( )
-    {
-        EditorGUILayout.BeginVertical ( "Box" );
-        for ( int i = 0, len = strvalueList.Count; i < len; i++ )
-        {
-            GUILayout.BeginHorizontal ( );
-            string key = strkeyList[i];
-            var v = strvalueList[i];
-            EditorGUILayout.TextField ( key );
-            if ( v == null )
-            {
-                Debug.LogError ( "mono 配置的 key =" + key + "  引用的东西为空" );
-            }
-            else
-            {
-                EditorGUILayout.TextField ( v );
-            }
-            if ( GUILayout.Button ( "X" ) )
-            {
-                strvalueList.RemoveAt ( i );
-                strkeyList.RemoveAt ( i );
-#if UNITY_EDITOR
-                UnityEditor.EditorUtility.SetDirty ( uimono.gameObject );
-#endif
-                return;
-            }
-            GUILayout.EndHorizontal ( );
-        }
-        //ChooseOneObj();
-        GUILayout.BeginHorizontal ( );
+    */
+//    public static void ShowStringInfo ( )
+//    {
+//        EditorGUILayout.BeginVertical ( "Box" );
+//        for ( int i = 0, len = strvalueList.Count; i < len; i++ )
+//        {
+//            GUILayout.BeginHorizontal ( );
+//            string key = strkeyList[i];
+//            var v = strvalueList[i];
+//            EditorGUILayout.TextField ( key );
+//            if ( v == null )
+//            {
+//                Debug.LogError ( "mono 配置的 key =" + key + "  引用的东西为空" );
+//            }
+//            else
+//            {
+//                EditorGUILayout.TextField ( v );
+//            }
+//            if ( GUILayout.Button ( "X" ) )
+//            {
+//                strvalueList.RemoveAt ( i );
+//                strkeyList.RemoveAt ( i );
+//#if UNITY_EDITOR
+//                UnityEditor.EditorUtility.SetDirty ( uimono.gameObject );
+//#endif
+//                return;
+//            }
+//            GUILayout.EndHorizontal ( );
+//        }
+//        //ChooseOneObj();
+//        GUILayout.BeginHorizontal ( );
 
-        tempKey = EditorGUILayout.TextField ( tempKey );
-        tempValue = EditorGUILayout.TextField ( tempValue );
-        GUILayout.EndHorizontal ( );
+//        tempKey = EditorGUILayout.TextField ( tempKey );
+//        tempValue = EditorGUILayout.TextField ( tempValue );
+//        GUILayout.EndHorizontal ( );
 
-        if ( GUILayout.Button ( "添加string property" ) )
-        {
-            error = "";
-            if ( string.IsNullOrEmpty ( tempKey ) )
-            {
-                error = "唯一的key没有设置";
-            }
-            else if ( keyList.IndexOf ( tempKey ) != -1 || strkeyList.IndexOf ( tempKey ) != -1 )
-            {
-                error = "唯一的key 【" + tempKey + "】已经存在了";
-            }
-            else
-            {
-                strkeyList.Add ( tempKey );
-                strvalueList.Add ( tempValue );
-                tempKey = ""; tempValue = "";
-#if UNITY_EDITOR
-                UnityEditor.EditorUtility.SetDirty ( uimono.gameObject );
-#endif
-            }
-        }
-        //CreateSameTypeList();
+//        if ( GUILayout.Button ( "添加string property" ) )
+//        {
+//            error = "";
+//            if ( string.IsNullOrEmpty ( tempKey ) )
+//            {
+//                error = "唯一的key没有设置";
+//            }
+//            else if ( keyList.IndexOf ( tempKey ) != -1 || strkeyList.IndexOf ( tempKey ) != -1 )
+//            {
+//                error = "唯一的key 【" + tempKey + "】已经存在了";
+//            }
+//            else
+//            {
+//                strkeyList.Add ( tempKey );
+//                strvalueList.Add ( tempValue );
+//                tempKey = ""; tempValue = "";
+//#if UNITY_EDITOR
+//                UnityEditor.EditorUtility.SetDirty ( uimono.gameObject );
+//#endif
+//            }
+//        }
+//        //CreateSameTypeList();
 
-        if ( !string.IsNullOrEmpty ( error ) )
-        {
-            GUILayout.Space ( 3f );
-            EditorGUILayout.HelpBox ( error, MessageType.Error, true );
-        }
-        EditorGUILayout.EndVertical ( );
-        }
+//        if ( !string.IsNullOrEmpty ( error ) )
+//        {
+//            GUILayout.Space ( 3f );
+//            EditorGUILayout.HelpBox ( error, MessageType.Error, true );
+//        }
+//        EditorGUILayout.EndVertical ( );
+//        }
 
     }
 
@@ -302,10 +306,10 @@ public class LUAComponentEditor:UIViewItemEditor
     {
         uimono = target as LUAComponent;
         LUAComponent lUA = target as LUAComponent;
-        valueList = uimono.valueList;
-        keyList = uimono.keyList;
-        strkeyList = uimono.strkeyList;
-        strvalueList = uimono.strvalueList;
+        //valueList = uimono.valueList;
+        //keyList = uimono.keyList;
+        //strkeyList = uimono.strkeyList;
+        //strvalueList = uimono.strvalueList;
         AddProperty();
         GUILayout.BeginHorizontal();
         GUILayout.Label("LUAClassName:");
@@ -315,7 +319,8 @@ public class LUAComponentEditor:UIViewItemEditor
     }
     public virtual void AddProperty()
     {
-        ShowInfo();
-        ShowStringInfo();
+        //ShowInfo();
+        //ShowStringInfo();
+        baseEditor.ShowGUI(uimono);
     }
 }

@@ -236,15 +236,15 @@ namespace Pomelo.DotNetClient
             protocol.send(MessageType.MSG_REQUEST, reqId, serviceId, msg);
             reqId++;
         }*/
-        public void LuaPBRequest(uint serviceId, byte[] msg, Action<byte[]> action)
+        public void LuaPBRequest(uint serviceId, byte[] msg, Action<uint,byte[]> action)
         {
-            this.eventManager.AddCallBack(serviceId, new LuaProtobufReceiver(action));
+            this.eventManager.AddCallBack(reqId, new LuaProtobufReceiver(action));
             protocol.send(reqId, serviceId, msg);
             reqId++;
         }
-        public void LuaJsonRequest(uint serviceid,string msg,Action<string> action)
+        public void LuaJsonRequest(uint serviceid,string msg,Action<uint,string> action)
         {
-            this.eventManager.AddCallBack(serviceid, new LuajsonReceiver(action));
+            this.eventManager.AddCallBack(reqId, new LuajsonReceiver(action));
             protocol.send(reqId, serviceid, Encoding.UTF8.GetBytes(msg));
             reqId++;
 
@@ -276,11 +276,11 @@ namespace Pomelo.DotNetClient
             protocol.send(MessageType.MSG_NOTIFY,0, serviceId, Encoding.UTF8.GetBytes(msg));
         }*/
 
-        public void on(uint id,Action<string> action)
+        public void on(uint id,Action<uint,string> action)
         {
             eventManager.AddOnEvent(id, action);
         }
-        public void LuaPBOn(uint id, Action<byte[]> action)
+        public void LuaPBOn(uint id, Action<uint,byte[]> action)
         {
             eventManager.AddOnEvent(id, action);
         }

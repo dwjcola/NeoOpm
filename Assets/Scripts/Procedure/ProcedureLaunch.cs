@@ -13,7 +13,7 @@ using ProcedureOwner = GameFramework.Fsm.IFsm<GameFramework.Procedure.IProcedure
 
 namespace NeoOPM
 {
-    public class ProcedureLaunch : ProcedureBase
+    public class  ProcedureLaunch : ProcedureBase
     {
         public override bool UseNativeDialog
         {

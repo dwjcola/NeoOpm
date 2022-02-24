@@ -19,6 +19,7 @@ namespace GameFramework.AddressableResource
         CacheFinished,
         ChangeScene,
         ReLogin,
+        Manual,
         Never
     }
     public class AsyncCache
@@ -30,20 +31,6 @@ namespace GameFramework.AddressableResource
         {
             this.data = data;
             this.unloadTime = unloadTime;
-        }
-    }
-    public class ResourcesAsync
-    {
-        public string Res;
-        public CacheUnloadTime UnloadTime;
-        public string typeName;
-        public string assemblyName;
-        public ResourcesAsync(string res, string format, string type,string assembly, CacheUnloadTime unloadTime)
-        {
-            Res = res;
-            UnloadTime = unloadTime;
-            typeName = type;
-            assemblyName = assembly;
         }
     }
     public class AASResourceManager
@@ -96,85 +83,6 @@ namespace GameFramework.AddressableResource
             assetName = FormatPath(assetName);
             return cacheResDic.ContainsKey(assetName);
         }
-        AsyncCache GetAssetCache(string assetName)
-        {
-            assetName = FormatPath(assetName);
-            AsyncCache cache = null;
-            cacheResDic.TryGetValue(assetName, out cache);
-            return cache;
-        }
-        public List<ResourcesAsync> PreLoadAssetsLoadScene(int sceneId)
-        {
-            List<ResourcesAsync> list = new List<ResourcesAsync>();
-            foreach (var item in PreLoadRes.TableDic)
-            {
-                if ((item.Value.Scene == sceneId||item.Value.Scene==-1) && !HasCache(item.Key))
-                {
-                    list.Add(new ResourcesAsync(item.Key, item.Value.Txt,item.Value.fileType,item.Value.AssemblyName, CacheUnloadTime.ChangeScene));
-                }
-            }
-            return list;
-        }
-
-        Dictionary<string, System.Reflection.MethodInfo> keyValues = new Dictionary<string, System.Reflection.MethodInfo>();
-        public void CacheResourceAsync(List<ResourcesAsync> list, Action<Object> callBack, Action finish)
-        {
-            if (list == null || list.Count <= 0)
-            {
-                finish?.Invoke();
-                return;
-            }
-            int total = list.Count;
-            int progress = 0;
-            Action<AsyncOperationHandle,string,CacheUnloadTime> CompletAction = (h,path,unloadtime) => {
-                ++progress;
-                callBack?.Invoke((Object)h.Result);
-                if (progress >= total)
-                {
-                    ReleaseCache(CacheUnloadTime.CacheFinished);
-                    finish?.Invoke();
-                }
-                CacheHandle(path, h,unloadtime);
-            };
-            for (int i = 0; i < list.Count; i++)///AsyncOperationHandle 转换泛型的问题,使用object load无法转换为AsyncOperationHandle<T> 暂时这样
-            {
-                string path = list[i].Res;
-                string typeName = list[i].typeName;
-                string AssemblyName = list[i].assemblyName;
-                System.Reflection.MethodInfo method = null;
-                if (!keyValues.TryGetValue(typeName,out method)){
-                   //var asss= System.Reflection.Assembly.Load(AssemblyName);
-                    Type generic = typeof(GenericLoad<>);
-                    Type usetype = Utility.Assembly.GetType(typeName);//asss.GetType(typeName);
-                    Type result = generic.MakeGenericType(usetype);
-                    method= result.GetMethod("Load");
-                    keyValues.Add(typeName, method);
-                }
-                method.Invoke(null, new object[] { path, list[i].UnloadTime , CompletAction });
-                //AsyncOperationHandle<Object> handle = LoadAssetAsync<Object>(path);
-                //handle.Completed += (h) =>
-                //{
-                //    ++progress;
-                //    callBack?.Invoke(h.Result);
-                //    if (progress >= total)
-                //    {
-                //        ReleaseCache(CacheUnloadTime.CacheFinished);
-                //        finish?.Invoke();
-                //    }
-                //};
-                //CacheHandle(path, handle, list[i].UnloadTime);
-            }
-        }
-        public class GenericLoad<T>
-        {
-            public static void Load(string assetName, CacheUnloadTime unloadtime, Action<AsyncOperationHandle, string, CacheUnloadTime> CompletAction)
-            {
-                var handle=Instance.LoadAssetAsync<T>(assetName);
-                handle.Completed += (h) => {
-                    CompletAction?.Invoke(h, assetName, unloadtime);
-                };
-            }
-        }
 
         /// <summary>
         /// 如果资源需要缓存，则调用这个接口进行缓存
@@ -182,7 +90,7 @@ namespace GameFramework.AddressableResource
         /// <param name="assetName"></param>
         /// <param name="handle"></param>
         /// <param name="unloadTime"></param>
-        public void CacheHandle(string assetName, AsyncOperationHandle handle, CacheUnloadTime unloadTime)
+        public void CacheHandle(string assetName, AsyncOperationHandle handle, CacheUnloadTime unloadTime = CacheUnloadTime.Manual)
         {
             assetName = FormatPath(assetName);
             if (!HasCache(assetName))
@@ -190,43 +98,7 @@ namespace GameFramework.AddressableResource
                 cacheResDic.Add(assetName, new AsyncCache(handle, unloadTime));
             }
         }
-       
-        public void CacheHandle(string assetName, AsyncOperationHandle handle)
-        {
-            assetName = FormatPath(assetName);
-            int sceneid = -101;//登录场景
-         Fsm.IFsm<Procedure.IProcedureManager> fsm=GameFrameworkEntry.GetModule<Fsm.IFsmManager>().GetFsm<Procedure.IProcedureManager>();
-            if (fsm != null)
-            {
-                var value= fsm.GetData<Variable<int>>("NextSceneId")?.Value;
-                sceneid = value==null?-101:value.Value;
-            }
-            if (!HasCache(assetName))
-            {
-                //TODO 未自行指定时间的则依 表行事
-                PreLoadResRow row = null;
-                bool needCache = true;                                                                                                                                                                                                                            
-                CacheUnloadTime unloadTime = CacheUnloadTime.Never;
-                if (PreLoadRes.TableDic.TryGetValue(assetName, out row))
-                {   
-                    //todo
-                    if (row.Scene != -1)
-                    {
-                        if (row.Scene != sceneid)
-                        {
-                            needCache = false;
-                        }
-                        unloadTime = CacheUnloadTime.ChangeScene;
-                    }
-                }
-                if (needCache)
-                {
-                    CacheHandle(assetName, handle, unloadTime);
-                }
-                
-                
-            }
-        }
+
         /// <summary>
         /// 按标签加载的不受表控制了
         /// </summary>
@@ -241,7 +113,7 @@ namespace GameFramework.AddressableResource
             }
         }
         /// <summary>
-        /// 卸载资源，移除缓存
+        /// 通过资源路径卸载资源，移除缓存
         /// 非标签加载的资源
         /// </summary>
         /// <param name="assetName"></param>
@@ -257,6 +129,10 @@ namespace GameFramework.AddressableResource
             }
             return false;
         }
+        /// <summary>
+        /// 通过句柄释放ab
+        /// </summary>
+        /// <param name="handle"></param>
         private void UnLoadAssetHandle(AsyncOperationHandle? handle)
         {
             if (handle == null)
@@ -264,7 +140,11 @@ namespace GameFramework.AddressableResource
             if (handle.Value.IsValid())
              Addressables.Release(handle.Value);
         }
-       
+       /// <summary>
+       /// 通过资源名获取缓存的句柄
+       /// </summary>
+       /// <param name="assetName"></param>
+       /// <returns></returns>
         private AsyncCache LoadAssetFromCache(string assetName)
         {
             assetName = FormatPath(assetName);
@@ -280,20 +160,51 @@ namespace GameFramework.AddressableResource
             }
             return cache;
         }
-        private AsyncOperationHandle<T> LoadAssetAsync<T>(string assetName)
+       /// <summary>
+       /// 异步加载资源，不进行句柄缓存，使用者拿到句柄后需要镜像释放，使用addressabel引用计数
+       /// </summary>
+       /// <param name="assetName"></param>
+       /// <param name="onComplete"></param>
+       /// <param name="onFailed"></param>
+       /// <param name="autoUnload"></param>
+       /// <typeparam name="T"></typeparam>
+       /// <returns></returns>
+       public AsyncOperationHandle<T> LoadAssetHandleAsyncNoCatch<T>(string assetName, Action<string, bool, T> onComplete = null, Action<Exception> onFailed = null, bool autoUnload = false) 
         {
-            AsyncCache cache = LoadAssetFromCache(assetName);
-            if (cache == null)
+            AsyncOperationHandle<T> loading = Addressables.LoadAssetAsync<T>(FormatPath(assetName));
+            GameFrameworkLog.Info($"load asset {assetName} from AAS");
+            loading.Completed += (result) =>
             {
-                return Addressables.LoadAssetAsync<T>(FormatPath(assetName));
-            }
-            else
-            {
-                return cache.data.Convert<T>();
-            }
+                if (result.Status == AsyncOperationStatus.Succeeded)
+                {
+                    onComplete?.Invoke(assetName, result.Result != null && result.OperationException == null, result.Result);
+                }
+                else
+                {
+                    onFailed?.Invoke(result.OperationException);
+                    GameFrameworkLog.Warning($"Load Asset{assetName} Failed From AAS");
+                }
+                if (autoUnload)
+                    if (!UnloadResItem(assetName))
+                        UnLoadAssetHandle(result);
+            };
+            return loading;
         }
+       /// <summary>
+       /// 异步加载资源——不缓存句柄
+       /// </summary>
+       /// <typeparam name="T"></typeparam>
+       /// <param name="assetName"></param>
+       /// <param name="onComplete">加载成功的回调</param>
+       /// <param name="onFailed">加载失败的回调，在Completed的Status不为Succeeded时使用</param>
+       /// <param name="autoUnload">为true时加载完成立即release handle,再对返回的handle调用addressable的release会有错误提示</param>
+       /// <returns></returns>
+       public async Task<T> LoadAssetAsyncNoCatch<T>(string assetName, Action<string, bool, T> onComplete = null, Action<Exception> onFailed = null, bool autoUnload = false)
+       {
+           return await LoadAssetHandleAsyncNoCatch(assetName, onComplete, onFailed, autoUnload).Task;
+       }
         /// <summary>
-        /// 加载优先使用缓存的handle，传入回调也可以，通过complete+=也可以
+        /// 异步加载优先使用缓存的handle，传入回调也可以，通过complete+=也可以
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName"></param>
@@ -406,9 +317,8 @@ namespace GameFramework.AddressableResource
         /// <param name="assetPath"></param>
         /// <param name="parameters">实例化参数</param>
         /// <param name="insAction">使用加载的缓存实例化，故只能通过回调的方式处理实例化的物体</param>
-        /// <param name="usecache">使用缓存的handle实例化还是使用addressable实例化接口？</param>
         /// <returns></returns>
-        public void InstantiateUseCache(string assetPath, InstantiationParameters parameters=default, Action<GameObject> insAction=null, bool usecache = true)
+        public void InstantiateUseCache(string assetPath, InstantiationParameters parameters=default, Action<GameObject> insAction=null)
         {
             LoadAssetHandleAsync<GameObject>(assetPath, (path, exception, result) =>
             {
@@ -438,7 +348,7 @@ namespace GameFramework.AddressableResource
             return (T)handle.WaitForCompletion();
         }
         /// <summary>
-         /// 按地址加载的资源
+         /// 释放小于等于当前级别的缓存资源——按地址加载的资源
          /// </summary>
          /// <param name="unloadTime"></param>
         private void ReleaseResCache(CacheUnloadTime unloadTime)
@@ -458,6 +368,30 @@ namespace GameFramework.AddressableResource
                 }
             }
         }
+        /// <summary>
+        /// 释放小于等于当前级别的缓存资源——按标签加载的资源
+        /// </summary>
+        /// <param name="unloadTime"></param>
+        private void ReleaseAssetsCache(CacheUnloadTime unloadTime)
+        {
+            int maxCount = cacheAssetsDic.Count;
+            var keyList = cacheAssetsDic.Keys.ToList();
+            for (int i = 0; i < maxCount; i++)
+            {
+                AsyncCache cache = null;
+                if (cacheAssetsDic.TryGetValue(keyList[i], out cache))
+                {
+                    if (cache == null || cache.unloadTime <= unloadTime)
+                    {
+                        UnLoadAssetHandle(cache?.data);
+                        cacheAssetsDic.Remove(keyList[i]);
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// 释放所有缓存资源，包括标签加载的
+        /// </summary>
         public void UnLoadAllAssetCache()
         {
             foreach (var item in cacheResDic)
@@ -579,26 +513,10 @@ namespace GameFramework.AddressableResource
         }
        
         /// <summary>
-        /// 按标签等加载的 资源组
+        /// 释放标签加载的缓存资源
         /// </summary>
-        /// <param name="unloadTime"></param>
-        private void ReleaseAssetsCache(CacheUnloadTime unloadTime)
-        {
-            int maxCount = cacheAssetsDic.Count;
-            var keyList = cacheAssetsDic.Keys.ToList();
-            for (int i = 0; i < maxCount; i++)
-            {
-                AsyncCache cache = null;
-                if (cacheAssetsDic.TryGetValue(keyList[i], out cache))
-                {
-                    if (cache == null || cache.unloadTime <= unloadTime)
-                    {
-                        UnLoadAssetHandle(cache?.data);
-                        cacheAssetsDic.Remove(keyList[i]);
-                    }
-                }
-            }
-        }
+        /// <param name="keys"></param>
+        /// <returns></returns>
         private bool ReleaseAssetsCache(object keys)
         {
             AsyncCache cache;

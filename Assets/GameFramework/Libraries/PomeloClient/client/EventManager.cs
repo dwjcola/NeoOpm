@@ -28,7 +28,7 @@ namespace Pomelo.DotNetClient
             IReceiveTransfer transfer;
             if (callBackMap.TryGetValue(id,out transfer))
             {
-                transfer.doHandle(msg.body, msg.offset, (byte)msg.type);
+                transfer.doHandle(msg.body, msg.offset, (byte)msg.type,msg.errorCode);
             }
         }
 
@@ -61,7 +61,7 @@ namespace Pomelo.DotNetClient
                 this.eventMap.Add(id, list);
             }
         }
-        public void AddOnEvent(uint id, Action<byte[]> callback)
+        public void AddOnEvent(uint id, Action<uint,byte[]> callback)
         {
             List<IReceiveTransfer> list = null;
             if (this.eventMap.TryGetValue(id, out list))
@@ -89,7 +89,7 @@ namespace Pomelo.DotNetClient
                 this.eventMap.Add(id, list);
             }
         }
-        public void AddOnEvent(uint id, Action<string> callback)
+        public void AddOnEvent(uint id, Action<uint,string> callback)
         {
             List<IReceiveTransfer> list = null;
             if (this.eventMap.TryGetValue(id, out list))
@@ -134,7 +134,7 @@ namespace Pomelo.DotNetClient
             if (eventMap.TryGetValue(id,out list))
             {
                 foreach (var action in list) 
-                    action.doHandle(msg.body, msg.offset, (byte)msg.type);
+                    action.doHandle(msg.body, msg.offset, (byte)msg.type,msg.errorCode);
             }
         }
 

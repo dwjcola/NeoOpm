@@ -14,15 +14,15 @@ end
 
 --ui组件添加事件
 function UICtrlTemplateLUA:AddUIEventListener( )
-	--self:AddUIEvent("onclick", self.closeBtn.gameObject, self.OnCloseMe);
+	--self:AddUIEvent("onclick", self.closeBtn, self.OnCloseMe);
 end
 --模块添加全局事件
 function UICtrlTemplateLUA:AddEventListener( )
-	-- self:AddEvent("EventStringKey", self.EventHandle);
+	-- self:AddListener("EventStringKey", self.EventHandle);
 end
 --模块移除全局事件
 function UICtrlTemplateLUA:RemoveEventListener( )
-	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+	-- self:RemoveListener("EventStringKey");
 end
 function UICtrlTemplateLUA:OnCloseMe()
 	if(self.view~=nil)then
@@ -33,8 +33,13 @@ function UICtrlTemplateLUA:OnCloseMe()
 		end
 	end
 end
-function UICtrlTemplateLUA:OnDestroy()
+--当UI主动或被动被关闭时会执行，此时界面不会销毁
+function UICtrlTemplateLUA:OnPause()
+	self:RemoveUIEvent()
 	self:RemoveEventListener()
+end
+--当UI被主动关闭并且缓存时间到被销毁时执行
+function UICtrlTemplateLUA:OnDestroy()
 	UICtrlTemplateLUA = nil;
 end
 return UICtrlTemplateLUA

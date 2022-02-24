@@ -921,26 +921,24 @@ MonoBehaviour:
   m_EnableOpenUIFormUpdateEvent: 0
   m_EnableOpenUIFormDependencyAssetEvent: 0
   m_EnableCloseUIFormCompleteEvent: 1
-  m_InstanceAutoReleaseInterval: 60
+  m_InstanceAutoReleaseInterval: 3
   m_InstanceCapacity: 16
-  m_InstanceExpireTime: 60
+  m_InstanceExpireTime: 3
   m_InstancePriority: 0
   m_InstanceRoot: {fileID: 1576232203}
-  m_UIFormHelperTypeName: UnityGameFramework.Runtime.DefaultUIFormHelper
+  m_UIFormHelperTypeName: NeoOPM.NeoOPMUIFormHelper
   m_CustomUIFormHelper: {fileID: 0}
   m_UIGroupHelperTypeName: NeoOPM.UGuiGroupHelper
   m_CustomUIGroupHelper: {fileID: 0}
   m_UIGroups:
+  - m_Name: Main
+    m_Depth: 1
   - m_Name: Default
     m_Depth: 2
   - m_Name: Reminder
     m_Depth: 3
-  - m_Name: Scene
-    m_Depth: 0
   - m_Name: Guide
     m_Depth: 4
-  - m_Name: Main
-    m_Depth: 1
   m_uiCamera: {fileID: 0}
 --- !u!114 &349319366
 MonoBehaviour:
@@ -1426,6 +1424,7 @@ GameObject:
   - component: {fileID: 1576232205}
   - component: {fileID: 1576232204}
   - component: {fileID: 1576232207}
+  - component: {fileID: 1576232208}
   m_Layer: 5
   m_Name: UI Form Instances
   m_TagString: Untagged
@@ -1524,6 +1523,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d5cec83790ac7e46acde1be60df6b6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1576232208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1576232202}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 085d1ac8103048a3967a614c7b85fc9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1852670052

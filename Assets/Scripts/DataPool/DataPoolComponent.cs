@@ -14,85 +14,40 @@ namespace NeoOPM
     public class DataPoolComponent : GameFrameworkComponent
     {
         [CSharpCallLua]
-        public interface IBagInfoData
+        public interface ITableValue
         {
-            void PushItem(int itemId,int Count);
+            string Id { get; set; }
+            string AssetName { get; set; }
+            string UIGroupName { get; set; }
+            bool AllowMultiInstance { get; set; }
+            bool PauseCoveredUIForm { get; set; }
+            string LuaPath { get; set; }
+            string LuaName { get; set; }
+            bool Mask { get; set; }
+            int UITween { get; set; }
         }
-        [CSharpCallLua]
-        public interface IPlayerData
-        {
-            ulong RoleId { get; set; }
-            uint ServerId{ get; set; }
-            string AccId{ get; set; }
-            string RoleName{ get; set; }
-            uint Level{ get; set; }
-            int Food{ get; set; }
-            int Stone{ get; set; }
-            int Iron{ get; set; }
-            int Crystal{ get; set; }
-            int Gold{ get; set; }
-            int ActionToken{ get; set; }
-            int KillMonsterLevel { get; set; }
-            bool TroopAfterStop { get; set; }
-            IBagInfoData BagInfoData { get; }
-        }
-        private IPlayerData m_PlayerData;
-        public IPlayerData PlayerData
+        private Dictionary<string, ITableValue> m_Dic;
+        public Dictionary<string, ITableValue> Dic
         {
             get
             {
-                if (m_PlayerData == null)
+                if (m_Dic == null)
                 {
                     LuaEnv luaEnv = XluaManager.instance.LuaEnv;
-                    m_PlayerData = luaEnv.Global.GetInPath<IPlayerData>("PlayerData");
+                    m_Dic = luaEnv.Global.GetInPath<Dictionary<string,ITableValue>>("TPanel");
                 }
-                return m_PlayerData;
+                return m_Dic;
             }
         }
-
-        [CSharpCallLua]
-        public interface IPlayerSceneData
+        public ITableValue GetPanelValueByKey(string key)
         {
-            WsTroopBasicInfo GetSelfTroopDataById(ulong entityId);
-            WsObjInfo GetCastleInfo();
-            bool? IsSelfTroopInBattle(ulong entityId);
-            bool? IsSelfCityInBattle();
-            ulong GetCastleEntityId();
-        }
-        private IPlayerSceneData m_PlayerSceneData;
-        public IPlayerSceneData PlayerSceneData
-        {
-            get
+            ITableValue tv;
+            if (Dic.TryGetValue(key,out tv))
             {
-                if (m_PlayerSceneData == null)
-                {
-                    LuaEnv luaEnv = XluaManager.instance.LuaEnv;
-                    m_PlayerSceneData = luaEnv.Global.GetInPath<IPlayerSceneData>("PlayerSceneData");
-                }
-                return m_PlayerSceneData;
+                return tv;
             }
-        }
 
-        [CSharpCallLua]
-        public interface IBuildingPlaneData
-        {
-            void ChangeOneBlockPos(int posx, int posy , int id);
+            return null;
         }
-
-            //临时使用
-        private IBuildingPlaneData m_BuildingPlaneData;
-        public IBuildingPlaneData BuildingPlaneData
-        {
-            get
-            {
-                if (m_BuildingPlaneData == null)
-                {
-                    LuaEnv luaEnv = XluaManager.instance.LuaEnv;
-                    m_BuildingPlaneData = luaEnv.Global.GetInPath<IBuildingPlaneData>("BuildingPlaneData");
-                }
-                return m_BuildingPlaneData;
-            }
-        }
-        //临时使用end
     }
 }

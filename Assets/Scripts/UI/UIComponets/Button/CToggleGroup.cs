@@ -184,6 +184,7 @@ namespace NeoOPM
         public void ClearAll()
         {
             init = false;
+            tabSelect = null;
             if (m_CatchList != null)
             {
                 for (int i = 0; i < m_CatchList.Count; i++)

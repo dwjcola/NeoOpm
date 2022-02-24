@@ -51,10 +51,14 @@ end
 function MainUILUA:HideSelf()
 	self.bg.alpha = 0
 end
+function MainUILUA:OnGmBtnClick()
+	self:OpenUI("GMCommandForm");
+end
 --ui组件添加事件
 function MainUILUA:AddUIEventListener( )
 	--self:AddTabEvent(self.tabs,self.TabClick)
 	self:AddUIEvent("onclick", self.fightBtn, self.Fight);
+	self:AddUIEvent("onclick", self.gmBtn, self.OnGmBtnClick);
 end
 --模块添加全局事件
 function MainUILUA:AddEventListener( )

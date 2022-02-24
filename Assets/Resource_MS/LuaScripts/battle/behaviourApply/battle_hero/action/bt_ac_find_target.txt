@@ -52,7 +52,11 @@ function bt_ac_find_target:doAction(blackBoard,agent)
 
                 if isHandleSuss then
                     place_target = tmp_pos
-                    blackBoard._find_target_pos = place_target
+                    if  blackBoard._find_target_pos == place_target then
+                        blackBoard._find_target_pos = target
+                    else
+                        blackBoard._find_target_pos = place_target
+                    end
                 else
                     blackBoard._find_target_pos = nil
                 end

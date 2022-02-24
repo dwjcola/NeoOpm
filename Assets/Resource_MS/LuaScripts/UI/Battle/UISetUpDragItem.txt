@@ -8,6 +8,7 @@ local UISetUpDragItem = SimpleClassUtil:class(UIDragMoveBaseItem)
 function UISetUpDragItem:initialize(transform,index,parent)
     UIDragMoveBaseItem.initialize(self,transform)
     self._transform = transform
+    self._layer = parent
     self._index = index
     ---@type BattleTeam
     self._parent = parent

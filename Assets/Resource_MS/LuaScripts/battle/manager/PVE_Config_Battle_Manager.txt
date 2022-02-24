@@ -34,7 +34,7 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
 
     self._list_renderCharacter = {}
     -- 战斗倍速
-    self._battleSpeed = 1
+    self._battleSpeed = 2
     -- 计算后的 倍速下 每帧时间间隔
     self._speedInterval = self._interval/self._battleSpeed
 end

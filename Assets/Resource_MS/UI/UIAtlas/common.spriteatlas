@@ -62,14 +62,17 @@ SpriteAtlas:
   - {fileID: 21300000, guid: f1fea1b1ea0c4c74b959a20ac1d8fc84, type: 3}
   - {fileID: 21300000, guid: 729ebbc19f4ecc64ca3c9146324f1d6d, type: 3}
   - {fileID: 21300000, guid: 4700c0e1575394c49bd6238081e52060, type: 3}
+  - {fileID: 21300000, guid: b4d4cdf13857d724e88b1048943d18fa, type: 3}
   - {fileID: 21300000, guid: faa10462fce3a9e408db878e816b2078, type: 3}
   - {fileID: 21300000, guid: 7a18a9a29112c9a4d9741b9f743ddd67, type: 3}
   - {fileID: 21300000, guid: 7b5b4c33007afa8419b815d42aee0f2e, type: 3}
   - {fileID: 21300000, guid: 2e0a4653f11515344bc24394b41a041d, type: 3}
   - {fileID: 21300000, guid: a668c6631dc84854eb7f9dbe6bda2ca7, type: 3}
+  - {fileID: 21300000, guid: 288bcf63c1fb24e4691db1c3ecefdf3b, type: 3}
   - {fileID: 21300000, guid: 4629888332030684f81c1f6b55525b10, type: 3}
   - {fileID: 21300000, guid: 1f53a883a958d6d47b803d30b6fdd5e6, type: 3}
   - {fileID: 21300000, guid: 7b3e92a3a3d9bec4cad6ed78efd45f93, type: 3}
+  - {fileID: 21300000, guid: 8fd672f3243e4be48bc79c4f80e82ea4, type: 3}
   - {fileID: 21300000, guid: 2657bf34ee42d7f469fdbfe6c0701ede, type: 3}
   - {fileID: 21300000, guid: d0d79d44234732e4fb7122b6ff0f0865, type: 3}
   - {fileID: 21300000, guid: 266fd554bdc191c43873679a31896126, type: 3}
@@ -98,6 +101,7 @@ SpriteAtlas:
   - {fileID: 21300000, guid: a2281f28298dc1c4889b7987db100018, type: 3}
   - {fileID: 21300000, guid: b226a138cc494914aa678d39ca7d5d03, type: 3}
   - {fileID: 21300000, guid: e4e9e2385a94bd14494bcf30a1a5e667, type: 3}
+  - {fileID: 21300000, guid: fa22db38ef215dd4ab3e3cf6033ad17a, type: 3}
   - {fileID: 21300000, guid: ac681248562205942958d07509f91139, type: 3}
   - {fileID: 21300000, guid: 3ca3f558de16d9246a1a40b22d91f30c, type: 3}
   - {fileID: 21300000, guid: 001c71681021a4e42bf21d7d20420773, type: 3}
@@ -109,11 +113,13 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 85a2ae796e8ca994faa4e730fa36d383, type: 3}
   - {fileID: 21300000, guid: bc20d9c98b4b39c4eb661ba0fd34f7c8, type: 3}
   - {fileID: 21300000, guid: cd0070d9d237fbe469d38a2d2e8fecfb, type: 3}
+  - {fileID: 21300000, guid: 8b36a35a1456cb64688fae55931a8b2e, type: 3}
   - {fileID: 21300000, guid: d70b92dadf64e304099764e9e578503f, type: 3}
   - {fileID: 21300000, guid: 51c213fa8d152e8488575f35b12f1209, type: 3}
   - {fileID: 21300000, guid: 0e8f412b4b581e84abc90396d4003f9b, type: 3}
   - {fileID: 21300000, guid: 40831a2b2c2687b4398b1e619519fcaf, type: 3}
   - {fileID: 21300000, guid: edb65d6b875fd3f4d891398c8f4ef00c, type: 3}
+  - {fileID: 21300000, guid: 8ddabc2cd91e3784a929031b082f21ee, type: 3}
   - {fileID: 21300000, guid: b476613c4d3e8bf42be49b2074146d3c, type: 3}
   - {fileID: 21300000, guid: cae9988ccf816ef419c23d7cfb8abea9, type: 3}
   - {fileID: 21300000, guid: b156f2fcf7f03dc458acf7df7f3570e5, type: 3}
@@ -125,7 +131,9 @@ SpriteAtlas:
   - {fileID: 21300000, guid: 18cea67eeeb483a48a20acb69401ef8c, type: 3}
   - {fileID: 21300000, guid: b47a468ead31ff04ebd5e5675de9c24a, type: 3}
   - {fileID: 21300000, guid: e6e86b8e967b71e4bbca47d2ca9efc6a, type: 3}
+  - {fileID: 21300000, guid: 7c48740f689e05641aed9dc992043b86, type: 3}
   - {fileID: 21300000, guid: 7735ff6f9466b264bb7d13930562c86e, type: 3}
+  - {fileID: 21300000, guid: 59d6468fd3afaff4b881363aa034901d, type: 3}
   - {fileID: 21300000, guid: bf97d4cfc6b0f2442a5daf74d3911564, type: 3}
   - {fileID: 21300000, guid: 06ec5dff42bb0024b98ec0fa769c7d61, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -141,14 +149,17 @@ SpriteAtlas:
   - Icon_BP2_Common
   - Panel_GridCorner5_Common
   - Img_RainbowStar3_Common
+  - Btn_CountDown_Common
   - Panel_HeroGrid5_Common
   - Btn_BtnA1_Common
   - Btn_BtnB3_Common
   - Panel_PageOff_Common
   - Panel_HeroListBg_Common
+  - Panel_Cursor_Common
   - Panel_RaceBg3_Common
   - Panel_HeroGrid7_Common
   - Btn_Back_Common
+  - Img_RedAlert_Common
   - Icon_BP_Common
   - Icon_Race6_Common
   - Panel_BP_Common
@@ -177,6 +188,7 @@ SpriteAtlas:
   - Panel_CoinBg_Common
   - Panel_HeroGridBg1_Common
   - Btn_BtnC3_Common
+  - Panel_CountBg_Common
   - Panel_PlayerGrid_Common
   - Panel_Window_Common
   - Panel_GridCorner3_Common
@@ -188,11 +200,13 @@ SpriteAtlas:
   - Img_WhiteStar4_Common
   - Panel_HeroGridBg6_Common
   - Panel_WindowTitle_Common
+  - Panel_CountProgressBg_Common
   - Icon_Race7_Common
   - Btn_BtnD1_Common
   - Img_Img2_ReLink
   - Panel_HeroGridBg4_Common
   - Img_Window1_Common
+  - Panel_CountProgressCursor_Common
   - Img_RainbowStar2_Common
   - Img_RainbowStar4_Common
   - Icon_Race5_Common
@@ -204,7 +218,9 @@ SpriteAtlas:
   - Panel_HeroGrid1_Common
   - Icon_Race3_Common
   - Img_WhiteStar1_Common
+  - Panel_CountProgress_Common
   - Panel_WindowInfoBg_Common
+  - Btn_CountUp_Common
   - Img_CoinAdd_Common
   - Panel_HeroGridBg3_Common
   m_RenderDataMap: {}

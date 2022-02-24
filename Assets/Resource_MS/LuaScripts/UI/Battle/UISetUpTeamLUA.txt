@@ -278,7 +278,7 @@ end
 ---初始化 item组件
 function UISetUpTeamLUA:initItem(item)
 	---通过c#对象唯一标识 建立与lua item对象之间的关系
-    local heroItem = UIHeroItemLUA:new(item.transform)
+    local heroItem = UIHeroItemLUA:new(item.transform,self)
 	heroItem:setIsBelongScroll(true,self.scroll_h)
 	heroItem:setDelegate(function(data) self:startDrag(data) end,
 			function(data) self:ingDrag(data) end,

@@ -55,6 +55,12 @@ function BehaviourTreeEntity:getRootNode()
     return self._rootNode
 end
 
+function BehaviourTreeEntity:stop(dt)
+    if self._rootNode and not self._tree_end then
+        self._rootNode:stop()
+    end
+end
+
 function BehaviourTreeEntity:execute(dt)
     if self._rootNode and not self._tree_end then
         self._rootNode:prePosition()

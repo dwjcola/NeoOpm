@@ -11,6 +11,7 @@ function BattleRenderSystemContext:initialize()
     self._moveSystem = MoveSystem:new()
     self._debugSystem = DebugSystem:new()
     self._rotationSystem = RotationSystem:new()
+    self._changeRenderLayerSystem = ChangeRenderLayerSystem:new()
     --self._effectSystem = EffectSystem:new()
     --self._audioSystem = AudioSystem:new()
 end
@@ -35,6 +36,9 @@ function BattleRenderSystemContext:addEntity(entity)
     end
     if  self._rotationSystem then
         self._rotationSystem:addEntity(entity)
+    end
+    if  self._changeRenderLayerSystem then
+        self._changeRenderLayerSystem:addEntity(entity)
     end
 end
 

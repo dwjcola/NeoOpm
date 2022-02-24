@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: cea33407e88c620438029a631748a6bb, type: 3}
+        m_Texture: {fileID: 2800000, guid: d608e1cc955a4b847b6fc8284e57c0ab, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskDataTex1:
@@ -83,7 +83,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
-    - _Outline: 0.00045
+    - _Outline: 0
     - _Parallax: 0.02
     - _Power: 5
     - _Saturation1: 1

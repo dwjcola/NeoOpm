@@ -37,14 +37,6 @@ MonoBehaviour:
     m_Address: Assets/Resource_MS/Battle/General
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 30752ba11fab5be4eaf65d018b70a3ba
-    m_Address: Assets/Resource_MS/Battle/General/jienuosi
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: af93f11aaf4ec3d4a962240b4e6aa8a1
-    m_Address: Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 5d66acfc78670bf48aa8e393a2442bc0
     m_Address: Assets/Resource_MS/UISprites/Common
     m_ReadOnly: 0
@@ -59,6 +51,22 @@ MonoBehaviour:
     m_SerializedLabels: []
   - m_GUID: c74f0eb74ee433541a46cf88dc930180
     m_Address: Assets/Resource_MS/Prefabs/Scenes/setUpGridItem.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: aa121b4489f8efd4db4d7132d995df08
+    m_Address: Assets/Resource_MS/Battle/General/jienuosi
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ae1f66243540f1f4bb7d76cbc9b19bef
+    m_Address: Assets/Resource_MS/Battle/General/longjuan
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 79df7131fed56bd4a811ef4e8b0829d2
+    m_Address: Assets/Resource_MS/Battle/longjuan/Model
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6aa8d7a0294e40a42af2069e25a2a714
+    m_Address: Assets/Resource_MS/Battle/General/jienuosi/Model
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

@@ -105,20 +105,23 @@ function CreateUtils:getSkillFireRangerCon(blackboard, skillData)
     end
 end
 
+---@return BlackBoard
+function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
+    local blackBoard = BlackBoard:new()
+    blackBoard._heroId = heroId
+    blackBoard._sceneData = sceneData
+    --blackBoard._index = sceneData.index
+    --blackBoard._position = sceneData.position
+    --blackBoard._skeleton_head = sceneData.skeleton_head
+    --blackBoard._skeleton_bosom = sceneData.skeleton_bosom
+    --blackBoard._skeleton_root = sceneData.skeleton_root
+
+    blackBoard._cultivateData = cultivateData
+    return blackBoard
+end
+
 function CreateUtils:createTree(blackboard)
-    ---@type NodeIfJudge
-    local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
-    -------------------------------------------------------------------------------
-          ---@type NodeCondition  判断是否活着
-          local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000002")
-          node_1:setICondition(self:getICondition("bt_con_compare_base",{ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_hp", _compareTargetValue = 0, }))
-    root:addNode(node_1)
-    ---------------------------------------------------------------------------------
-    root:addNode(self:createLiveTree(blackboard))
-    ---------------------------------------------------------------------------------
-    root:addNode(self:createDiedTree(blackboard))
-    --------------
-    return  root
+   return btConfigMap:getHeroTree(blackboard)
 end
 
 --- 死亡树
@@ -358,7 +361,7 @@ function CreateUtils:createSkill(blackBoard,skillTag)
     local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"create_SkillSuper_001")
     local skillData = blackBoard._skillData[skillTag]
     node:addNode(self:createSetPlaySkill(skillTag))
-    node:addNode(self:createSetSkillPlayTime())
+    node:addNode(self:createSetSkillPlayTime(skillTag))
     node:addNode(self:createStopFindWay())
     self:createSetGcd(node,skillData)
     node:addNode(self:createTimeLineSkill(skillData))
@@ -604,6 +607,7 @@ function CreateUtils:createFindWayTree()
     node:addNode(node_2)
     return node
 end
+
 
 function CreateUtils:getAwaitTree()
     ---@type NodeSequence

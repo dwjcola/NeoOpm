@@ -72,9 +72,9 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    return ""
     --end
     if heroId == "14" then
-        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/101_Genos_Skin.prefab"
     else
-        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi2.prefab"
+        return "Assets/Resource_MS/Battle/General/longjuan/Model/508_Tatsumaki_Skin.prefab"
     end
 
 end

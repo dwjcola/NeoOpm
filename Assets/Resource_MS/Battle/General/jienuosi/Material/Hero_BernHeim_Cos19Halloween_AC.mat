@@ -40,11 +40,11 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 6761bc24e30784641afd9d1cfbb2ddb0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 777285b234d17b24389ff1316590a820, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskDataTex1:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 777285b234d17b24389ff1316590a820, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -60,17 +60,17 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SSSTex:
-        m_Texture: {fileID: 2800000, guid: 6761bc24e30784641afd9d1cfbb2ddb0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 777285b234d17b24389ff1316590a820, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecAndAOTexAndInnerLineColorTex:
-        m_Texture: {fileID: 2800000, guid: 6761bc24e30784641afd9d1cfbb2ddb0, type: 3}
+        m_Texture: {fileID: 2800000, guid: 777285b234d17b24389ff1316590a820, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _Bias: 0
     - _Brightness1: 1
-    - _Brightness2: 0.6
+    - _Brightness2: 1
     - _BumpScale: 1
     - _Contrast1: 1
     - _Contrast2: 1
@@ -83,7 +83,7 @@ Material:
     - _Metallic: 0
     - _Mode: 3
     - _OcclusionStrength: 1
-    - _Outline: 0.00009
+    - _Outline: 0
     - _Parallax: 0.02
     - _Power: 5
     - _Saturation1: 1

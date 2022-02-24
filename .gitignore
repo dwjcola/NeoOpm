@@ -70,3 +70,4 @@ crashlytics-build.properties
 Assets/StreamingAssets/config/
 
 /Packages/packages-lock.json
+/.vscode

@@ -15,6 +15,7 @@ function bt_ac_way_finding:initData(data)
 
 end
 ---@param blackBoard BlackBoard_BattleBase
+---@param agent Agent
 function bt_ac_way_finding:doAction(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
     if blackBoard._enmityIndex == 0 then
@@ -39,7 +40,7 @@ function bt_ac_way_finding:doAction(blackBoard,agent)
                 end
                 --- @type PVE_Config_Battle_Manager
                 local battleManager = agent._battleManager
-                local data = {uid = blackBoard._uid,newPos = newPos,time = battleManager._interval}
+                local data = {uid = blackBoard._uid,newPos = newPos,time = battleManager:getSpeedInterval()}
                 EventManager:Dispatch_battle(EventType.Event_Battle_Render_Move_Line,data)
                 blackBoard._position = newPos
                 result = Enum_BT.Node_ResultType.Running

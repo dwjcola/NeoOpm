@@ -3,20 +3,33 @@
 --- Created by liuyubao.
 --- DateTime: 2021/12/13 10:20
 ---
+
+bt_hero_base = require_path("bt_hero_base","battle/behaviourConfig/heroSkill/bt_hero_base")
+
+
 ---@class btConfigMap
 local btConfigMap = {}
 
  btConfigMap.classPath = {
-    ["bt_con_battle_process"] = "battle/behaviourConfig/battle_frame/bt_con_battle_process"
+    ["test10111"] = "battle/behaviourConfig/heroSkill/test10111"
 }
 
 
-function btConfigMap:getClass(className)
-    if self.classPath and self.classPath[className] then
-        return require_path(className, self.classPath[className])
+function btConfigMap:getClass(heroId,blackboard)
+    if self.classPath and self.classPath[heroId] then
+        local tree = require_path(heroId, self.classPath[heroId])
+        tree:new(heroId)
+        return tree:createTree(blackboard)
     else
-        BattleLog.error("btConfigMap 文件 没有配置  ",className ," 数据 ")
+        local tree = bt_hero_base:new(heroId)
+        return tree:createTree(blackboard)
     end
+end
+
+---@param blackboard BlackBoard_BattleBase
+function btConfigMap:getHeroTree(blackboard)
+    local heroId = blackboard._heroId
+    return self:getClass(heroId,blackboard)
 end
 
 return btConfigMap

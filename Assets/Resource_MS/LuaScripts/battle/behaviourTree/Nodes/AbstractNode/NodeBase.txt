@@ -84,7 +84,7 @@ function NodeBase:onEnter()
 
 end
 
-function NodeBase:execute(blackboard,contextManager)
+function NodeBase:execute(blackboard,agent,dt)
    return Enum_BT.ResultType.Fail
 end
 

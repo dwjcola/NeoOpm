@@ -33,6 +33,8 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._moveSpeed = 1
     ---@type SkillData[]
     self._skillData = {}
+    -- gcd
+    self._gcd = 0
     -- 普攻半径
     self._attack_r_a = 1
 
@@ -58,10 +60,17 @@ function BlackBoard_BattleBase:initialize(contextManager)
     ---@type BattleCharacter
     self._dislocation_friend_entity = nil
 
+    -- 带位移的技能要移动的速度
+    self._skill_moveSpeed = 0
+    -- 带位移的技能要移动的帧率
+    self._skill_moveFrame = 0
+
     -- 小技能进行中
     self._smallSkillIng = false
-    -- 其他技能释放中 不能被大招打算
-    self._nothingToSkill = false
+    -- 小技能释放中不能被打断
+    self._smallSkillContBeBreak = false
+    ---- 其他技能释放中 不能被大招打算  暂时没啥用
+    --self._nothingToSkill = true
     -- 大招是否可以释放
     self._bigSkillReady = false
     -- 大招释放按钮是否按下
@@ -87,6 +96,8 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._attackMe_map ={}
 
 
+    -- 正在播放的技能tag
+    self._playSkillTag = nil
 end
 
 return BlackBoard_BattleBase

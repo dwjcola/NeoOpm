@@ -31,4 +31,101 @@ function BattleMathUtils.AngleAxis_Y_V2(oriVec,angle)
     local y1 = x *  math.sin(radian) + y * math.cos(radian)
     return Vector2(x1,y1)
 end
+
+--- 将Vector2 转换到第一象限
+---@return Vector2
+function BattleMathUtils.Vector2_abs(vec2)
+    if vec2 then
+        vec2.x = vec2.x > 0 and vec2.x or -vec2.x
+        vec2.y = vec2.y > 0 and vec2.y or -vec2.y
+        return vec2
+    else
+        Logger.error("传参不合法 ！！ ")
+        return Vector2.zero
+    end
+end
+--- 判断矩形和圆是不是相交
+function BattleMathUtils.BoxCircleIntersect(vec2_c,vec2_h,vec2_p,r)
+    if vec2_c and vec2_h and vec2_p and r then
+        local v = BattleMathUtils.Vector2_abs(vec2_p - vec2_c)
+        local u = Vector2.Max(v - vec2_h,0)
+        return Vector2.Dot(u, u) <= r * r
+    else
+        Logger.error("传参不合法 ！！ ")
+        return false
+    end
+end
+--- 获取矩形中心点位置 --
+function BattleMathUtils.getRectangleCenterPos(vec2_h,width,isToRight)
+    if vec2_h and width  and isToRight then
+        if isToRight then
+            return Vector2(vec2_h.x + width * 0.5,vec2_h.y)
+        else
+            return Vector2(vec2_h.x - width * 0.5,vec2_h.y)
+        end
+    else
+        Logger.error("传参不合法 ！！ ")
+        return false
+    end
+end
+
+--- 获取矩形第一象限得对角线矢量 --
+function BattleMathUtils.getRectangleDiagonal_1(width,length)
+    if width and length  then
+        return Vector2( width * 0.5,length * 0.5)
+    else
+        Logger.error("传参不合法 ！！ ")
+        return false
+    end
+end
+
+--- 获取矩形第一象限得对角线矢量 --
+function BattleMathUtils.getRectangleDiagonal_1(width,length)
+    if width and length  then
+        return Vector2( width * 0.5,length * 0.5)
+    else
+        Logger.error("传参不合法 ！！ ")
+        return false
+    end
+end
+
+--- 计算线段与点的最短平方距离
+---@param vec2_x0 Vector2
+---@param vec2_u Vector2
+---@param vec2_x Vector2
+function BattleMathUtils.SegmentPointSqrDistance(vec2_x0,vec2_u,vec2_x)
+   local t = Vector2.Dot(vec2_x - vec2_x0,vec2_u) / vec2_u:SqrMagnitude()
+    return (vec2_x - (vec2_x0 + Mathf.Clamp(t,0,1)))
+end
+
+--- 判断扇形是不是 与圆形相交
+---@param vec2_a Vector2 扇形圆心
+---@param vec2_u Vector2 扇形方向（单位矢量）
+---@param angle number 扇形扫掠全角 单位：°
+---@param l number 扇形边长
+---@param vec2_c Vector2 圆盘圆心
+---@param r number 圆盘半径
+function BattleMathUtils.IsSectorDiskIntersect(vec2_a,vec2_u,angle,l,vec2_c,r)
+    local theta = angle * 0.5 * Mathf.Deg2Rad
+
+    local vec2_d = vec2_c - vec2_a
+    local rsum = l + r
+    if vec2_d:SqrMagnitude() > rsum * rsum then
+        return false
+    end
+
+    local px = Vector2.Dot(vec2_d,vec2_u)
+
+    if px > Vector2.Magnitude(vec2_d) * Mathf.Cos(theta) then
+        return true
+    end
+
+    local py = Mathf.Abs(Vector2.Dot(vec2_d,Vector2(-vec2_u.y,vec2_u.x)))
+
+    local q = l * Vector2(Mathf.Cos(theta),Mathf.Sintheta())
+    local p = Vector2(px,py)
+    return BattleMathUtils.SegmentPointSqrDistance(Vector2.zero,q,p) <= r *r
+end
+
+
 return BattleMathUtils

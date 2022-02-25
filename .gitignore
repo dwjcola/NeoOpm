@@ -70,3 +70,6 @@ crashlytics-build.properties
 Assets/StreamingAssets/config/
 
 /Packages/packages-lock.json
+/.vscode
+/Assets/Resource_MS/LuaScripts/.vscode
+Assets/Resource_MS/LuaScripts/.vscode/launch.json

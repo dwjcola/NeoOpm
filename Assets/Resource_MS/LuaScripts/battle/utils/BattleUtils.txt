@@ -42,6 +42,27 @@ function BattleUtils:getPositionByIndex(isLeft,index)
 
 end
 
+function BattleUtils:getAnimationNameByPos(pos,piece)
+    local ani = ""
+    if pos == Enum_Battle.SkillTag.Skill_1 then
+        ani = Enum_Battle.AniState.ultra
+    elseif  pos == Enum_Battle.SkillTag.Skill_2 then
+        ani = Enum_Battle.AniState.skill1
+    elseif  pos == Enum_Battle.SkillTag.Skill_3 then
+        ani = Enum_Battle.AniState.skill2
+    elseif  pos == Enum_Battle.SkillTag.Skill_4 then
+        ani = Enum_Battle.AniState.skill3
+    elseif  pos == Enum_Battle.SkillTag.Skill_5 then
+        ani = Enum_Battle.AniState.baseSkill
+    else
+        Logger.error("未处理得技能 位置 pos == ",pos)
+    end
+    if piece then
+        ani = string.format("%s_%s",ani,piece)
+    end
+    return ani
+end
+
 function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --local heroInfo = ConfigReader:getDataByNameAndId("HeroInfo",heroId)
     --if heroInfo then
@@ -51,9 +72,9 @@ function BattleUtils:getHeroAssetPathByHeroId(heroId)
     --    return ""
     --end
     if heroId == "14" then
-        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi.prefab"
+        return "Assets/Resource_MS/Battle/General/jienuosi/Model/101_Genos_Skin.prefab"
     else
-        return "Assets/Resource_MS/Battle/General/jienuosi/Model/jienuosi2.prefab"
+        return "Assets/Resource_MS/Battle/General/longjuan/Model/508_Tatsumaki_Skin.prefab"
     end
 
 end
@@ -155,10 +176,17 @@ function BattleUtils:getTestBattleData()
 
                 heroList = {
                     ["14_00001"] = {
+                        heroUid = "14_00001",
                         heroId = "14",
-                        star = 6,
-                        level = 180,
-                        quality = 8,
+                        level = 120,
+                        star = 5,
+                        quality = 6,
+                        -- 职业
+                        occupation = 3,
+                        -- 右上角角标 不知道啥含义 姑且叫 稀有度
+                        rarity = 4,
+                        -- 战斗力
+                        combat = 100000,
                     }
                 }
             },
@@ -181,10 +209,14 @@ function BattleUtils:getTestBattleData()
 
                 heroList = {
                     ["15_00005"] = {
+                        heroUid = "15_00005",
                         heroId = "15",
-                        star = 5,
-                        level = 380,
-                        quality = 5,
+                        level = 120,
+                        star = 6,
+                        quality = 2,
+                        occupation = 5,
+                        rarity = 3,
+                        combat = 88888,
                     }
                 }
             },
@@ -308,5 +340,79 @@ function BattleUtils:setInitPos(isSelf,idx_pos,modelGo,parent,pos)
 end
 
 
+function BattleUtils:handlerCharacterData(campType,heroTeamData,teamData,posIndex,uid)
+
+    local volume_r = 0.5
+    local place_r = 0.6
+    local dislocation_r = 0.9
+    local detection_r = 0.8
+
+    local con_hero_detail = ConfigUtils:getHero_DetailCon(heroTeamData.heroId)
+
+    local heroData = teamData.playerData.heroList[heroTeamData.heroUid]
+
+    local data = {
+        _uid = uid,
+        _heroUid = heroData.heroUid,
+        _heroId =  heroData.heroId,
+        _hp = 1000,
+        _campType = campType,
+        _index_pos = posIndex,
+        _position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(campType == Enum_Battle.Camp.CampSelf,posIndex)),
+        _alive = true,
+        _anger = 0,
+        _smallSkillIng = false,
+        _bigSkillReady = false,
+        _isKeyDownBigSkill = true,
+        _moveSpeed = 0.05,
+        _skillData = self:getSkillData(con_hero_detail,heroData.level),
+        _volume_r = volume_r,
+        _place_r = place_r,
+        _dislocation_r = dislocation_r,
+        _detection_r = detection_r,
+        _place_r_base = place_r,
+        _isCloseIn = con_hero_detail.range == 1,
+        _orientation = campType == Enum_Battle.Camp.CampSelf and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left
+    }
+
+  return data
+end
+
+function BattleUtils:getSkillData(con_hero_detail,level)
+
+    local func = function(skillArray,level)
+        local skillTag = ""
+        for i, v in ipairs(skillArray) do
+            if v and v[2] and v[2] <= level then
+                skillTag = v[1]
+            end
+        end
+        if skillTag and skillTag ~= "" then
+            return SkillAnalysis:getSkillData(skillTag)
+        else
+            return nil
+        end
+    end
+
+    local tmp = {}
+    if con_hero_detail then
+        if con_hero_detail.normalAtk then
+            tmp[Enum_Battle.SkillTag.Skill_5] = func(con_hero_detail.normalAtk,level)
+        end
+        if con_hero_detail.skill1 then
+            tmp[Enum_Battle.SkillTag.Skill_1] = func(con_hero_detail.skill1,level)
+        end
+        if con_hero_detail.skill2 then
+            tmp[Enum_Battle.SkillTag.Skill_2] = func(con_hero_detail.skill2,level)
+        end
+        if con_hero_detail.skill3 then
+            tmp[Enum_Battle.SkillTag.Skill_3] = func(con_hero_detail.skill3,level)
+        end
+        if con_hero_detail.skill4 then
+            tmp[Enum_Battle.SkillTag.Skill_4] = func(con_hero_detail.skill4,level)
+        end
+    end
+    return tmp
+end
 
 return BattleUtils

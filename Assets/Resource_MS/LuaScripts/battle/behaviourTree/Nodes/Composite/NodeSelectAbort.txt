@@ -32,7 +32,7 @@ function NodeSelectAbort:onExit()
 end
 
 
-function NodeSelectAbort:execute(blackboard,contextManager)
+function NodeSelectAbort:execute(blackboard,agent,dt)
     self:log_enter("NodeSelectAbort    Entity: ",self:getEntityId())
     local index = #self:getChildes() + 1
     if self._lastRunningNode then
@@ -47,7 +47,7 @@ function NodeSelectAbort:execute(blackboard,contextManager)
         local nodeBase = self:getChildesByIndex(i)
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then

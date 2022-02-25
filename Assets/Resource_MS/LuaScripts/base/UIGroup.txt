@@ -1,0 +1,15 @@
+--[[
+---------------------------------------------
+-- File Name:    UIGroup.txt
+-- Author:       wangguoqing
+-- Create Date:  2022/02/24
+---------------------------------------------
+--]]
+
+
+
+UIGroup={}
+UIGroup.Main=1
+UIGroup.Default=2
+UIGroup.Reminder=3
+UIGroup.Guide=4

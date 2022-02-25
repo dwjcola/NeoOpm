@@ -42,7 +42,9 @@ end
 
 function BattleMainNode:handleBattleData(rep,userData)
    self._data = BattleUtils:getTestBattleData()
+   -- todo 暂且这么处理 以后会直接用布阵得数据
    self._data.team_self.teamMap = BattleProxy:getBattleTeamMap(self._battleTimes).team_self.teamMap
+
    self._battleTeam = BattleTeam:new(self._battleTimes)
    self._battleTeam:setLoadData(self._data)
    self._battleTeam:tryLoad(function()

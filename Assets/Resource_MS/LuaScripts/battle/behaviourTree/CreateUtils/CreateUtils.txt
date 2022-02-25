@@ -61,14 +61,50 @@ function CreateUtils:getNodeByType(type,entityId)
     node:setEntityId(entityId)
     return node
 end
-
-function CreateUtils:getICondition()
-
+---@return ICondition
+function CreateUtils:getICondition(conName,data)
+    ---@type ICondition
+    local con = btApplyMap:getClass(conName)
+    con:initData(data)
+    return con
+end
+---@return IAction
+function CreateUtils:getIAction(conName,data)
+    ---@type IAction
+    local action = btApplyMap:getClass(conName)
+    action:initData(data)
+    return action
+end
+---@param blackboard BlackBoard_BattleBase
+---@param skillData SkillData
+function CreateUtils:getSkillFireSpecialCon(blackboard, skillData)
+    local condition = skillData._skillCon.condition
+    local type = condition[1]
+    if type == Enum_Battle.SkillFireSpecialCondition.AroundNoEnemy then
+        return  self:getICondition("bt_con_aroundNoEnemy",skillData)
+    else
+        BattleLog.error("特殊技能判断类型 未处理 ： ",type)
+    end
+end
+---@param blackboard BlackBoard_BattleBase
+---@param skillData SkillData
+function CreateUtils:getSkillFireRangerCon(blackboard, skillData)
+    local rangeType = skillData._skillCon.rangeType or Enum_Battle.SkillLaunchRangeType.Passive
+    if rangeType == Enum_Battle.SkillLaunchRangeType.Passive or rangeType == Enum_Battle.SkillLaunchRangeType.JumpRange then
+        return nil
+    elseif rangeType == Enum_Battle.SkillLaunchRangeType.Roundness then
+        return self:getICondition("bt_con_around_circle",skillData)
+    elseif rangeType == Enum_Battle.SkillLaunchRangeType.FullScreen then
+        return self:getICondition("bt_con_fullScreen",skillData)
+    elseif rangeType == Enum_Battle.SkillLaunchRangeType.Rectangle_forward then
+        return self:getICondition("bt_con_rectangle_forward",skillData)
+    elseif rangeType == Enum_Battle.SkillLaunchRangeType.Sector_forward then
+        return self:getICondition("bt_con_sector_forward",skillData)
+    else
+        BattleLog.error("技能范围判断类型 未处理 ： ",rangeType)
+    end
 end
 
-function CreateUtils:getIAction()
-
-end
 ---@return BlackBoard
 function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
     local blackBoard = BlackBoard:new()
@@ -84,118 +120,221 @@ function CreateUtils:createBlackBoard(heroId,sceneData,cultivateData)
     return blackBoard
 end
 
-function CreateUtils:createTree(heroId,sceneData,data)
+function CreateUtils:createTree(blackboard)
+   return btConfigMap:getHeroTree(blackboard)
+end
+
+--- 死亡树
+function CreateUtils:createDiedTree(blackboard)
+    ---@type NodeAction 死亡 行为
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"0000006")
+    node:setIAction(self:getIAction("bt_ac_died"))
+    return node
+end
+
+function CreateUtils:createLiveTree(blackboard)
+    ---@type NodeSequence
+    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"createLiveTree_001")
+    node:addNode(self:createInitSkillCdTree(blackboard))
+    node:addNode(self:createLoopSkillsTree(blackboard))
+    return node
+end
+---初始化技能Cd
+function CreateUtils:createInitSkillCdTree(blackboard)
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createInitSkillCdTree_0001")
+    node:setIAction(self:getIAction("bt_ac_initSkillCd"))
+    return node
+end
+
+--- 技能树
+function CreateUtils:createLoopSkillsTree(blackboard)
+    ---@type NodeDecoratorRepeat 一直 判断技能 树
+    local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
+    node_2:setRepeatCount(-1)
+          ---@type NodeParallelAll
+          local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000004")
+              -- 1.先添加 被动技能
+             --local  passiveNode = self:createPassiveTree(blackboard)
+             --if passiveNode then
+             --    node_2_1:addNode(passiveNode)
+             --end
+             -- 2. 仇恨值列表刷新树
+          node_2_1:addNode(self:createHostilityValueTree(blackboard))
+             -- 3.技能树
+              ---@type NodeParallelAll 技能 行为
+              local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
+              node_2_1_2:addNode(self:createBigSkillJudgeTree(blackboard))
+              node_2_1_2:addNode(self:createBigSkillTree(blackboard))
+              node_2_1_2:addNode(self:createSkillMoveTree(blackboard))
+          node_2_1:addNode(node_2_1_2)
+          node_2_1:addNode(self:getGcdTree(blackboard))
+    node_2:addNode(node_2_1)
+    return node_2
+end
+--- GCD计时树
+---@param blackboard BlackBoard_BattleBase
+function CreateUtils:getGcdTree(blackboard)
     ---@type NodeIfJudge
-    local root = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000001")
-    -------------------------------------------------------------------------------
-          ---@type NodeCondition  判断是否活着
-          local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition,"0000002")
-                local condition_1 = btApplyMap:getClass("bt_con_compare_base")
-                condition_1:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_hp", _compareTargetValue = 0, })
-                node_1:setICondition(condition_1)
-    root:addNode(node_1)
-    ---------------------------------------------------------------------------------
-          ---@type NodeDecoratorRepeat 一直 判断技能 树
-          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
-          node_2:setRepeatCount(-1)
-                ---@type NodeParallelAll
-                local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000004")
-                       -- 1.todo 先添加 被动技能
-                       -- 仇恨值 目标计算
-                       local node_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
-                            ---@type NodeConditionGroup
-                            local node_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
-                                  local con_2_1_3_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
-                                  local con_2_1_3_1_2 = btApplyMap:getClass("bt_con_enmityCd")
-                                        con_2_1_3_1_2:initData({cdTime = 10000})
-                                  local con_2_1_3_1_3 = btApplyMap:getClass("bt_onReceive")
-                                        con_2_1_3_1_3:initData({eventId = EventType.Event_Battle_Died})
-                                  local con_2_1_3_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
-                                        con_2_1_3_1_4:initData()
-                            node_2_1_3_1:setIConditionS({con_2_1_3_1_1,con_2_1_3_1_2,con_2_1_3_1_3,con_2_1_3_1_4},Enum_BT.Condition_Relation.BT_OR)
-                      node_2_1_3:addNode(node_2_1_3_1)
-                            ---@type NodeAction
-                            local node_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
-                                  local ac_2_1_3_2_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
-                            node_2_1_3_2:setIAction(ac_2_1_3_2_1)
-                      node_2_1_3:addNode(node_2_1_3_2)
-                node_2_1:addNode(node_2_1_3)
-                       -- 2.技能树
-                       ---@type NodeParallelAll 技能 行为
-                       local node_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000005")
-                              node_2_1_2:addNode(self:createBigSkillJudgeTree())
-                              node_2_1_2:addNode(self:createBigSkillTree())
-                node_2_1:addNode(node_2_1_2)
-          node_2:addNode(node_2_1)
-    root:addNode(node_2)
-    ---------------------------------------------------------------------------------
-          ---@type NodeAction 死亡 行为
-          local node_3 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000006")
-                local action_3 = btApplyMap:getClass("bt_ac_died")
-          node_3:setIAction(action_3)
-    root:addNode(node_3)
-    --------------
-    return  root
-end
+    local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"GcdTree_1")
 
-function CreateUtils:createBigSkillJudgeTree()
+    ---@type NodeCondition
+    local node_1 = self:getNodeByType(Enum_BT.Node_Type.Condition)
+    node_1:setICondition(self:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_gcd", _compareTargetValue = 0}))
+    node:addNode(node_1)
+
+    ---@type NodeAction
+    local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action)
+    node_2:setIAction(self:getIAction("bt_ac_count_down"))
+    node:addNode(node_2) --
+    return node
+end
+--- 被动树
+---@param blackboard BlackBoard_BattleBase
+function CreateUtils:createPassiveTree(blackboard)
+    ---@type bt_ac_passive
+    local node = nil
+    if blackboard and blackboard._skillData then
+        for i, v in pairs(blackboard._skillData) do
+            if v and ( v._skillCon.type == Enum_Battle.SkillType.Skill_passive) or (v._skillCon.type == Enum_Battle.SkillType.Skill_cCalled) then
+                if node == nil then
+                    node = btApplyMap:getClass("bt_ac_passive")
+                    node:addPassive(v)
+                end
+            end
+        end
+    end
+    return node
+end
+--- 仇恨值列表
+function CreateUtils:createHostilityValueTree(blackboard)
+    -- 仇恨值 目标计算
+    local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000005_1")
+          ---@type NodeConditionGroup
+          local node1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000005_2")
+                local con_1_1 = btApplyMap:getClass("bt_con_enmityTargetCheck")
+                local con_1_2 = btApplyMap:getClass("bt_con_enmityCd")
+                con_1_2:initData({cdTime = BattleConstant.BattleEnmityListRefreshCd})
+                local con_1_3 = btApplyMap:getClass("bt_onReceive")
+                con_1_3:initData({eventId = EventType.Event_Battle_Died})
+                local con_1_4 = btApplyMap:getClass("bt_onBeAttack_isNotEnmity")
+                con_1_4:initData()
+         node1:setIConditionS({con_1_1,con_1_2,con_1_3,con_1_4},Enum_BT.Condition_Relation.BT_OR)
+    node:addNode(node1)
+          ---@type NodeAction
+          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000005_3")
+                local ac_1 = btApplyMap:getClass("bt_ac_refreshEnmityList")
+          node_2:setIAction(ac_1)
+    node:addNode(node_2)
+    return node
+end
+---@param blackboard BlackBoard_BattleBase
+function CreateUtils:createBigSkillJudgeTree(blackboard)
+    ---@type SkillData
+    local skillData = blackboard._skillData[Enum_Battle.SkillTag.Skill_1]
     ---@type NodeIfJudge 判断是否满足 大招释放条件
-    local node_2_2_1 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000007")
-         ---@type NodeConditionGroup
-         local node_2_2_1_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000008")
-               -----@type bt_con_compare_base
-               local condition_2_2_1_1_1 = btApplyMap:getClass("bt_con_compare_base")
-               condition_2_2_1_1_1:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = "_anger", _compareTargetValue = 100, })
-               -----@type bt_con_astrict
-               local condition_2_2_1_1_2 = btApplyMap:getClass("bt_con_astrict")
-               condition_2_2_1_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_1, isDefy = false, })
-               -----@type ICondition
-               local condition_2_2_1_1_3 = btApplyMap:getClass("bt_con_find_s_live")
-               condition_2_2_1_1_3:initData({ skillTag = Enum_Battle.SkillTag.Skill_1 })
-               -----@type ICondition
-               local condition_2_2_1_1_4 = btApplyMap:getClass("bt_con_compare_base")
-               condition_2_2_1_1_4:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_nothingToSkill", _compareTargetValue = false, })
-         local tmp_01 = {condition_2_2_1_1_1,condition_2_2_1_1_2,condition_2_2_1_1_3,condition_2_2_1_1_4}
-         node_2_2_1_1:setIConditionS(tmp_01,Enum_BT.Condition_Relation.BT_AND)
-         ---@type NodeSequence
-         local node_2_2_1_2 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000009")
-               ---@type NodeAction
-               local node_2_2_1_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action),"0000010"
-                     ---@type bt_ac_setValue
-                     local ac_2_2_1_2_1 = btApplyMap:getClass("bt_ac_setValue")
-                     ac_2_2_1_2_1:initData({key = "_bigSkillReady",value = true})
-                node_2_2_1_2_1:setIAction(ac_2_2_1_2_1)
-               ---@type NodeAction
-               local node_2_2_1_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000011")
-                     ---@type bt_ac_sendMag
-                     local ac_2_2_1_2_2 = btApplyMap:getClass("bt_ac_sendMag")
-                     ac_2_2_1_2_2:initData({eventKey = EventType.Event_BigSkillCanRelease})
-               node_2_2_1_2_2:setIAction(ac_2_2_1_2_2)
-         node_2_2_1_2:addNode(node_2_2_1_2_1)
-         node_2_2_1_2:addNode(node_2_2_1_2_2)
-         ---@type NodeSequence
-         local node_2_2_1_3 = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000012")
-               ---@type NodeAction
-               local node_2_2_1_3_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000013")
-                      ---@type bt_ac_setValue
-                      local ac_2_2_1_3_1 = btApplyMap:getClass("bt_ac_setValue")
-                      ac_2_2_1_3_1:initData({key = "_bigSkillReady",value = false})
-               node_2_2_1_3_1:setIAction(ac_2_2_1_3_1)
-               ---@type NodeAction
-               local node_2_2_1_3_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000014")
-                     ---@type bt_ac_sendMag
-                     local ac_2_2_1_3_2 = btApplyMap:getClass("bt_ac_sendMag")
-                     ac_2_2_1_3_2:initData({eventKey = EventType.Event_BigSkillCannotRelease})
-               node_2_2_1_3_2:setIAction(ac_2_2_1_3_2)
-         node_2_2_1_3:addNode(node_2_2_1_3_1)
-         node_2_2_1_3:addNode(node_2_2_1_3_2)
-    node_2_2_1:addNode(node_2_2_1_1)
-    node_2_2_1:addNode(node_2_2_1_2)
-    node_2_2_1:addNode(node_2_2_1_3)
-    return node_2_2_1
+    local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000007")
+
+    node:addNode(self:baseSkillCondition(blackboard,skillData,false))
+
+    node:addNode(self:bigSkillCondition_to_true(blackboard,skillData))
+
+    node:addNode(self:bigSkillCondition_to_false(blackboard,skillData))
+
+    return node
+end
+---@param blackboard BlackBoard_BattleBase
+---@param skillData SkillData
+function CreateUtils:baseSkillCondition(blackboard,skillData,isInfluenced_gcd)
+    ---@type NodeConditionGroup
+    local node = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,tostring(skillData._skillTag))
+    local tmp = {}
+
+    table.insert(tmp, self:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = "_anger",
+              _compareTargetValue = skillData._skill_need_power or 0 }))
+
+    table.insert(tmp,self:getICondition("bt_con_astrict",
+            { skillTag = Enum_Battle.SkillTag.Skill_1, isDefy = skillData._unstoppable, }))
+
+    table.insert(tmp, self:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_smallSkillContBeBreak", _compareTargetValue = false, }))
+
+    table.insert(tmp, self:getICondition("bt_con_cd", skillData))
+
+
+    if isInfluenced_gcd then
+        table.insert(tmp, self:getICondition("bt_con_compare_base",
+                { _compareType = Enum_BT.CompareType.BT_LessThanEqual, _key = "_gcd", _compareTargetValue = 0, }))
+    end
+    if skillData and skillData._skillCon and skillData._skillCon.condition then
+        local specialConNode = self:getSkillFireSpecialCon(blackboard, skillData)
+        if specialConNode then
+            table.insert(tmp,specialConNode)
+        end
+    end
+    if skillData and skillData._skillCon.rangeType then
+        local rangerConNode = self:getSkillFireRangerCon(blackboard, skillData)
+        if rangerConNode then
+            table.insert(tmp,rangerConNode)
+        end
+    end
+    node:setIConditionS(tmp,Enum_BT.Condition_Relation.BT_AND)
+    return node
 end
 
-function CreateUtils:createBigSkillTree()
+function CreateUtils:bigSkillCondition_to_true(blackboard,skillData)
+    ---@type NodeSequence
+    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000009")
+      ---@type NodeAction
+      local node_1 = self:getNodeByType(Enum_BT.Node_Type.Action),"0000010"
+      node_1:setIAction(self:getIAction("bt_ac_setValue",{key = "_bigSkillReady",value = true}))
+      ---@type NodeAction
+      local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000011")
+      node_2:setIAction(self:getIAction("bt_ac_sendMag",{eventKey = EventType.Event_BigSkillCanRelease}))
+
+    node:addNode(node_1)
+    node:addNode(node_2)
+    return node
+end
+
+function CreateUtils:bigSkillCondition_to_false(blackboard,skillData)
+    ---@type NodeSequence
+    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000012")
+       ---@type NodeAction
+       local node_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000013")
+       node_1:setIAction(self:getIAction("bt_ac_setValue",{key = "_bigSkillReady",value = false}))
+
+       ---@type NodeAction
+       local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000014")
+       node_2:setIAction(self:getIAction("bt_ac_sendMag",{eventKey = EventType.Event_BigSkillCannotRelease}))
+    node:addNode(node_1)
+    node:addNode(node_2)
+    return node
+end
+
+function CreateUtils:createSkillMoveTree(blackBoard)
+   ---@type NodeIfJudge
+   local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"createSkillMove_Tree 001")
+      ---@type NodeConditionGroup
+      local node_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"createSkillMove_Tree 002")
+        -----@type ICondition
+        local condition_1_1 = btApplyMap:getClass("bt_con_compare_base")
+        condition_1_1:initData({ _compareType = Enum_BT.CompareType.BT_UnequalTo, _key = "_skill_moveSpeed", _compareTargetValue = 0,})
+        -----@type ICondition
+        local condition_1_2 = btApplyMap:getClass("bt_con_compare_base")
+        condition_1_2:initData({ _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_skill_moveFrame", _compareTargetValue = 0,})
+      node_1:setIConditionS({condition_1_1,condition_1_2},Enum_BT.Condition_Relation.BT_AND)
+      ---@type NodeAction
+      local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"createSkillMove_Tree 003")
+      node_2:setIAction(self:getIAction("bt_ac_skill_move"))
+    node:addNode(node_1)
+    node:addNode(node_2)
+    return node
+end
+
+function CreateUtils:createBigSkillTree(blackBoard)
     ---@type NodeIfJudge
     local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000015")
           ---@type NodeConditionGroup
@@ -210,25 +349,91 @@ function CreateUtils:createBigSkillTree()
           local tmp_1 = {condition_1_1,condition_1_2}
           node_1:setIConditionS(tmp_1,Enum_BT.Condition_Relation.BT_AND)
     node:addNode(node_1)
-          ---@type NodeAction
-          local node_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000017")
-                -----@type bt_ac_playSkill
-                local ac_2 = btApplyMap:getClass("bt_ac_playSkill")
-                ac_2:initData({})
-          node_2:setIAction(ac_2)
-    node:addNode(node_2)
 
-    node:addNode(self:createSmallSkillTree())
+    node:addNode(self:createSkill(blackBoard,Enum_Battle.SkillTag.Skill_1))
+
+    node:addNode(self:createSmallSkillTree(blackBoard))
+    return node
+end
+--- 技能释放树
+function CreateUtils:createSkill(blackBoard,skillTag)
+    ---@type NodeSequence
+    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"create_SkillSuper_001")
+    local skillData = blackBoard._skillData[skillTag]
+    node:addNode(self:createSetPlaySkill(skillTag))
+    node:addNode(self:createSetSkillPlayTime(skillTag))
+    node:addNode(self:createStopFindWay())
+    self:createSetGcd(node,skillData)
+    node:addNode(self:createTimeLineSkill(skillData))
+    node:addNode(self:createSetAnger(skillData._skill_add_anger))
+    self:setSkillPlayCost(node,skillData)
+    node:addNode(self:createSetPlaySkill(nil))
     return node
 end
 
-function CreateUtils:createSmallSkillTree()
+function CreateUtils:createTimeLineSkill(skillData)
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_003")
+    node:setIAction(self:getIAction("bt_ac_playTimeLine", {skillData = skillData}))
+    return node
+end
+-- 设置 gcd
+function CreateUtils:createSetGcd(rootNode,skillData)
+    if skillData._skill_gCd and skillData._skill_gCd > 0 then
+        ---@type NodeAction
+        local node = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SetGcd")
+        node:setIAction(self:getIAction("bt_ac_setValue",{key = "_gcd",value = skillData._skill_gCd}))
+        rootNode:addNode(node)
+    end
+end
+-- 技能释放得 消耗 gcd
+---@param skillData SkillData
+function CreateUtils:setSkillPlayCost(rootNode,skillData)
+    if skillData._skillCon.cost and skillData._skillCon.cost[1] and skillData._skillCon.cost[2]  then
+        if skillData._skillCon.cost[1] == Enum_Battle.SkillCostType.Anger then
+            ---@type NodeAction
+            local node = self:getNodeByType(Enum_BT.Node_Type.Action,"set_SkillPlayCost_anger")
+            node:setIAction(self:getIAction("bt_ac_setValue",{key = "_anger",value = 0}))
+            rootNode:addNode(node)
+        end
+    end
+end
+--设置正在释放得技能 是哪个
+function CreateUtils:createSetPlaySkill(skillTag)
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SetPlaySkill")
+    node:setIAction(self:getIAction("bt_ac_setValue",{key = "_playSkillTag",value = skillTag}))
+    return node
+end
+-- 设置怒气
+function CreateUtils:createSetAnger(anger)
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createSetAnger")
+    node:setIAction(self:getIAction("bt_ac_setValue",{key = "_anger",value = anger or 0,setValueType = Enum_BT.SetValueType.BT_AddEqual}))
+    return node
+end
+
+function CreateUtils:createSetSkillPlayTime(skillTag)
+    ---@type NodeAction
+    local node_ac_skillPlayTime = self:getNodeByType(Enum_BT.Node_Type.Action,"create_SkillSuper_002")
+    node_ac_skillPlayTime:setIAction(self:getIAction("bt_ac_setSkillPlayTime",skillTag))
+    return node_ac_skillPlayTime
+end
+--- 停止寻路
+function CreateUtils:createStopFindWay()
+    ---@type NodeAction
+    local node = self:getNodeByType(Enum_BT.Node_Type.Action,"createStopFindWay001")
+    node:setIAction(self:getIAction("bt_ac_setValue",{key = "_find_target_pos",value = nil}))
+    return node
+end
+
+function CreateUtils:createSmallSkillTree(blackboard)
     ---@type NodeParallelAll
     local node = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000018")
 
     --node:addNode(self:createSelectSmallSkillTree())
 
-    node:addNode(self:createTreeExceptSmallSkill())
+    node:addNode(self:createTreeExceptSmallSkill(blackboard))
     return node
 end
 
@@ -270,7 +475,7 @@ function CreateUtils:createSelectSmallSkillTree()
     return node_1
 end
 
-function CreateUtils:createTreeExceptSmallSkill()
+function CreateUtils:createTreeExceptSmallSkill(blackboard)
     ---@type NodeIfJudge 判断是不是 在放 小技能
     local node = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000025")
           ---@type NodeCondition
@@ -283,7 +488,7 @@ function CreateUtils:createTreeExceptSmallSkill()
           ---@type NodeParallel
           local node_2 = self:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000025_2")
           node_2:addNode(self:createOptimizeTree())
-          node_2:addNode(self:createOrdinarySkillTree())
+          node_2:addNode(self:createOrdinarySkillTree(blackboard))
     node:addNode(node_2)
     return node
 end
@@ -326,19 +531,13 @@ function CreateUtils:createOptimizeTree()
     return node
 end
 
-function CreateUtils:createOrdinarySkillTree()
+function CreateUtils:createOrdinarySkillTree(blackboard)
+    ---@type SkillData
+    local skillData = blackboard._skillData[Enum_Battle.SkillTag.Skill_5]
     ---@type NodeIfJudge 判断 能不能 释放普攻
     local node_2 = self:getNodeByType(Enum_BT.Node_Type.IF_Judge,"0000027")
-          ---@type NodeConditionGroup
-          local node_2_1 = self:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000028")
-                local condition_2_1_1 = btApplyMap:getClass("bt_con_baseControlled")
-                ---@type bt_con_skillRange_to_enmity
-                local condition_2_1_2 = btApplyMap:getClass("bt_con_skillRange_to_enmity")
-                condition_2_1_2:initData({ skillTag = Enum_Battle.SkillTag.Skill_5 })
-          local tmp_01 = {condition_2_1_1,condition_2_1_2}
-          node_2_1:setIConditionS(tmp_01,Enum_BT.Condition_Relation.BT_AND)
-    node_2:addNode(node_2_1)
-    node_2:addNode(self:createGeneralAttackTree())
+    node_2:addNode(self:baseSkillCondition(blackboard,skillData,false))
+    node_2:addNode(self:createSkill(blackboard,Enum_Battle.SkillTag.Skill_5))
     node_2:addNode(self:createTreeExceptSkillTree())
     return node_2
 end
@@ -409,33 +608,6 @@ function CreateUtils:createFindWayTree()
     return node
 end
 
-function CreateUtils:createGeneralAttackTree()
-    ---@type NodeSequence
-    local node = self:getNodeByType(Enum_BT.Node_Type.Sequence,"0000028")
-    node:addNode(self:getTurnTree())
-           ---@type NodeAction
-           local node_2_3_3_2_0 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_1")
-                ---@type bt_ac_setValue
-                local ac_2_3_3_2_1_1 = btApplyMap:getClass("bt_ac_setValue")
-                 ac_2_3_3_2_1_1:initData({key = "_find_target_pos",value = nil})
-           node_2_3_3_2_0:setIAction(ac_2_3_3_2_1_1)
-    node:addNode(node_2_3_3_2_0)
-           ---@type NodeAction
-           local node_2_3_3_2_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_2")
-                 ---@type bt_ac_switchAnima
-                 local ac_2_3_3_2_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
-                 ac_2_3_3_2_1_1:initData({aniName = Enum_Battle.AniState.baseSkill,isReset = true,speed = 1})
-           node_2_3_3_2_1:setIAction(ac_2_3_3_2_1_1)
-    node:addNode(node_2_3_3_2_1)
-          ---@type NodeAction
-          local node_2_3_3_2_2 = self:getNodeByType(Enum_BT.Node_Type.Action,"0000028_3")
-                 ---@type bt_ac_playSkill
-                 local action_2_3_3_2_2_1 = btApplyMap:getClass("bt_ac_playSkill")
-                 action_2_3_3_2_2_1:initData({ })
-          node_2_3_3_2_2:setIAction(action_2_3_3_2_2_1)
-    node:addNode(node_2_3_3_2_2)
-    return node
-end
 
 function CreateUtils:getAwaitTree()
     ---@type NodeSequence
@@ -444,7 +616,7 @@ function CreateUtils:getAwaitTree()
           local node_1 = self:getNodeByType(Enum_BT.Node_Type.Action,"await_1_1")
                 ---@type bt_ac_switchAnima
                 local ac_1_1 = btApplyMap:getClass("bt_ac_switchAnima")
-                ac_1_1:initData({aniName = Enum_Battle.AniState.idle,isReset = false,speed = 1})
+                ac_1_1:initData({aniName = Enum_Battle.AniState.idle,isReset = true,speed = 1})
           node_1:setIAction(ac_1_1)
     node:addNode(node_1)
     return node

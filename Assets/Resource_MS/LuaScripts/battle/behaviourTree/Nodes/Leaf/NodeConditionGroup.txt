@@ -23,14 +23,17 @@ function NodeConditionGroup:setIConditionS(iConditionList,type)
     self._relationType = type
 end
 
-function NodeConditionGroup:execute(blackBoard,battleManager)
+function NodeConditionGroup:execute(blackBoard,agent,dt)
     self:log_enter("NodeConditionGroup    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self._iConditionList  then
         if self._relationType == Enum_BT.Condition_Relation.BT_AND then
             resultType =  Enum_BT.Node_ResultType.Success
             for i, v in ipairs(self._iConditionList) do
-                if v:doCondition(blackBoard,battleManager) == Enum_BT.Node_ResultType.Fail  then
+                if v:doCondition(blackBoard,agent,dt) == Enum_BT.Node_ResultType.Fail  then
+                    --if self:getEntityId() == "14102" then
+                    --     Logger.error("break === ",i)
+                    --end
                     resultType =  Enum_BT.Node_ResultType.Fail
                     break
                 end
@@ -38,7 +41,7 @@ function NodeConditionGroup:execute(blackBoard,battleManager)
         else
             resultType =  Enum_BT.Node_ResultType.Fail
             for i, v in ipairs(self._iConditionList) do
-                if  v:doCondition(blackBoard,battleManager) == Enum_BT.Node_ResultType.Success then
+                if  v:doCondition(blackBoard,agent,dt) == Enum_BT.Node_ResultType.Success then
                     resultType =  Enum_BT.Node_ResultType.Success
                     break
                 end
@@ -48,6 +51,9 @@ function NodeConditionGroup:execute(blackBoard,battleManager)
         resultType =  Enum_BT.Node_ResultType.Fail
     end
     self:log("NodeConditionGroup   Entity: ",self:getEntityId(),    "  resultType :", resultType)
+    --if self:getEntityId() == "14102" then
+    --    Logger.error("resultType === ",resultType)
+    --end
     return resultType
 end
 

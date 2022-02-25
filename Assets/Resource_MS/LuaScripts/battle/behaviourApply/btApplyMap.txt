@@ -27,9 +27,13 @@ btApplyMap.classPath = {
     ["bt_ac_check_change_place_r"] = "battle/behaviourApply/battle_hero/action/bt_ac_check_change_place_r",
     ["bt_ac_malposed_findWay"] = "battle/behaviourApply/battle_hero/action/bt_ac_malposed_findWay",
     ["bt_ac_malposed_findTarget"] = "battle/behaviourApply/battle_hero/action/bt_ac_malposed_findTarget",
-    --
-
-
+    ["bt_ac_passive"] = "battle/behaviourApply/battle_hero/action/bt_ac_passive",
+    ["bt_ac_count_down"] = "battle/behaviourApply/battle_hero/action/bt_ac_count_down",
+    ["bt_ac_initSkillCd"] = "battle/behaviourApply/battle_hero/action/bt_ac_initSkillCd",
+    ["bt_ac_setSkillPlayTime"] = "battle/behaviourApply/battle_hero/action/bt_ac_setSkillPlayTime",
+    ["bt_ac_skill_move"] = "battle/behaviourApply/battle_hero/action/bt_ac_skill_move",
+    ["bt_ac_playTimeLine"] = "battle/behaviourApply/battle_hero/action/bt_ac_playTimeLine",
+-------------------------------------------------------------------------------------
 
     ["bt_con_astrict"] = "battle/behaviourApply/battle_hero/condition/bt_con_astrict",
     ["bt_con_cd"] = "battle/behaviourApply/battle_hero/condition/bt_con_cd",
@@ -46,6 +50,12 @@ btApplyMap.classPath = {
     ["bt_con_skillRange_to_enmity"] = "battle/behaviourApply/battle_hero/condition/bt_con_skillRange_to_enmity",
     ["bt_con_need_turn"] = "battle/behaviourApply/battle_hero/condition/bt_con_need_turn",
     ["bt_con_isDislocation"] = "battle/behaviourApply/battle_hero/condition/bt_con_isDislocation",
+    ["bt_con_aroundNoEnemy"] = "battle/behaviourApply/battle_hero/condition/bt_con_aroundNoEnemy",
+    ["bt_con_sector_forward"] = "battle/behaviourApply/battle_hero/condition/bt_con_sector_forward",
+    ["bt_con_rectangle_forward"] = "battle/behaviourApply/battle_hero/condition/bt_con_rectangle_forward",
+    ["bt_con_fullScreen"] = "battle/behaviourApply/battle_hero/condition/bt_con_fullScreen",
+    ["bt_con_around_circle"] = "battle/behaviourApply/battle_hero/condition/bt_con_around_circle",
+
 
 }
 

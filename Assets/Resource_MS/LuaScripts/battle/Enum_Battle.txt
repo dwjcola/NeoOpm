@@ -6,7 +6,6 @@
 Enum_Battle = {}
 
 --- 战斗类型
----@class Enum_Battle.BattleType
 Enum_Battle.BattleType = {
     PVE_C = 1,  --- 玩家对数值选手
     PVP_E = 2,  --- 玩家对玩家选手 挂机
@@ -14,7 +13,6 @@ Enum_Battle.BattleType = {
 }
 
 --- 战斗资源类型
----@class Enum_Battle.BattleAssetType
 Enum_Battle.BattleAssetType = {
     Scene = 1,  --- 场景
     Model = 2,  --- 角色模型
@@ -22,19 +20,16 @@ Enum_Battle.BattleAssetType = {
 }
 
 --- 战斗实例
----@class Enum_Battle.BattleEntityType
 Enum_Battle.BattleEntityType = {
     MainBattle = 1,  --- 主战斗
 }
 
 --- 布阵类型
----@class Enum_Battle.BattleTeamType
 Enum_Battle.BattleTeamType = {
     MainTeam = 1,  --- 主战斗类型
 }
 
 --- 技能目标选择类型
----@class Enum_Battle.SkillTargetType
 Enum_Battle.SkillTargetType = {
     FacePos  = 1,         --- 对位得
     XiangQianShiFang = 2, --- 向前释放得（没懂）
@@ -54,6 +49,17 @@ Enum_Battle.SkillTag = {
     Skill_4 = 4, -- 技能3
     Skill_5 = 5, -- 普攻
 }
+
+--- 技能标识 ：表示是什么技能
+Enum_Battle.SkillType = {
+    Skill_super = 1, -- 大招
+    Skill_general = 2, -- 普通技能
+    Skill_a = 3, -- 普攻
+    Skill_passive = 4, -- 被动
+    Skill_cCalled = 5, -- 被调用
+    Skill_special = 6, -- 特殊的
+}
+
 --- 战斗阵营 敌我 双方
 Enum_Battle.Camp = {
    CampSelf = 1,
@@ -61,10 +67,10 @@ Enum_Battle.Camp = {
 }
 --- 战斗动画 状态
 Enum_Battle.AniState = {
-    idle = "Stand",
-    run = "Move",
-    show = "Show",
-    Ultra = "Ultra",
+    idle   = "Stand",
+    run    = "Move",
+    show   = "Show",
+    ultra  = "Ultra",
     skill1 = "Skill1",
     skill2 = "Skill2",
     skill3 = "Skill3",
@@ -80,4 +86,74 @@ Enum_Battle.Orientation = {
     Left = 1,       -- 朝左
     Right = 2,      -- 朝右
 }
+--- 技能实现 类型
+Enum_Battle.SkillCreateType = {
+    General = 1,   -- 普通技能
+    Accumulate = 2,-- 蓄力技能
+    Sustain = 3,   -- 持续释放
+    Special = 4,   -- 特殊技能
+    Passive = 5,   -- 被动
+}
 
+--- 战斗技能 释放的条件判断 类型
+Enum_Battle.SkillLaunchRangeType = {
+    Passive = -1,          -- 被动的
+    JumpRange = 0,         -- 跳过判断 不需要 判断
+    Roundness = 1,         -- 圆形
+    FullScreen = 2,        -- 全屏
+    Rectangle_forward = 3, -- 前方矩形
+    Sector_forward = 4,    -- 前方扇形
+
+}
+--- 技能释放目标选择类型
+Enum_Battle.SkillLaunchTargetType = {
+    Enemy  = 1,         --- 敌人
+    ZZSelf = 2,         --- 自己
+    FriendNoSelf = 3,   --- 友军不含自己
+    AllFriend = 4,      --- 友军含自己
+}
+--- 技能timeline事件枚举
+Enum_Battle.TimeLineEventType = {
+    UnBreakOffStart = -5,-- 不可被打断开始
+    UnBreakOffEnd = -4, -- 不可被打断结束
+    Art = -3,      -- 美术资源 特效啥得
+    Sound = -2,    -- 音效
+    Cast = -1,     -- 配音
+    Animation = 0, -- 动作
+    Attack = 1,    -- AttackId
+    Missle = 2,    -- MissileId
+    MovePos = 3,   -- 位移
+    Blackout = 4,  -- 黑屏
+}
+
+
+--- 技能timeline事件枚举
+Enum_Battle.TimeLineGroupType = {
+   FixFrame = 1,      -- 固定帧率
+   BreakFixFrame = 2, -- 可以提前结束的 固定帧率
+   Condition = 3,     -- 达到目标点得 帧率
+}
+
+--- 技能释放得特殊条件
+Enum_Battle.SkillFireSpecialCondition = {
+    AroundNoEnemy = 1,    -- 周围半径没有敌人
+}
+
+--- 技能释放得特殊条件
+Enum_Battle.SkillBlackOut = {
+    Open = 0,    -- 开启黑屏
+    Close = 1,    -- 关闭黑屏
+}
+--- buff 类型
+Enum_Battle.BuffTimeType = {
+    once = 1,          -- 一次性得
+    forever = 2,       -- 永久
+    timeLimit = 3,     -- 限时
+}
+
+--- 技能释放得特殊条件
+Enum_Battle.SkillCostType = {
+    Anger = 1,    -- 怒气
+    Hp = 2,       -- 生命值
+    Buff = 3,     -- buff
+}

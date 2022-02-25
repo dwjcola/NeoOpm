@@ -14,8 +14,12 @@ public class UIViewEditorWin : EditorWindow
     }  
     void OnGUI()
     {
-        if (uimono != null) UIViewEditor.ShowInfo();
-        if ( uimono != null ) UIViewEditor.ShowStringInfo ( );
+        //if (uimono != null) UIViewEditor.ShowInfo();
+        //if ( uimono != null ) UIViewEditor.ShowStringInfo ( );
+        if(uimono != null)
+        {
+            UIViewEditor.baseEditor.ShowGUI(uimono);
+        }
       
     } 
 }

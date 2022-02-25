@@ -155,7 +155,7 @@ function UISetUpTeamLUA:OnDestroy()
 
 	self._isSetDragData = false
 
-	UISetUpTeamLUA = nil;
+	UISetUpTeamLUA = nil
 end
 
 function UISetUpTeamLUA:startUpdate()

@@ -27,7 +27,7 @@ function NodeSubTree:onExit()
 end
 
 
-function NodeSubTree:execute(blackboard,contextManager)
+function NodeSubTree:execute(blackboard,agent,dt)
     self:log_enter("NodeSubTree    Entity: ",self:getEntityId())
     local resultType = Enum_BT.Node_ResultType.Fail
     if self:getChildesCount() <= 0 then
@@ -35,7 +35,7 @@ function NodeSubTree:execute(blackboard,contextManager)
     end
     local nodeBase = self:getChildesByIndex(1)
     nodeBase:prePosition()
-    resultType = nodeBase:execute(blackboard,contextManager)
+    resultType = nodeBase:execute(blackboard,agent,dt)
     nodeBase:postPosition(resultType)
 
     if resultType == Enum_BT.Node_ResultType.Running then

@@ -31,6 +31,9 @@ local EventType = {
     Event_Battle_Attack_Hp = "",
 
     Event_Battle_TeamLoadFinish = "", -- TeamModelLoadEnd
+
+    Event_Battle_BlackOut = "",   -- 战斗黑屏
+
 }
 
 --给所有的Event赋值

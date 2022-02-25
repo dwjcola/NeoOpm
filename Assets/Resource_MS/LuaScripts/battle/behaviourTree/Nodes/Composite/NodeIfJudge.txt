@@ -39,7 +39,7 @@ function NodeIfJudge:onExit()
 end
 
 
-function NodeIfJudge:execute(blackboard,contextManager)
+function NodeIfJudge:execute(blackboard,agent,dt)
     self:log_enter("NodeIfJudge    Entity: ",self:getEntityId())
     if self:getChildesCount() <= 0 then
         return Enum_BT.Node_ResultType.Fail
@@ -47,7 +47,7 @@ function NodeIfJudge:execute(blackboard,contextManager)
     local resultType = Enum_BT.Node_ResultType.Fail
 
     local ifNode = self:getChildesByIndex(1)
-    resultType = self:executeNode(ifNode,blackboard,contextManager)
+    resultType = self:executeNode(ifNode,blackboard,agent,dt)
 
     --local nodeBase = self:getBaseNode(resultType)
 
@@ -58,7 +58,7 @@ function NodeIfJudge:execute(blackboard,contextManager)
             self._lastRunningNode:postPosition(Enum_BT.Node_ResultType.Fail)
             self._lastRunningNode = nil
         end
-        resultType = self:executeNode(nodeBase,blackboard,contextManager)
+        resultType = self:executeNode(nodeBase,blackboard,agent,dt)
     else
         resultType = Enum_BT.Node_ResultType.Fail
     end
@@ -66,11 +66,11 @@ function NodeIfJudge:execute(blackboard,contextManager)
     return resultType
 end
 
-function NodeIfJudge:executeNode(nodeBase,blackboard,contextManager)
+function NodeIfJudge:executeNode(nodeBase,blackboard,agent,dt)
     local resultType = Enum_BT.Node_ResultType.Fail
     if nodeBase then
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
     end
     if resultType ==  Enum_BT.Node_ResultType.Running then

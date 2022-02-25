@@ -7,7 +7,7 @@
 -------math-------------------------------------------------------------
 Mathf = require_path("Mathf", "battle/base/math3D/Mathf")
 Vector3 = require_path("Mathf", "battle/base/math3D/Vector3")
-
+Vector2 = require_path("Mathf", "battle/base/math3D/Vector2")
 
 
 ------------------------------- container ------------------------------------------
@@ -19,3 +19,7 @@ Queue = require_path("IndexSet","battle/Container/Queue")
 
 -------------------------pool--------------------------------------
 TablePool = require_path("TablePool","battle/pool/TablePool")
+
+
+
+require_path("BattleLog","battle/base/logger/BattleLog")

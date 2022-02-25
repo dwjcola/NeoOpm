@@ -109,6 +109,8 @@ function Logger.WarningTable(table)
     Logger.Warning(Logger.printTable(false,table,"","",0,{}))
 end
 
+
+
 -- 循环打印table
 ---@generic V : any
 ---@param str string @ 最后总的msg
@@ -166,4 +168,14 @@ end
 
     return str
 end
+function log(...)
+    Logger.Log(...)
+end
 
+function warn(...)
+    Logger.Warning(...)
+end
+
+function err(...)
+    Logger.Error(...)
+end

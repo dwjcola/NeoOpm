@@ -1,0 +1,67 @@
+--region *.lua
+--Date
+--此文件由[BabeLua]插件自动生成
+--
+--双向队列
+--
+---@class Stack @栈
+Stack=SimpleClassUtil:class()
+
+function Stack:initialize()
+    self.Stack = {} 
+    self.last = -1
+end
+--
+--在后面插入
+--
+function Stack:Push( value)
+    self.last=self.last+1;
+    self.Stack[self.last] = value;
+end
+
+--
+--取出
+--
+function Stack:Pop()   
+    local value= self.Stack[self.last]
+    table.remove(self.Stack,self.last)
+    self.last=self.last -1
+    return value
+end
+
+
+function Stack:Seek()   
+    local value= self.Stack[self.last]
+    return value
+end
+ 
+function Stack:Remove()   
+    --local value= self.Stack[self.last]
+    table.remove(self.Stack,self.last)
+    self.last=self.last -1
+end
+
+function Stack:RemoveByIndex(index)   
+    --local value= self.Stack[self.last]
+    table.remove(self.Stack,index)
+    self.last=self.last -1
+end
+--
+--长度
+--
+function Stack:Count()
+    return self.last+1
+end
+
+function Stack:Clear()
+    self.Stack = {} 
+    self.last = -1
+end
+
+function Stack:Dump()
+    for i = 1, self.last do
+        print(i.."  "..self.Stack[i])
+    end
+end
+
+--endregion

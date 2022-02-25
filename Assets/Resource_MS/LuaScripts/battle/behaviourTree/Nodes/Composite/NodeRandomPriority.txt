@@ -36,7 +36,7 @@ function NodeRandomPriority:onExit()
 end
 
 
-function NodeRandomPriority:execute(blackboard,contextManager)
+function NodeRandomPriority:execute(blackboard,agent,dt)
     self:log_enter("NodeRandomPriority    Entity: ",self:getEntityId())
     local index = 0
     if self._lastRunningNode then
@@ -53,7 +53,7 @@ function NodeRandomPriority:execute(blackboard,contextManager)
         index = 0
 
         nodeBase:prePosition()
-        resultType = nodeBase:execute(blackboard,contextManager)
+        resultType = nodeBase:execute(blackboard,agent,dt)
         nodeBase:postPosition(resultType)
 
         if resultType == Enum_BT.Node_ResultType.Fail then

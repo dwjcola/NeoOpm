@@ -15,7 +15,7 @@ function BattleEntityContext:init(baseBlackBoard,battleData,battleManager)
     self._battleManager = battleManager
 
     self._battleData = battleData
-
+    ---@type BattleCharacter[][]
     self._list_camp = battleManager._list_logicCharacter
 
     self:initCharacters()
@@ -26,7 +26,6 @@ end
 function BattleEntityContext:initCharacters()
     for i, characterList in pairs(self._list_camp) do
         for pos, character in pairs(characterList) do
-            ---@type BattleCharacter
             character:init(self)
         end
     end

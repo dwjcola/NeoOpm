@@ -100,7 +100,7 @@ end
 
 
 function UISetUpDragItem:initPosition(rectPos)
-    rectPos.y = rectPos.y - 50
+    rectPos.y = rectPos.y
     self._rect_root.anchoredPosition = rectPos
     self._transform:SetLocalPositionZ(0)
 end

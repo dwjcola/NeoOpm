@@ -5,14 +5,43 @@
 ---@class SkillData
 local SkillData = SimpleClassUtil:class()
 
-function SkillData:initialize(con)
-    self._skillType = Enum_Battle.SkillTag.Skill_1
-    -- 攻击距离
-    self._skill_r = 1
+function SkillData:initialize(con,supplementaryCon)
+    self:initParams(con,supplementaryCon)
+end
+
+function SkillData:initParams(con,supplementaryCon)
+    self._skillTag = con.skillId or supplementaryCon.skillId
+    -- 数值表数值
+    self._skillCon = con
+    -- lua 配置表
+    self._supplementaryCon = supplementaryCon
     -- 上次释放时间
     self._skill_time_play = 0
+
+    -------------------------------
+    -- 释放释放得条件 怒气 -- 目前是约定得只有大招才需要怒气 而且是 常量 1000
+    self._skill_need_power = con.position == Enum_Battle.SkillTag.Skill_1 and BattleConstant.SkillLaunchEnergy or 0
+    -- 普攻攻击距离
+    self._skill_r = con.type == Enum_Battle.SkillType.Skill_a and con.range[1] or 0
     -- 技能cd
-    self._skill_time_cd = 0
+    self._skill_time_cd = con.cd2 and con.cd2 * 1000 or 0
+    -- 初始前置技能cd
+    self._skill_time_initCd = con.cd1 and con.cd1 * 1000 or 0
+    -- Gcd
+    self._skill_gCd = con.gcd and con.gcd * 1000 or 0
+    -- 释放时增加的怒气
+    self._skill_add_anger = con.addPower or 0
+    -- 是否无视异常状态
+    self._unstoppable = (con.unstoppable and con.unstoppable == 1) or false
+
+
+    self._skillCreateType = SkillUtils:getCreateType(con)
+    ---- 帧事件map
+    --self._timeLineMap = SkillUtils:handleTimeLineMap(con,supplementaryCon)
+
+
 end
+
+
 
 return SkillData

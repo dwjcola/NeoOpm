@@ -9,12 +9,28 @@ local bt_ac_setValue = SimpleClassUtil:class(IAction)
 function bt_ac_setValue:initData(data)
     self._key = data.key
     self._value = data.value
-
+    self._setValueType = data.setValueType or Enum_BT.SetValueType.Bt_Equal
 end
-
+---@param blackBoard BlackBoard_BattleBase
 function bt_ac_setValue:doAction(blackBoard,contextManager)
-    if  blackBoard then
-        blackBoard[self._key] = self._value
+    if blackBoard then
+        if self._setValueType == Enum_BT.SetValueType.Bt_Equal then
+            blackBoard[self._key] = self._value
+        elseif self._setValueType == Enum_BT.SetValueType.BT_AddEqual then
+            blackBoard[self._key] = blackBoard[self._key]  or 0
+            blackBoard[self._key] =  blackBoard[self._key] + self._value
+        elseif self._setValueType == Enum_BT.SetValueType.BT_MinusEqual then
+            blackBoard[self._key] = blackBoard[self._key]  or 0
+            blackBoard[self._key] =  blackBoard[self._key] - self._value
+        elseif self._setValueType == Enum_BT.SetValueType.BT_MultiplyEqual then
+            blackBoard[self._key] = blackBoard[self._key]  or 0
+            blackBoard[self._key] =  blackBoard[self._key] * self._value
+        elseif self._setValueType == Enum_BT.SetValueType.BT_DivisionEqual then
+            blackBoard[self._key] = blackBoard[self._key]  or 0
+            blackBoard[self._key] =  blackBoard[self._key] / self._value
+        else
+            BattleLog.error("未处理赋值类型 ： ",self._setValueType)
+        end
     end
     return Enum_BT.Node_ResultType.Success
 end

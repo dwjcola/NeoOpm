@@ -5,24 +5,24 @@
 ---@class BattleCharacter:SimpleClassUtil
 local BattleCharacter = SimpleClassUtil:class()
 ---@param battleManager PVE_Config_Battle_Manager
-function BattleCharacter:initialize(campType,index,battleManager,heroData,uid)
+function BattleCharacter:initialize(param,battleManager)
 
-    self._campType = campType
+    self._param = param
+    self._campType = param._campType
 
-    self._index_pos = index
+    self._index_pos = param._index_pos
 
     self._battleManager = battleManager
 
     --self._entityContext = battleManager._world_logic._battleLogicContext._entityContext
 
-    self._heroData = heroData
 
-    self._heroId = heroData.heroId
 
-    self._heroUid = heroData.heroUid
+    self._heroId = param._heroId
 
-    self._uid = uid
-    --BattleLog.error( self._heroId)
+    self._heroUid = param._heroUid
+
+    self._uid = param._uid
 
 
 end
@@ -33,52 +33,9 @@ function BattleCharacter:init(entityContext)
 end
 
 function BattleCharacter:initTree()
-    local volume_r = 0.5
-    local place_r = 0.6
-    local dislocation_r = 0.9
-    local detection_r = 0.8
-
-    local rlist = {6,6,1}
-    local skill_5 = SkillData:new()
-    --skill_5._skill_r = rlist[math.random(1,3)]
-    skill_5._skill_r = 1
-    skill_5._skillType = Enum_Battle.SkillTag.Skill_5
-    skill_5._skill_time_cd = 0
-
-    local data = {
-        _heroId =  self._heroData.heroId,
-        _hp = 1000,
-        _campType = self._campType,
-        _index_pos = self._index_pos,
-        _position = BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(self._campType == Enum_Battle.Camp.CampSelf,self._index_pos)),
-        _alive = true,
-        _anger = 0,
-        _isUnPutSkill = false,
-        _smallSkillIng = false,
-        _bigSkillReady = false,
-        _isKeyDownBigSkill = false,
-        _uid = self._uid,
-        _moveSpeed = 0.05,
-        _skillData = {
-           [Enum_Battle.SkillTag.Skill_5] = skill_5
-        },
-        _volume_r = volume_r,
-        _place_r = place_r,
-        _dislocation_r = dislocation_r,
-        _detection_r = detection_r,
-        _place_r_base = place_r,
-        _isCloseIn = true,
-        _orientation = self._campType == Enum_Battle.Camp.CampSelf and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left
-    }
-
-    local agent = {
-        _battleManager =  self._battleManager,
-        _entityContext = self._entityContext
-    }
-
-    self._logicTree = BehaviourTreeEntity:new({},data,agent)
-
-    self:debugSetting(volume_r,place_r,dislocation_r,detection_r,skill_5._skill_r,place_r)
+    self._logicTree = BehaviourTreeEntity:new({}, self._param,Agent:new(self._battleManager,self._entityContext))
+    self:debugSetting( self._param._volume_r,self._param._place_r,self._param._dislocation_r,
+            self._param._detection_r,0.2,self._param._place_r)
 end
 
 function BattleCharacter:debugSetting(volume_r,place_r,dislocation_r,detection_r,attack_r,place_r_base)

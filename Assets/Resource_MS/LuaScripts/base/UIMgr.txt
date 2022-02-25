@@ -1,0 +1,368 @@
+ ---------------------------------------------
+-- File Name:    UIMgr.txt
+-- Author:       wangguoqing
+-- Create Date:  2022/02/24
+ ---------------------------------------------
+
+---@class UIMgr @UI管理器
+UIMgr = class("UIMgr")
+ --单例
+ UIMgr.m_Instance=nil
+ UIMgr.GetInstance=function()
+     if nil==UIMgr.m_Instance then UIMgr.m_Instance= UIMgr:new() end
+     return UIMgr.m_Instance;
+ end
+ 
+--关闭界面后缓存时间过期后卸载界面
+ local destroyWaitTimer=20
+ 
+ function UIMgr:initialize()
+     -- 界面容器
+     self.__panels = {}
+     self.__groups={}
+     self.__destroyWaitPanels={}
+     -- ui root canvas
+     self.canvas=nil
+     self.rectTransform=nil
+     --ui camera
+     self.uiCam=nil
+     
+     return self
+ end
+ 
+ function UIMgr:Init()
+    local canvasObj= GameObject.Find("UI Form Instances")
+    if canvasObj==nil then
+        err("UIMgr:Init::::canvas is not find!")
+        return
+    end
+   --  GameObject.DontDestroyOnLoad(canvasObj)
+    self.canvas=canvasObj:GetComponent("Canvas")
+    self.rectTransform=canvasObj:GetComponent("RectTransform")
+    self.uiCam=   self.canvas.worldCamera
+    local rectTransform=self.canvas.gameObject:GetComponent("RectTransform")
+    print("self.uiCam:::",self.uiCam,"  self.canvas:",self.canvas)
+    -- Logger.Error(self.uiCam)
+
+    self.__groups[UIGroup.Main]=Stack:new()
+    self.__groups[UIGroup.Default]=Stack:new()
+    self.__groups[UIGroup.Reminder]=Stack:new()
+    self.__groups[UIGroup.Guide]=Stack:new()
+ end
+
+ 
+ function UIMgr:LoadUIASyncCallBack(prefab, UIInfo)
+    log("UIMgr:LoadUIASyncCallBack:: prefab"..tostring(prefab))
+    if prefab==nil then
+        err("UIMgr:LoadUIASyncCallBack:: panel prefab is nil!! panelId::"..UIInfo.config.Id.."  assetPath::"..UIInfo.assetPath)
+        return
+    end
+
+    if UIInfo.isChild then
+        local rectTransform1=prefab:GetComponent("RectTransform")
+        UIInfo.rectTransform=rectTransform1
+        UIInfo.show=true
+
+        if UIInfo.parent then
+            UIInfo.rectTransform:SetParent(UIInfo.parent)
+        end
+
+        UIInfo.luaObj = require(UIInfo.scriptPath):new()        
+        monoPanel:OnInit(UIInfo.luaObj)
+        UIInfo.luaObj:Open(UIInfo.param)
+        
+        if UIInfo.afterCallback~=nil then
+            if UIInfo.afterObj then
+               UIInfo.afterCallback(UIInfo.afterObj,UIInfo.param)
+               UIInfo.afterObj=nil
+            else
+               UIInfo.afterCallback(UIInfo.param)
+            end
+            UIInfo.afterCallback=nil
+            UIInfo.param=nil
+        end
+
+        return
+    end
+
+    local groupId=self:GetGroupId(UIInfo.config.UIGroupName)
+    -- self.__groups[groupId]
+    if groupId<0 then
+        err("groupId获取失败：groupId:"..groupId.."  UIGroupName:"..UIInfo.config.UIGroupName.." panelId"..UIInfo.config.Id)
+        return
+    end
+    local groupStack= self.__groups[groupId]
+    local order= self:GetGroupNextOrder(groupId)
+
+    
+    
+    local rectTransform=prefab:GetComponent("RectTransform")
+    local canvas=prefab:GetComponent("Canvas")
+    local monoPanel=prefab:GetComponent("NeoOPM.UIMonoPanel")
+
+    rectTransform:SetParent(self.rectTransform)
+    rectTransform.localPosition=Vector3.zero;
+    rectTransform.localRotation=CS.UnityEngine.Quaternion.identity;
+    rectTransform.localScale = Vector3.one;
+    rectTransform.anchorMax=Vector2(1,1)
+    rectTransform.anchorMin=Vector2(0,0)
+    rectTransform.offsetMax=Vector2.zero
+    rectTransform.offsetMin=Vector2.zero
+    rectTransform.gameObject:SetActive(true)
+
+    canvas.overrideSorting = true
+    canvas.sortingOrder=order;
+    UIInfo.groupId=groupId
+    UIInfo.order=order
+    UIInfo.rectTransform=rectTransform
+    UIInfo.show=true
+
+    groupStack:Push(UIInfo)
+
+    local luaObj= require(UIInfo.scriptPath):new()
+    UIInfo.luaObj =luaObj
+    luaObj.panelId=UIInfo.panelId
+    
+    monoPanel:OnInit(luaObj)
+    luaObj:Open(luaObj.param)
+
+     if UIInfo.afterCallback~=nil then
+         if UIInfo.afterObj then
+            UIInfo.afterCallback(UIInfo.afterObj,UIInfo.param)
+            UIInfo.afterObj=nil
+         else
+            UIInfo.afterCallback(UIInfo.param)
+         end
+         UIInfo.afterCallback=nil
+         UIInfo.param=nil
+     end
+     
+ 
+ end
+ 
+ 
+ --panelId:ui的唯一Id
+ --param:回调方法的参数及打开界面的参数
+ --afterCallback:回调方法
+ --afterObj:afterCallback的依赖对象
+ function UIMgr:OpenPanel(panelId, param,afterCallback,afterObj)
+     log("ui.UIMgr:OpenPanel:",panelId)
+ --    TimeDict[panelId]=Time.realtimeSinceStartup
+
+     if self.__panels[panelId]~=nil then
+         log("ui.UIMgr:OpenPanel:界面打开中或者已经打开")
+         return
+     end
+
+     -- 界面配置
+     local config= TPanel[panelId]
+     if nil == config then
+        -- 界面配置不存在
+        err("panel config is not exist,please check TPanel config!!! panelId:"..panelId)
+        return
+     end
+
+     -- 脚本文件
+     local scriptPath=config.LuaPath.."/"..config.LuaName
+     local assetPath="Assets/Resource_MS/UI/UIForms/"..config.AssetName..".prefab"
+     log("scriptPath::"..scriptPath.."assetPath::"..assetPath)
+
+     local UIInfo={}
+     UIInfo.panelId=config.Id
+     UIInfo.config=config
+     UIInfo.assetHandle=nil
+     UIInfo.afterCallback=afterCallback
+     UIInfo.afterObj=afterObj
+     UIInfo.param=param
+     UIInfo.rectTransform=nil
+     UIInfo.scriptPath=scriptPath
+     UIInfo.assetPath=assetPath;
+     UIInfo.order=0
+     UIInfo.parent=nil
+     UIInfo.luaObj=nil
+     UIInfo.groupId=-1
+     UIInfo.show=false
+     UIInfo.curTimer=0
+     UIInfo.isChild=false
+     UIInfo.childItems={}
+
+     self.__panels[config.Id]=UIInfo
+
+     UIInfo.assetHandle=  AssetUtil.LoadAsync(assetPath,self.LoadUIASyncCallBack,UIInfo,self)
+     print(UIInfo.assetHandle)
+     print("open panel await ...");
+ end
+ 
+
+ -- 只需要加载，不需要调用卸载
+ function UIMgr:OpenItem(panelId, param,afterCallback,afterObjAndPanelLuaObj,parent)
+    log("ui.UIMgr:OpenItem:",panelId)
+
+    if afterObjAndPanelLuaObj == nil then
+        err("afterObjAndPanelLuaObj is nil ! 该对象必须是当前调用界面的对象，且是afterCallback的self！！")
+        return 
+    end
+
+    if self.__panels[panelId]~=nil then
+        log("ui.UIMgr:OpenItem:item 打开中或者已经打开")
+        return
+    end
+
+     -- 界面配置
+     local config= TPanel[panelId]
+     if nil == config then
+        -- 界面配置不存在
+        err("panel config is not exist,please check TPanel config!!! panelId:"..panelId)
+        return
+     end
+     
+
+     -- 脚本文件
+     local scriptPath=config.LuaPath.."/"..config.LuaName
+     local assetPath="Assets/Resource_MS/UI/UIForms/"..config.AssetName..".prefab"
+     log("scriptPath::"..scriptPath.."assetPath::"..assetPath)
+     
+
+
+     local UIInfo={}
+     UIInfo.panelId=panelId
+     UIInfo.superPanelId=afterObjAndPanelLuaObj.panelId
+     UIInfo.config=config
+     UIInfo.assetHandle=nil
+     UIInfo.afterCallback=afterCallback
+     UIInfo.afterObj=afterObjAndPanelLuaObj
+     UIInfo.param=param
+     UIInfo.rectTransform=nil
+     UIInfo.scriptPath=scriptPath
+     UIInfo.assetPath=assetPath;
+     UIInfo.order=0
+     UIInfo.parent=nil
+     UIInfo.luaObj=nil
+     UIInfo.groupId=-1
+     UIInfo.show=false
+     UIInfo.curTimer=0
+     UIInfo.isChild=true
+
+     self.__panels[config.Id]=UIInfo
+     local superUIInfo= self.__panels[UIInfo.superPanelId]
+     table.insert(superUIInfo.childItems,UIInfo)
+     UIInfo.assetHandle=  AssetUtil.LoadAsync(assetPath,self.LoadUIASyncCallBack,UIInfo,self)
+     print(UIInfo.assetHandle)
+     print("open panel await ...");
+
+ end
+
+
+ function UIMgr:ClosePanel(panelId, destroyImmediate)
+     warn("UIMgr:ClosePanel:",panelId)
+     local UIInfo= self.__panels[panelId]
+    if UIInfo == nil then
+        err("UIInfo is nil! panelId:"..panelId )
+        return
+    end
+    UIInfo.show=false
+    if UIInfo.luaObj.OnClose then
+        UIInfo.luaObj:OnClose()
+    end
+    
+    if destroyImmediate then
+        self:DestroyPanel(UIInfo)
+    else
+        UIInfo.curTimer=0
+        table.insert(self.__destroyWaitPanels,UIInfo)
+    end
+ end
+
+
+
+
+ function UIMgr:DestroyPanel(UIInfo)
+    self:RemovePanelFromGroup(UIInfo)
+    self.__panels[panelId]=nil
+    GameObject.Destroy(UIInfo.rectTransform.gameObject)
+    AssetUtil.Release(UIInfo.assetHandle)
+ end
+
+function UIMgr:RemovePanelFromGroup(UIInfo)
+    local groupStack = self.__groups[UIInfo.groupId]
+    if groupStack:Seek() == UIInfo then
+        groupStack:Remove()
+        return
+    end
+    log("栈顶元素不是要删除的panel！ panelId:"..UIInfo.Id)
+    local count=groupStack:Count()
+    for i = count-1, 0,-1 do
+        -- body
+        if groupStack.Stack[i]== UIInfo then
+            groupStack:RemoveByIndex(i)
+            break
+        end
+    end
+end
+
+
+
+function UIMgr:GetGroupId(UIGroupName)
+    if UIGroupName== "Main" then
+        return UIGroup.Main
+    end
+    if UIGroupName== "Default" then
+        return UIGroup.Default
+    end
+    if UIGroupName== "Reminder" then
+        return UIGroup.Reminder
+    end
+    if UIGroupName== "Guide" then
+        return UIGroup.Guide
+    end            
+
+    err("没有找到UIGroup ::UIGroupName:"..UIGroupName)
+    return -1
+end
+
+function UIMgr:GetGroupNextOrder(groupId)
+    local groupStack= self.__groups[groupId]
+    if(groupStack:Count()==0) then
+        return groupId*10000+100*0
+    else
+        local UIInfo= groupStack:Seek()
+        return UIInfo.order+100
+    end
+end
+
+
+function UIMgr:Update(deltaTime)
+ 
+    for k,UIInfo  in pairs(self.__panels) do
+        if UIInfo and UIInfo.show and UIInfo.luaObj and UIInfo.luaObj.Update then
+            UIInfo:Update(deltaTime)
+        end
+    end
+ end
+ 
+ function UIMgr:LateUpdate(deltaTime)
+    
+    for k,UIInfo  in pairs(self.__panels) do
+        if UIInfo and UIInfo.show and UIInfo.luaObj and UIInfo.luaObj.LateUpdate then
+            UIInfo:LateUpdate(deltaTime)
+        end
+    end
+    
+    for i = #self.__destroyWaitPanels, 1,-1 do
+        local UIInfo=self.__destroyWaitPanels[i]
+
+        if UIInfo.show then
+            table.remove(self.__destroyWaitPanels,i)
+        else
+            UIInfo.curTimer = UIInfo.curTimer+deltaTime
+            if UIInfo.curTimer >= destroyWaitTimer then
+                self:DestroyPanel(UIInfo)
+                table.remove(self.__destroyWaitPanels,i)
+            end
+        end
+    end
+
+ end
+function UIMgr:Release()
+    UIMgr.m_Instance=nil
+end

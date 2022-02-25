@@ -1,0 +1,169 @@
+--[[
+---------------------------------------------
+-- File Name:    TimerMgr.txt
+-- Author:       wangguoqing
+-- Create Date:  2022/02/25
+---------------------------------------------
+--]]
+
+
+--计时器，处理动画，坐标等ui相关的业务
+TimerMgr = class("UIMgr");
+
+TimerMgr.m_instance = nil;
+TimerMgr.GetInstance = function()
+    if nil == TimerMgr.m_instance then
+        TimerMgr.m_instance = TimerMgr:new();
+    end
+    return TimerMgr.m_instance;
+end
+function TimerMgr:initialize()
+	-- 当前时间
+	self.CurrentTime = 0;
+	-- 时间容器（全局）
+	self.TimePool = {}
+    -- 时间容器（场景内）
+    self.SceneTimePool={}
+
+    self.TimePoolDelKeys={};
+    self.SceneTimePoolDelKeys={};
+end
+
+--计时器初始化
+function TimerMgr:Init()
+    
+end
+
+--注册计时器(场景内)，退出场景时自动清空场景内所有在运行的计时器
+function TimerMgr:SceneRegister(timerId, delta, callBack,param,obj,loop)
+	local find = self.SceneTimePool[timerId];
+	if nil == find then
+		local timeNode = {id = timerId, leftTime = delta, interval=delta, loop=loop,param = param,obj=obj,callback=callBack}
+		self.SceneTimePool[timerId] = timeNode;
+		find = timeNode;
+	else
+		find.leftTime = delta;
+	end
+	return find;
+end
+
+--注册计时器(全局)
+function TimerMgr:Register(timerId, delta, callBack,param,obj,loop)
+	local find = self.TimePool[timerId];
+	if nil == find then
+		local timeNode = {id = timerId, leftTime = delta, interval=delta, loop=loop,param = param,obj=obj,callback=callBack}
+		self.TimePool[timerId] = timeNode;
+		find = timeNode;
+	else
+		find.leftTime = delta;
+	end
+	return find;
+end
+
+
+--销毁计时器(场景内)
+function TimerMgr:SceneDeregister( timerId )
+--    table.insert(self.SceneTimePoolDelKeys,timerId)
+    self.SceneTimePoolDelKeys[timerId]=1;
+end
+
+--销毁计时器(场景内)
+function TimerMgr:Deregister( timerId )
+--    table.insert(self.TimePoolDelKeys,timerId)
+    self.TimePoolDelKeys[timerId]=1;
+end
+
+function TimerMgr:Update(deltatime)
+--    log("TimerMgr:Update::deltatime",deltatime)
+		-- 计时器递减
+	for k, v in pairs(self.TimePool) do
+		if v and v.leftTime then v.leftTime = v.leftTime -deltatime end
+--        log("TimerMgr:Update::v.leftTime",v.leftTime)
+        if v.leftTime<=0 then
+--            log("callback:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::####",tostring(v.obj),tostring(v.callback))
+            if v.obj and v.callback then
+--                log("callback:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::$$$$$$$$$$$")
+                local callback=v.callback
+                if self.TimePoolDelKeys[k]==nil then
+                    callback(v.obj,v.id,v.param) 
+                end
+            elseif v.callback then
+--                log("callback:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+                if self.TimePoolDelKeys[k]==nil then
+                    v.callback(v.id,v.param)
+                end
+             end
+             if v.loop then
+                v.leftTime=v.interval
+             else 
+                self.TimePool[v.id] = nil;
+            end
+        end
+	end
+
+
+	for k, v in pairs(self.SceneTimePool) do
+		if v and v.leftTime then v.leftTime = v.leftTime -deltatime end
+--        log("TimerMgr:Update::v.leftTime",v.leftTime)
+        if v.leftTime<=0 then
+--            log("callback:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::####",tostring(v.obj),tostring(v.callback))
+            if v.obj and v.callback then
+--                log("callback:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::$$$$$$$$$$$")
+                local callback=v.callback
+                if self.SceneTimePoolDelKeys[k]==nil then
+                    callback(v.obj,v.id,v.param) 
+                end
+            elseif v.callback then
+--                log("callback:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+                if self.SceneTimePoolDelKeys[k]==nil then
+                    v.callback(v.id,v.param)
+                end
+             end
+             if v.loop then
+                v.leftTime=v.interval
+             else 
+                self.SceneTimePool[v.id] = nil;
+            end
+        end
+	end
+end
+
+
+--late update 不允许删除计时器
+function TimerMgr:LateUpdate()
+    for k,v in pairs(self.SceneTimePoolDelKeys) do
+        self.SceneTimePoolDelKeys[k]=nil
+        self.SceneTimePool[k] = nil;
+    end
+
+    for k,v in pairs(self.TimePoolDelKeys) do
+        self.TimePoolDelKeys[k]=nil
+        self.TimePool[k] = nil;
+    end
+end
+--function TimerMgr:Find( evtId )
+--	return self.TimePool[evtId];
+--end
+
+--function TimerMgr:FindLeftTime( evtId )
+--	local find = self.TimePool[evtId];
+--	if nil == find then return 0 end;
+--	if nil == find.leftTime then return 0 end;
+--	return find.leftTime;
+--end
+
+--切换场景时清空计时器管理池
+function TimerMgr:ResetSceneTimePool( )
+    self.SceneTimePool={};
+end
+
+function TimerMgr:Clear( )
+	-- body
+	self.TimePool = {};
+    self.SceneTimePool={};
+end
+
+
+function TimerMgr:Release()
+    TimerMgr.m_instance=nil
+end

@@ -24,6 +24,7 @@ namespace NeoOPM
 
     public abstract class UGuiForm : UIFormLogic, ISerializationCallbackReceiver
     {
+        [XLua.BlackList]
         [StructLayout(LayoutKind.Explicit, Size = 4)]
         public struct UNum
         {
@@ -115,22 +116,28 @@ namespace NeoOPM
             go.AddComponent<Text>().font = mainFont;
             Destroy(go);
         }
+        [XLua.BlackList]
         [SerializeField]
         [HideInInspector]
         public List<string> keyList = new List<string>();
+        [XLua.BlackList]
         [SerializeField]
         [HideInInspector]
         public List<Object> valueList = new List<Object>();
+        [XLua.BlackList]
         [SerializeField]
         [HideInInspector]
         public List<string> strkeyList = new List<string>();
+        [XLua.BlackList]
         [SerializeField]
         [HideInInspector]
         public List<string> strvalueList = new List<string>();
 
+        [XLua.BlackList]
         [SerializeField]
         [HideInInspector]
         public List<string> intkeyList = new List<string>();
+        [XLua.BlackList]
         [SerializeField]
         [HideInInspector]
         public List<int> intvalueList = new List<int>();
@@ -168,6 +175,7 @@ namespace NeoOPM
                 luatable.Set(key, intvalueList[i]);
             }
             luatable.Set ( "trans", this.transform );
+            luatable.Set("transform", this.transform);
             luatable.Set ( "view", this );
         }
         /// <summary>

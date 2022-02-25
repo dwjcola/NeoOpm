@@ -30,7 +30,7 @@ function Stack:Pop()
 end
 
 
-function Stack:GetPop()   
+function Stack:Seek()   
     local value= self.Stack[self.last]
     return value
 end
@@ -39,7 +39,12 @@ function Stack:Remove()
     --local value= self.Stack[self.last]
     table.remove(self.Stack,self.last)
     self.last=self.last -1
-   
+end
+
+function Stack:RemoveByIndex(index)   
+    --local value= self.Stack[self.last]
+    table.remove(self.Stack,index)
+    self.last=self.last -1
 end
 --
 --长度

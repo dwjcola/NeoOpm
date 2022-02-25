@@ -7,7 +7,7 @@
 TblManager = require "TblManager"
 TblManager:InitAllTbl()
 GameStatic = require("GameStatic")
-class = require("MiddleClass")
+require("MiddleClass")
 SimpleClassUtil = require("SimpleClassUtil")
 
 require("Enum")
@@ -17,11 +17,18 @@ require("Logger")
 
 require("ConfigReader")
 
+require("Stack")
+
+require("TimerMgr")
+require("UIGroup")
 require("LUAUIBase")
 LUAUIBase:init()
 
 require("LUADefine")
 
+require("AssetUtil")
+-- UI管理器
+require("UIMgr")
 --网络
 PomeloCLUA = require("PomeloCLUA")
 PomeloCLUA:Init()

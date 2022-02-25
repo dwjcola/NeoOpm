@@ -6,6 +6,7 @@ namespace NeoOPM
     // custom editor UIViewEditor
 
     [AddComponentMenu("UIMonoPanel")]
+    [LuaCallCSharp]
     public class UIMonoPanel : UGuiForm
     {
         //[ContextMenu("CopyToMonoItem")]

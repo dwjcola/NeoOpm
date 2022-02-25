@@ -353,4 +353,7 @@ function MiddleClass:release()
 end
 MiddleClass.static = {}
 
+function class(name,super)
+    return middleclass.class(name,super)
+end
 return middleclass

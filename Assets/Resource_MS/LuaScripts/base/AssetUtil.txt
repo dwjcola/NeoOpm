@@ -1,0 +1,23 @@
+--资源加载和卸载
+AssetUtil={}
+
+
+function AssetUtil.LoadAsync(assetPath,callback, param,obj)
+    local handle= LC.LoadAsset(assetPath,
+    function(asset)
+        if callback then
+            if obj then
+                print("===============>>>")
+                callback(obj,asset,param)
+            else
+                callback(asset,param)
+            end
+        end
+    end)
+    print(handle)
+    return handle
+end
+
+function AssetUtil.Release(handle)
+
+end

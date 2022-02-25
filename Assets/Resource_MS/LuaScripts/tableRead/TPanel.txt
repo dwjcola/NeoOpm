@@ -159,5 +159,6 @@ TPanel=TblBase:new({['mathLUA']={Id='mathLUA',AssetName="",UIGroupName="",AllowM
 ['UICoinItem']={Id='UICoinItem',AssetName="",UIGroupName="",AllowMultiInstance=true,PauseCoveredUIForm=false,LuaPath='UI/Coin',LuaName='UICoinItemLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=-1,},
 ['Test1']={Id='Test1',AssetName='Login/Test1',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Login',LuaName='Test1LUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 ['Test2']={Id='Test2',AssetName='Login/Test2',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=true,LuaPath='UI/Login',LuaName='Test2LUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
+['UIBagPanel']={Id='UIBagPanel',AssetName='Bag/UIBagPanel',UIGroupName='Default',AllowMultiInstance=false,PauseCoveredUIForm=false,LuaPath='UI/Bag',LuaName='UIBagPanelLUA',Mask=false,ShowHead=false,ShowRes=false,UITween=false,},
 });
 return TPanel;

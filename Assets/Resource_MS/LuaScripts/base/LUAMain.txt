@@ -76,9 +76,10 @@ function LUAMain:lateUpdate(dt,timeScale)
 end
 
 
-
 require("MianInit")
 
---[[package.cpath = package.cpath .. ';C:/Users/dongwenjun/AppData/Roaming/JetBrains/Rider2020.1/plugins/intellij-emmylua/classes/debugger/emmy/windows/x64/?.dll'
+package.cpath = package.cpath .. ';'..CS.UnityEngine.Application.streamingAssetsPath..'/?.dll'
 local dbg = require('emmy_core')
-dbg.tcpConnect('localhost', 45640)]]
+--dbg.tcpConnect('localhost', 9966)
+dbg.tcpListen('localhost', 9966)
+

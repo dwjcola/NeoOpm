@@ -5,31 +5,9 @@
 ---@class BattleNumericBox
 local BattleNumericBox = SimpleClassUtil:class()
 
-function BattleNumericBox:initialize()
-    -- 生命值
-    self._hp = 0
-    -- 最大生命值
-    self._max_hp = 0
-    -- 防御
-    self._defense = 0
-    -- 攻击
-    self._attack = 0
-    -- 怒气
-    self._anger = 0
-    -- 暴击率
-    self._crit_rate = 0
-    -- 命中等级
-    self._hitLevel = 0
-    -- 闪避率
-    self._dodge_rate = 0
-    -- 物理减伤率
-    self._physicDownHit_rate = 0
-    -- 超能减伤率
-    self._superDownHit_rate = 0
-    -- 急速
-    self._swift = 0
-    -- 吸血等级
-    self._suckBloodLevel = 0
+function BattleNumericBox:initialize(uid)
+    self._uid = uid
+
 end
 
 function BattleNumericBox:setValue(key,value)

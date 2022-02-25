@@ -35,7 +35,7 @@ function bt_ac_malposed_findWay:doAction(blackBoard,agent)
             local battleManager = agent._battleManager
             local data = {uid = blackBoard._uid,newPos = newPos,time = battleManager._interval}
             EventManager:Dispatch_battle(EventType.Event_Battle_Render_Move_Line,data)
-            blackBoard._position = newPos
+            blackBoard:setValue("_position",newPos)
             result = Enum_BT.Node_ResultType.Running
         end
     end

@@ -100,4 +100,13 @@ function BlackBoard_BattleBase:initialize(contextManager)
     self._playSkillTag = nil
 end
 
+function BlackBoard_BattleBase:setValue(key,value)
+    self[key] = value
+end
+
+function BlackBoard_BattleBase:setSkillDataValue(skillTag,key,value)
+    if self._skillData[skillTag] then
+        self._skillData[skillTag][key] = value
+    end
+end
 return BlackBoard_BattleBase

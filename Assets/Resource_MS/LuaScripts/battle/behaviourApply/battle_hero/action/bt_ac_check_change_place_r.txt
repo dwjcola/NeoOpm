@@ -34,13 +34,14 @@ function bt_ac_check_change_place_r:doAction(blackBoard,agent)
         end
     end
     if len == 0 then
-        blackBoard._place_r =  blackBoard._place_r_base
+        blackBoard:setValue("_place_r",blackBoard._place_r_base)
     elseif len == 1 then
-        blackBoard._place_r =  blackBoard._place_r_base * 0.66
+        blackBoard:setValue("_place_r", blackBoard._place_r_base * 0.66)
     elseif len == 2 then
-        blackBoard._place_r =  blackBoard._place_r_base * 0.5
+        blackBoard:setValue("_place_r",blackBoard._place_r_base * 0.5)
     else
-        blackBoard._place_r =  blackBoard._place_r_base * 0.33
+        blackBoard:setValue("_place_r",blackBoard._place_r_base * 0.33)
+
     end
 
     changeDelegate()

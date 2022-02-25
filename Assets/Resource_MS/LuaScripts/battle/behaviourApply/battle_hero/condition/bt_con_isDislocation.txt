@@ -15,6 +15,7 @@ function bt_con_isDislocation:doCondition(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
     if blackBoard._enmityIndex == 0 then
         blackBoard._dislocation_friend_entity = nil
+        blackBoard:setValue("_dislocation_friend_entity",nil)
         result = Enum_BT.Node_ResultType.Fail
     else
         local check_r = blackBoard._dislocation_r
@@ -49,18 +50,18 @@ function bt_con_isDislocation:doCondition(blackBoard,agent)
                 local self_z_abs = math.abs(self_pos_z - enemy_pos_z)
                 local friend_z_abs = math.abs(friend_pos_z - enemy_pos_z)
                 if self_z_abs <= friend_z_abs then
-                    blackBoard._dislocation_friend_entity = friendEntity
+                    blackBoard:setValue("_dislocation_friend_entity",friendEntity)
                     result = Enum_BT.Node_ResultType.Success
                 else
-                    blackBoard._dislocation_friend_entity = nil
+                    blackBoard:setValue("_dislocation_friend_entity",nil)
                     result = Enum_BT.Node_ResultType.Fail
                 end
             else
-                blackBoard._dislocation_friend_entity = nil
+                blackBoard:setValue("_dislocation_friend_entity",nil)
                 result = Enum_BT.Node_ResultType.Fail
             end
         else
-            blackBoard._dislocation_friend_entity = nil
+            blackBoard:setValue("_dislocation_friend_entity",nil)
             result = Enum_BT.Node_ResultType.Fail
         end
     end

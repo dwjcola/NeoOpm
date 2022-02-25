@@ -15,19 +15,27 @@ end
 function bt_ac_setValue:doAction(blackBoard,contextManager)
     if blackBoard then
         if self._setValueType == Enum_BT.SetValueType.Bt_Equal then
-            blackBoard[self._key] = self._value
+            blackBoard:setValue(self._key,self._value)
         elseif self._setValueType == Enum_BT.SetValueType.BT_AddEqual then
-            blackBoard[self._key] = blackBoard[self._key]  or 0
-            blackBoard[self._key] =  blackBoard[self._key] + self._value
+            local result = blackBoard[self._key]  or 0
+            result =  result + self._value
+            blackBoard:setValue(self._key,result)
         elseif self._setValueType == Enum_BT.SetValueType.BT_MinusEqual then
-            blackBoard[self._key] = blackBoard[self._key]  or 0
-            blackBoard[self._key] =  blackBoard[self._key] - self._value
+            local result = blackBoard[self._key]  or 0
+            result =  result - self._value
+            blackBoard:setValue(self._key,result)
         elseif self._setValueType == Enum_BT.SetValueType.BT_MultiplyEqual then
-            blackBoard[self._key] = blackBoard[self._key]  or 0
-            blackBoard[self._key] =  blackBoard[self._key] * self._value
+            local result = blackBoard[self._key]  or 0
+            result =  result * self._value
+            blackBoard:setValue(self._key,result)
         elseif self._setValueType == Enum_BT.SetValueType.BT_DivisionEqual then
-            blackBoard[self._key] = blackBoard[self._key]  or 0
-            blackBoard[self._key] =  blackBoard[self._key] / self._value
+            if self._value ~= 0 then
+                local result = blackBoard[self._key]  or 0
+                result =  result / self._value
+                blackBoard:setValue(self._key,result)
+            else
+                BattleLog.error("self._value 不能等于 0 ")
+            end
         else
             BattleLog.error("未处理赋值类型 ： ",self._setValueType)
         end

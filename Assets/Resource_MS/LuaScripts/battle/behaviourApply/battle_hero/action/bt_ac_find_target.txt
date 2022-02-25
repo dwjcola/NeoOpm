@@ -20,7 +20,7 @@ function bt_ac_find_target:doAction(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
     if blackBoard._enmityIndex == 0 then
         result = Enum_BT.Node_ResultType.Fail
-        blackBoard._find_target_pos = nil
+        blackBoard:setValue("_find_target_pos",nil)
     else
         --- @type BattleEntityContext
         local _entityContext = agent._entityContext
@@ -53,21 +53,21 @@ function bt_ac_find_target:doAction(blackBoard,agent)
                 if isHandleSuss then
                     place_target = tmp_pos
                     if  blackBoard._find_target_pos == place_target then
-                        blackBoard._find_target_pos = target
+                        blackBoard:setValue("_find_target_pos",target)
                     else
-                        blackBoard._find_target_pos = place_target
+                        blackBoard:setValue("_find_target_pos",place_target)
                     end
                 else
-                    blackBoard._find_target_pos = nil
+                    blackBoard:setValue("_find_target_pos",nil)
                 end
                 result = Enum_BT.Node_ResultType.Success
             else
                 BattleLog.error("SkillData 没有 普工技能数据 ！！！")
-                blackBoard._find_target_pos = nil
+                blackBoard:setValue("_find_target_pos",nil)
                 result = Enum_BT.Node_ResultType.Fail
             end
         else
-            blackBoard._find_target_pos = nil
+            blackBoard:setValue("_find_target_pos",nil)
             result = Enum_BT.Node_ResultType.Fail
         end
     end

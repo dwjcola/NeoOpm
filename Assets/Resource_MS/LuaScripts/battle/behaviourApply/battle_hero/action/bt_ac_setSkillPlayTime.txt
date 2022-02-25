@@ -12,7 +12,7 @@ end
 ---@param agent Agent
 function bt_ac_setSkillPlayTime:doAction(blackBoard,agent,dt)
     if blackBoard and blackBoard._skillData and blackBoard._skillData[self._skillPosition] then
-        blackBoard._skillData[self._skillPosition]._skill_time_play = agent._battleManager._time
+        blackBoard:setSkillDataValue(self._skillPosition,"_skill_time_play",agent._battleManager._time)
     end
     return Enum_BT.Node_ResultType.Success
 end

@@ -1,0 +1,11 @@
+--[[
+---------------------------------------------
+-- File Name:    gamepackage.txt
+-- Author:       wangguoqing
+-- Create Date:  2022/02/25
+---------------------------------------------
+--]]
+
+
+-- 包定义
+ui = ClassUtil.CreatePackage("ui");

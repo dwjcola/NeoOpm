@@ -44,9 +44,9 @@ public class CSCallLua : MonoBehaviour
 
     void LateUpdate()
     {
-        //if (isInitLuaMain && func_uplateUpdate != null)
-        //{
-        //    func_uplateUpdate(mainLuaTable, Time.deltaTime, Time.timeScale);
-        //}
+        if (isInitLuaMain && func_uplateUpdate != null)
+        {
+            func_uplateUpdate(mainLuaTable, Time.deltaTime, Time.timeScale);
+        }
     }
 }

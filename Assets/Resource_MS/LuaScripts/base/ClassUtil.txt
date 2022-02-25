@@ -1,0 +1,53 @@
+
+---------------------------------------------
+-- File Name:    ClassUtil.txt
+-- Author:       wangguoqing
+-- Create Date:  2022/02/25
+---------------------------------------------
+--
+
+
+ClassUtil = { };
+
+ClassUtil.CreatePackage = function(packageName)
+    local package = {};
+    package.__index = function(tb, className)
+        -- require(packageName .. "." .. className);
+        require(className);
+        return tb[className];
+    end
+    _G[packageName] = package;
+    setmetatable(_G[packageName], package)
+    return _G[packageName];
+end
+
+-- 创建别名
+-- 包名和类名现在必须要填,属性名可以不写也可以是多个.连接的 如
+-- ClassUtil.CreateAlias("common", "Constants", "Test.GoTest");
+-- packageName 包名
+-- className 类名
+-- propName 属性名
+-- ClassUtil.CreateAlias = function (packageName, className, propName)
+--     local alias = {};
+--     alias.__index = function(tb, key)
+--         require(packageName .. "." .. className);
+--         local ptb = _G[packageName][className];
+--         if propName then
+--             for pname in string.gmatch(propName, "[^.]+") do
+--                 ptb = ptb[pname];
+--             end
+--         end
+--         alias.__index = ptb;
+--         return alias[key];
+--     end
+--     setmetatable(alias, alias)
+--     return alias;
+-- end
+
+-- function test(path)
+--     for name in string.gmatch(path, "[^.]+") do
+--         print(name);
+--     end
+-- end
+
+

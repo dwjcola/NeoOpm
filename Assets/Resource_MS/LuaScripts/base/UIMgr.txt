@@ -15,7 +15,8 @@ UIMgr = class("UIMgr")
  
 --关闭界面后缓存时间过期后卸载界面
  local destroyWaitTimer=20
- 
+ local closePanelOffset=CS.UnityEngine.Vector3(5000,0,0)
+
  function UIMgr:initialize()
      -- 界面容器
      self.__panels = {}
@@ -189,7 +190,7 @@ UIMgr = class("UIMgr")
      self.__panels[config.Id]=UIInfo
 
      UIInfo.assetHandle=  AssetUtil.LoadAsync(assetPath,self.LoadUIASyncCallBack,UIInfo,self)
-     print(UIInfo.assetHandle)
+    --  print(UIInfo.assetHandle)
      print("open panel await ...");
  end
  
@@ -268,7 +269,9 @@ UIMgr = class("UIMgr")
     if destroyImmediate then
         self:DestroyPanel(UIInfo)
     else
-        UIInfo.curTimer=0
+        log("UIMgr:ClosePanel add to destroyWaitPanels wait time:",panelId)
+        UIInfo.rectTransform.localPosition=closePanelOffset;        
+        -- UIInfo.rectTransform.anch
         table.insert(self.__destroyWaitPanels,UIInfo)
     end
  end
@@ -277,10 +280,12 @@ UIMgr = class("UIMgr")
 
 
  function UIMgr:DestroyPanel(UIInfo)
+    log("UIMgr:DestroyPanel::",UIInfo.panelId)
     self:RemovePanelFromGroup(UIInfo)
-    self.__panels[panelId]=nil
+    self.__panels[UIInfo.panelId]=nil
     GameObject.Destroy(UIInfo.rectTransform.gameObject)
     AssetUtil.Release(UIInfo.assetHandle)
+
  end
 
 function UIMgr:RemovePanelFromGroup(UIInfo)
@@ -355,6 +360,7 @@ function UIMgr:Update(deltaTime)
             table.remove(self.__destroyWaitPanels,i)
         else
             UIInfo.curTimer = UIInfo.curTimer+deltaTime
+            -- log("UIMgr:ClosePanel add to destroyWaitPanels wait time:",UIInfo.panelId," curTimer:",UIInfo.curTimer)
             if UIInfo.curTimer >= destroyWaitTimer then
                 self:DestroyPanel(UIInfo)
                 table.remove(self.__destroyWaitPanels,i)

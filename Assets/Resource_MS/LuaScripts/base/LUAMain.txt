@@ -3,6 +3,7 @@ Author: DWJ
 Date: 2021-11-18
 Description:LUAMain
 --]]
+
 LUAMain={};
 function LUAMain:new (o)
   o = o or {}
@@ -13,6 +14,12 @@ end
 LUAMain.name="luamain"
 LUAMain.LuaIdBaseNum=1
 
+local UIMgr_Obj=nil
+local UIMgr_Update=nil
+local UIMgr_LateUpdate=nil
+local TimerMgr_Obj=nil
+local TimerMgr_Update=nil
+local TimerMgr_LateUpdate=nil
 
 require_path = function(className,classPath)
   if CS.NeoOPM.GameEntry.Config.IsEditor then
@@ -69,14 +76,38 @@ function LUAMain:update(dt,timeScale)
       v:update(dt,timeScale)
     end
   end
+
+  if UIMgr_Update then
+    UIMgr_Update(UIMgr_Obj,dt)
+  end  
+  if TimerMgr_Update then
+    TimerMgr_Update(TimerMgr_Obj,dt)
+  end  
 end
 
 function LUAMain:lateUpdate(dt,timeScale)
-
+-- warn("=================>>>lateUpdate")
+  if UIMgr_LateUpdate then
+    UIMgr_LateUpdate(UIMgr_Obj,dt)
+  end  
+  if TimerMgr_LateUpdate then
+    TimerMgr_LateUpdate(TimerMgr_Obj,dt)
+  end  
 end
 
 
+
 require("MianInit")
+
+TimerMgr_Obj=TimerMgr.GetInstance()
+TimerMgr_Update=TimerMgr.GetInstance().Update
+TimerMgr_LateUpdate=TimerMgr.GetInstance().LateUpdate
+
+UIMgr_Obj=UIMgr.GetInstance()
+UIMgr_Update=UIMgr.GetInstance().Update
+UIMgr_LateUpdate=UIMgr.GetInstance().LateUpdate
+UIMgr.GetInstance():Init();
+TimerMgr.GetInstance():Init()
 
 package.cpath = package.cpath .. ';'..CS.UnityEngine.Application.streamingAssetsPath..'/?.dll'
 local dbg = require('emmy_core')

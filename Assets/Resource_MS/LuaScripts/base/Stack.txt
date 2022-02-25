@@ -1,7 +1,11 @@
---region *.lua
---Date
---此文件由[BabeLua]插件自动生成
---
+--[[
+---------------------------------------------
+-- File Name:    Stack.txt
+-- Author:       wangguoqing
+-- Create Date:  2022/02/25
+---------------------------------------------
+--]]
+
 --双向队列
 --
 ---@class Stack @栈
@@ -64,4 +68,4 @@ function Stack:Dump()
     end
 end
 
---endregion
+

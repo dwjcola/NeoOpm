@@ -4,6 +4,9 @@
 --- DateTime: 2021/11/25 15:05
 ---
 ---表格
+require("ClassUtil")
+require("gamepackage")
+
 TblManager = require "TblManager"
 TblManager:InitAllTbl()
 GameStatic = require("GameStatic")

@@ -12,34 +12,44 @@ function BattleRenderSystemContext:initialize()
     self._debugSystem = DebugSystem:new()
     self._rotationSystem = RotationSystem:new()
     self._changeRenderLayerSystem = ChangeRenderLayerSystem:new()
+    self._sceneMaskSystem = SceneMaskSystem:new()
     --self._effectSystem = EffectSystem:new()
     --self._audioSystem = AudioSystem:new()
 end
 
-function BattleRenderSystemContext:init(list_camp)
+function BattleRenderSystemContext:init(list_camp,listEntity)
     for camp, entityList in pairs(list_camp) do
         for pos, entity in pairs(entityList) do
             self:addEntity(entity)
         end
     end
+    for pos, entity in pairs(listEntity) do
+        self:addEntity(entity)
+    end
 end
 
 function BattleRenderSystemContext:addEntity(entity)
-    if  self._animatorSystem then
-        self._animatorSystem:addEntity(entity)
+    if entity then
+        if  self._animatorSystem and entity.getAnimationComponent then
+            self._animatorSystem:addEntity(entity)
+        end
+        if  self._moveSystem and entity.setPosition then
+            self._moveSystem:addEntity(entity)
+        end
+        if  self._debugSystem and entity.setGizmosCircle then
+            self._debugSystem:addEntity(entity)
+        end
+        if  self._rotationSystem and entity.setScaleZ then
+            self._rotationSystem:addEntity(entity)
+        end
+        if  self._changeRenderLayerSystem and entity.getAllSkinnedMeshRenderComponent then
+            self._changeRenderLayerSystem:addEntity(entity)
+        end
+        if self._sceneMaskSystem and entity.getRoleMask then
+            self._sceneMaskSystem:addEntity(entity)
+        end
     end
-    if  self._moveSystem then
-        self._moveSystem:addEntity(entity)
-    end
-    if  self._debugSystem then
-        self._debugSystem:addEntity(entity)
-    end
-    if  self._rotationSystem then
-        self._rotationSystem:addEntity(entity)
-    end
-    if  self._changeRenderLayerSystem then
-        self._changeRenderLayerSystem:addEntity(entity)
-    end
+
 end
 
 

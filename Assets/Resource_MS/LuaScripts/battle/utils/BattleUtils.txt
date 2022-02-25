@@ -323,8 +323,8 @@ end
 function BattleUtils:addComponentForModel(model)
     if model then
         if GameStatic_Battle.General_Grizmo then
-            --model.gameObject.GetOrAddComponent(typeof(CS.UnityEngine.GameObjectGizmosCircle))
-            CS.LC.GetOrAddComponent(model.gameObject, "GameObjectGizmosCircleLine")
+            model.gameObject:GetOrAddComponent(typeof(CS.GameObjectGizmosCircleLine))
+            --model.gameObject:GetOrAddComponent("GameObjectGizmosCircleLine")
         end
     end
 end

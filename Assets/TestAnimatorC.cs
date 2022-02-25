@@ -11,6 +11,7 @@ public class TestAnimatorC : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Component[] components = transform.GetComponentsInChildren(System.Type.GetType("SkinnedMeshRenderer"));
         Debug.LogError(transform.localRotation);
         //meshRenderer.sortingLayerName = "RoleShow";
         //for (int i = 0; i < meshRenderer.materials.Length; i++)

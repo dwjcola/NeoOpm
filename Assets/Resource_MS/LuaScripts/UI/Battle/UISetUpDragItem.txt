@@ -122,7 +122,7 @@ end
 function UISetUpDragItem:updateTopPos()
     if self._trans_model and  self._uiCamera then
         local vecPos = self._trans_model.position
-        local uiPos = LC.WorldPosToScreenLocalPos(self._parent._roleCamera, self._uiCamera,self._rect_modelRoot,vecPos)
+        local uiPos = GameUtility.WorldPosToScreenLocalPos(self._parent._roleCamera, self._uiCamera,self._rect_modelRoot,vecPos)
         self:initPosition(uiPos)
     end
 
@@ -155,7 +155,7 @@ end
 function UISetUpDragItem:refreshTarget()
     local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
     local ray = self._parent._roleCamera:ScreenPointToRay(v)
-    local point = LC.GetRayRaycastHitInfo(ray)
+    local point = GameUtility.GetRayRaycastHitInfo(ray)
     self._pos_target = point
 end
 
@@ -192,7 +192,7 @@ function UISetUpDragItem:getInitPos(isSelf,index)
     if index == 0 then
         local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
         local ray = self._parent._roleCamera:ScreenPointToRay(v)
-        return LC.GetRayRaycastHitInfo(ray)
+        return GameUtility.GetRayRaycastHitInfo(ray)
     else
         return BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,index))
     end

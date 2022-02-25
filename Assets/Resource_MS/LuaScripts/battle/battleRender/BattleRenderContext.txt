@@ -17,12 +17,15 @@ function BattleRenderContext:init(blackBoard,battleData,battleManager)
 
    self._entity_context:init(blackBoard,battleData,battleManager)
 
-   self._system_context:init(self._entity_context._list_camp)
+   self._system_context:init(battleManager._list_renderCharacter,battleManager._list_renderEntity)
 end
 
 function BattleRenderContext:update(dt)
    if self._entity_context then
       self._entity_context:update(dt)
+   end
+   if self._system_context then
+      self._system_context:update(dt)
    end
 end
 

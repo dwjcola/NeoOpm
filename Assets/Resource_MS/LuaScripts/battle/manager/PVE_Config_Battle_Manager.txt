@@ -33,8 +33,10 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     self._list_logicCharacter = {}
 
     self._list_renderCharacter = {}
+
+    self._list_renderEntity = {}
     -- 战斗倍速
-    self._battleSpeed = 2
+    self._battleSpeed = 1
     -- 计算后的 倍速下 每帧时间间隔
     self._speedInterval = self._interval/self._battleSpeed
 end
@@ -71,18 +73,23 @@ function PVE_Config_Battle_Manager:formalInit()
 end
 
 function PVE_Config_Battle_Manager:initEntity()
+    self:initCharacterEntity()
+    self:initSceneEntity()
+end
+
+function PVE_Config_Battle_Manager:initCharacterEntity()
     local data = self._battleData
 
     local func = function(teamData,type)
         for i, v in pairs(teamData.teamMap) do
             local index = i
-            self._entityId = self._entityId + 1
+            local entityId = self:getNewEntityId()
 
             if self._list_logicCharacter[type] == nil then
                 self._list_logicCharacter[type] = {}
             end
 
-            local param = BattleUtils:handlerCharacterData(type,v,teamData,index, self._entityId)
+            local param = BattleUtils:handlerCharacterData(type,v,teamData,index,entityId)
             self._list_logicCharacter[type][index] = BattleCharacter:new(param,self)
             if not self._isOnlyLogic then
 
@@ -95,9 +102,9 @@ function PVE_Config_Battle_Manager:initEntity()
                     index = i,
                     heroId = v.heroId,
                     campType = type,
-                    uid =  self._entityId,
+                    uid = entityId,
                 })
-                self._list_renderCharacter[type][index] =  renderCharacter
+                self._list_renderCharacter[type][index] = renderCharacter
             end
         end
 
@@ -107,6 +114,18 @@ function PVE_Config_Battle_Manager:initEntity()
 
     func(data.team_enemy,Enum_Battle.Camp.CampEnemy)
 
+
+end
+
+function PVE_Config_Battle_Manager:getNewEntityId()
+    self._entityId = self._entityId + 1
+    return self._entityId
+end
+
+function PVE_Config_Battle_Manager:initSceneEntity()
+
+    local battleSceneEntity = BattleSceneEntity:new(self._battleTeam, self:getNewEntityId())
+    table.insert( self._list_renderEntity,battleSceneEntity)
 end
 
 function PVE_Config_Battle_Manager:update(dt)

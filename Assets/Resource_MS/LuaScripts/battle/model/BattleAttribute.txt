@@ -7,12 +7,20 @@ local BattleAttribute = SimpleClassUtil:class()
 
 function BattleAttribute:initialize(id,initValue)
     self._id = id
-    self._value = initValue
     self._name = Enum_Battle.AttributeName[self._id]
+    self:set(initValue)
 end
 
-function BattleAttribute:setValue()
+function BattleAttribute:set(value)
+    self._value =  value
+end
 
+function BattleAttribute:get()
+   return self._value
+end
+
+function BattleAttribute:reset()
+    self:set(0)
 end
 
 return BattleAttribute

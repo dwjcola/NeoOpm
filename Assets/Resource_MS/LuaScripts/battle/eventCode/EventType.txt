@@ -34,6 +34,8 @@ local EventType = {
 
     Event_Battle_BlackOut = "",   -- 战斗黑屏
 
+    Event_Battle_NumericBox_ValueChange = "",       -- 战斗数值变化事件
+
     Event_Battle_Trigger_EnterBattle = "",           -- 进战斗触发
     Event_Battle_Trigger_UltraSkillPlay = "",        -- 当大招触发
     Event_Battle_Trigger_CauseDamage = "",           -- 造成伤害时触发

@@ -4,4 +4,5 @@
 --- DateTime: 2022/2/21 18:23
 ---
 BattleConstant = require_path("BattleConstant","battle/model/BattleConstant")
+BattleAttribute = require_path("BattleAttribute","battle/model/BattleAttribute")
 BattleNumericBox = require_path("BattleNumericBox","battle/model/BattleNumericBox")

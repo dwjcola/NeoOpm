@@ -372,7 +372,10 @@ function BattleUtils:handlerCharacterData(campType,heroTeamData,teamData,posInde
         _detection_r = detection_r,
         _place_r_base = place_r,
         _isCloseIn = con_hero_detail.range == 1,
-        _orientation = campType == Enum_Battle.Camp.CampSelf and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left
+        _orientation = campType == Enum_Battle.Camp.CampSelf and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left,
+        _attributeList = {[Enum_Battle.Attribute.HP] = 100000,
+                          [Enum_Battle.Attribute.Anger] = 0,
+                          [Enum_Battle.Attribute.MoveSpeed] = 0.05}
     }
 
   return data

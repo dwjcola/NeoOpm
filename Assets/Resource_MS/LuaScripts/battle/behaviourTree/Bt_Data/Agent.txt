@@ -4,12 +4,15 @@
 --- DateTime: 2022/2/15 10:32
 --- @class Agent
 local Agent = SimpleClassUtil:class()
-
-function Agent:initialize(battleManager,entityContext)
+function Agent:initialize(owner)
+    --- @type BattleCharacter
+    self._owner = owner
     ---@type PVE_Config_Battle_Manager
-    self._battleManager = battleManager
+    self._battleManager = self._owner._battleManager
     ---@type BattleEntityContext
-    self._entityContext = entityContext
+    self._entityContext =  self._owner._entityContext
+    ---@type BattleNumericBox
+    self._battleNumericBox = self._owner._battleNumericBox
 end
 
 return Agent

@@ -8,15 +8,12 @@ local BattleCharacter = SimpleClassUtil:class()
 function BattleCharacter:initialize(param,battleManager)
 
     self._param = param
+
     self._campType = param._campType
 
     self._index_pos = param._index_pos
 
     self._battleManager = battleManager
-
-    --self._entityContext = battleManager._world_logic._battleLogicContext._entityContext
-
-
 
     self._heroId = param._heroId
 
@@ -27,7 +24,6 @@ function BattleCharacter:initialize(param,battleManager)
     self._eventListenerList = {}
 
     self._isStop = false
-
 
     self:registerMsg()
 end
@@ -54,14 +50,18 @@ function BattleCharacter:unRegisterMsg()
         end
     end
 end
-
+---@param entityContext BattleEntityContext
 function BattleCharacter:init(entityContext)
+
     self._entityContext = entityContext
+    ---@type BattleNumericBox
+    self._battleNumericBox = BattleNumericBox:new(self._uid,self._param._attributeList)
+
     self:initTree()
 end
 
 function BattleCharacter:initTree()
-    self._logicTree = BehaviourTreeEntity:new({}, self._param,Agent:new(self._battleManager,self._entityContext))
+    self._logicTree = BehaviourTreeEntity:new({}, self._param,Agent:new(self,self._battleManager,self._entityContext, self))
     self:debugSetting( self._param._volume_r,self._param._place_r,self._param._dislocation_r,
             self._param._detection_r,0.2,self._param._place_r)
 end
@@ -100,18 +100,19 @@ function BattleCharacter:update(dt)
     end
 end
 
-------------------------------------------------
+function BattleCharacter:release()
+    self:unRegisterMsg()
+end
 
+------------------------------------------------------------------------------
+--- 大招黑屏事件处理
 function BattleCharacter:handleEvent_Battle_BlackOut(params)
     local uid = params.uid
     if uid ~= self._uid then
         self._isStop = params.openType == Enum_Battle.SkillBlackOut.Open
     end
---
 end
 
-function BattleCharacter:release()
-    self:unRegisterMsg()
-end
+
 
 return BattleCharacter

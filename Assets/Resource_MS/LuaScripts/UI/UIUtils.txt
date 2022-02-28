@@ -56,6 +56,7 @@ function UIUtils:createItem(prefab,parent)
         if parent then
             childGo.transform:SetParent(parent.transform)
             childGo.transform.localScale = Vector3.one
+            childGo.transform.localPosition = Vector3.zero
         end
         return childGo
     else

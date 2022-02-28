@@ -15,8 +15,8 @@ local EventType = {
 
     Event_GetBattleData = "", -- 获取战斗数据
 
-    Event_BigSkillCanRelease = "",
-    Event_BigSkillCannotRelease = "",
+    Event_BigSkillCanRelease = "",  -- 大招可以释放
+    Event_BigSkillCannotRelease = "", -- 大招取消释放
     Event_Battle_Died = "",
     Event_Battle_Be_Attack = "",
 

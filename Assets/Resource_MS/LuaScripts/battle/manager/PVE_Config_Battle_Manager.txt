@@ -170,6 +170,7 @@ function PVE_Config_Battle_Manager:updateLogic(dt)
 end
 
 
+
 function PVE_Config_Battle_Manager:_updateRender(dt)
     -- todo interpolation 计算是不对的 因为  _speedInterval 实在变化的 不要对 interpolation 进行累加操作
     -- todo 如果帧同步 这里必须修改 但是 此处 不要需要帧同步 不做修改

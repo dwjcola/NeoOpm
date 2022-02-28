@@ -24,6 +24,7 @@ function UIBattleMainLUA:initParams(params)
 	self._map_index = {}
 	---@type UIBattleHeadItem[][]
 	self._list_headItem = {}
+	---@type UIBattleSkillItem[]
 	self._list_skillItem = {}
 end
 
@@ -39,6 +40,8 @@ end
 --模块添加全局事件
 function UIBattleMainLUA:AddEventListener( )
 	-- self:AddEvent("EventStringKey", self.EventHandle);
+	self._event_Obj_1 =  EventManager:AddListener(EventType.Event_BigSkillCanRelease,self.onSkillCanFire,self)
+	self._event_Obj_2 =  EventManager:AddListener(EventType.Event_BigSkillCannotRelease,self.onSkillCannotFire,self)
 end
 --模块移除全局事件
 function UIBattleMainLUA:RemoveEventListener( )
@@ -121,6 +124,22 @@ function UIBattleMainLUA:update()
 			if item and item._isActive == true and item.update then
 				item:update()
 			end
+		end
+	end
+end
+
+function UIBattleMainLUA:onSkillCanFire(data)
+	for i, skillItem in pairs(self._list_skillItem) do
+		if skillItem and skillItem._isActive and skillItem._posIndex == data.initIndex then
+			skillItem:setSkillConjure(true)
+		end
+	end
+end
+
+function UIBattleMainLUA:onSkillCannotFire(data)
+	for i, skillItem in pairs(self._list_skillItem) do
+		if skillItem and skillItem._isActive and skillItem._posIndex == data.initIndex then
+			skillItem:setSkillConjure(false)
 		end
 	end
 end

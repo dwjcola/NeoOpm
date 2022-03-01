@@ -309,10 +309,37 @@ function bt_hero_base:createSkill(blackBoard,skillTag)
     node:addNode(self:createTimeLineSkill(skillData))
     node:addNode(self:createAddAnger(skillData._skill_add_anger))
     self:setSkillPlayCost(node,skillData)
+    self:createResetIsKeyDownBigSkill(node,skillTag)
     node:addNode(self:createSetPlaySkill(nil))
     return node
 end
-
+--设置还原按下操作
+function bt_hero_base:createResetIsKeyDownBigSkill(rootNode,skillTag)
+    if Enum_Battle.SkillTag.Skill_1 ~= skillTag then
+        return
+    end
+    ---@type NodeIfJudge
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.IF_Judge)
+        ---@type NodeConditionGroup
+        local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.ConditionGroup)
+            local con_1 = CreateUtils:getICondition("bt_con_compare_base",
+                    { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_campType", _compareTargetValue = Enum_Battle.Camp.CampSelf })
+            local con_2 = CreateUtils:getICondition("bt_con_isAutoBattle",false)
+        node_1:setIConditionS({con_1,con_2},Enum_BT.Condition_Relation.BT_AND)
+    node:addNode(node_1)
+        ---@type NodeAction
+        local node_2 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
+        node_2:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_isKeyDownBigSkill",value = false}))
+    node:addNode(node_2)
+    rootNode:addNode( node)
+end
+--设置正在释放得技能 是哪个
+function bt_hero_base:createSetPlaySkill(skillTag)
+    ---@type NodeAction
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
+    node:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_playSkillTag",value = skillTag}))
+    return node
+end
 --设置正在释放得技能 是哪个
 function bt_hero_base:createSetPlaySkill(skillTag)
     ---@type NodeAction

@@ -31,6 +31,8 @@ end
 function BattleCharacter:getEventHandleMap()
     return {
         [EventType.Event_Battle_BlackOut] = "handleEvent_Battle_BlackOut",
+        [EventType.Event_Battle_ClientHandle_ClickSkill] = "handleEvent_Battle_ClientHandle_ClickSkill",
+        [EventType.Event_Battle_ClientHandle_ClickAutoBattle] = "handleEvent_Battle_ClientHandle_ClickAutoBattle",
     }
 end
 
@@ -112,7 +114,25 @@ function BattleCharacter:handleEvent_Battle_BlackOut(params)
         self._isStop = params.openType == Enum_Battle.SkillBlackOut.Open
     end
 end
+--- 释放发招
+function BattleCharacter:handleEvent_Battle_ClientHandle_ClickSkill(params)
+    local index_pos = params.posIndex
+    if index_pos == self._index_pos and self._campType == Enum_Battle.Camp.CampSelf then
+        self._logicTree:setBlackBordData("_isKeyDownBigSkill",true)
+    end
+end
+---
+function BattleCharacter:handleEvent_Battle_ClientHandle_ClickAutoBattle(params)
+    local isAutoBattle = params.isAutoBattle
+    if isAutoBattle then
+        self._logicTree:setBlackBordData("_isKeyDownBigSkill",true)
+    else
+        local _playSkillTag = self._logicTree:getBlackBordData("_playSkillTag")
+        if not ( _playSkillTag and _playSkillTag == Enum_Battle.SkillTag.Skill_1) then
+            self._logicTree:setBlackBordData("_isKeyDownBigSkill",false)
+        end
+    end
 
-
+end
 
 return BattleCharacter

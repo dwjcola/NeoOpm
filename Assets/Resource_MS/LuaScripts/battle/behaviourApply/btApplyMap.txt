@@ -58,6 +58,7 @@ btApplyMap.classPath = {
     ["bt_con_fullScreen"] = "battle/behaviourApply/battle_hero/condition/bt_con_fullScreen",
     ["bt_con_around_circle"] = "battle/behaviourApply/battle_hero/condition/bt_con_around_circle",
     ["bt_con_compare_box"] = "battle/behaviourApply/battle_hero/condition/bt_con_compare_box",
+    ["bt_con_isAutoBattle"] = "battle/behaviourApply/battle_hero/condition/bt_con_isAutoBattle",
 
 
 }

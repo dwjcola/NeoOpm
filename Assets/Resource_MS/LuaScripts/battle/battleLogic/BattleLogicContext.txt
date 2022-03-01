@@ -22,6 +22,7 @@ function BattleLogicContext:update(dt)
     if self._logicSystemContest and self._logicSystemContest.update then
         self._logicSystemContest:update(dt)
     end
+
 end
 
 

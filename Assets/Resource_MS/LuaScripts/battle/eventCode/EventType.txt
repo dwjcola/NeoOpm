@@ -62,6 +62,12 @@ local EventType = {
     Event_Battle_Trigger_Enemy_Friend_Up = "",       -- 场上我方多余
     Event_Battle_Trigger_Character_Friend_Down = "", -- 场上全部少于
     Event_Battle_Trigger_Character_Friend_Up = "",   -- 场上全部多余
+
+
+    Event_Battle_ClientHandle_ClickSkill = '',         -- 点击技能释放大招
+    Event_Battle_ClientHandle_PauseBattle = '',        -- 点击技能释放大招
+    Event_Battle_ClientHandle_ClickAutoBattle = '',    -- 点击自动释放大招
+    Event_Battle_ClientHandle_ClickChangeSpeed = '',   -- 点击切换战斗速度
 }
 
 --给所有的Event赋值

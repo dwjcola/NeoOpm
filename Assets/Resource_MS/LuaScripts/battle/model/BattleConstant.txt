@@ -41,6 +41,8 @@ local BattleConstant = {
            [5] = {4.8,0,-6.5},
        }
     },
+    --- 每秒 逻辑帧数
+    FrameCount = 30,
     --- 逻辑帧  ms
     FrameTime = 33.334,
 

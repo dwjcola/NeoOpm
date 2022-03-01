@@ -27,11 +27,12 @@ function BattleMainNode:initialize(tree,index,type,battleTimes)
 
    self._scheduler:start()
 
-
+   self:init()
 end
 
 function BattleMainNode:init()
    self._event_Obj = EventManager:AddListener(EventType.Event_GetBattleData,self.handleBattleData,self)
+   self._frameControl = FrameControl:new()
 end
 
 function BattleMainNode:onStart()
@@ -42,13 +43,16 @@ end
 
 function BattleMainNode:handleBattleData(rep,userData)
    self._data = BattleUtils:getTestBattleData()
+   -- todo 可能需要设置服务器缓存得 客户端操作帧
+   self._frameControl:setServerFrameData({})
+
    -- todo 暂且这么处理 以后会直接用布阵得数据
    self._data.team_self.teamMap = BattleProxy:getBattleTeamMap(self._battleTimes).team_self.teamMap
 
    self._battleTeam = BattleTeam:new(self._battleTimes)
    self._battleTeam:setLoadData(self._data)
    self._battleTeam:tryLoad(function()
-      BattleProxy:OpenBattleMainView({battleData = self._data,battleTeam =  self._battleTeam })
+      BattleProxy:OpenBattleMainView({battleData = self._data,battleTeam =  self._battleTeam,frameControl = self._frameControl})
 
       -- todo 开始战斗 横幅
       -- todo 开始战斗得其他准备工作
@@ -61,8 +65,7 @@ end
 
 
 function BattleMainNode:toStartBattle(isServer)
-
-   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer, self._battleTeam)
+   self._battleManager = PVE_Config_Battle_Manager:new(self._data,isServer, self._battleTeam,self._frameControl)
    self._battleManager:start()
    self:startScheduler()
 end

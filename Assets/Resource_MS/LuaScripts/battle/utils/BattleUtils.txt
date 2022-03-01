@@ -165,6 +165,8 @@ function BattleUtils:getTestBattleData()
         scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
         rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
         battleType = Enum_Battle.BattleType.PVE_C,
+        battleSpeed = 2,
+        isAutoBattle = false,
         team_self = {
             teamMap = {
 

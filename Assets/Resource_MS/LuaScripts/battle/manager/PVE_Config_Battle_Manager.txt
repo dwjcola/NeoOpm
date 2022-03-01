@@ -6,14 +6,16 @@
 ---@class PVE_Config_Battle_Manager:MiddleClass
 local PVE_Config_Battle_Manager = SimpleClassUtil:class()
 
-function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
+function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam,frameControl)
 
     self._battleData = data or {}
     ---@type boolean 是否只跑逻辑
     self._isOnlyLogic = isOnlyLogic or false
 
-    self._interval = 0.033334
-
+    -- 每帧时间间隔  /s
+    self._interval = BattleConstant.FrameTime * 0.001
+    ---@type FrameControl
+    self._frameControl = frameControl
 
     self._battleTime = 0
     --- 单位 ms
@@ -35,10 +37,16 @@ function PVE_Config_Battle_Manager:initialize(data,isOnlyLogic,battleTeam)
     self._list_renderCharacter = {}
 
     self._list_renderEntity = {}
-    -- 战斗倍速
-    self._battleSpeed = 2
+
+    -- todo 设置 是不是自动战斗
+    self._automaticBattle = data.isAutoBattle
+    -- todo 更具服务器设置  战斗倍速
+    self._battleSpeed = data.battleSpeed
     -- 计算后的 倍速下 每帧时间间隔
     self._speedInterval = self._interval/self._battleSpeed
+
+    self._eventListenerList = {}
+    self:registerMsg()
 end
 
 function PVE_Config_Battle_Manager:getBattleSpeed()
@@ -163,12 +171,12 @@ function PVE_Config_Battle_Manager:updateLogic(dt)
     -- CSharpImport.BeginSample("PVEBattle_updateLogic")
     if self._world_logic then
         self._battleResult = self._world_logic:update(dt)
+        self._frameControl:update(dt)
         -- CSharpImport.EndSample()
         return self._battleResult
     end
 
 end
-
 
 
 function PVE_Config_Battle_Manager:_updateRender(dt)
@@ -189,6 +197,47 @@ function PVE_Config_Battle_Manager:updateRender(dt, interpolation)
     -- CSharpImport.EndSample()
 end
 
+function PVE_Config_Battle_Manager:getEventHandleMap()
+    return {
+        [EventType.Event_Battle_ClientHandle_PauseBattle] = "handleEvent_Battle_ClientHandle_PauseBattle",
+        [EventType.Event_Battle_ClientHandle_ClickAutoBattle] = "handleEvent_Battle_ClientHandle_ClickAutoBattle",
+        [EventType.Event_Battle_ClientHandle_ClickChangeSpeed] = "handleEvent_Battle_ClientHandle_ClickChangeSpeed",
+    }
+end
+
+function PVE_Config_Battle_Manager:registerMsg()
+    local eventHandleMap = self:getEventHandleMap()
+    for i, v in pairs(eventHandleMap) do
+        if i and v and self[v] then
+            self._eventListenerList[i] = EventManager:AddListener(i,self[v],self)
+        end
+    end
+end
+
+function PVE_Config_Battle_Manager:unRegisterMsg()
+    for i, v in pairs(self._eventListenerList) do
+        if i and v  then
+            EventManager:RemoveListener(i,v)
+        end
+    end
+end
+-- todo 调用一哈
+function PVE_Config_Battle_Manager:release()
+    self:unRegisterMsg()
+end
+
+function PVE_Config_Battle_Manager:handleEvent_Battle_ClientHandle_PauseBattle()
+
+end
+
+function PVE_Config_Battle_Manager:handleEvent_Battle_ClientHandle_ClickAutoBattle(data)
+   self._automaticBattle = data.isAutoBattle
+end
+
+function PVE_Config_Battle_Manager:handleEvent_Battle_ClientHandle_ClickChangeSpeed(data)
+   self:setBattleSpeed(data.battleSpeed)
+
+end
 
 return PVE_Config_Battle_Manager
 

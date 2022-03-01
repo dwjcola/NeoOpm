@@ -8,3 +8,6 @@ BattleMainManager = require_path("BattleMainManager","battle/manager/BattleMainM
 BattleLoaderManager = require_path("BattleLoaderManager","battle/manager/BattleLoaderManager"):new()
 
 PVE_Config_Battle_Manager = require_path("PVE_Config_Battle_Manager","battle/manager/PVE_Config_Battle_Manager")
+
+FrameControl =  require_path("FrameControl","battle/manager/FrameControl")
+FrameData =  require_path("FrameData","battle/manager/FrameData")

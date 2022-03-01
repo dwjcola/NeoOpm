@@ -1,4 +1,5 @@
 --界面
+---@class UIBattleMainLUA:LUAUIBase
 UIBattleMainLUA=LUAUIBase:new({
 	
 	});
@@ -7,6 +8,7 @@ function UIBattleMainLUA:Open(params)
 	self:AddUIEventListener()
 	self:AddEventListener()
 	self:Init(params);
+	self:refreshPanel()
 end
 function UIBattleMainLUA:Init(params)
 	self:initParams(params)
@@ -18,9 +20,13 @@ end
 
 function UIBattleMainLUA:initParams(params)
 	self._battleTeam = params.battleTeam
+	---@type FrameControl
+	self._frameControl = params.frameControl
     self._team_self = params.battleData.team_self
 	self._team_enemy = params.battleData.team_enemy
 	-- todo 映射表 映射entity 对应得血条和底部技能item得Index
+	self._battleSpeed = params.battleData.battleSpeed
+	self._isAutoBattle = params.battleData.isAutoBattle
 	self._map_index = {}
 	---@type UIBattleHeadItem[][]
 	self._list_headItem = {}
@@ -46,6 +52,8 @@ end
 --模块移除全局事件
 function UIBattleMainLUA:RemoveEventListener( )
 	-- self:RemoveEvent("EventStringKey", self.EventHandle);
+	EventManager:RemoveListener(EventType.Event_BigSkillCanRelease,self._event_Obj_1)
+	EventManager:RemoveListener(EventType.Event_BigSkillCannotRelease,self._event_Obj_2)
 end
 function UIBattleMainLUA:OnCloseMe()
 	if(self.view~=nil)then
@@ -64,15 +72,20 @@ function UIBattleMainLUA:OnDestroy()
 end
 
 function UIBattleMainLUA:onPauseClick()
-	Logger.log("onPauseClick  ")
+	self._frameControl:disPatchEventMsg(EventType.Event_Battle_ClientHandle_PauseBattle)
 end
 
 function UIBattleMainLUA:onAutomaticClick()
-	Logger.log("onAutomaticClick  ")
+	self._isAutoBattle = not self._isAutoBattle
+	self._frameControl:disPatchEventMsg(EventType.Event_Battle_ClientHandle_ClickAutoBattle,{isAutoBattle = self._isAutoBattle})
+	self:setAutoBattleTxt()
 end
 
 function UIBattleMainLUA:onSpeedClick()
-	Logger.log("onSpeedClick  ")
+	self._battleSpeed = self._battleSpeed + 1
+	self._battleSpeed = self._battleSpeed <= 3 and self._battleSpeed or 1
+	self._frameControl:disPatchEventMsg(EventType.Event_Battle_ClientHandle_ClickChangeSpeed,{battleSpeed = self._battleSpeed})
+	self:setBattleSpeedTxt()
 end
 
 function UIBattleMainLUA:initHeadList()
@@ -98,7 +111,7 @@ function UIBattleMainLUA:initSkillList()
 	for pos, data in pairs(self._team_self.teamMap) do
 		if self._list_skillItem[tmpIndex] == nil then
 			local obj = UIUtils:createItem(self.go_skillHeadItem,self.go_skillroot)
-			local skillItem = UIBattleSkillItem:new(obj.transform,self._battleTeam)
+			local skillItem = UIBattleSkillItem:new(obj.transform,self._battleTeam,self)
 			self._list_skillItem[tmpIndex] = skillItem
 		end
 		self._list_skillItem[tmpIndex]:setData(pos,data)
@@ -142,6 +155,20 @@ function UIBattleMainLUA:onSkillCannotFire(data)
 			skillItem:setSkillConjure(false)
 		end
 	end
+end
+
+function UIBattleMainLUA:refreshPanel()
+	self:setAutoBattleTxt()
+	self:setBattleSpeedTxt()
+end
+
+function UIBattleMainLUA:setAutoBattleTxt()
+   local tag = self._isAutoBattle and TranslateDic.UI_BattleMain_autoBattle or TranslateDic.UI_BattleMain_manualOperationBattle
+	self.m_tmptxt_auto.text = StringGet:get(tag)
+end
+
+function UIBattleMainLUA:setBattleSpeedTxt()
+	self.tmptxt_speed.text = StringGet:get(UIUtils:battleSpeedTxtTurn(self._battleSpeed))
 end
 
 return UIBattleMainLUA

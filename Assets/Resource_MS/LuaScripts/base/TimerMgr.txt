@@ -8,7 +8,7 @@
 
 
 --计时器，处理动画，坐标等ui相关的业务
-TimerMgr = class("UIMgr");
+TimerMgr = class();
 
 TimerMgr.m_instance = nil;
 TimerMgr.GetInstance = function()

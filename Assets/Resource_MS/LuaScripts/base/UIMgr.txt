@@ -5,7 +5,7 @@
  ---------------------------------------------
 
 ---@class UIMgr @UI管理器
-UIMgr = class("UIMgr")
+UIMgr = class()
  --单例
  UIMgr.m_Instance=nil
  UIMgr.GetInstance=function()
@@ -52,80 +52,41 @@ UIMgr = class("UIMgr")
  end
 
  
- function UIMgr:LoadUIASyncCallBack(prefab, UIInfo)
-    log("UIMgr:LoadUIASyncCallBack:: prefab"..tostring(prefab))
+ function UIMgr:LoadUIASyncCallBack(prefab,handle, UIInfo)
+    log("UIMgr:LoadUIASyncCallBack:: prefab"..tostring(prefab).."   "..tostring(self))
     if prefab==nil then
         err("UIMgr:LoadUIASyncCallBack:: panel prefab is nil!! panelId::"..UIInfo.config.Id.."  assetPath::"..UIInfo.assetPath)
         return
     end
-
-    if UIInfo.isChild then
-        local rectTransform1=prefab:GetComponent("RectTransform")
-        UIInfo.rectTransform=rectTransform1
-        UIInfo.show=true
-
-        if UIInfo.parent then
-            UIInfo.rectTransform:SetParent(UIInfo.parent)
+    local obj=CS.UnityEngine.GameObject.Instantiate(prefab)
+    local rectTransform=obj:GetComponent("RectTransform")
+    if not UIInfo.isChild then
+        local groupId=self:GetGroupId(UIInfo.config.UIGroupName)
+        -- self.__groups[groupId]
+        if groupId<0 then
+            err("groupId获取失败：groupId:"..groupId.."  UIGroupName:"..UIInfo.config.UIGroupName.." panelId"..UIInfo.config.Id)
+            return
         end
+        local groupStack= self.__groups[groupId]
+        local order= self:GetGroupNextOrder(groupId)
+        UIInfo.groupId=groupId
+        UIInfo.order=order
 
-        UIInfo.luaObj = require(UIInfo.scriptPath):new()        
-        monoPanel:OnInit(UIInfo.luaObj)
-        UIInfo.luaObj:Open(UIInfo.param)
-        
-        if UIInfo.afterCallback~=nil then
-            if UIInfo.afterObj then
-               UIInfo.afterCallback(UIInfo.afterObj,UIInfo.param)
-               UIInfo.afterObj=nil
-            else
-               UIInfo.afterCallback(UIInfo.param)
-            end
-            UIInfo.afterCallback=nil
-            UIInfo.param=nil
-        end
-
-        return
+        groupStack:Push(UIInfo)
     end
 
-    local groupId=self:GetGroupId(UIInfo.config.UIGroupName)
-    -- self.__groups[groupId]
-    if groupId<0 then
-        err("groupId获取失败：groupId:"..groupId.."  UIGroupName:"..UIInfo.config.UIGroupName.." panelId"..UIInfo.config.Id)
-        return
-    end
-    local groupStack= self.__groups[groupId]
-    local order= self:GetGroupNextOrder(groupId)
-
-    
-    
-    local rectTransform=prefab:GetComponent("RectTransform")
-    local canvas=prefab:GetComponent("Canvas")
-    local monoPanel=prefab:GetComponent("NeoOPM.UIMonoPanel")
-
-    rectTransform:SetParent(self.rectTransform)
-    rectTransform.localPosition=Vector3.zero;
-    rectTransform.localRotation=CS.UnityEngine.Quaternion.identity;
-    rectTransform.localScale = Vector3.one;
-    rectTransform.anchorMax=Vector2(1,1)
-    rectTransform.anchorMin=Vector2(0,0)
-    rectTransform.offsetMax=Vector2.zero
-    rectTransform.offsetMin=Vector2.zero
-    rectTransform.gameObject:SetActive(true)
-
-    canvas.overrideSorting = true
-    canvas.sortingOrder=order;
-    UIInfo.groupId=groupId
-    UIInfo.order=order
     UIInfo.rectTransform=rectTransform
     UIInfo.show=true
-
-    groupStack:Push(UIInfo)
-
-    local luaObj= require(UIInfo.scriptPath):new()
-    UIInfo.luaObj =luaObj
-    luaObj.panelId=UIInfo.panelId
     
-    monoPanel:OnInit(luaObj)
-    luaObj:Open(luaObj.param)
+    log(tostring(UIInfo)) 
+    log(tostring(UIInfo.panelId))
+    log(tostring(UIInfo.rectTransform)) 
+    local luaObj= ui[UIInfo.panelId].new(UIInfo)
+    UIInfo.luaObj =luaObj
+    
+    luaObj:OnInit(UIInfo.param)
+    
+    luaObj:OnShow(UIInfo.param)
 
      if UIInfo.afterCallback~=nil then
          if UIInfo.afterObj then
@@ -149,9 +110,15 @@ UIMgr = class("UIMgr")
  function UIMgr:OpenPanel(panelId, param,afterCallback,afterObj)
      log("ui.UIMgr:OpenPanel:",panelId)
  --    TimeDict[panelId]=Time.realtimeSinceStartup
-
-     if self.__panels[panelId]~=nil then
+    local UIInfo
+    UIInfo=self.__panels[panelId]
+     if UIInfo~=nil then
          log("ui.UIMgr:OpenPanel:界面打开中或者已经打开")
+         if not UIInfo.show then
+            UIInfo.show=true
+            UIInfo.luaObj:OnShow(param)
+            return
+         end
          return
      end
 
@@ -168,8 +135,10 @@ UIMgr = class("UIMgr")
      local assetPath="Assets/Resource_MS/UI/UIForms/"..config.AssetName..".prefab"
      log("scriptPath::"..scriptPath.."assetPath::"..assetPath)
 
-     local UIInfo={}
+     UIInfo={}
      UIInfo.panelId=config.Id
+     UIInfo.superPanelId=nil
+     UIInfo.superUIInfo=nil
      UIInfo.config=config
      UIInfo.assetHandle=nil
      UIInfo.afterCallback=afterCallback
@@ -179,10 +148,10 @@ UIMgr = class("UIMgr")
      UIInfo.scriptPath=scriptPath
      UIInfo.assetPath=assetPath;
      UIInfo.order=0
-     UIInfo.parent=nil
+     UIInfo.parent=self.rectTransform
      UIInfo.luaObj=nil
      UIInfo.groupId=-1
-     UIInfo.show=false
+     UIInfo.show=true
      UIInfo.curTimer=0
      UIInfo.isChild=false
      UIInfo.childItems={}
@@ -196,11 +165,11 @@ UIMgr = class("UIMgr")
  
 
  -- 只需要加载，不需要调用卸载
- function UIMgr:OpenItem(panelId, param,afterCallback,afterObjAndPanelLuaObj,parent)
+ function UIMgr:OpenItem(panelId, param,afterCallback,callerPanel,parent)
     log("ui.UIMgr:OpenItem:",panelId)
 
-    if afterObjAndPanelLuaObj == nil then
-        err("afterObjAndPanelLuaObj is nil ! 该对象必须是当前调用界面的对象，且是afterCallback的self！！")
+    if callerPanel == nil then
+        err("callerPanel is nil ! 该对象必须是当前调用界面的对象，且是afterCallback的self！！")
         return 
     end
 
@@ -227,22 +196,24 @@ UIMgr = class("UIMgr")
 
      local UIInfo={}
      UIInfo.panelId=panelId
-     UIInfo.superPanelId=afterObjAndPanelLuaObj.panelId
+     UIInfo.superPanelId=callerPanel.panelId
+     UIInfo.superUIInfo=callerPanel.__UIInfo
      UIInfo.config=config
      UIInfo.assetHandle=nil
      UIInfo.afterCallback=afterCallback
-     UIInfo.afterObj=afterObjAndPanelLuaObj
+     UIInfo.afterObj=callerPanel
      UIInfo.param=param
      UIInfo.rectTransform=nil
      UIInfo.scriptPath=scriptPath
      UIInfo.assetPath=assetPath;
      UIInfo.order=0
-     UIInfo.parent=nil
+     UIInfo.parent=parent
      UIInfo.luaObj=nil
      UIInfo.groupId=-1
-     UIInfo.show=false
+     UIInfo.show=true
      UIInfo.curTimer=0
      UIInfo.isChild=true
+     UIInfo.childItems=nil
 
      self.__panels[config.Id]=UIInfo
      local superUIInfo= self.__panels[UIInfo.superPanelId]
@@ -253,6 +224,10 @@ UIMgr = class("UIMgr")
 
  end
 
+--  function UIMgr:BindItem(itemRectTransform,parent)
+    
+--  end
+
 
  function UIMgr:ClosePanel(panelId, destroyImmediate)
      warn("UIMgr:ClosePanel:",panelId)
@@ -262,7 +237,7 @@ UIMgr = class("UIMgr")
         return
     end
     UIInfo.show=false
-    if UIInfo.luaObj.OnClose then
+    if UIInfo.luaObj and UIInfo.luaObj.OnClose then
         UIInfo.luaObj:OnClose()
     end
     
@@ -277,12 +252,12 @@ UIMgr = class("UIMgr")
  end
 
 
-
-
  function UIMgr:DestroyPanel(UIInfo)
     log("UIMgr:DestroyPanel::",UIInfo.panelId)
     self:RemovePanelFromGroup(UIInfo)
     self.__panels[UIInfo.panelId]=nil
+    UIInfo.luaObj:OnDestroy()
+    UIInfo.luaObj:Finalize()
     GameObject.Destroy(UIInfo.rectTransform.gameObject)
     AssetUtil.Release(UIInfo.assetHandle)
 

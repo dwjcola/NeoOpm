@@ -1,0 +1,227 @@
+---@class ui.BasePanel
+ui.BasePanel = class();
+local BasePanel = ui.BasePanel
+
+function BasePanel:initialize(UIInfo)
+    log("BasePanel:initialize::"..UIInfo.panelId)
+    -- 只读，ui管理器维护数据
+    self.__UIInfo=UIInfo
+    -- UIMonoPanel,UIMonoIteam
+    self.behaviour=nil 
+
+    -- gameObject
+    self.gameObject=nil
+    -- RectTransform
+    self.transform=nil
+    -- Canvas
+    self.canvas=nil
+    
+
+    self:__init(UIInfo)
+end
+
+
+function BasePanel:__init(UIInfo)
+    
+    self.transform=UIInfo.rectTransform
+    self.gameObject=UIInfo.rectTransform.gameObject
+    if UIInfo.parent then
+        UIInfo.rectTransform:SetParent(UIInfo.parent)
+    end
+
+    if not UIInfo.isChild then
+        self:__initPanel(UIInfo)
+    else
+        self:__initItem(UIInfo)
+    end
+
+end
+
+function BasePanel:__initPanel(UIInfo)
+    local rectTransform=UIInfo.rectTransform 
+    rectTransform.localPosition=Vector3.zero;
+    rectTransform.localRotation=CS.UnityEngine.Quaternion.identity;
+    rectTransform.localScale = Vector3.one;
+    rectTransform.anchorMax=Vector2(1,1)
+    rectTransform.anchorMin=Vector2(0,0)
+    rectTransform.offsetMax=Vector2.zero
+    rectTransform.offsetMin=Vector2.zero
+
+    self.canvas=rectTransform:GetComponent("Canvas")
+    self.canvas.overrideSorting = true
+    self.canvas.sortingOrder=0;   
+
+    self.behaviour=rectTransform:GetComponent("NeoOPM.UIMonoPanel")
+    self.behaviour:RegisterTable(self)
+    self.panelId=UIInfo.panelId    
+
+    -- local arr= self.gameObject:GetComponentsInChildren(typeof(CS.UnityEngine.Canvas),true)
+    local arr= self:GetComponentsInChildren(typeof(CS.UnityEngine.Canvas),true)
+    if nil ~= arr then
+        local len= arr.Length
+        for i=0,len-1,1 do
+            local canvas=arr[i]
+            canvas.overrideSorting=true
+            canvas.sortingOrder=UIInfo.order+canvas.sortingOrder
+        end
+    end
+
+    self.gameObject:SetActive(true)
+end
+
+function BasePanel:__initItem(UIInfo)
+    self.behaviour=obj:GetComponent("NeoOPM.UIMonoItem")
+    self.behaviour:RegisterTable(self)    
+
+    local arr= self:GetComponentsInChildren(typeof(CS.UnityEngine.Canvas),true)
+    if nil ~= arr then
+        local len= arr.Length
+        for i=0,len-1,1 do
+            local canvas=arr[i]
+            canvas.overrideSorting=true
+            canvas.sortingOrder=UIInfo.superUIInfo.order+canvas.sortingOrder
+        end    
+    end
+    self.gameObject:SetActive(true)
+end
+
+
+
+function BasePanel:OnInit(args)
+    log("BasePanel:OnInit::")
+end
+
+
+function BasePanel:OnShow(args)
+    log("BasePanel:OnShow::")
+end
+function BasePanel:OnClose()
+    log("BasePanel:OnClose::")
+end
+
+function BasePanel:ClosePanel()
+    UIMgr.GetInstance():ClosePanel(self.panelId)
+end
+
+
+function BasePanel:OnDestroy()
+    log("BasePanel:OnDestroy")
+
+end
+
+function BasePanel:Finalize()
+    log("BasePanel:Finalize")
+    self.transform=nil
+    self.gameObject=nil
+    self.behaviour=nil
+    self.__UIInfo=nil
+end
+
+function BasePanel:SetSprite(image,spriteName)
+    local atlasName = TAtlas[spriteName]
+    if atlasName == nil or atlasName == "" then
+      err("BasePanel:SetSprite::"..spriteName.." 没有找到图集")
+      return
+    end        
+    AtlasMgr.GetInstance():LoadSpriteAtlasAsync(self,atlasName,self.SetSpriteCallback,{image=image,spriteName=spriteName},self)
+end
+
+function BasePanel:SetSpriteCallback(spriteAtlas,param)
+    log("BasePanel:SetSpriteCallback::")
+    if spriteAtlas == nil then
+        err("BasePanel:SetSpriteCallback 图集加载为空")
+        return
+    end    
+    if self.transform~=nil then
+        param.image.sprite=spriteAtlas:GetSprite(param.spriteName)
+    end
+end
+
+function BasePanel:SetGrey(image,noGrey)
+    noGrey= noGrey or false
+    if noGrey then
+        image.material=nil
+        return
+    end
+
+    local assetPath =""
+    AssetUtil.LoadAsync(assetPath,self.SetGreyCallback,{image=image},self,false,true)
+end
+
+function BasePanel:SetGreyCallback(handle,param)
+    local image=param.image
+    local mat=handle.Result
+    image.material=mat;
+    AssetUtil.Release(handle)
+end
+
+-- self:GetComponentsInChildren(typeof(CS.UnityEngine.Canvas),true)
+function BasePanel:GetComponentsInChildren(type,includeInactive,target)
+    target =target or self.gameObject
+    local array = target:GetComponentsInChildren(type,includeInactive)
+    -- local len=array.Length
+    -- for i=0,len-1 do
+    --     local component=array[i]
+    --     -- do some thing
+    -- end
+    return array
+end
+
+function BasePanel:AddClickEvent(button,evtHandler,data)
+    if nil == button then return end;
+    if data then
+    self.behaviour:AddClick(button,function()evtHandler(self,data) end,self);
+    else
+        self.behaviour:AddClick(button,evtHandler,self);
+    end
+end
+
+function BasePanel:AddSliderValueChangeEvent(slider,evtHandler,data)
+    if nil == slider then return end;
+    if data then
+        self.behaviour:AddSliderValueChangeEvent(slider,function()evtHandler(self,data) end,self);
+    else
+        self.behaviour:AddSliderValueChangeEvent(slider,evtHandler,self);
+    end
+end
+
+function BasePanel:AddScrollBarValueChangeEvent(scrollBar,evtHandler,data)
+    if nil == scrollBar then return end;
+    if data then
+        self.behaviour:AddScrollBarValueChangeEvent(scrollBar,function()evtHandler(self,data) end,self);
+    else
+        self.behaviour:AddScrollBarValueChangeEvent(scrollBar,evtHandler,self);
+    end
+end
+
+function BasePanel:AddInputFieldEndEdit(inputField,evtHandler,data)
+    if nil == inputField then return end;
+    if data then
+        self.behaviour:AddInputFieldEndEdit(inputField,function()evtHandler(self,data) end,self);
+    else
+        self.behaviour:AddInputFieldEndEdit(inputField,evtHandler,self);
+    end
+end
+
+function BasePanel:AddInputFieldValueChanged(inputField,evtHandler,data)
+    if nil == inputField then return end;
+    if data then
+        self.behaviour:AddInputFieldValueChanged(inputField,function()evtHandler(self,data) end,self);
+    else
+        self.behaviour:AddInputFieldValueChanged(inputField,evtHandler,self);
+    end
+end
+
+function BasePanel:AddToggleValueChanged(toggle,evtHandler,data)
+    if nil == toggle then return end;
+    if data then
+        self.behaviour:AddToggleValueChanged(toggle,function()evtHandler(self,data) end,self);
+    else
+        self.behaviour:AddToggleValueChanged(toggle,evtHandler,self);
+    end
+end
+
+
+
+
+

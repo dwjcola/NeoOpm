@@ -25,6 +25,8 @@ using System.Threading.Tasks;
 using UnityEngine.EventSystems;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.U2D;
+using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 public class LC
 {
@@ -555,6 +557,8 @@ public class LC
         };
         return handle;
     }
+
+
     public static void ReleaseAsset(AsyncOperationHandle<GameObject> handle)
     {
         ResMgr.Release(handle);
@@ -574,6 +578,117 @@ public class LC
 
         handlers?.Clear();
     }
+    [CSharpCallLua]
+    public  static AsyncOperationHandle LoadAsync(string assetPath, Action<AsyncOperationHandle> action,bool isSprite=false, bool isAdditive=false)
+    {
+        AsyncOperationHandle handle;
+        string extName = assetPath.Substring(assetPath.LastIndexOf(".")).ToLower();
+        switch (extName)
+        {
+            case ".controller":
+                handle=Addressables.LoadAssetAsync<RuntimeAnimatorController>(assetPath);
+                break;
+            case ".prefab":
+                handle = Addressables.LoadAssetAsync<GameObject>(assetPath);
+                break;
+            case ".mat":
+                handle = Addressables.LoadAssetAsync<Material>(assetPath);
+                break;
+            case ".anim":
+                handle = Addressables.LoadAssetAsync<AnimationClip>(assetPath);
+                break;
+            case ".spriteatlas":
+                handle = Addressables.LoadAssetAsync<SpriteAtlas>(assetPath);
+                break;
+            case ".exr":
+            case ".png":
+            case ".bmp":
+            case ".jpg":
+                if(isSprite)
+                {
+                    handle = Addressables.LoadAssetAsync<Sprite>(assetPath);
+                }
+                else
+                {
+                    handle = Addressables.LoadAssetAsync<Texture2D>(assetPath);
+                }
+                break;
+            case ".mp3":
+            case ".wav":
+            case ".ogg":
+                handle = Addressables.LoadAssetAsync<AudioClip>(assetPath);
+                break;
+            case ".unity":
+                LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+                handle = Addressables.LoadSceneAsync(assetPath, mode);
+                break;
+            default:
+                handle = Addressables.LoadAssetAsync<Object>(assetPath);
+                break;
+        }
+        if(action!=null)
+        {
+            handle.Completed += action;
+        }
+        
+        return handle;
+    }
+    public AsyncOperationHandle LoadSync(string assetPath,bool isSprite = false, bool isAdditive = false)
+    {
+        AsyncOperationHandle handle;
+        string extName = assetPath.Substring(assetPath.LastIndexOf(".")).ToLower();
+        switch (extName)
+        {
+            case ".controller":
+                handle = Addressables.LoadAssetAsync<RuntimeAnimatorController>(assetPath);
+                break;
+            case ".prefab":
+                handle = Addressables.LoadAssetAsync<GameObject>(assetPath);
+                break;
+            case ".mat":
+                handle = Addressables.LoadAssetAsync<Material>(assetPath);
+                break;
+            case ".anim":
+                handle = Addressables.LoadAssetAsync<AnimationClip>(assetPath);
+                break;
+            case ".spriteatlas":
+                handle = Addressables.LoadAssetAsync<SpriteAtlas>(assetPath);
+                break;
+            case ".exr":
+            case ".png":
+            case ".bmp":
+            case ".jpg":
+                if (isSprite)
+                {
+                    handle = Addressables.LoadAssetAsync<Sprite>(assetPath);
+                }
+                else
+                {
+                    handle = Addressables.LoadAssetAsync<Texture2D>(assetPath);
+                }
+                break;
+            case ".mp3":
+            case ".wav":
+            case ".ogg":
+                handle = Addressables.LoadAssetAsync<AudioClip>(assetPath);
+                break;
+            case ".unity":
+                LoadSceneMode mode = isAdditive ? LoadSceneMode.Additive : LoadSceneMode.Single;
+                handle = Addressables.LoadSceneAsync(assetPath, mode);
+                break;
+            default:
+                handle = Addressables.LoadAssetAsync<Object>(assetPath);
+                break;
+        }
+
+        handle.WaitForCompletion();
+        return handle;
+    }
+    public static void Release(AsyncOperationHandle handle)
+    {
+        Addressables.Release(handle);
+    }
+
     public static void ReconnectSucc()
     {
         Rpc.PushEvent.Init(PomeloClient.Instance);

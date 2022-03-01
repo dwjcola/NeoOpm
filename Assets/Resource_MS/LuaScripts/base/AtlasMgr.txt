@@ -1,0 +1,129 @@
+--region AtlasMgr.lua
+--Date 2016-09-19
+--使SpritePrefab的实例唯一
+----------------------------------------------------------------------------------------
+AtlasMgr = class()
+AtlasMgr.m_Instance=nil
+AtlasMgr.GetInstance = function ()
+    if AtlasMgr.m_Instance == nil then
+        AtlasMgr.m_Instance = AtlasMgr.new()
+    end
+    return AtlasMgr.m_Instance
+end
+
+function AtlasMgr:initialize()
+    self.__allatlas = {} --所有使用的atlas的数组
+    self.__panels = {}  --调用对象（通常是继承BasePanel的对象）中使用的Atlas{key = BasePanel对象，value = Atlas的数组}
+end
+
+function AtlasMgr:SetSprite(callerpanel,image,spriteName)
+    log("AtlasMgr:SetSprite::",spriteName)
+    local atlasName = TAtlas[spriteName]
+    if atlasName == nil or atlasName == "" then
+      err("AtlasMgr:SetSprite::"..spriteName.." 没有找到图集")
+      return
+    end    
+    self:LoadSpriteAtlasAsync(callerpanel,atlasName,self.SetSpriteCallback,{image=image,spriteName=spriteName},self)
+end
+
+function AtlasMgr:SetSpriteCallback(spriteAtlas,param)
+    log("AtlasMgr:SetSpriteCallback::")
+    if spriteAtlas == nil then
+        err("AtlasMgr:SetSpriteCallback 图集加载为空")
+        return
+    end    
+    param.image.sprite=spriteAtlas:GetSprite(param.spriteName)
+end
+
+function AtlasMgr:LoadSpriteAtlasAsync(callerpanel,atlasName, callback,param,obj)
+    log("AtlasMgr:LoadSpriteAtlasAsync",atlasName)
+    local callatlas = self.__panels[callerpanel]
+    if callatlas == nil then
+        self.__panels[callerpanel] = {}
+        callatlas = self.__panels[callerpanel]
+    end
+    if callatlas[atlasName] == nil then
+        callatlas[atlasName] = 1
+        local atlasInfo= self.__allatlas[atlasName]
+        if atlasInfo ~=nil then
+            self:LoadSpriteAtlasPostProcessing({callback=callback,param=param,obj=obj,callerpanel=callerpanel},atlasInfo)
+        else
+            AssetUtil.LoadSpriteAtlasAsync(atlasName,self.LoadSpriteAtlasCallback,{callback=callback,param=param,obj=obj,callerpanel=callerpanel},self)
+        end
+    else
+        local atlasInfo= self.__allatlas[atlasName]
+        if atlasInfo ~=nil then
+            self:LoadSpriteAtlasPostProcessing({callback=callback,param=param,obj=obj},atlasInfo)
+        else
+            AssetUtil.LoadSpriteAtlasAsync(atlasName,self.LoadSpriteAtlasCallback,{callback=callback,param=param,obj=obj},self)
+        end    
+    end
+    
+end
+
+function AtlasMgr:LoadSpriteAtlasCallback(spriteAtlas,handle, param)
+    log("AtlasMgr:LoadSpriteAtlasCallback")
+    local atlasInfo=nil 
+    if self.__allatlas[atlasName]==nil then
+        local atlasInfo={spriteAtlas=spriteAtlas,referenceCount = 0,handle=handle,atlasName=atlasName}
+        self.__allatlas[atlasName]=atlasInfo
+    else
+        atlasInfo=self.__allatlas[atlasName]
+        -- 保证Addressables引用计数统一，每个图集对Addressables的引用计数只是增加1，如果异步加载中调用多次引用计数则回调中减少多余的引用计数
+        utils.AssetsUtil.Release(atlasInfo.handle) 
+    end
+
+    self:LoadSpriteAtlasPostProcessing(param,atlasInfo)
+end
+function AtlasMgr:LoadSpriteAtlasPostProcessing(param,atlasInfo)
+
+    local callback=param.callback
+    local param=param.param
+    local obj = param.obj
+    local callerpanel=param.callerpanel
+
+    if callerPanel then
+        atlasInfo.referenceCount=atlasInfo.referenceCount+1
+    end    
+
+    local callatlas = self.__panels[callerpanel]
+    if callatlas ==nil then
+        -- 假设 5个对象调用图集A，每个对象调用1次，这5次调用需要异步加载或者是异步加载中，突然5个对象都销毁了，都执行clear，单是异步加载还没返回，引用计数都清0了，后面异步加载都返回了，这时候只需要return即可，不需要5个对象分别再对引用计数减1了，不考虑界面关闭再打开是同一个对象的情况
+        -- self:Release(atlasInfo.atlasName)
+        return
+    end
+
+    if not callback then
+        return
+    end 
+
+    if obj then
+        callback(obj,atlasInfo.spriteAtlas,param)
+    else
+        callback(atlasInfo.spriteAtlas,param)
+    end
+end
+
+function AtlasMgr:Clear(callerpanel)
+    local callatlas = self.__panels[callerpanel]
+    if callatlas == nil then
+        return
+    end
+    for atlasName, v in pairs(callatlas) do
+        self:Release(atlasName)
+    end
+    self.__panels[callerpanel] = nil
+end
+
+function AtlasMgr:Release(atlasName)
+    local atlasInfo = self.__allatlas[atlasName]
+    if atlasInfo ~= nil then
+        atlasInfo.referenceCount = atlasInfo.referenceCount - 1
+        if atlasInfo.referenceCount == 0 then
+            utils.AssetsUtil.Release(atlasInfo.handle)
+            if self.__allatlas[atlasName] ~= nil then
+                self.__allatlas[atlasName] = nil
+            end
+        end
+    end
+end

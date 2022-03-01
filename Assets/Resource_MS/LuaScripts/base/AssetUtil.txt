@@ -2,22 +2,74 @@
 AssetUtil={}
 
 
-function AssetUtil.LoadAsync(assetPath,callback, param,obj)
-    local handle= LC.LoadAsset(assetPath,
-    function(asset)
+function AssetUtil.LoadAsync(assetPath,callback, param,obj,isSprite)
+    isSprite=isSprite or false
+    local handle= LC.LoadAsync(assetPath,
+    function(handle)
+        local asset= handle.Result
         if callback then
             if obj then
-                print("===============>>>")
-                callback(obj,asset,param)
+                callback(obj,asset,handle,param)
             else
-                callback(asset,param)
+                callback(asset,handle,param)
             end
         end
-    end)
-    print(handle)
+    end,isSprite,false)
+    -- err("handle::".. tostring(handle))
+    return handle
+end
+
+function AssetUtil.LoadSpriteAtlasAsync(atlasName,callback, param,obj)
+    local assetPath="Assets/Resource_MS/UI/UIAtlas/"..atlasName..".spriteatlas"
+    AssetUtil.LoadAsync(assetPath,callback, param,obj,true,false)
+end
+
+function AssetUtil.LoadSceneAsync(assetPath,callback, param,obj,isAdditive)
+    isAdditive=isAdditive or false
+    local handle= LC.LoadAsync(assetPath,
+    function(handle)
+        if callback then
+            if obj then
+                -- print("LoadSceneAsync===============>>>")
+                callback(obj, handle, param)
+            else
+                callback( handle,param)
+            end
+        end
+    end,false,isAdditive)
+    -- err("handle::".. tostring(handle))
+    return handle
+end
+
+function AssetUtil.LoadSync(assetPath,isSprite)
+    local isAdditive=false
+    isSprite=isSprite or false
+    local handle=LC.LoadSync(assetPath,isSprite,isAdditive)
+    return handle.Result,handle
+end
+
+function AssetUtil.GetSprite(spriteName)
+    local atlasName = TAtlas[spriteName]
+    if atlasName == nil or atlasName == "" then
+      err("AssetUtil.GetSprite::"..spriteName.." 没有找到图集")
+      return
+    end   
+    local assetPath="Assets/Resource_MS/UI/UIAtlas/"..atlasName..".spriteatlas"
+    
+    
+    local handle=LC.LoadSync(assetPath,true,false)
+    local spriteAtlas=handle.result
+    local sprite=spriteAtlas:GetSprite(spriteName)
+    return sprite,handle
+end
+
+function AssetUtil.LoadSceneSync(assetPath,isAdditive)
+    isAdditive=isAdditive or false
+    local isSprite= false
+    local handle=LC.LoadSync(assetPath,isSprite,isAdditive)
     return handle
 end
 
 function AssetUtil.Release(handle)
-
+    LC.Release(handle)
 end

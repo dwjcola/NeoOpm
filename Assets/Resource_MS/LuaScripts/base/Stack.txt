@@ -9,7 +9,7 @@
 --双向队列
 --
 ---@class Stack @栈
-Stack=SimpleClassUtil:class()
+Stack=class()
 
 function Stack:initialize()
     self.Stack = {} 

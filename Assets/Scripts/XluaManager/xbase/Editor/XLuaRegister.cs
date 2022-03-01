@@ -131,7 +131,9 @@ public static class XLuaRegister
         typeof (Action<LuaTable, object,object>),
         typeof (Action<LuaTable, bool>),
         typeof (Action<LuaTable, int>),
-        
+        typeof (Action<UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle>),
+
+
         typeof (   Action<LuaTable, float>),
         typeof (Action<LuaTable, string>),
         typeof (Action<LuaTable, string,string>),
@@ -143,7 +145,7 @@ public static class XLuaRegister
         typeof (Action<LuaTable, GameObject>),
         typeof (Action<LuaTable, int, LuaTable>),
         typeof (Action<LuaTable, LuaTable>),
-          typeof (Action<LuaTable, int, object>),
+        typeof (Action<LuaTable, int, object>),
 
         typeof (Func<LuaTable, long>),
         typeof (Func<LuaTable, int>),

@@ -63,13 +63,89 @@ public class XluaManager : Singleton<XluaManager>
         InitLuaMain();
         init = true;
     }
+
+#if UNITY_EDITOR
+    static Dictionary<string, string> editorDict = new Dictionary<string, string>();
+#endif
     /// <summary>
     /// 初始化环境
     /// </summary>
     private void InitEnv()
     {
+#if UNITY_EDITOR
+        string[] arr = Directory.GetFiles(@"Assets\Resource_MS\LuaScripts\", "*.txt", SearchOption.AllDirectories);
+        editorDict.Clear();
+        foreach (string _path in arr)
+        {
+            editorDict.Add(System.IO.Path.GetFileName(_path), _path);
+        }
+#endif
         luaEnv = new LuaEnv();
         requireMap = new List<string> ( );
+        
+        luaEnv.AddLoader((ref string className) => {
+            if (string.IsNullOrEmpty(className))
+            {
+                return null;
+            }
+            string path = "";
+#if UNITY_EDITOR
+            if (className.Contains("/"))
+            {
+                className=className.Substring(className.LastIndexOf("/")+1);
+            }
+            string fileName = className + ".txt";
+            if(editorDict.ContainsKey(fileName))
+            {
+                return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(editorDict[fileName], System.Text.Encoding.UTF8));
+                //UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(pathTemp + className + ".txt");
+            }
+            else
+            {
+                fileName = string.Format("{0}LUA.txt", className);
+                if(editorDict.ContainsKey(fileName))
+                {
+                    return System.Text.Encoding.UTF8.GetBytes(File.ReadAllText(editorDict[fileName], System.Text.Encoding.UTF8));
+                }
+            }
+            
+
+            // 加载配置
+            
+            if (NeoOPM.GameEntry.Config.IsUseLocalConfig)
+            {
+                path = string.Format("{0}/config/configDataFile/{1}.txt", Application.streamingAssetsPath, className);
+            }
+            else
+            {
+                path = string.Format("{0}/config/configDataFile/{1}.txt", Application.persistentDataPath, className);
+            }
+            if (File.Exists(path))
+            {
+                // 不加密
+                return File.ReadAllBytes(path);
+            }
+#else
+            string content= GetLuaStrInDic(className);
+            if(!string.IsNullOrEmpty(content))
+            {
+                return System.Text.Encoding.UTF8.GetBytes(content);
+            }
+            // 检查是否在persistant目录存在原始路径
+            path = string.Format("{0}/config/configDataFile/{1}.txt", Application.persistentDataPath, className);
+            if (File.Exists(path))
+            {
+                // 不加密
+                return File.ReadAllBytes(path);
+            }
+            Log.Error("lua file{0}load failed!", className);
+            
+#endif
+            return null;
+        });
+        
+
+        /*
         luaEnv.AddLoader ( ( ref string className ) => {
             if ( string.IsNullOrEmpty(className) )
             {
@@ -149,7 +225,7 @@ public class XluaManager : Singleton<XluaManager>
             return null;
 
         } );
-
+        */
         luaEnv.AddBuildin("rapidjson", XLua.LuaDLL.Lua.LoadRapidJson);
         //luaEnv.AddBuildin("lpeg", XLua.LuaDLL.Lua.LoadLpeg);
         luaEnv.AddBuildin("pb", XLua.LuaDLL.Lua.LoadLuaProfobuf);

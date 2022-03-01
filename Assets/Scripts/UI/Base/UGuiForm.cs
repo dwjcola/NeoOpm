@@ -21,7 +21,7 @@ using Object = UnityEngine.Object;
 namespace NeoOPM
 {
 
-
+    [LuaCallCSharp]
     public abstract class UGuiForm : UIFormLogic, ISerializationCallbackReceiver
     {
         [XLua.BlackList]
@@ -188,6 +188,7 @@ namespace NeoOPM
             if (m_LuaClass == null)
             {
                 var luaEnv = XluaManager.instance.LuaEnv;
+                //Debug.LogError("UIKEY:::" + UIKey);
                 luaEnv.DoString($"require ('{UIKey}') ;");
                 m_LuaClass = luaEnv.Global.Get<LuaTable>(luaClassName);
             }
@@ -454,5 +455,380 @@ namespace NeoOPM
               StartCoroutine(CloseCo(FadeTime));
           }
       }*/
+
+        private Dictionary<object, LuaDelegate> interactives = new Dictionary<object, LuaDelegate>();
+        private Dictionary<InputField, LuaDelegate> inputOnEditEnds = new Dictionary<InputField, LuaDelegate>();
+        private Dictionary<InputField, LuaDelegate> inputOnValueChanges = new Dictionary<InputField, LuaDelegate>();
+        private Dictionary<Toggle, LuaDelegate> toggleOnValueChanges = new Dictionary<Toggle, LuaDelegate>();
+
+
+        public void RegisterTable(LuaTable member)
+        {
+            for (int i = 0; i < keyList.Count && i < valueList.Count; i++)
+            {
+                member.Set(keyList[i], valueList[i]);
+            }
+            for (int i = 0; i < strkeyList.Count && i < strvalueList.Count; i++)
+            {
+                member.Set(strkeyList[i], strvalueList[i]);
+            }
+            for (int i = 0; i < intkeyList.Count && i < intvalueList.Count; i++)
+            {
+                member.Set(intkeyList[i], intvalueList[i]);
+            }
+            member.Dispose();
+        }
+
+        /// <summary>
+        /// 添加单击事件
+        /// </summary>
+        public void AddClick(Button button, LuaFunction luafunc, LuaTable self)
+        {
+            if (button == null || luafunc == null)
+            {
+                Debug.LogError("AddClick is null or luafunc is null");
+                return;
+            }
+
+            if (interactives.ContainsKey(button))
+            {
+                button.onClick.RemoveAllListeners();
+                interactives.Remove(button);
+            }
+
+            if (!interactives.ContainsKey(button))
+            {
+
+                LuaDelegate ld = new LuaDelegate(luafunc, self);
+                interactives.Add(button, ld);
+                button.onClick.AddListener
+                (
+                    delegate ()
+                    {
+                        //Dg.Log("Click,name:", button.name);
+                        ld.Call(new object[] { self, button });
+
+                        ////引导完成触发（金龙添加）
+                        //var noviceGuide = button.GetComponent<NoviceGuide.NoviceGuideComponent>();
+                        //if (noviceGuide != null)
+                        //{
+                        //    noviceGuide.OnPointerClick();
+                        //}
+                    }
+                );
+            }
+            else
+            {
+                Debug.LogError("Button can't add listener");
+            }
+            // luafunc.Dispose();
+        }
+
+        
+        public void AddSliderValueChangeEvent(Slider slider, LuaFunction luafunc, LuaTable self)
+        {
+            if (slider == null || luafunc == null)
+            {
+                Debug.LogError("AddSliderValueChangeEvent slider is null or luafunc is null");
+                return;
+            }
+
+            if (interactives.ContainsKey(slider))
+            {
+                slider.onValueChanged.RemoveAllListeners();
+                interactives.Remove(slider);
+            }
+
+            if (!interactives.ContainsKey(slider))
+            {
+                LuaDelegate ld = new LuaDelegate(luafunc, self);
+                interactives.Add(slider, ld);
+                slider.onValueChanged.AddListener(
+                    delegate (float v)
+                    {
+                        ld.Call(self, slider, v);
+                    }
+                );
+            }
+        }
+
+        public void AddScrollBarValueChangeEvent(Scrollbar scroll, LuaFunction luafunc, LuaTable self)
+        {
+            if (scroll == null || luafunc == null)
+            {
+                Debug.LogError("AddScrollBarValueChangeEvent scroll is null or luafunc is null");
+                return;
+            }
+
+            if (interactives.ContainsKey(scroll))
+            {
+                scroll.onValueChanged.RemoveAllListeners();
+                interactives.Remove(scroll);
+            }
+            if (!interactives.ContainsKey(scroll))
+            {
+                LuaDelegate ld = new LuaDelegate(luafunc, self);
+                interactives.Add(scroll, ld);
+                scroll.onValueChanged.RemoveAllListeners();
+                scroll.onValueChanged.AddListener(
+                    delegate (float v)
+                    {
+                        ld.Call(self, scroll, v);
+                    }
+                );
+            }
+        }
+
+
+        public void AddInputFieldEndEdit(InputField input, LuaFunction luafunc, LuaTable self)
+        {
+            if (input == null || luafunc == null)
+            {
+                Debug.LogError("AddInputFieldEndEdit input is null or luafunc is null");
+                return;
+            }
+            if (interactives.ContainsKey(input))
+            {
+                input.onEndEdit.RemoveAllListeners();
+                interactives.Remove(input);
+            }
+
+            if (!inputOnEditEnds.ContainsKey(input))
+            {
+                LuaDelegate ld = new LuaDelegate(luafunc, self);
+                inputOnEditEnds.Add(input, ld);
+                input.onEndEdit.AddListener(
+                    delegate (string text)
+                    {
+                        ld.Call(self, text, input);
+                    }
+                );
+            }
+        }
+
+        public void AddInputFieldValueChanged(InputField input, LuaFunction luafunc, LuaTable self)
+        {
+
+            if (input == null || luafunc == null)
+            {
+                Debug.LogError("AddInputFieldValueChanged input is null or luafunc is null");
+                return;
+            }
+            if (interactives.ContainsKey(input))
+            {
+                input.onValueChanged.RemoveAllListeners();
+                interactives.Remove(input);
+            }
+
+
+            if (!inputOnValueChanges.ContainsKey(input))
+            {
+                LuaDelegate ld = new LuaDelegate(luafunc, self);
+                inputOnValueChanges.Add(input, ld);
+                input.onValueChanged.RemoveAllListeners();
+                input.onValueChanged.AddListener(
+                    delegate (string text)
+                    {
+                        ld.Call(self, text, input);
+                    }
+                );
+            }
+        }
+
+        public void AddToggleValueChanged(Toggle toggle, LuaFunction luafunc, LuaTable self)
+        {
+            if (toggle == null || luafunc == null)
+            {
+                Debug.LogError("AddToggleValueChanged input is null or luafunc is null");
+                return;
+            }
+            if (interactives.ContainsKey(toggle))
+            {
+                toggle.onValueChanged.RemoveAllListeners();
+                interactives.Remove(toggle);
+            }
+
+            if (!toggleOnValueChanges.ContainsKey(toggle))
+            {
+                LuaDelegate ld = new LuaDelegate(luafunc, self);
+                toggleOnValueChanges.Add(toggle, ld);
+                toggle.onValueChanged.RemoveAllListeners();
+                toggle.onValueChanged.AddListener(
+                    delegate (bool result)
+                    {
+                        ld.Call(self, result, toggle);
+                    }
+                );
+            }
+
+        }
+        /// <summary>
+        /// 删除单击事件
+        /// </summary>
+        /// <param name="go"></param>
+        public void RemoveClick(Button button)
+        {
+            if (button == null) return;
+            LuaDelegate luafunc = null;
+            if (interactives.TryGetValue(button, out luafunc))
+            {
+                luafunc.Dispose();
+                luafunc = null;
+                interactives.Remove(button);
+            }
+        }
+        public void RemoveSliderValueChangeEvent(Slider slider)
+        {
+            if (slider == null) return;
+            LuaDelegate luafunc = null;
+            if (interactives.TryGetValue(slider, out luafunc))
+            {
+                luafunc.Dispose();
+                luafunc = null;
+                interactives.Remove(slider);
+            }
+        }
+        public void RemoveEndEdit(InputField input)
+        {
+            if (input == null)
+                return;
+            LuaDelegate luafunc = null;
+            if (inputOnEditEnds.TryGetValue(input, out luafunc))
+            {
+                luafunc.Dispose();
+                luafunc = null;
+                inputOnEditEnds.Remove(input);
+            }
+        }
+
+        public void RemoveValueChanged(InputField input)
+        {
+            if (input == null)
+                return;
+            LuaDelegate luafunc = null;
+            if (inputOnValueChanges.TryGetValue(input, out luafunc))
+            {
+                luafunc.Dispose();
+                luafunc = null;
+                inputOnValueChanges.Remove(input);
+            }
+        }
+
+        public void RemoveValueChanged(Toggle toggle)
+        {
+            if (toggle == null)
+                return;
+            LuaDelegate luafunc = null;
+            if (toggleOnValueChanges.TryGetValue(toggle, out luafunc))
+            {
+                luafunc.Dispose();
+                luafunc = null;
+                toggleOnValueChanges.Remove(toggle);
+            }
+        }
+
+        /// <summary>
+        /// 清除单击事件
+        /// </summary>
+        public void ClearClick()
+        {
+            foreach (var de in interactives)
+            {
+                if (de.Value != null)
+                {
+                    de.Value.Dispose();
+                }
+            }
+            interactives.Clear();
+        }
+
+        public void ClearEndEdit()
+        {
+            foreach (var de in inputOnEditEnds)
+            {
+                if (de.Value != null)
+                {
+                    de.Value.Dispose();
+                }
+            }
+            inputOnEditEnds.Clear();
+        }
+
+        public void ClearInputValueChanged()
+        {
+            foreach (var de in inputOnValueChanges)
+            {
+                if (de.Value != null)
+                {
+                    de.Value.Dispose();
+                }
+            }
+            inputOnValueChanges.Clear();
+        }
+
+        public void ClearToggleValueChanged()
+        {
+            foreach (var de in toggleOnValueChanges)
+            {
+                if (de.Value != null)
+                {
+                    de.Value.Dispose();
+                }
+            }
+            toggleOnValueChanges.Clear();
+        }
+
+
+
+        private void OnDestroy()
+        {
+            ClearClick();
+            ClearEndEdit();
+            ClearInputValueChanged();
+            ClearToggleValueChanged();
+        }
+
+
+
+
+
+
+    }
+
+    public class LuaDelegate
+    {
+        public LuaFunction func = null;
+        public LuaTable self = null;
+
+        public LuaDelegate(LuaFunction func)
+        {
+            this.func = func;
+        }
+
+        public LuaDelegate(LuaFunction func, LuaTable self)
+        {
+            this.func = func;
+            this.self = self;
+        }
+
+        public virtual void Dispose()
+        {
+            if (func != null)
+            {
+                func.Dispose();
+                func = null;
+            }
+
+            if (self != null)
+            {
+                self.Dispose();
+                self = null;
+            }
+        }
+
+        public object[] Call(params object[] args)
+        {
+            return func.Call(args);
+        }
     }
 }

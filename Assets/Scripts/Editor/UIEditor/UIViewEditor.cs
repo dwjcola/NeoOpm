@@ -39,72 +39,77 @@ public class UIViewEditor : Editor
         }
         if (GUILayout.Button("生成资源"))
         {
-            Object[] arr = Selection.GetFiltered(typeof(Object), SelectionMode.TopLevel);
-            string resPath = AssetDatabase.GetAssetPath(arr[0]);
-            string resname = target.name;
-            {
-                TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(panelTxt);
-                if (textAsset == null)
-                {
-                    return;
-                }
-                int nret = textAsset.text.IndexOf(resname);
-                Resources.UnloadAsset(textAsset);
-                if (nret >= 0)
-                {
-                    Debug.LogError("resname is existed !!! resname:" + resname);
-                    return;
-                }
-            }
-            int nstart = resPath.IndexOf(UIRootPath) + UIRootPath.Length + 1;
-            int nend = resPath.IndexOf(resname);
-            int nlen = nend - nstart;
-            string id = resname;
-            string path = resPath.Substring(nstart, nlen);
-            string tmpStr = path;
-            string AssetName = path + resname;
-            Debug.Log("ui path:" + path + " resname:" + resname);
-            //生成lua模板
-            string luaFileName = resname + "LUA";
-            string clacclua = luaFileName;
-            tmpStr = tmpStr.Substring(0, tmpStr.Length - 1);
-            nstart = tmpStr.LastIndexOf("/");
-            string luapath = "UI/" + tmpStr.Substring(nstart + 1);
-            string dataPath = Application.dataPath + "/Resource_MS/LuaScripts/" + luapath;
-            if (!Directory.Exists(dataPath))
-            {
-                Directory.CreateDirectory(dataPath);
-            }
-            string outfile = dataPath + "/" + luaFileName + ".txt";
-            if (!File.Exists(outfile))
-            {
-                TextAsset textAsset1 = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Resource_MS/LuaScripts/UI/UICtrlTemplate.txt");
-                string tableTxt = textAsset1.text.Replace("UICtrlTemplate", resname);
-                Resources.UnloadAsset(textAsset1);
-                File.WriteAllText(outfile, tableTxt);
-                AssetDatabase.Refresh();
-            }
-            List<string> lines = new List<string>(File.ReadAllLines(panelTxt));
-            string l = "['" + id + "']={";
-            l += string.Format(
-                "Id='{0}'," +
-                "AssetName='{1}'," +
-                "UIGroupName='Default'," +
-                "AllowMultiInstance=false," +
-                "PauseCoveredUIForm=false," +
-                "LuaPath='{2}'," +
-                "LuaName='{3}'," +
-                "Mask=false," +
-                "ShowHead=false," +
-                "ShowRes=false," +
-                "UITween=false,",
-                id,AssetName,luapath,clacclua
-            );
-            l += "},";
-            lines.Insert(lines.Count-2,l);
-            File.WriteAllLines(panelTxt,lines.ToArray());
+            UIViewBaseEditor.CreateLuaTemplate();
         }
-        base.OnInspectorGUI();
+
+            //if (GUILayout.Button("生成资源"))
+            //{
+            //    Object[] arr = Selection.GetFiltered(typeof(Object), SelectionMode.TopLevel);
+            //    string resPath = AssetDatabase.GetAssetPath(arr[0]);
+            //    string resname = target.name;
+            //    {
+            //        TextAsset textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(panelTxt);
+            //        if (textAsset == null)
+            //        {
+            //            return;
+            //        }
+            //        int nret = textAsset.text.IndexOf(resname);
+            //        Resources.UnloadAsset(textAsset);
+            //        if (nret >= 0)
+            //        {
+            //            Debug.LogError("resname is existed !!! resname:" + resname);
+            //            return;
+            //        }
+            //    }
+            //    int nstart = resPath.IndexOf(UIRootPath) + UIRootPath.Length + 1;
+            //    int nend = resPath.IndexOf(resname);
+            //    int nlen = nend - nstart;
+            //    string id = resname;
+            //    string path = resPath.Substring(nstart, nlen);
+            //    string tmpStr = path;
+            //    string AssetName = path + resname;
+            //    Debug.Log("ui path:" + path + " resname:" + resname);
+            //    //生成lua模板
+            //    string luaFileName = resname;
+            //    string clacclua = luaFileName;
+            //    tmpStr = tmpStr.Substring(0, tmpStr.Length - 1);
+            //    nstart = tmpStr.LastIndexOf("/");
+            //    string luapath = "UI/" + tmpStr.Substring(nstart + 1);
+            //    string dataPath = Application.dataPath + "/Resource_MS/LuaScripts/" + luapath;
+            //    if (!Directory.Exists(dataPath))
+            //    {
+            //        Directory.CreateDirectory(dataPath);
+            //    }
+            //    string outfile = dataPath + "/" + luaFileName + ".txt";
+            //    if (!File.Exists(outfile))
+            //    {
+            //        TextAsset textAsset1 = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/Resource_MS/LuaScripts/UI/UICtrlTemplate.txt");
+            //        string tableTxt = textAsset1.text.Replace("UICtrlTemplate", resname);
+            //        Resources.UnloadAsset(textAsset1);
+            //        File.WriteAllText(outfile, tableTxt);
+            //        AssetDatabase.Refresh();
+            //    }
+            //    List<string> lines = new List<string>(File.ReadAllLines(panelTxt));
+            //    string l = "['" + id + "']={";
+            //    l += string.Format(
+            //        "Id='{0}'," +
+            //        "AssetName='{1}'," +
+            //        "UIGroupName='Default'," +
+            //        "AllowMultiInstance=false," +
+            //        "PauseCoveredUIForm=false," +
+            //        "LuaPath='{2}'," +
+            //        "LuaName='{3}'," +
+            //        "Mask=false," +
+            //        "ShowHead=false," +
+            //        "ShowRes=false," +
+            //        "UITween=false,",
+            //        id,AssetName,luapath,clacclua
+            //    );
+            //    l += "},";
+            //    lines.Insert(lines.Count-2,l);
+            //    File.WriteAllLines(panelTxt,lines.ToArray());
+            //}
+            base.OnInspectorGUI();
        
  
         }

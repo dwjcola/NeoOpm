@@ -970,5 +970,99 @@ internal class UIViewBaseEditor
         EditorUtility.SetDirty(tmpForm);
     }
 
+    public static void CreateLuaTemplate()
+    {
+        Object[] arr = Selection.GetFiltered(typeof(Object), SelectionMode.TopLevel);
+        Object obj = arr[0];
+        var status= PrefabUtility.GetPrefabInstanceStatus(obj);
+        if(status== PrefabInstanceStatus.Connected)
+        {
+            //选中的是Hierarchy中的物体
+            string prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot(obj);
+            string luaFileName = System.IO.Path.GetFileNameWithoutExtension(prefabPath);
+            CreateLuaTemplate(luaFileName, prefabPath);
+        }
+        else
+        {
+            //选中的是Project中的物体
+            string assetPath = AssetDatabase.GetAssetPath(obj);
+            string luaFileName = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+            CreateLuaTemplate(luaFileName, assetPath);
+        }
+
+        
+    }
+
+
+    private static void CreateLuaTemplate(string luaFileName,string assetPath)
+    {
+        Debug.Log("luaFileName:" + luaFileName);
+        Debug.Log("assetPath:" + assetPath);
+        // 检查TPanel配置是否存在该panel信息
+        string tpanelPath = "Assets/Resource_MS/LuaScripts/tableRead/TPanel.txt";
+        string luaTemplatePath = "Assets/Resource_MS/LuaScripts/UI/UICtrlTemplate.txt";
+
+        if(string.IsNullOrEmpty(assetPath))
+        {
+            Debug.LogError("需要在Project窗口操作！！");
+            return;
+        }
+
+        string content= File.ReadAllText(tpanelPath);
+        if(content.IndexOf(luaFileName)>=0)
+        {
+            //已经写入该配置
+            Debug.LogError("TPanel.txt existed config ! config name:" + luaFileName);
+            return;
+        }
+
+        //生成lua文件
+        string temp = assetPath.Substring(assetPath.LastIndexOf("/UIForms/") + 9);
+        Debug.Log("temp:" + temp);
+        temp = temp.Substring(0, temp.IndexOf("/"));
+        Debug.Log("temp:" + temp);
+        string dirName = temp;
+        string dir= string.Format("Assets/Resource_MS/LuaScripts/UI/{0}/", dirName);
+        string path = string.Format("Assets/Resource_MS/LuaScripts/UI/{0}/{1}.txt", dirName, luaFileName);
+        Debug.Log("luafilepath:::" + path);
+        if(!Directory.Exists(dir))
+        {
+            Directory.CreateDirectory(dir);
+        }
+        if(File.Exists(path))
+        {
+            Debug.LogError("lua文件已经存在");
+            return;
+        }
+
+        string templateContent = File.ReadAllText(luaTemplatePath);
+        string luaContent = templateContent.Replace("UICtrlTemplate", luaFileName);
+        File.WriteAllText(path, luaContent);
+
+        // 添加TPanel配置
+        List<string> lines = new List<string>(File.ReadAllLines(tpanelPath));
+
+        string id = luaFileName;
+        string l = "['" + id + "']={";
+        l += string.Format(
+            "Id='{0}'," +
+            "AssetName='{1}'," +
+            "UIGroupName='Default'," +
+            "AllowMultiInstance=false," +
+            "PauseCoveredUIForm=false," +
+            "Mask=false," +
+            "ShowHead=false," +
+            "ShowRes=false," +
+            "UITween=false,",
+            id, assetPath
+        );
+        l += "},";
+        lines.Insert(lines.Count - 2, l);
+
+        File.WriteAllLines(tpanelPath, lines.ToArray());
+        AssetDatabase.Refresh();
+        Debug.Log("生成lua文件完成!!");
+    }
+
 }
 

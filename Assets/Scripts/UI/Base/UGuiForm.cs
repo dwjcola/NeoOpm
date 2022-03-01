@@ -546,7 +546,7 @@ namespace NeoOPM
                 slider.onValueChanged.AddListener(
                     delegate (float v)
                     {
-                        ld.Call(self, slider, v);
+                        ld.Call(self, v, slider);
                     }
                 );
             }
@@ -573,7 +573,7 @@ namespace NeoOPM
                 scroll.onValueChanged.AddListener(
                     delegate (float v)
                     {
-                        ld.Call(self, scroll, v);
+                        ld.Call(self, v,scroll);
                     }
                 );
             }

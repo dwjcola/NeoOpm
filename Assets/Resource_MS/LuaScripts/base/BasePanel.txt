@@ -22,7 +22,7 @@ end
 
 
 function BasePanel:__init(UIInfo)
-    
+    self.panelId=UIInfo.panelId
     self.transform=UIInfo.rectTransform
     self.gameObject=UIInfo.rectTransform.gameObject
     if UIInfo.parent then
@@ -170,7 +170,7 @@ end
 function BasePanel:AddClickEvent(button,evtHandler,data)
     if nil == button then return end;
     if data then
-    self.behaviour:AddClick(button,function()evtHandler(self,data) end,self);
+    self.behaviour:AddClick(button,function(obj,btn)evtHandler(obj,btn,data) end,self);
     else
         self.behaviour:AddClick(button,evtHandler,self);
     end
@@ -179,7 +179,7 @@ end
 function BasePanel:AddSliderValueChangeEvent(slider,evtHandler,data)
     if nil == slider then return end;
     if data then
-        self.behaviour:AddSliderValueChangeEvent(slider,function()evtHandler(self,data) end,self);
+        self.behaviour:AddSliderValueChangeEvent(slider,function(obj,value,_slider)evtHandler(obj,value,_slider,data) end,self);
     else
         self.behaviour:AddSliderValueChangeEvent(slider,evtHandler,self);
     end
@@ -188,7 +188,7 @@ end
 function BasePanel:AddScrollBarValueChangeEvent(scrollBar,evtHandler,data)
     if nil == scrollBar then return end;
     if data then
-        self.behaviour:AddScrollBarValueChangeEvent(scrollBar,function()evtHandler(self,data) end,self);
+        self.behaviour:AddScrollBarValueChangeEvent(scrollBar,function(obj,value,_scrollBar)evtHandler(obj,value,_scrollBar,data) end,self);
     else
         self.behaviour:AddScrollBarValueChangeEvent(scrollBar,evtHandler,self);
     end
@@ -197,7 +197,7 @@ end
 function BasePanel:AddInputFieldEndEdit(inputField,evtHandler,data)
     if nil == inputField then return end;
     if data then
-        self.behaviour:AddInputFieldEndEdit(inputField,function()evtHandler(self,data) end,self);
+        self.behaviour:AddInputFieldEndEdit(inputField,function(obj,text,_inputField)evtHandler(obj,text,_inputField,data) end,self);
     else
         self.behaviour:AddInputFieldEndEdit(inputField,evtHandler,self);
     end
@@ -206,7 +206,7 @@ end
 function BasePanel:AddInputFieldValueChanged(inputField,evtHandler,data)
     if nil == inputField then return end;
     if data then
-        self.behaviour:AddInputFieldValueChanged(inputField,function()evtHandler(self,data) end,self);
+        self.behaviour:AddInputFieldValueChanged(inputField,function(obj,text,_inputField)evtHandler(obj,text,_inputField,data) end,self);
     else
         self.behaviour:AddInputFieldValueChanged(inputField,evtHandler,self);
     end
@@ -215,7 +215,7 @@ end
 function BasePanel:AddToggleValueChanged(toggle,evtHandler,data)
     if nil == toggle then return end;
     if data then
-        self.behaviour:AddToggleValueChanged(toggle,function()evtHandler(self,data) end,self);
+        self.behaviour:AddToggleValueChanged(toggle,function(obj,v ,_toggle)evtHandler(obj,v ,_toggle,data) end,self);
     else
         self.behaviour:AddToggleValueChanged(toggle,evtHandler,self);
     end

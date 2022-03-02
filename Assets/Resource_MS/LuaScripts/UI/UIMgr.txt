@@ -16,6 +16,7 @@ UIMgr = class()
 --关闭界面后缓存时间过期后卸载界面
  local destroyWaitTimer=20
  local closePanelOffset=CS.UnityEngine.Vector3(5000,0,0)
+ local Vector3Zero=CS.UnityEngine.Vector3(0,0,0)
 
  function UIMgr:initialize()
      -- 界面容器
@@ -45,10 +46,10 @@ UIMgr = class()
     print("self.uiCam:::",self.uiCam,"  self.canvas:",self.canvas)
     -- Logger.Error(self.uiCam)
 
-    self.__groups[UIGroup.Main]=Stack.New()
-    self.__groups[UIGroup.Default]=Stack.New()
-    self.__groups[UIGroup.Reminder]=Stack.New()
-    self.__groups[UIGroup.Guide]=Stack.New()
+    self.__groups[ui.UIGroup.Main]=Stack.New()
+    self.__groups[ui.UIGroup.Default]=Stack.New()
+    self.__groups[ui.UIGroup.Reminder]=Stack.New()
+    self.__groups[ui.UIGroup.Guide]=Stack.New()
  end
 
  
@@ -116,6 +117,7 @@ UIMgr = class()
          log("ui.UIMgr:OpenPanel:界面打开中或者已经打开")
          if not UIInfo.show then
             UIInfo.show=true
+            UIInfo.rectTransform.localPosition=Vector3Zero
             UIInfo.luaObj:OnShow(param)
             return
          end
@@ -284,17 +286,17 @@ end
 
 function UIMgr:GetGroupId(UIGroupName)
     if UIGroupName== "Main" then
-        return UIGroup.Main
+        return ui.UIGroup.Main
     end
     if UIGroupName== "Default" then
-        return UIGroup.Default
+        return ui.UIGroup.Default
     end
     if UIGroupName== "Reminder" then
-        return UIGroup.Reminder
+        return ui.UIGroup.Reminder
     end
     if UIGroupName== "Guide" then
-        return UIGroup.Guide
-    end            
+        return ui.UIGroup.Guide
+    end
 
     err("没有找到UIGroup ::UIGroupName:"..UIGroupName)
     return -1

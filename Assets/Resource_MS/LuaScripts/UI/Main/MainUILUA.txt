@@ -10,6 +10,7 @@ function MainUILUA:Open(param)
 	self:Init();
 end
 function MainUILUA:Init()
+	log("MainUILUA:Init")
 	self.name.text = PlayerData.Name
 	self.lv.text = PlayerData.Level
 	
@@ -54,11 +55,17 @@ end
 function MainUILUA:OnGmBtnClick()
 	self:OpenUI("GMCommandForm");
 end
+function MainUILUA:OnBagClick()
+	UIMgr.GetInstance():OpenPanel("UIBagPanel")
+end
+
 --ui组件添加事件
 function MainUILUA:AddUIEventListener( )
 	--self:AddTabEvent(self.tabs,self.TabClick)
 	self:AddUIEvent("onclick", self.fightBtn, self.Fight);
 	self:AddUIEvent("onclick", self.gmBtn, self.OnGmBtnClick);
+	self:AddUIEvent("onclick", self.bagBtn, self.OnBagClick);
+	
 end
 --模块添加全局事件
 function MainUILUA:AddEventListener( )
@@ -78,6 +85,7 @@ function MainUILUA:OnCloseMe()
 	end
 end
 function MainUILUA:OnDestroy()
+	log("MainUILUA:OnDestroy")
 	self:RemoveEventListener()
 	MainUILUA = nil;
 end

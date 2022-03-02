@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 5392892832114889578}
   - component: {fileID: 7488782382832504348}
   m_Layer: 5
-  m_Name: UIPropsIteam
+  m_Name: UIPropsItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

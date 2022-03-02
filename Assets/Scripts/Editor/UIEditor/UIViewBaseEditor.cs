@@ -1007,6 +1007,8 @@ internal class UIViewBaseEditor
             Debug.LogError("需要在Project窗口操作！！");
             return;
         }
+        assetPath = assetPath.Replace("Assets/Resource_MS/UI/UIForms/", "").Replace(".prefab", "");
+
 
         string content= File.ReadAllText(tpanelPath);
         if(content.IndexOf(luaFileName)>=0)
@@ -1017,11 +1019,8 @@ internal class UIViewBaseEditor
         }
 
         //生成lua文件
-        string temp = assetPath.Substring(assetPath.LastIndexOf("/UIForms/") + 9);
-        Debug.Log("temp:" + temp);
-        temp = temp.Substring(0, temp.IndexOf("/"));
-        Debug.Log("temp:" + temp);
-        string dirName = temp;
+        string dirName = assetPath.Substring(0, assetPath.IndexOf("/"));
+        Debug.Log("dirName:" + dirName);
         string dir= string.Format("Assets/Resource_MS/LuaScripts/UI/{0}/", dirName);
         string path = string.Format("Assets/Resource_MS/LuaScripts/UI/{0}/{1}.txt", dirName, luaFileName);
         Debug.Log("luafilepath:::" + path);

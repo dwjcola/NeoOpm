@@ -23,7 +23,7 @@ function manager.BaseManager:FixedUpdate(fixedDeltaTime)
     
 end
 
-function manager.BaseManager:LateUpdate()
+function manager.BaseManager:LateUpdate(deltatime)
     
 end
 

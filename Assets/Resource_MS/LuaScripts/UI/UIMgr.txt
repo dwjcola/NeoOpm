@@ -132,10 +132,9 @@ UIMgr = class()
         return
      end
 
-     -- 脚本文件
-     local scriptPath=config.LuaPath.."/"..config.LuaName
+     -- 资源
      local assetPath="Assets/Resource_MS/UI/UIForms/"..config.AssetName..".prefab"
-     log("scriptPath::"..scriptPath.."assetPath::"..assetPath)
+     log("assetPath::"..assetPath)
 
      UIInfo={}
      UIInfo.panelId=config.Id
@@ -147,7 +146,6 @@ UIMgr = class()
      UIInfo.afterObj=afterObj
      UIInfo.param=param
      UIInfo.rectTransform=nil
-     UIInfo.scriptPath=scriptPath
      UIInfo.assetPath=assetPath;
      UIInfo.order=0
      UIInfo.parent=self.rectTransform
@@ -189,10 +187,9 @@ UIMgr = class()
      end
      
 
-     -- 脚本文件
-     local scriptPath=config.LuaPath.."/"..config.LuaName
+     -- 资源
      local assetPath="Assets/Resource_MS/UI/UIForms/"..config.AssetName..".prefab"
-     log("scriptPath::"..scriptPath.."assetPath::"..assetPath)
+     log("assetPath::"..assetPath)
      
 
 
@@ -206,7 +203,6 @@ UIMgr = class()
      UIInfo.afterObj=callerPanel
      UIInfo.param=param
      UIInfo.rectTransform=nil
-     UIInfo.scriptPath=scriptPath
      UIInfo.assetPath=assetPath;
      UIInfo.order=0
      UIInfo.parent=parent

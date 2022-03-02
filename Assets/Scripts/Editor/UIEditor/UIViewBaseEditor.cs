@@ -1019,7 +1019,7 @@ internal class UIViewBaseEditor
         }
 
         //生成lua文件
-        string dirName = assetPath.Substring(0, assetPath.IndexOf("/"));
+        string dirName = assetPath.Substring(0, assetPath.IndexOf("/")).ToLower();
         Debug.Log("dirName:" + dirName);
         string dir= string.Format("Assets/Resource_MS/LuaScripts/UI/{0}/", dirName);
         string path = string.Format("Assets/Resource_MS/LuaScripts/UI/{0}/{1}.txt", dirName, luaFileName);

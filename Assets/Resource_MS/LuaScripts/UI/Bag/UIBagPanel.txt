@@ -2,7 +2,7 @@
 ui.UIBagPanel=class(ui.BasePanel)
 -- 界面打开时只调用一次，当界面隐藏再显示时不会再次调用
 function ui.UIBagPanel:OnInit(args)
-	log("UIBagPanel:OnInit::"..tostring(args))
+	log("ui.UIBagPanel:OnInit::"..tostring(args))
 	--[[
 	下面参数都可以直接使用
     -- gameObject
@@ -18,7 +18,7 @@ end
 
 -- 每次显示时都会调用（包括第一次显示）
 function ui.UIBagPanel:OnShow(args)
-	log("UIBagPanel:OnShow::")
+	log("ui.UIBagPanel:OnShow::")
 	-- self.super:OnShow(args)
 	self:RegisterEvents()
 end
@@ -51,12 +51,12 @@ end
 
 --每次隐藏时都会调用（包括销毁时，在销毁前先调用该方法）
 function ui.UIBagPanel:OnClose()
-	log("UIBagPanel:OnClose::")
+	log("ui.UIBagPanel:OnClose::")
 	-- self.super:OnClose(args)
 	self:UnregisterEvents()
 end
 
 --当销毁时并且缓存时间到被销毁时执行
 function ui.UIBagPanel:OnDestroy()
-	log("UIBagPanel:OnDestroy::")
+	log("ui.UIBagPanel:OnDestroy::")
 end

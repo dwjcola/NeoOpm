@@ -18,7 +18,7 @@ public enum ConfigVersonStatus {
 public class ConfigPreload :Singleton<ConfigPreload>
 {
  
-    string url_root = "http://10.1.10.6:82/";
+    string url_root = "http://47.94.233.15/";
     string url_config = "";
     string url_config_list = "";
     string url_config_verson = "";
@@ -34,10 +34,10 @@ public class ConfigPreload :Singleton<ConfigPreload>
     StringBuilder stringBuild_url;
 
     string verson_file_name = "config_verson.json";
-    string verson_list_name = "config_list.json";
+    string verson_list_name = "all_.md5";
 
     string verson_file_name_tmp = "config_verson_tmp.json";
-    string list_file_name_tmp = "config_list_tmp.json";
+    string list_file_name_tmp = "all_tmp.md5";
 
     string p_config_path;
     string p_config_verson_path;
@@ -64,8 +64,8 @@ public class ConfigPreload :Singleton<ConfigPreload>
     }
     public void InitPath()
     {
-        url_config = url_root + "config/configDataFile";
-        url_config_list = url_root + "config/config_list.json";
+        url_config = url_root + "config";
+        url_config_list = url_root + "config/all.md5";
         url_config_verson = url_root + "config/config_verson.json";
 
 //#if !UNITY_EDITOR
@@ -97,7 +97,19 @@ public class ConfigPreload :Singleton<ConfigPreload>
         s_config_dataFile_path = Application.streamingAssetsPath + "/config/configDataFile";
     }
 
-
+    public Dictionary<string, string> AnalysisMd5(string path)
+    {
+        string text = File.ReadAllText(Application.streamingAssetsPath + "/all.md5");
+        string[] tmp = text.Split('\n');
+        Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
+        string[] k_v;
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            k_v = text.Split(',');
+            keyValuePairs.Add(k_v[1], k_v[2]);
+        }
+        return keyValuePairs;
+    }
     public void UpdateConfig(Action finishDelegate)
     {
 
@@ -177,7 +189,7 @@ public class ConfigPreload :Singleton<ConfigPreload>
         if (!System.IO.File.Exists(p_config_path))
         {
 #if !UNITY_EDITOR
-                 CheckStreamingAssetsFileStatus();    
+              //   CheckStreamingAssetsFileStatus();    
 #endif
             BeginDownConfig();
         }
@@ -224,7 +236,8 @@ public class ConfigPreload :Singleton<ConfigPreload>
 
     public void DownMd5AndVerson(Action action)
     {
-        DownVersonFile(()=> { DownListFile(action);});
+        //DownVersonFile(()=> { DownListFile(action);});
+        DownListFile(action);
     }
     void TryCreatorConfigFolder(string path)
     {
@@ -234,7 +247,7 @@ public class ConfigPreload :Singleton<ConfigPreload>
         }
 
     }
-    public void BeginDownConfig()
+    public void BeginDownConfig_old()
     {
         TryCreatorConfigFolder(p_config_path);
         Js_ConfigMd5_Verson js_ConfigMd5_Verson_t = ConfigJsonTool.ReadConfigVersonFile(p_config_verson_path_tmp);
@@ -306,7 +319,69 @@ public class ConfigPreload :Singleton<ConfigPreload>
         DeleteConfig(deleteDic);
         DownConfig(downWebs);
     }
+    public void BeginDownConfig()
+    {
+        TryCreatorConfigFolder(p_config_path);
 
+
+        Dictionary<string, string> Md5_Dic_t = AnalysisMd5(p_config_list_path_tmp);
+
+        Dictionary<string, string> deleteDic = new Dictionary<string, string>();
+
+        Queue<UnityWeb> downWebs = new Queue<UnityWeb>();
+
+
+        TryCreatorConfigFolder(p_config_dataFile_path);
+
+        if (!File.Exists(p_config_list_path))
+        {
+            FileUtils.DeleteAllFile(p_config_path);
+            foreach (KeyValuePair<string, string> kv in Md5_Dic_t)
+            {
+                downWebs.Enqueue(CreateDownWeb(kv.Key));
+            }
+        }
+        else
+        {
+            Dictionary<string, string> Md5_Dic_p = AnalysisMd5(p_config_list_path_tmp);
+            foreach (KeyValuePair<string, string> kv in Md5_Dic_t)
+            {
+                string tmpMDF;
+                if (Md5_Dic_p.TryGetValue(kv.Key, out tmpMDF))
+                {
+
+                    GetConfigFileMD5(kv.Key, out tmpMDF);
+
+                    if (tmpMDF != kv.Value)
+                    {
+                        downWebs.Enqueue(CreateDownWeb(kv.Key));
+                    }
+                    Md5_Dic_p.Remove(kv.Key);
+                }
+                else
+                {
+                    downWebs.Enqueue(CreateDownWeb(kv.Key));
+                }
+
+            }
+            foreach (KeyValuePair<string, string> kv in Md5_Dic_p)
+            {
+                string tmpMDF;
+                if (Md5_Dic_p.TryGetValue(kv.Key, out tmpMDF))
+                {
+                    // nothing to do;
+                }
+                else
+                {
+                    stringBuild_path.Clear();
+                    deleteDic.Add(kv.Key, stringBuild_path.AppendFormat("{0}/{1}{2}", p_config_dataFile_path, kv.Key, file_suffix_txt).ToString());
+                }
+            }
+        }
+     
+        DeleteConfig(deleteDic);
+        DownConfig(downWebs);
+    }
     UnityWeb CreateDownWeb(string name)
     {
         stringBuild_fileName.Clear();

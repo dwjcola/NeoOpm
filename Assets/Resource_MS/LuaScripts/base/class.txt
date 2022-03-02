@@ -39,7 +39,7 @@ function class(super)
         } )
     end
 
-    class_type.new = function(...)
+    class_type.New = function(...)
         -- 一个类实例的构建
         local obj = { class = class_type }
         -- 设置实例关联类的查找域vtbl

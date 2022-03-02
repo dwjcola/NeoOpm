@@ -13,7 +13,7 @@ TimerMgr = class();
 TimerMgr.m_instance = nil;
 TimerMgr.GetInstance = function()
     if nil == TimerMgr.m_instance then
-        TimerMgr.m_instance = TimerMgr:new();
+        TimerMgr.m_instance = TimerMgr.New();
     end
     return TimerMgr.m_instance;
 end

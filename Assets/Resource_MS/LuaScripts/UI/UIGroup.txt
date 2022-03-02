@@ -8,8 +8,8 @@
 
 
 
-UIGroup={}
-UIGroup.Main=1
-UIGroup.Default=2
-UIGroup.Reminder=3
-UIGroup.Guide=4
+ui.UIGroup={}
+ui.UIGroup.Main=1
+ui.UIGroup.Default=2
+ui.UIGroup.Reminder=3
+ui.UIGroup.Guide=4

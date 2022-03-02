@@ -6,7 +6,7 @@ AtlasMgr = class()
 AtlasMgr.m_Instance=nil
 AtlasMgr.GetInstance = function ()
     if AtlasMgr.m_Instance == nil then
-        AtlasMgr.m_Instance = AtlasMgr.new()
+        AtlasMgr.m_Instance = AtlasMgr.New()
     end
     return AtlasMgr.m_Instance
 end

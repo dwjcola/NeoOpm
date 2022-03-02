@@ -15,7 +15,6 @@ function BasePanel:initialize(UIInfo)
     self.transform=nil
     -- Canvas
     self.canvas=nil
-    
 
     self:__init(UIInfo)
 end

@@ -9,7 +9,7 @@ UIMgr = class()
  --单例
  UIMgr.m_Instance=nil
  UIMgr.GetInstance=function()
-     if nil==UIMgr.m_Instance then UIMgr.m_Instance= UIMgr:new() end
+     if nil==UIMgr.m_Instance then UIMgr.m_Instance= UIMgr.New() end
      return UIMgr.m_Instance;
  end
  
@@ -45,10 +45,10 @@ UIMgr = class()
     print("self.uiCam:::",self.uiCam,"  self.canvas:",self.canvas)
     -- Logger.Error(self.uiCam)
 
-    self.__groups[UIGroup.Main]=Stack:new()
-    self.__groups[UIGroup.Default]=Stack:new()
-    self.__groups[UIGroup.Reminder]=Stack:new()
-    self.__groups[UIGroup.Guide]=Stack:new()
+    self.__groups[UIGroup.Main]=Stack.New()
+    self.__groups[UIGroup.Default]=Stack.New()
+    self.__groups[UIGroup.Reminder]=Stack.New()
+    self.__groups[UIGroup.Guide]=Stack.New()
  end
 
  
@@ -81,7 +81,7 @@ UIMgr = class()
     log(tostring(UIInfo)) 
     log(tostring(UIInfo.panelId))
     log(tostring(UIInfo.rectTransform)) 
-    local luaObj= ui[UIInfo.panelId].new(UIInfo)
+    local luaObj= ui[UIInfo.panelId].New(UIInfo)
     UIInfo.luaObj =luaObj
     
     luaObj:OnInit(UIInfo.param)

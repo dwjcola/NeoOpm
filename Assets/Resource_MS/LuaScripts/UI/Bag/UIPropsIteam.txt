@@ -1,0 +1,62 @@
+--@class ui.UIPropsIteam:ui.BasePanel
+ui.UIPropsIteam=class(ui.BasePanel)
+-- 界面打开时只调用一次，当界面隐藏再显示时不会再次调用
+function ui.UIPropsIteam:OnInit(args)
+	log("ui.UIPropsIteam:OnInit::"..tostring(args))
+	--[[
+	下面参数都可以直接使用
+    -- gameObject
+    self.gameObject
+    -- RectTransform
+    self.transform
+    -- Canvas
+    self.canvas
+	]]--
+	-- self.super:OnInit(args)
+	self:RegisterUIEvents()	
+end
+
+-- 每次显示时都会调用（包括第一次显示）
+function ui.UIPropsIteam:OnShow(args)
+	log("ui.UIPropsIteam:OnShow::")
+	-- self.super:OnShow(args)
+	self:RegisterEvents()
+end
+
+-- function ui.UIPropsIteam:Update(deltaTime)
+-- end
+
+-- function ui.UIPropsIteam:LateUpdate(deltaTime)
+-- end
+
+--ui组件添加事件，一般只需要注册一次，界面destroy后会自动释放
+function ui.UIPropsIteam:RegisterUIEvents()
+	--self:AddClickEvent(self.CloseBtn, self.CloseClick);
+end
+
+
+-- function ui.UIPropsIteam:CloseClick(btn)
+-- 	self:ClosePanel()
+-- end
+
+--注册事件
+function ui.UIPropsIteam:RegisterEvents( )
+	-- self:AddListener("EventStringKey", self.EventHandle);
+end
+
+--移除事件
+function ui.UIPropsIteam:UnregisterEvents( )
+	-- self:RemoveListener("EventStringKey");
+end
+
+--每次隐藏时都会调用（包括销毁时，在销毁前先调用该方法）
+function ui.UIPropsIteam:OnClose()
+	log("ui.UIPropsIteam:OnClose::")
+	-- self.super:OnClose(args)
+	self:UnregisterEvents()
+end
+
+--当销毁时并且缓存时间到被销毁时执行
+function ui.UIPropsIteam:OnDestroy()
+	log("ui.UIPropsIteam:OnDestroy::")
+end

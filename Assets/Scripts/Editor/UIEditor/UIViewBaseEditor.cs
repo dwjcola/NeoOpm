@@ -1046,7 +1046,7 @@ internal class UIViewBaseEditor
         l += string.Format(
             "Id='{0}'," +
             "AssetName='{1}'," +
-            "UIGroupName='Default'," +
+            "Group=ui.UIGroup.Default," +
             "AllowMultiInstance=false," +
             "PauseCoveredUIForm=false," +
             "Mask=false," +

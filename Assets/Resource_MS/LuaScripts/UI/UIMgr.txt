@@ -62,7 +62,7 @@ UIMgr = class()
     local obj=CS.UnityEngine.GameObject.Instantiate(prefab)
     local rectTransform=obj:GetComponent("RectTransform")
     if not UIInfo.isChild then
-        local groupId=self:GetGroupId(UIInfo.config.UIGroupName)
+        local groupId=UIInfo.config.Group
         -- self.__groups[groupId]
         if groupId<0 then
             err("groupId获取失败：groupId:"..groupId.."  UIGroupName:"..UIInfo.config.UIGroupName.." panelId"..UIInfo.config.Id)

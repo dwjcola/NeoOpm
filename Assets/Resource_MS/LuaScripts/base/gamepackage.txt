@@ -8,4 +8,5 @@
 
 
 -- 包定义
+manager = ClassUtil.CreatePackage("manager");
 ui = ClassUtil.CreatePackage("ui");

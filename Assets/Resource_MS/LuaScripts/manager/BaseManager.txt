@@ -1,6 +1,10 @@
---region *.lua
---Date
---此文件由[BabeLua]插件自动生成
+--[[
+---------------------------------------------
+-- File Name:    BaseManager.lua
+-- Author:       wangguoqing
+-- Create Date:  2022/03/02
+---------------------------------------------
+--]]
 
 --根管理器
 manager.BaseManager=class()

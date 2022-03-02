@@ -702,7 +702,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     1: ENABLE_LOG
     4: ODIN_INSPECTOR
-    7: ODIN_INSPECTOR
+    7: ODIN_INSPECTOR;AMPLIFY_SHADER_EDITOR
     13: ENABLE_LOG
     14: ENABLE_LOG
   additionalCompilerArguments: {}

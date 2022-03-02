@@ -6,24 +6,37 @@
 local BattleLogicContext = SimpleClassUtil:class()
 
 function BattleLogicContext:initialize()
+    self._missileContext = MissileContext:new()
     self._entityContext = BattleEntityContext:new()
-    self._logicSystemContest = BattleLogicSystemContext:new()
+    self._logicSystemContext = BattleLogicSystemContext:new()
+
 end
 
 function BattleLogicContext:init(blackBoard,battleData,battleManager)
+    self._missileContext:init(30)
     self._entityContext:init(blackBoard,battleData,battleManager)
     self._logicSystemContest:init(self._entityContext._list_camp)
 end
 
 function BattleLogicContext:update(dt)
+    if self._missileContext and self._missileContext.update then
+        self._missileContext:update(dt)
+    end
     if self._entityContext and self._entityContext.update then
         self._entityContext:update(dt)
     end
-    if self._logicSystemContest and self._logicSystemContest.update then
-        self._logicSystemContest:update(dt)
+    if self._logicSystemContext and self._logicSystemContext.update then
+        self._logicSystemContext:update(dt)
     end
 
 end
 
-
+function BattleLogicContext:release()
+    if self._entityContext and self._entityContext.release then
+        self._entityContext:release()
+    end
+    if self._logicSystemContext and self._logicSystemContext.release then
+        self._logicSystemContext:release()
+    end
+end
 return BattleLogicContext

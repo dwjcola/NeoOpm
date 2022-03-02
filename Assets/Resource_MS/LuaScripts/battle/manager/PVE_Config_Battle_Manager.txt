@@ -224,6 +224,12 @@ end
 -- todo 调用一哈
 function PVE_Config_Battle_Manager:release()
     self:unRegisterMsg()
+    if self._world_render and self._world_render.release then
+        self._world_render:release()
+    end
+    if self._world_logic and self._world_logic.release then
+        self._world_logic:release()
+    end
 end
 
 function PVE_Config_Battle_Manager:handleEvent_Battle_ClientHandle_PauseBattle()

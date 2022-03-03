@@ -14,7 +14,7 @@ function bt_ac_turn:doAction(blackBoard,contextManager)
     local old_orientation = blackBoard._orientation
     local new_orientation = old_orientation == Enum_Battle.Orientation.Left
             and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left
-    blackBoard._orientation = new_orientation
+    blackBoard:setValue("_orientation",new_orientation)
     local data = {uid = blackBoard._uid,orientation = new_orientation}
     EventManager:Dispatch_battle(EventType.Event_Battle_Render_Turn,data)
     return Enum_BT.Node_ResultType.Success

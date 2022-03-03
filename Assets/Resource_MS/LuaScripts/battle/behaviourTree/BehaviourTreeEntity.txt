@@ -18,6 +18,19 @@ function BehaviourTreeEntity:initialize(treeData,data,agent)
 
 end
 
+function BehaviourTreeEntity:getBlackBordData(key)
+    if self._blackboard then
+      return  self._blackboard:getValue(key)
+    end
+end
+
+
+function BehaviourTreeEntity:setBlackBordData(key,value)
+    if self._blackboard then
+        self._blackboard:setValue(key,value)
+    end
+end
+
 function BehaviourTreeEntity:initBlackBoard(data)
     for i, v in pairs(data) do
         self._blackboard[i] = v
@@ -27,7 +40,7 @@ end
 function BehaviourTreeEntity:initTree(treeData,blackboard,agent)
     --Logger.ErrorTable(blackboard)
     --self._rootNode = BehaviourAnalysis:Analysis(treeData,blackboard,agent)
-    self._rootNode = CreateUtils:createTree(blackboard)
+    self._rootNode = CreateUtils:createTree(blackboard,agent)
 
     if self._rootNode == nil then
         BattleLog.error("行为树 初始化失败")
@@ -53,6 +66,12 @@ end
 
 function BehaviourTreeEntity:getRootNode()
     return self._rootNode
+end
+
+function BehaviourTreeEntity:stop(dt)
+    if self._rootNode and not self._tree_end then
+        self._rootNode:stop()
+    end
 end
 
 function BehaviourTreeEntity:execute(dt)

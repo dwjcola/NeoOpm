@@ -157,5 +157,11 @@ namespace NeoOPM
             }
             return com;
         }
+
+        public static SkinnedMeshRenderer[] GetSkinnedMeshRenderersInChildren(GameObject target)
+        {
+            SkinnedMeshRenderer[] com = target.GetComponentsInChildren<SkinnedMeshRenderer>();
+            return com;
+        }
     }
 }

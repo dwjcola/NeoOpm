@@ -15,8 +15,8 @@ local EventType = {
 
     Event_GetBattleData = "", -- 获取战斗数据
 
-    Event_BigSkillCanRelease = "",
-    Event_BigSkillCannotRelease = "",
+    Event_BigSkillCanRelease = "",  -- 大招可以释放
+    Event_BigSkillCannotRelease = "", -- 大招取消释放
     Event_Battle_Died = "",
     Event_Battle_Be_Attack = "",
 
@@ -34,6 +34,40 @@ local EventType = {
 
     Event_Battle_BlackOut = "",   -- 战斗黑屏
 
+    Event_Battle_NumericBox_ValueChange = "",       -- 战斗数值变化事件
+
+    Event_Battle_Trigger_EnterBattle = "",           -- 进战斗触发
+    Event_Battle_Trigger_UltraSkillPlay = "",        -- 当大招触发
+    Event_Battle_Trigger_CauseDamage = "",           -- 造成伤害时触发
+    Event_Battle_Trigger_Hit = "",                   -- 受伤是触发(任何类型)
+    Event_Battle_Trigger_Hit_Physics = "",           -- 受物理伤害
+    Event_Battle_Trigger_Hit_Magic = "",             -- 受法术伤害
+    Event_Battle_Trigger_CreateTherapy = "",         -- 创造治疗
+    Event_Battle_Trigger_ReceiveTherapy = "",        -- 接受治疗
+    Event_Battle_Trigger_CreateBuff = "",            -- 创建buff
+    Event_Battle_Trigger_ReceiveBuff = "",           -- 接受buff
+    Event_Battle_Trigger_ReceiveBuff_Add = "",       -- 接受增益buff
+    Event_Battle_Trigger_ReceiveBuff_Subtract = "",  -- 接受减益buff
+
+    Event_Battle_Trigger_HpEnough = "",              -- 满血时
+    Event_Battle_Trigger_Articulo_Mortis = "",       -- 濒死时
+    Event_Battle_Trigger_Died = "",                  -- 死亡时
+    Event_Battle_Trigger_Hp_Percentage_Down = "",    -- 生命百分比低于
+    Event_Battle_Trigger_Hp_Percentage_Up = "",      -- 生命百分比高于
+    Event_Battle_Trigger_BattleTime_Down = "",       -- 血量百分比低于
+    Event_Battle_Trigger_BattleTime_Up = "",         -- 血量百分比高于
+    Event_Battle_Trigger_Enemy_Number_Down = "",     -- 场上敌人少于
+    Event_Battle_Trigger_Enemy_Number_Up = "",       -- 场上敌人多余
+    Event_Battle_Trigger_Enemy_Friend_Down = "",     -- 场上我方少于
+    Event_Battle_Trigger_Enemy_Friend_Up = "",       -- 场上我方多余
+    Event_Battle_Trigger_Character_Friend_Down = "", -- 场上全部少于
+    Event_Battle_Trigger_Character_Friend_Up = "",   -- 场上全部多余
+
+
+    Event_Battle_ClientHandle_ClickSkill = '',         -- 点击技能释放大招
+    Event_Battle_ClientHandle_PauseBattle = '',        -- 点击技能释放大招
+    Event_Battle_ClientHandle_ClickAutoBattle = '',    -- 点击自动释放大招
+    Event_Battle_ClientHandle_ClickChangeSpeed = '',   -- 点击切换战斗速度
 }
 
 --给所有的Event赋值

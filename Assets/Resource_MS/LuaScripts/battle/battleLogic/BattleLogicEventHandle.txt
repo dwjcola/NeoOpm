@@ -96,10 +96,8 @@ end
 ---@param frameData EventFrameData
 function BattleLogicEventHandle:handleBlackoutEvent(blackBoard,agent,frameData)
 
-    -- todo  战斗黑屏  其他人停止update
-
     local data = {uid = blackBoard._uid,openType = frameData.eventTag}
-    --EventManager:Dispatch_battle(EventType.Event_Battle_Render_SwitchAni, data)
+    EventManager:Dispatch_battle(EventType.Event_Battle_BlackOut, data)
 
 end
 
@@ -107,7 +105,6 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 ---@param frameData UnBreakOffStartFrameData
 function BattleLogicEventHandle:handleUnBreakOffStartEvent(blackBoard,agent,frameData)
-
     blackBoard._smallSkillContBeBreak = true
 end
 

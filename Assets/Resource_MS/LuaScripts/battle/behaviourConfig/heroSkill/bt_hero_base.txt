@@ -15,8 +15,8 @@ function bt_hero_base:createTree(blackboard)
     -------------------------------------------------------------------------------
     ---@type NodeCondition  判断是否活着
     local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
-    node_1:setICondition(CreateUtils:getICondition("bt_con_compare_base",
-            { _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = "_hp", _compareTargetValue = 0, }))
+    node_1:setICondition(CreateUtils:getICondition("bt_con_compare_box",
+            { _compareType = Enum_BT.CompareType.BT_GreaterThan, _key = Enum_Battle.Attribute.HP, _compareTargetValue = 0, }))
     root:addNode(node_1)
     ---------------------------------------------------------------------------------
     root:addNode(self:createLiveTree(blackboard))
@@ -54,7 +54,7 @@ end
 ---@param blackboard BlackBoard_BattleBase
 function bt_hero_base:createLoopTree(blackboard)
     ---@type NodeDecoratorRepeat 一直 判断技能 树
-    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat,"0000003")
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Decorator_Repeat)
     node:setRepeatCount(-1)
     node:addNode(self:createOnceSkillTree(blackboard))
     return node
@@ -63,7 +63,7 @@ end
 ---@param blackboard BlackBoard_BattleBase
 function bt_hero_base:createOnceSkillTree(blackboard)
     ---@type NodeParallelAll
-    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Parallel_All,"0000004")
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Parallel_All)
     self:createPassiveTree(node,blackboard)
     node:addNode(self:createHostilityValueTree(blackboard))
     node:addNode(self:createSkillExecuteTree(blackboard))
@@ -98,7 +98,8 @@ function bt_hero_base:createPassiveTree(node,blackboard)
     local passiveNode = nil
     if blackboard and blackboard._skillData then
         for i, v in pairs(blackboard._skillData) do
-            if v and ( v._skillCon.type == Enum_Battle.SkillType.Skill_passive) or (v._skillCon.type == Enum_Battle.SkillType.Skill_cCalled) then
+            if v and ( v._skillCon.type == Enum_Battle.SkillType.Skill_passive)
+                    or (v._skillCon.type == Enum_Battle.SkillType.Skill_cCalled) then
                 if passiveNode == nil then
                     passiveNode = btApplyMap:getClass("bt_ac_passive")
                 end
@@ -163,8 +164,8 @@ function bt_hero_base:baseSkillCondition(blackboard,skillData,isInfluenced_gcd)
     local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.ConditionGroup,tostring(skillData._skillTag))
     local tmp = {}
 
-    table.insert(tmp, CreateUtils:getICondition("bt_con_compare_base",
-            { _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = "_anger",
+    table.insert(tmp, CreateUtils:getICondition("bt_con_compare_box",
+            { _compareType = Enum_BT.CompareType.BT_GreaterThanEqual, _key = Enum_Battle.Attribute.Anger,
               _compareTargetValue = skillData._skill_need_power or 0 }))
 
     table.insert(tmp,CreateUtils:getICondition("bt_con_astrict",
@@ -195,19 +196,31 @@ function bt_hero_base:baseSkillCondition(blackboard,skillData,isInfluenced_gcd)
     node:setIConditionS(tmp,Enum_BT.Condition_Relation.BT_AND)
     return node
 end
-
+---@param skillData SkillData
 ---@param blackboard BlackBoard_BattleBase
 function bt_hero_base:bigSkillCondition_to_true(blackboard,skillData)
     ---@type NodeSequence
     local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Sequence)
+
         ---@type NodeAction
         local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
         node_1:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_bigSkillReady",value = true}))
         ---@type NodeAction
         local node_2 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
-        node_2:setIAction(CreateUtils:getIAction("bt_ac_sendMag",{eventKey = EventType.Event_BigSkillCanRelease}))
-
+        node_2:setIAction(CreateUtils:getIAction("bt_ac_sendMag",
+                {eventKey = EventType.Event_BigSkillCanRelease, params =
+                {uid = blackboard._uid,initIndex = blackboard._index_pos,skillType = skillData._skillCreateType}}))
+        ---@type NodeCondition
+        local node_3 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
+        node_3:setICondition(CreateUtils:getICondition("bt_con_compare_base",
+                { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_bigSkillReady", _compareTargetValue = false, }))
+        ---@type NodeCondition
+        local node_4 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
+        node_4:setICondition(CreateUtils:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_campType", _compareTargetValue =  Enum_Battle.Camp.CampSelf, }))
+    node:addNode(node_3)
     node:addNode(node_1)
+    node:addNode(node_4)
     node:addNode(node_2)
     return node
 end
@@ -220,8 +233,21 @@ function bt_hero_base:bigSkillCondition_to_false(blackboard,skillData)
        node_1:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_bigSkillReady",value = false}))
        ---@type NodeAction
        local node_2 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
-       node_2:setIAction(CreateUtils:getIAction("bt_ac_sendMag",{eventKey = EventType.Event_BigSkillCannotRelease}))
+       node_2:setIAction(CreateUtils:getIAction("bt_ac_sendMag",
+               {eventKey = EventType.Event_BigSkillCannotRelease, params =
+               {uid = blackboard._uid,initIndex = blackboard._index_pos,skillType = skillData._skillCreateType}}))
+       ---@type NodeCondition
+       local node_3 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
+       node_3:setICondition(CreateUtils:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_bigSkillReady", _compareTargetValue = true, }))
+
+        ---@type NodeCondition
+        local node_4 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
+        node_4:setICondition(CreateUtils:getICondition("bt_con_compare_base",
+            { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_campType", _compareTargetValue =  Enum_Battle.Camp.CampSelf, }))
+    node:addNode(node_3)
     node:addNode(node_1)
+    node:addNode(node_4)
     node:addNode(node_2)
     return node
 end
@@ -251,7 +277,7 @@ function bt_hero_base:createBigSkillTree(blackboard)
     ---@type NodeIfJudge
     local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.IF_Judge)
          ---@type NodeConditionGroup
-         local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.ConditionGroup,"0000016")
+         local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.ConditionGroup)
               -----@type ICondition
               local condition_1_1 = btApplyMap:getClass("bt_con_compare_base")
               condition_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_bigSkillReady", _compareTargetValue = true, })
@@ -281,12 +307,39 @@ function bt_hero_base:createSkill(blackBoard,skillTag)
 
     self:createSetGcd(node,skillData)
     node:addNode(self:createTimeLineSkill(skillData))
-    node:addNode(self:createSetAnger(skillData._skill_add_anger))
+    node:addNode(self:createAddAnger(skillData._skill_add_anger))
     self:setSkillPlayCost(node,skillData)
+    self:createResetIsKeyDownBigSkill(node,skillTag)
     node:addNode(self:createSetPlaySkill(nil))
     return node
 end
-
+--设置还原按下操作
+function bt_hero_base:createResetIsKeyDownBigSkill(rootNode,skillTag)
+    if Enum_Battle.SkillTag.Skill_1 ~= skillTag then
+        return
+    end
+    ---@type NodeIfJudge
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.IF_Judge)
+        ---@type NodeConditionGroup
+        local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.ConditionGroup)
+            local con_1 = CreateUtils:getICondition("bt_con_compare_base",
+                    { _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_campType", _compareTargetValue = Enum_Battle.Camp.CampSelf })
+            local con_2 = CreateUtils:getICondition("bt_con_isAutoBattle",false)
+        node_1:setIConditionS({con_1,con_2},Enum_BT.Condition_Relation.BT_AND)
+    node:addNode(node_1)
+        ---@type NodeAction
+        local node_2 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
+        node_2:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_isKeyDownBigSkill",value = false}))
+    node:addNode(node_2)
+    rootNode:addNode( node)
+end
+--设置正在释放得技能 是哪个
+function bt_hero_base:createSetPlaySkill(skillTag)
+    ---@type NodeAction
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
+    node:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_playSkillTag",value = skillTag}))
+    return node
+end
 --设置正在释放得技能 是哪个
 function bt_hero_base:createSetPlaySkill(skillTag)
     ---@type NodeAction
@@ -324,22 +377,28 @@ function bt_hero_base:createTimeLineSkill(skillData)
     return node
 end
 -- 设置怒气
+function bt_hero_base:createAddAnger(anger)
+    ---@type NodeAction
+    local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
+    node:setIAction(CreateUtils:getIAction("bt_ac_setBoxValue",
+            {key = Enum_Battle.Attribute.Anger,value = anger or 0,setValueType = Enum_BT.SetValueType.BT_AddEqual}))
+    return node
+end
+-- 设置怒气
 function bt_hero_base:createSetAnger(anger)
     ---@type NodeAction
     local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
-    node:setIAction(CreateUtils:getIAction("bt_ac_setValue",
-            {key = "_anger",value = anger or 0,setValueType = Enum_BT.SetValueType.BT_AddEqual}))
+    node:setIAction(CreateUtils:getIAction("bt_ac_setBoxValue",
+            {key = Enum_Battle.Attribute.Anger,value = anger or 0,setValueType = Enum_BT.SetValueType.Bt_Equal}))
     return node
 end
+
 -- 技能释放得 消耗 gcd
 ---@param skillData SkillData
 function bt_hero_base:setSkillPlayCost(rootNode,skillData)
     if skillData._skillCon.cost and skillData._skillCon.cost[1] and skillData._skillCon.cost[2]  then
         if skillData._skillCon.cost[1] == Enum_Battle.SkillCostType.Anger then
-            ---@type NodeAction
-            local node = CreateUtils:getNodeByType(Enum_BT.Node_Type.Action)
-            node:setIAction(CreateUtils:getIAction("bt_ac_setValue",{key = "_anger",value = 0}))
-            rootNode:addNode(node)
+            rootNode:addNode(self:createSetAnger(0))
         end
     end
 end
@@ -400,7 +459,8 @@ function bt_hero_base:createTreeExceptSmallSkill(blackboard)
        local node_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
             ---@type bt_con_compare_base
             local condition_1_1 = btApplyMap:getClass("bt_con_compare_base")
-            condition_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_smallSkillIng", _compareTargetValue = false, })
+            condition_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal,
+                                     _key = "_smallSkillIng", _compareTargetValue = false, })
         node_1:setICondition(condition_1_1)
     node:addNode(node_1)
          ---@type NodeParallel
@@ -507,7 +567,8 @@ function bt_hero_base:createFindWayTree()
               local node_2_1 = CreateUtils:getNodeByType(Enum_BT.Node_Type.Condition)
               ---@type bt_con_compare_base
               local con_2_1_1 = btApplyMap:getClass("bt_con_compare_base")
-              con_2_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal, _key = "_find_target_pos", _compareTargetValue = nil, })
+              con_2_1_1:initData({ _compareType = Enum_BT.CompareType.Bt_Equal,
+                                   _key = "_find_target_pos", _compareTargetValue = nil, })
               node_2_1:setICondition(con_2_1_1)
          node_2:addNode(node_2_1)
          node_2:addNode(self:getAwaitTree())

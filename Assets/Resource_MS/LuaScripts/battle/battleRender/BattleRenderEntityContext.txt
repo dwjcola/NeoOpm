@@ -21,39 +21,12 @@ function BattleRenderEntityContext:init(baseBlackBoard,battleData,battleManager)
 
     self._list_camp = battleManager._list_renderCharacter
 
-     --self:initCharacters(self._battleManager._battleTeam)
+    self._list_renderEntity = battleManager._list_renderEntity
 end
 
 function BattleRenderEntityContext:getUid()
     self._uid = self._uid + 1
     return self._uid
-end
-
-
----@param battleTeam BattleTeam
-function BattleRenderEntityContext:initCharacters(battleTeam)
-    local data = self._battleData
-
-    for i, v in pairs(data.team_self.teamMap) do
-        local character = BattleRenderCharacter:new({
-            go_model = battleTeam._map_left_role[i].model,
-            index = i,
-            heroId = v.heroId,
-            campType = Enum_Battle.Camp.CampSelf,
-            uid = i,
-        })
-        self._list_camp[Enum_Battle.Camp.CampSelf][i] = character
-    end
-    for i, v in pairs(data.team_enemy.teamMap) do
-        local character = BattleRenderCharacter:new({
-            go_model = battleTeam._map_right_role[i].model,
-            index = i,
-            heroId = v.heroId,
-            campType = Enum_Battle.Camp.CampEnemy,
-            uid = i + 5,
-        })
-        self._list_camp[Enum_Battle.Camp.CampEnemy][i] = character
-    end
 end
 
 function BattleRenderEntityContext:update(dt)
@@ -62,6 +35,11 @@ function BattleRenderEntityContext:update(dt)
             if character and character.update then
                 character:update(dt)
             end
+        end
+    end
+    for _, entity in pairs(self._list_renderEntity) do
+        if entity and entity.update then
+            entity:update(dt)
         end
     end
 end

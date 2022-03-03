@@ -6,7 +6,8 @@
 
 ---@type LC
 LC    =   CS.LC
-
+---@type GameUtility
+GameUtility = CS.NeoOPM.GameUtility
 ---@type NeoOPM
 NeoOPM    =   CS.NeoOPM
 -----@type CS.UnityEngine.Vector2

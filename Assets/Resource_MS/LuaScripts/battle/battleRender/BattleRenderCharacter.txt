@@ -26,11 +26,12 @@ end
 function BattleRenderCharacter:init()
     self:initDebugComponent()
     self:initAnimationComponent()
+    self:initAllSkinnedMeshRender()
 end
 
 function BattleRenderCharacter:initDebugComponent()
     if GameStatic_Battle.General_Grizmo then
-        self._gizmosCircle = self._go_model.transform:GetComponent("GameObjectGizmosCircleLine")
+        self._gizmosCircle = self._go_model.transform:GetComponent(typeof(CS.GameObjectGizmosCircleLine))
     end
 end
 ---animation
@@ -41,6 +42,10 @@ function BattleRenderCharacter:initAnimationComponent()
     self._aniState = Enum_Battle.AniState.idle
 
     self._ani_speed = 1
+end
+
+function BattleRenderCharacter:initAllSkinnedMeshRender()
+    self._csArray_allMeshRender = GameUtility.GetSkinnedMeshRenderersInChildren(self._go_model)
 end
 
 function BattleRenderCharacter:getAnimationComponent()
@@ -83,6 +88,10 @@ function BattleRenderCharacter:setScaleZ(z)
     if z and self._go_model and self._go_model.transform then
         self._go_model.transform:SetLocalScaleZ(z)
     end
+end
+
+function BattleRenderCharacter:getAllSkinnedMeshRenderComponent()
+    return self._csArray_allMeshRender
 end
 
 return BattleRenderCharacter

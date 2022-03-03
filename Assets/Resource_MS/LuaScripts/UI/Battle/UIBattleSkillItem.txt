@@ -5,12 +5,15 @@
 ---@class UIBattleSkillItem
 local UIBattleSkillItem = SimpleClassUtil:class()
 ---@param battleTeam BattleTeam
-function UIBattleSkillItem:initialize(transform,battleTeam)
+function UIBattleSkillItem:initialize(transform,battleTeam,layer)
+    ---@type UIBattleMainLUA
+    self._layer = layer
     self._transform = transform
     self._battleTeam = battleTeam
     self._isActive = false
 
     self:initComponent(transform)
+    self:initClick()
 end
 
 function UIBattleSkillItem:initComponent(transform)
@@ -18,20 +21,27 @@ function UIBattleSkillItem:initComponent(transform)
     self._img_choose = transform:Find("m_go_root/m_img_choose"):GetComponent("Image")
     self._img_img = transform:Find("m_go_root/m_img_choose"):GetComponent("Image")
     self._img_choose = transform:Find("m_go_root/m_img_choose"):GetComponent("Image")
+    self._btn_skill = transform:Find("m_go_root/m_btn_skill"):GetComponent("Button")
+end
+
+function UIBattleSkillItem:initClick(transform)
+    self._layer:AddUIEvent("onclick", self._btn_skill.gameObject,function()
+        self:onClickSkill()
+    end)
 end
 
 function UIBattleSkillItem:setData(posIndex,data)
     self._posIndex = posIndex
     self._data = data
-
-
-
     self:setActive(true)
 end
 
 function UIBattleSkillItem:setSkillConjure(isConjure)
+    if self._isCanConjure == isConjure then
+       return
+    end
     self._isCanConjure = isConjure
-    self._img_choose:SetActiveVirtual(isConjure)
+    self._img_choose.gameObject:SetActiveVirtual(isConjure)
     self._go_root.transform.localPosition = isConjure and Vector3_CS(0,10,0) or Vector3_CS.zero
 end
 
@@ -40,6 +50,12 @@ function UIBattleSkillItem:setActive(isActive)
     self._transform.gameObject:SetActiveVirtual(isActive)
 end
 
-
+function UIBattleSkillItem:onClickSkill()
+    if  self._isCanConjure then
+        self._layer._frameControl:disPatchEventMsg(EventType.Event_Battle_ClientHandle_ClickSkill,{posIndex = self._posIndex})
+        -- todo 判断是不是 蓄力大招
+        self:setSkillConjure(false)
+    end
+end
 
 return UIBattleSkillItem

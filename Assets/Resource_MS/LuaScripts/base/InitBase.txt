@@ -43,4 +43,6 @@ require("UtilsLUA")--一些扩展函数
 require("LUAInitProxy")
 
 
+require("StringGet")
+
 

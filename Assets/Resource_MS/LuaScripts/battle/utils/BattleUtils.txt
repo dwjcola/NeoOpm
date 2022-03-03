@@ -165,6 +165,8 @@ function BattleUtils:getTestBattleData()
         scenePath = "Assets/Resource_MS/Prefabs/Scenes/scene_root_test.prefab",
         rootPath = "Assets/Resource_MS/Prefabs/Scenes/playerRoot.prefab",
         battleType = Enum_Battle.BattleType.PVE_C,
+        battleSpeed = 2,
+        isAutoBattle = false,
         team_self = {
             teamMap = {
 
@@ -323,8 +325,8 @@ end
 function BattleUtils:addComponentForModel(model)
     if model then
         if GameStatic_Battle.General_Grizmo then
-            --model.gameObject.GetOrAddComponent(typeof(CS.UnityEngine.GameObjectGizmosCircle))
-            CS.LC.GetOrAddComponent(model.gameObject, "GameObjectGizmosCircleLine")
+            model.gameObject:GetOrAddComponent(typeof(CS.GameObjectGizmosCircleLine))
+            --model.gameObject:GetOrAddComponent("GameObjectGizmosCircleLine")
         end
     end
 end
@@ -363,7 +365,7 @@ function BattleUtils:handlerCharacterData(campType,heroTeamData,teamData,posInde
         _anger = 0,
         _smallSkillIng = false,
         _bigSkillReady = false,
-        _isKeyDownBigSkill = true,
+        _isKeyDownBigSkill = campType == Enum_Battle.Camp.CampEnemy,
         _moveSpeed = 0.05,
         _skillData = self:getSkillData(con_hero_detail,heroData.level),
         _volume_r = volume_r,
@@ -372,7 +374,10 @@ function BattleUtils:handlerCharacterData(campType,heroTeamData,teamData,posInde
         _detection_r = detection_r,
         _place_r_base = place_r,
         _isCloseIn = con_hero_detail.range == 1,
-        _orientation = campType == Enum_Battle.Camp.CampSelf and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left
+        _orientation = campType == Enum_Battle.Camp.CampSelf and Enum_Battle.Orientation.Right or Enum_Battle.Orientation.Left,
+        _attributeList = {[Enum_Battle.Attribute.HP] = 100000,
+                          [Enum_Battle.Attribute.Anger] = 0,
+                          [Enum_Battle.Attribute.MoveSpeed] = 0.05}
     }
 
   return data

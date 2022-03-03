@@ -7,9 +7,10 @@
 ---@class UIHeroItemLUA:UIDragMoveBaseItem
 local UIHeroItemLUA = SimpleClassUtil:class(UIDragMoveBaseItem)
 
-function UIHeroItemLUA:initialize(transform)
+function UIHeroItemLUA:initialize(transform,layer)
     UIDragMoveBaseItem.initialize(self,transform)
     self._transform = transform
+    self._layer = layer
     self._index = -1
     self._isUpTeam = false
     self:initComponent(transform)
@@ -51,15 +52,15 @@ function UIHeroItemLUA:setBaseData(data)
 end
 
 function UIHeroItemLUA:setIcon(heroId)
-    LUAUIBase:SetSprite(self._img_icon,UIUtils:getHeroIconByHeroId(heroId))
+    self._layer:SetSprite(self._img_icon,UIUtils:getHeroIconByHeroId(heroId))
 end
 
 function UIHeroItemLUA:setBg(quality)
-    LUAUIBase:SetSprite(self._img_bg,UIUtils:getHeroBg(quality))
+    self._layer:SetSprite(self._img_bg,UIUtils:getHeroBg(quality))
 end
 
 function UIHeroItemLUA:setFrame(quality)
-    LUAUIBase:SetSprite(self._img_frame,UIUtils:getHeroFrame(quality))
+    self._layer:SetSprite(self._img_frame,UIUtils:getHeroFrame(quality))
 end
 
 function UIHeroItemLUA:setLevel(level)

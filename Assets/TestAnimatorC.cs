@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class TestAnimatorC : MonoBehaviour
 {
+    public SkinnedMeshRenderer meshRenderer;
     public Animator animator;
     float normalizedTransitionDuration = 0.1f;
     string state = "";
     // Start is called before the first frame update
     void Start()
     {
+        Component[] components = transform.GetComponentsInChildren(System.Type.GetType("SkinnedMeshRenderer"));
         Debug.LogError(transform.localRotation);
-        
+        //meshRenderer.sortingLayerName = "RoleShow";
+        //for (int i = 0; i < meshRenderer.materials.Length; i++)
+        //{
+        //    meshRenderer.materials[i].renderQueue = 3000;
+        //} 
     }
 
     // Update is called once per frame

@@ -12,7 +12,7 @@ end
 ---@param blackBoard BlackBoard_BattleBase
 function bt_ac_count_down:doAction(blackBoard,agent,dt)
     if blackBoard and blackBoard._gcd > 0 then
-        blackBoard._gcd = blackBoard._gcd - dt
+        blackBoard:setValue("_gcd",blackBoard._gcd - dt)
         return  Enum_BT.Node_ResultType.Running
     end
     return Enum_BT.Node_ResultType.Success

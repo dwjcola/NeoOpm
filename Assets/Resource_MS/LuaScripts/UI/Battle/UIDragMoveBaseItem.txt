@@ -119,7 +119,7 @@ function UIDragMoveBaseItem:onDrag(obj,eventData)
                     self:getScroll().enabled = not self:getIsSlant()
                 end
             end
-            local vec = LC.ScreenPointToWorldPointInRectangle(self._transform.gameObject,eventData)
+            local vec = GameUtility.ScreenPointToWorldPointInRectangle(self._transform.gameObject,eventData)
             self:ingEvent(eventData,vec,self:getIsSlant())
             --if self._ingDrag then
             --    self._ingDrag(self,eventData,vec,self:getIsSlant())

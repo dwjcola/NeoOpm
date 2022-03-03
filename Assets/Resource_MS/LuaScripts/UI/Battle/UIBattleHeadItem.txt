@@ -57,7 +57,7 @@ function UIBattleHeadItem:getInitPos(isSelf,index)
     if index == 0 then
         local v = Vector3_CS(CS.UnityEngine.Input.mousePosition.x, CS.UnityEngine.Input.mousePosition.y)
         local ray = self._battleTeam._roleCamera:ScreenPointToRay(v)
-        return LC.GetRayRaycastHitInfo(ray)
+        return GameUtility.GetRayRaycastHitInfo(ray)
     else
         return BattleUtils:posMapToVec3(BattleUtils:getPositionByIndex(isSelf,index))
     end
@@ -66,7 +66,7 @@ end
 function UIBattleHeadItem:updateTopPos()
     if self._trans_model and  self._uiCamera then
         local vecPos = self._trans_model.position
-        local uiPos = LC.WorldPosToScreenLocalPos(self._battleTeam._roleCamera, self._uiCamera,self._rect_modelRoot,vecPos)
+        local uiPos = GameUtility.WorldPosToScreenLocalPos(self._battleTeam._roleCamera, self._uiCamera,self._rect_modelRoot,vecPos)
         self:initPosition(uiPos)
     end
 

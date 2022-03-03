@@ -12,6 +12,8 @@ end
 function AnimatorSystem:getEventHandleMap()
     return {
         [EventType.Event_Battle_Render_SwitchAni] = "switchAniHandle",
+        [EventType.Event_Battle_BlackOut]         = "blackoutHandle",
+
     }
 end
 
@@ -54,6 +56,17 @@ function AnimatorSystem:switchAniHandle(data)
         self:setSpeed(animationComponent,speed)
         self:crossFade(animationComponent,aniState,isReset)
         entity:setAnimationComponent(aniState,speed)
+    end
+end
+
+function AnimatorSystem:blackoutHandle(data)
+    local uid = data.uid
+    for i, v in pairs(self._entityMap) do
+        if i ~= uid then
+            local animationComponent = v:getAnimationComponent()
+            --BattleLog.errorTable(animationComponent)
+            self:setSpeed(animationComponent,data.openType == Enum_Battle.SkillBlackOut.Open and 0 or animationComponent.ani_speed)
+        end
     end
 end
 

@@ -31,6 +31,9 @@ function NodeConditionGroup:execute(blackBoard,agent,dt)
             resultType =  Enum_BT.Node_ResultType.Success
             for i, v in ipairs(self._iConditionList) do
                 if v:doCondition(blackBoard,agent,dt) == Enum_BT.Node_ResultType.Fail  then
+                    --if self:getEntityId() == "14501" then
+                    --    Logger.error("break === ",i)
+                    --end
                     --if self:getEntityId() == "14102" then
                     --     Logger.error("break === ",i)
                     --end

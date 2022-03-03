@@ -18,6 +18,8 @@ function BattleTeam:initialize(battleTimes)
 
     self._go_root = nil
 
+    self._go_roleMask = nil
+
     self._go_left = nil
 
     self._go_right = nil
@@ -122,6 +124,7 @@ function BattleTeam:tryLoadRoot()
         self._go_root = root
         self._go_root.gameObject:SetActiveVirtual(true)
         self._roleCamera = root.transform:Find("role_camera"):GetComponent('Camera')
+        self._go_roleMask = root.transform:Find("Mask").gameObject
         self:initRootList(root)
         self:tryLoadFinish()
 
@@ -223,8 +226,8 @@ end
 function BattleTeam:addComponent(model)
     if model then
         if GameStatic_Battle.General_Grizmo then
-            --model.gameObject.GetOrAddComponent(typeof(CS.UnityEngine.GameObjectGizmosCircle))
-            CS.LC.GetOrAddComponent(model.gameObject, "GameObjectGizmosCircleLine")
+            model.gameObject:GetOrAddComponent(typeof(CS.GameObjectGizmosCircleLine))
+            --model.gameObject:GetOrAddComponent("GameObjectGizmosCircleLine")
         end
     end
 end

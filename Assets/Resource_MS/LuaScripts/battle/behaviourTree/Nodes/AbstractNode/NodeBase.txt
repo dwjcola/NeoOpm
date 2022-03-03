@@ -105,6 +105,11 @@ function NodeBase:postPosition(resultType)
       self:onExit()
    end
 end
+
+function NodeBase:stop()
+
+end
+
 function NodeBase:log_enter(...)
    --BattleLog.warning(" ########  enter:  ",...)
 end

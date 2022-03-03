@@ -14,7 +14,7 @@ function bt_ac_malposed_findTarget:doAction(blackBoard,agent)
     local result = Enum_BT.Node_ResultType.Fail
 
     if blackBoard._enmityIndex == 0 or blackBoard._dislocation_friend_entity == nil then
-        blackBoard._pos_dislocation = nil
+        blackBoard:setValue("_pos_dislocation",nil)
         result = Enum_BT.Node_ResultType.Fail
     else
         local self_pos_z = blackBoard._position.z
@@ -39,18 +39,18 @@ function bt_ac_malposed_findTarget:doAction(blackBoard,agent)
                 local sign = blackBoard._position.x <=  _enemyEntity:getData()._position.x and -1 or 1
                 local isOk , tmp = self:handleTarget_dislocation_r(blackBoard,_enemyEntity,blackBoard._dislocation_friend_entity,angle,_entityContext,sign)
                 if isOk and tmp then
-                    blackBoard._pos_dislocation = tmp
+                    blackBoard:setValue("_pos_dislocation",tmp)
                     result = Enum_BT.Node_ResultType.Success
                 else
-                    blackBoard._pos_dislocation = nil
+                    blackBoard:setValue("_pos_dislocation",nil)
                     result = Enum_BT.Node_ResultType.Fail
                 end
             else
-                blackBoard._pos_dislocation = nil
+                blackBoard:setValue("_pos_dislocation",nil)
                 result = Enum_BT.Node_ResultType.Fail
             end
         else
-            blackBoard._pos_dislocation = nil
+            blackBoard:setValue("_pos_dislocation",nil)
             result = Enum_BT.Node_ResultType.Fail
         end
     end

@@ -21,6 +21,14 @@ function ui.UIBagPanel:OnShow(args)
 	log("ui.UIBagPanel:OnShow::")
 	-- self.super:OnShow(args)
 	self:RegisterEvents()
+	self:ShowAllItems(args)
+end
+
+function ui.UIBagPanel:ShowAllItems(args)
+	for index = 1, 100 do
+		UIMgr.GetInstance():OpenItem("UIPropsItem",nil,nil,self,self.MainContent)
+	end
+
 end
 
 -- function ui.UIBagPanel:Update(deltaTime)

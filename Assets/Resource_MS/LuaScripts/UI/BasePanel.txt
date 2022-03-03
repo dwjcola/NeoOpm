@@ -50,7 +50,7 @@ function BasePanel:__initPanel(UIInfo)
     self.canvas.overrideSorting = true
     self.canvas.sortingOrder=0;   
 
-    self.behaviour=rectTransform:GetComponent("NeoOPM.UIMonoPanel")
+    self.behaviour=rectTransform:GetComponent(typeof(NeoOPM.UIMonoPanel) )
     self.behaviour:RegisterTable(self)
     self.panelId=UIInfo.panelId    
 
@@ -69,7 +69,13 @@ function BasePanel:__initPanel(UIInfo)
 end
 
 function BasePanel:__initItem(UIInfo)
-    self.behaviour=obj:GetComponent("NeoOPM.UIMonoItem")
+    local rectTransform=self.transform 
+    rectTransform.localPosition=Vector3.zero;
+    rectTransform.localRotation=CS.UnityEngine.Quaternion.identity;
+    rectTransform.localScale = Vector3.one;
+
+
+    self.behaviour=rectTransform:GetComponent(typeof(NeoOPM.UIMonoItem))
     self.behaviour:RegisterTable(self)    
 
     local arr= self:GetComponentsInChildren(typeof(CS.UnityEngine.Canvas),true)

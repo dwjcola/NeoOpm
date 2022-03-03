@@ -79,9 +79,9 @@ UIMgr = class()
     UIInfo.rectTransform=rectTransform
     UIInfo.show=true
     
-    log(tostring(UIInfo)) 
+    -- log(tostring(UIInfo)) 
     log(tostring(UIInfo.panelId))
-    log(tostring(UIInfo.rectTransform)) 
+    -- log(tostring(UIInfo.rectTransform)) 
     local luaObj= ui[UIInfo.panelId].New(UIInfo)
     UIInfo.luaObj =luaObj
     
@@ -154,7 +154,7 @@ UIMgr = class()
      UIInfo.show=true
      UIInfo.curTimer=0
      UIInfo.isChild=false
-     UIInfo.childItems={}
+     UIInfo.childItems=nil
 
      self.__panels[config.Id]=UIInfo
 
@@ -165,6 +165,7 @@ UIMgr = class()
  
 
  -- 只需要加载，不需要调用卸载
+ -- afterCallback(callerPanel,param)
  function UIMgr:OpenItem(panelId, param,afterCallback,callerPanel,parent)
     log("ui.UIMgr:OpenItem:",panelId)
 
@@ -173,10 +174,10 @@ UIMgr = class()
         return 
     end
 
-    if self.__panels[panelId]~=nil then
-        log("ui.UIMgr:OpenItem:item 打开中或者已经打开")
-        return
-    end
+    -- if self.__panels[panelId]~=nil then
+    --     log("ui.UIMgr:OpenItem:item 打开中或者已经打开")
+    --     return
+    -- end
 
      -- 界面配置
      local config= TPanel[panelId]
@@ -213,8 +214,9 @@ UIMgr = class()
      UIInfo.isChild=true
      UIInfo.childItems=nil
 
-     self.__panels[config.Id]=UIInfo
+    --  self.__panels[config.Id]=UIInfo
      local superUIInfo= self.__panels[UIInfo.superPanelId]
+     superUIInfo.childItems=superUIInfo.childItems or {}
      table.insert(superUIInfo.childItems,UIInfo)
      UIInfo.assetHandle=  AssetUtil.LoadAsync(assetPath,self.LoadUIASyncCallBack,UIInfo,self)
      print(UIInfo.assetHandle)
@@ -256,8 +258,14 @@ UIMgr = class()
     self.__panels[UIInfo.panelId]=nil
     UIInfo.luaObj:OnDestroy()
     UIInfo.luaObj:Finalize()
+
     GameObject.Destroy(UIInfo.rectTransform.gameObject)
     AssetUtil.Release(UIInfo.assetHandle)
+    if UIInfo.childItems then
+        for index, _UIInfo in ipairs(UIInfo.childItems) do
+            AssetUtil.Release(_UIInfo.assetHandle)
+        end
+    end
 
  end
 
@@ -313,7 +321,14 @@ function UIMgr:Update(deltaTime)
  
     for k,UIInfo  in pairs(self.__panels) do
         if UIInfo and UIInfo.show and UIInfo.luaObj and UIInfo.luaObj.Update then
-            UIInfo:Update(deltaTime)
+            UIInfo.luaObj:Update(deltaTime)
+            if UIInfo.childItems then
+                for _, _UIInfo in ipairs(UIInfo.childItems) do
+                    if _UIInfo.luaObj.Update then
+                        _UIInfo.luaObj:Update(deltaTime)
+                    end
+                end
+            end            
         end
     end
  end
@@ -322,7 +337,7 @@ function UIMgr:Update(deltaTime)
     
     for k,UIInfo  in pairs(self.__panels) do
         if UIInfo and UIInfo.show and UIInfo.luaObj and UIInfo.luaObj.LateUpdate then
-            UIInfo:LateUpdate(deltaTime)
+            UIInfo.luaObj:LateUpdate(deltaTime)
         end
     end
     
@@ -335,8 +350,8 @@ function UIMgr:Update(deltaTime)
             UIInfo.curTimer = UIInfo.curTimer+deltaTime
             -- log("UIMgr:ClosePanel add to destroyWaitPanels wait time:",UIInfo.panelId," curTimer:",UIInfo.curTimer)
             if UIInfo.curTimer >= destroyWaitTimer then
-                self:DestroyPanel(UIInfo)
                 table.remove(self.__destroyWaitPanels,i)
+                self:DestroyPanel(UIInfo)
             end
         end
     end

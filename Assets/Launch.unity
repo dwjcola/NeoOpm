@@ -1156,7 +1156,7 @@ MonoBehaviour:
   UseDebug: 0
   ShowBuildingArea: 0
   SkipGuide: 0
-  IsUseLocalConfig: 1
+  IsUseLocalConfig: 0
   IsEditor: 0
 --- !u!114 &349431040
 MonoBehaviour:

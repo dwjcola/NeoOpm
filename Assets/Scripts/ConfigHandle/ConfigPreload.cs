@@ -99,14 +99,17 @@ public class ConfigPreload :Singleton<ConfigPreload>
 
     public Dictionary<string, string> AnalysisMd5(string path)
     {
-        string text = File.ReadAllText(Application.streamingAssetsPath + "/all.md5");
+        string text = File.ReadAllText(path);
         string[] tmp = text.Split('\n');
         Dictionary<string, string> keyValuePairs = new Dictionary<string, string>();
         string[] k_v;
         for (int i = 0; i < tmp.Length; i++)
         {
-            k_v = text.Split(',');
-            keyValuePairs.Add(k_v[1], k_v[2]);
+            k_v = tmp[i].Split(',');
+            if (k_v.Length >= 2 )
+            {
+                keyValuePairs.Add(k_v[0], k_v[1]);
+            }
         }
         return keyValuePairs;
     }
@@ -294,7 +297,7 @@ public class ConfigPreload :Singleton<ConfigPreload>
                 foreach (KeyValuePair<string, string> kv in js_ConfigMd5_List_p.configMd5)
                 {
                     string tmpMDF;
-                    if (js_ConfigMd5_List_p.configMd5.TryGetValue(kv.Key, out tmpMDF))
+                    if (js_ConfigMd5_List_t.configMd5.TryGetValue(kv.Key, out tmpMDF))
                     {
                         // nothing to do;
                     }
@@ -343,14 +346,14 @@ public class ConfigPreload :Singleton<ConfigPreload>
         }
         else
         {
-            Dictionary<string, string> Md5_Dic_p = AnalysisMd5(p_config_list_path_tmp);
+            Dictionary<string, string> Md5_Dic_p = AnalysisMd5(p_config_list_path);
             foreach (KeyValuePair<string, string> kv in Md5_Dic_t)
             {
                 string tmpMDF;
                 if (Md5_Dic_p.TryGetValue(kv.Key, out tmpMDF))
                 {
 
-                    GetConfigFileMD5(kv.Key, out tmpMDF);
+                   // GetConfigFileMD5(kv.Key, out tmpMDF);
 
                     if (tmpMDF != kv.Value)
                     {
@@ -367,7 +370,7 @@ public class ConfigPreload :Singleton<ConfigPreload>
             foreach (KeyValuePair<string, string> kv in Md5_Dic_p)
             {
                 string tmpMDF;
-                if (Md5_Dic_p.TryGetValue(kv.Key, out tmpMDF))
+                if (Md5_Dic_t.TryGetValue(kv.Key, out tmpMDF))
                 {
                     // nothing to do;
                 }
@@ -411,13 +414,14 @@ public class ConfigPreload :Singleton<ConfigPreload>
     {
         // to do
         //替换两个文件得内容
-        File.Delete(p_config_verson_path);
+        //File.Delete(p_config_verson_path);
         File.Delete(p_config_list_path);
-       
-        /*FileUtil.CopyFileOrDirectory(p_config_verson_path_tmp, p_config_verson_path);
-        FileUtil.CopyFileOrDirectory(p_config_list_path_tmp, p_config_list_path);
+
+        //FileUtil.CopyFileOrDirectory(p_config_verson_path_tmp, p_config_verson_path);
+        File.Copy(p_config_list_path_tmp, p_config_list_path);
+        File.Delete(p_config_list_path_tmp);
         if (finishDelegate != null)
-            finishDelegate();*/
+            finishDelegate();
     }
 
     void GetConfigFileMD5(string fileName,out string tmpMDF)

@@ -108,7 +108,7 @@ namespace NeoOPM
             }
 
             OnPreloadFinish();
-            //ConfigPreload.instance.UpdateConfig(OnPreloadFinish);
+            ConfigPreload.instance.UpdateConfig(OnPreloadFinish);
         }
 
 

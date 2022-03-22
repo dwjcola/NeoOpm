@@ -24,7 +24,7 @@ function LoginFormLUA:Init(param)
 end
 function LoginFormLUA:ConnectLogin()
 
-	if self.input.text == nil or self.input.text == "" then
+--[[	if self.input.text == nil or self.input.text == "" then
 		self:Error("请输入账号")
 	else
 		if self.ProcedureLogin ~= nil then
@@ -35,9 +35,9 @@ function LoginFormLUA:ConnectLogin()
 			CS.NeoOPM.PlayerPreferenceData.LastAccName = self.input.text
 			self.ProcedureLogin:GetServerInfo(jsData);
 		end
-	end
+	end]]
 
-	--self:EnterServerBack()--跳过登录
+	self:EnterServerBack()--跳过登录
 end
 function LoginFormLUA:Login()
 	if self.CurrentServerInfo ~= nil then
